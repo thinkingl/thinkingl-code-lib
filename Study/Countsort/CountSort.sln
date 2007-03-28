@@ -1,0 +1,20 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 9.00
+# Visual Studio 2005
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CountSort", "CountSort\CountSort.vcproj", "{F54BF45E-6E9B-468F-809E-3D1703A51322}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F54BF45E-6E9B-468F-809E-3D1703A51322}.Debug|Win32.ActiveCfg = Debug|Win32
+		{F54BF45E-6E9B-468F-809E-3D1703A51322}.Debug|Win32.Build.0 = Debug|Win32
+		{F54BF45E-6E9B-468F-809E-3D1703A51322}.Release|Win32.ActiveCfg = Release|Win32
+		{F54BF45E-6E9B-468F-809E-3D1703A51322}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
