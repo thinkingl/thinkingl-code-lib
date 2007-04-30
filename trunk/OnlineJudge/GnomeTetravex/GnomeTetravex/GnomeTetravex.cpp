@@ -13,6 +13,30 @@
 // SetPoint的时候,就将那一点和那一点的旋转对称点都置位.
 // 对称点求法: 一个点 (x,y), 矩阵Size = s. 那么四个点是: (x,y), (y,-x+s) (-x+s, -y+s) (-y+s, x)
 
+//////////////////////////////////////////////////////////////////////////
+// 更新日志.
+
+// 2007.4.30
+//	(1). 查找有两个目标: 
+//	1	2
+//	3	x
+// 如上图,查找x的时候,只会查找x的左边是否和3的右边相等. x的上边是否和2的下边相等.
+// 籍此,将类哈希的查询结构展成两个,进一步提升性能.
+
+
+
+// 2007.4.29..
+// 有很长时间没有弄这些东西了.隔了几个月,觉得想法成熟了些.
+// 利用哈希的原理优化查找过程.这样应该会有数量级上的性能提升.
+// 好像这些题目普遍的一个特点就是"小问题".按"正常"方式解决的话耗费的内存很小.
+// 而它给出的内存使用量限制却很大.一般的是32M..但实际程序使用的内存只在K的数量级上.
+// 以空间换时间,貌似是做这种题目的王道.
+// 详细:
+// 最快的数据结构,当然是普通的数组了.用数组套数组再套数组..
+// 层次: 类哈希数组--(方块序号,方块边序号)的数组.
+// 这个数组的长度,放在另一个数组里.
+// 
+
 // 2007.1.3
 // 尝试着网上所说的限时搜索(属于Cheat)不能通过.看来jol的数据的确很强.
 // 正面的优化策略: 先分析输入的方块,按方块中拥有有重复的数字的数目和位置确定方块能放置的位置.
@@ -26,6 +50,10 @@
 // #include "stdafx.h"
 
 #include <iostream>
+#include <math.h>
+
+#include <windows.h>
+
 using namespace std;
 
 class Square;
@@ -52,6 +80,14 @@ public:
     int m_y;
 
     PlanarPosition &operator ++( int );
+
+	PlanarPosition getNextPos()
+	{
+		PlanarPosition nextPos(m_planSize);
+		nextPos = *this;
+		nextPos ++;
+		return nextPos;
+	}
 
     // Check if it is over the end.
     bool IsOverEnd() const ;
@@ -207,17 +243,21 @@ bool CentrosymmetricPlan::GetPoint( int index, PlanarPosition pos)
 }
 
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+// 优化
 class Square
 {
 public:
+	
+	Square( const Square& another )
+	{
+		*this = another;
+	}
+	
 	Square(  int top, int right , int bottom, int left);
 	~Square();
 
 	// 顺时针旋转1下.
 	Square &operator ++(int);
-
-	// 是否已经使用.
-	bool m_bUsed;
 
 public:
 	int m_left;
@@ -234,8 +274,6 @@ Square::Square( int top, int right , int bottom, int left )
 	m_right = right;
 	m_top = top;
 	m_bottom = bottom;
-
-	m_bUsed = false;
 }
 
 Square::~Square()
@@ -252,40 +290,374 @@ Square &Square::operator ++(int)
 	return *this;
 }
 
-// 初始化.
-// And loop to load all the squares.
-Square ** Init( int size )
-{
-	Square **squaresArray = new Square*[size*size];
-	for( int i=0; i<size*size; i++ )
-	{
-		int top, right, bottom, left;
-		cin >> top >>  right  >>  bottom >> left ;
-		squaresArray[i] = new Square(  top, right, bottom, left );	
-	}
-	return squaresArray;
-}
+//////////////////////////////////////////////////////////////////////////////////////////////////
 
-Square ***InitSquares( int size )
+// 用空间换时间的快速查找类..
+class SearchQuickly
 {
-	Square ***squareArray = new Square**[size];
-	for( int i=0; i<size; i++ )
+public:
+	SearchQuickly( int size )
+		:m_optimizeSquare( size )
 	{
-		squareArray[i] = new Square *[size];
-	}
-	return squareArray;
-}
+		m_gameSize = size;
+		m_squareCount = m_gameSize * m_gameSize;
+		this->Init();
+		this->InitSquares();
+		this->InitHashTable();
 
-// release the memory.
-void Destroy( Square *** squaresArray, int gameSize )
-{
-	for( int i=0; i<gameSize; i++ )
+		// 把初始的状态打出来..
+		for ( int i=0; i<m_gameSize; i++ )
+		{
+			for ( int k=0; k<m_gameSize; k++ )
+			{
+				this->m_gameModel[i][k] = this->m_squareNodeArray[i*m_gameSize + k].m_square[3];
+			}
+		}
+		this->OutPutTheResult();
+
+	}
+	~SearchQuickly()
 	{
-		delete[] squaresArray[i];
+		for( int i=0; i<m_gameSize; i++ )
+		{
+			delete m_gameModel[i];
+		}
+
+		delete[] this->m_squareNodeArray;
+		delete[] m_gameModel;		
 	}
 
-	delete[] squaresArray;
-}
+	// 递归的开始..
+	bool Search( )
+	{
+		PlanarPosition beginPos( m_gameSize );
+		PlanarPosition nextPos = beginPos.getNextPos();
+		for ( int i=0; i<this->m_squareCount; i++ )
+		{
+			if ( this->m_optimizeSquare.GetPoint( i, beginPos ) )
+			{
+				this->m_optimizeSquare.SetPoint( i, false, beginPos );
+				for ( int k=0; k<4; k++ )
+				{
+					this->m_gameModel[beginPos.m_y][beginPos.m_x] = this->m_squareNodeArray[i].m_square[k];
+					this->m_squareNodeArray[i].m_isUsed = true;
+					if ( this->Search( nextPos ) )
+					{
+						return true;
+					}
+					else
+					{
+						this->m_squareNodeArray[i].m_isUsed = false;
+					}
+				}
+			}
+		}
+		return false;
+	}
+
+	void OutPutTheResult()
+	{
+		for ( int y=0; y<m_gameSize; y++ )
+		{
+			for ( int x=0; x<m_gameSize; x++ )
+			{
+				cout << " " << m_gameModel[y][x]->m_top << " | ";
+			}
+
+			cout << endl;
+
+			for ( int x=0; x<m_gameSize; x++ )
+			{
+				cout << m_gameModel[y][x]->m_left << " " << m_gameModel[y][x]->m_right << "|";
+			}
+
+			cout << endl;
+
+			for ( int x=0; x<m_gameSize; x++ )
+			{
+				cout << " " << m_gameModel[y][x]->m_bottom << " | ";
+			}
+
+			cout << endl;
+			cout << " --   "<< endl;
+		}
+	}
+protected:
+	// 搜索可能的组合.
+	bool Search( PlanarPosition curPos )
+	{		
+		// 如果当前要搜索的位置已经超出了范围,说明这个解已经找到了.
+		if ( curPos.IsOverEnd() )
+		{
+			return true;
+		}
+
+		PlanarPosition leftPos = curPos.LeftStep(1);
+		PlanarPosition upPos = curPos.UpStep(1);
+		PlanarPosition nextPos = curPos.getNextPos();
+
+		Square *leftSquare = 0;
+		Square *upSquare  = 0;
+		
+		if ( !leftPos.IsOverEnd() )
+		{
+			leftSquare = this->m_gameModel[leftPos.m_y][leftPos.m_x];
+		}
+
+		if ( !upPos.IsOverEnd() )
+		{
+			upSquare = this->m_gameModel[upPos.m_y][upPos.m_x];
+		}
+		
+		if ( !leftPos.IsOverEnd() )
+		{
+			int numberCount = this->m_hashTableLeft[leftSquare->m_right].m_Count;
+			for ( int i=0; i<numberCount; i++ )
+			{
+				SquareNode *curNode = &this->m_squareNodeArray[ this->m_hashTableLeft[leftSquare->m_right].m_hashTable[i][0] ];
+				Square *curSquare = curNode->m_square[ this->m_hashTableLeft[leftSquare->m_right].m_hashTable[i][1] ];
+				// 看看上边是否合适..
+				if ( ( !curNode->m_isUsed ) 					
+					&& this->m_optimizeSquare.GetPoint( this->m_hashTableLeft[leftSquare->m_right].m_hashTable[i][0], curPos ) 
+					&& ( ( upPos.IsOverEnd() || upSquare->m_bottom == curSquare->m_top ) )
+					)
+				{
+					// 这个可以..
+					this->m_gameModel[curPos.m_y][curPos.m_x] = curSquare;
+					curNode->m_isUsed = true;			
+
+
+					//this->/*OutPutTheResult*/( curPos );
+
+
+					// 搜索下一个..						
+					if ( this->Search( nextPos ) )
+					{
+						return true;
+					}
+					else
+					{
+						// 没有找到,释放,找下一个.
+						curNode->m_isUsed = false;
+			//			this->m_optimizeSquare.SetPoint( this->m_hashTableLeft[leftSquare->m_right].m_hashTable[i][0], false, curPos);
+					}
+				}
+				
+			}
+			
+		}
+		else
+		{			
+			if ( !upPos.IsOverEnd() )
+			{
+				int numberCount = this->m_hashTableTop[upSquare->m_bottom].m_Count;
+				for ( int i=0; i<numberCount; i++ )
+				{
+					SquareNode *curNode = &this->m_squareNodeArray[ this->m_hashTableTop[upSquare->m_bottom].m_hashTable[i][0] ];
+					Square *curSquare = curNode->m_square[ this->m_hashTableTop[upSquare->m_bottom].m_hashTable[i][1] ];
+					// 看看是否合适..
+					if ( !curNode->m_isUsed 
+						&& this->m_optimizeSquare.GetPoint( this->m_hashTableTop[upSquare->m_bottom].m_hashTable[i][0], curPos ))
+					{
+						// 这个可以..
+						this->m_gameModel[curPos.m_y][curPos.m_x] = curSquare;
+						curNode->m_isUsed = true;
+
+						//this->OutPutTheResult( curPos );
+
+
+						// 搜索下一个..						
+						if ( this->Search( nextPos ) )
+						{
+							return true;
+						}
+						else
+						{
+							// 没有找到,释放,找下一个.
+							curNode->m_isUsed = false;
+						//	this->m_optimizeSquare.SetPoint( this->m_hashTableTop[upSquare->m_bottom].m_hashTable[i][0], false, curPos);
+						}
+					}
+				}
+			}
+			else
+			{
+				std::cout << "非常的不对劲!!!" << std::endl;
+			}
+		}
+
+		return false;
+	}
+
+	void InitSquares( )
+	{
+		m_gameModel = new Square**[m_gameSize];
+		for( int i=0; i<m_gameSize; i++ )
+		{
+			m_gameModel[i] = new Square *[m_gameSize];
+		}
+	}
+	// 初始化.
+	// And loop to load all the squares.
+	void Init( )
+	{
+		this->m_squareNodeArray = new SquareNode[ this->m_squareCount ];
+	}
+
+	// 初始化类哈希数据结构.
+	void InitHashTable()
+	{
+		for ( int squareIndex=0; squareIndex<this->m_squareCount; squareIndex ++ )
+		{
+			for ( int i=0; i<4; i++ )
+			{
+				int topValue = this->m_squareNodeArray[squareIndex].m_square[i]->m_top;
+				int temp[2] = { squareIndex, i };
+				this->m_hashTableTop[topValue].AddNode( temp );
+
+				int leftValue = this->m_squareNodeArray[squareIndex].m_square[i]->m_left;
+				this->m_hashTableLeft[leftValue].AddNode( temp );
+			}
+		}
+	}
+	void OutPutTheResult( PlanarPosition curPos )
+	{
+		for ( int y=0; y<curPos.m_y; y++ )
+		{
+			for ( int x=0; x<this->m_gameSize; x++ )
+			{
+				cout << " " << m_gameModel[y][x]->m_top << " | ";
+			}
+
+			cout << endl;
+
+			for ( int x=0; x<m_gameSize; x++ )
+			{
+				cout << this->m_gameModel[y][x]->m_left << " " << m_gameModel[y][x]->m_right << "| ";
+			}
+
+			cout << endl;
+
+			for ( int x=0; x<m_gameSize; x++ )
+			{
+				cout << " " << m_gameModel[y][x]->m_bottom << " | ";
+			}
+
+			cout << endl;
+			cout << " --   "<< endl;
+		}
+
+		for ( int x=0; x<=curPos.m_x; x++ )
+		{
+			cout << " " << m_gameModel[curPos.m_y][x]->m_top << " | ";
+		}
+
+		cout << endl;
+
+		for ( int x=0; x<=curPos.m_x; x++ )
+		{
+			cout << m_gameModel[curPos.m_y][x]->m_left << " " << m_gameModel[curPos.m_y][x]->m_right << "| ";
+		}
+
+		cout << endl;
+
+		for ( int x=0; x<=curPos.m_x; x++ )
+		{
+			cout << " " << m_gameModel[curPos.m_y][x]->m_bottom << " | ";
+		}
+
+		cout << endl;
+		cout << " --   "<< endl;
+		cout << "------------------------------------------------" << endl;
+	}
+	
+
+private:
+	enum { MaxNumber = 10 };
+	enum { MaxSquare = 100 };
+
+	// 游戏内存模型.
+	Square *** m_gameModel;
+
+	// 一个方块.
+	class SquareNode
+	{
+	public:
+		
+		SquareNode()
+		{
+			m_isUsed = false;
+
+			/*int top, right, bottom, left;
+			cin >> top >>  right  >>  bottom >> left ;	
+			Square temp(  top, right, bottom, left );	*/
+
+			/*static int kkk = 0;
+			kkk ++;*/
+		//	Square temp(  rand()%9,rand()%9,rand()%9,rand()%9 );
+
+			int limit = 9;
+			Square temp(  rand()%limit,rand()%limit,rand()%limit,rand()%limit );	
+
+			for ( int k=0; k<4; k++ )
+			{
+				m_square[k] = new Square( temp++ );
+			}			
+		}
+
+		~SquareNode()
+		{
+			for ( int i=0; i<4; i++ )
+			{
+				delete m_square[i];
+			}
+		}
+		// 四种形态的方块..
+		Square * m_square[4];
+		bool m_isUsed;
+	protected:
+	private:
+	};
+	// 所有的方块..
+	SquareNode *m_squareNodeArray;
+
+	// 用于优化性能的一个中心对称矩阵...可以防止一个方块在中心对称的位置上重复试.
+	CentrosymmetricPlan m_optimizeSquare;
+	
+	class HashTableNode
+	{
+	public:
+		HashTableNode()
+		{
+			m_Count = 0;
+		}
+
+		// 添加一项..
+		void AddNode( int* oneSquare )
+		{
+			m_hashTable[m_Count][0] = oneSquare[0];
+			m_hashTable[m_Count][1] = oneSquare[1];
+			m_Count ++;
+		}
+		// 这个数的数量..
+		int m_Count;
+		// 数据.
+		int m_hashTable[MaxSquare][2];
+	protected:
+	private:
+	};
+	// 用于优化查找性能的类哈希结构.
+	HashTableNode m_hashTableTop[MaxNumber];
+	HashTableNode m_hashTableLeft[MaxNumber];
+
+
+
+	// 大小..
+	int m_gameSize;
+	// 数目.
+	int m_squareCount;
+};
+
 
 // 检查合法性.
 // 只检查当前位置的方块在所有方块中是否合法.
@@ -317,165 +689,25 @@ bool CheckValid( Square *** curSquares, PlanarPosition curPos, int gameSize )
 }
 
 
-// 搜索可能的组合.
-bool Search( Square *** curSquares,int gameSize, PlanarPosition curPos, Square ** allSquares, CentrosymmetricPlan& optimizeSquare )
-{
-	// 如果当前要搜索的位置已经超出了范围,说明这个解已经找到了.
-	if ( curPos.IsOverEnd() )
-	{
-		return true;
-	}
-
-	//if ( counter > maxNum )
-	//{
-	//	return false;
-	//}
-
-	for ( int i=0; i<gameSize*gameSize; i++ )
-	{
-		if ( !allSquares[i]->m_bUsed && optimizeSquare.GetPoint(i, curPos) )
-		{
-			// 尝试在当前位置放置当前块.(循环4次把这个块都转一遍.
-			allSquares[i]->m_bUsed = true;
 
 
-			curSquares[curPos.m_y][curPos.m_x] = allSquares[i];
-			for ( int round =0; round<4; round++ )
-			{
-				bool bResult = CheckValid( curSquares, curPos, gameSize );
-				if ( bResult )
-				{
-					// 尝试下一个位置.
-					PlanarPosition nextPos = curPos;
-					nextPos ++;
 
-	//				OutPutTheResult( curSquares, gameSize, curPos );
-	//				cout << "once" << endl;
-					bResult = Search( curSquares, gameSize, nextPos, allSquares, optimizeSquare );
-					if (  bResult )
-					{
-						return true;
-					}
-				}
-				(*allSquares[i]) ++;
-			}
 
-			// 这个块试过了不行.将这个块已经使用的标志清除.
-			allSquares[i]->m_bUsed = false;
-
-			// 剪枝..
-			if ( curPos.m_y == 0 && curPos.m_x == 0 )
-			{
-				optimizeSquare.SetPoint( i, false, curPos);
-			}
-
-		}
-	}
-	
-
-	return false;
-}
-
-void OutPutTheResult(Square *** curSquare, int gameSize , PlanarPosition curPos )
-{
-	for ( int y=0; y<curPos.m_y; y++ )
-	{
-		for ( int x=0; x<gameSize; x++ )
-		{
-			cout << " " << curSquare[y][x]->m_top << " | ";
-		}
-
-		cout << endl;
-
-		for ( int x=0; x<gameSize; x++ )
-		{
-			cout << curSquare[y][x]->m_left << " " << curSquare[y][x]->m_right << "| ";
-		}
-
-		cout << endl;
-
-		for ( int x=0; x<gameSize; x++ )
-		{
-			cout << " " << curSquare[y][x]->m_bottom << " | ";
-		}
-
-		cout << endl;
-		cout << " --   "<< endl;
-	}
-
-	for ( int x=0; x<=curPos.m_x; x++ )
-	{
-		cout << " " << curSquare[curPos.m_y][x]->m_top << " | ";
-	}
-
-	cout << endl;
-
-	for ( int x=0; x<=curPos.m_x; x++ )
-	{
-		cout << curSquare[curPos.m_y][x]->m_left << " " << curSquare[curPos.m_y][x]->m_right << "| ";
-	}
-
-	cout << endl;
-
-	for ( int x=0; x<=curPos.m_x; x++ )
-	{
-		cout << " " << curSquare[curPos.m_y][x]->m_bottom << " | ";
-	}
-
-	cout << endl;
-	cout << " --   "<< endl;
-	cout << "------------------------------------------------" << endl;
-}
-
-void OutPutTheResult( Square *** curSquare, int gameSize )
-{
-	for ( int y=0; y<gameSize; y++ )
-	{
-		for ( int x=0; x<gameSize; x++ )
-		{
-			cout << " " << curSquare[y][x]->m_top << " | ";
-		}
-
-		cout << endl;
-
-		for ( int x=0; x<gameSize; x++ )
-		{
-			cout << curSquare[y][x]->m_left << " " << curSquare[y][x]->m_right << "|";
-		}
-
-		cout << endl;
-
-		for ( int x=0; x<gameSize; x++ )
-		{
-			cout << " " << curSquare[y][x]->m_bottom << " | ";
-		}
-
-		cout << endl;
-		cout << " --   "<< endl;
-	}
-}
 
 int main()
 {
 
 	int gameSize;
-	
-	Square ***squaresArray;
-
-	Square **allSquares;
-
 	int gameIndex = 0;
-
 	while( cin >> gameSize )
 	{
+		int beginTime = ::GetTickCount();
 		gameIndex ++;
-
 		if( gameSize == 0 )
 		{
 			return 0;
 		}
-
-		allSquares = Init( gameSize );
+		SearchQuickly finder( gameSize );
 
 			//5 9 1 4
 			//4 4 5 6
@@ -493,49 +725,24 @@ int main()
 		//	allSquares[i] = new Square( i, i+1 , i+2 , i+3 );
 		//}
 
-		squaresArray = InitSquares( gameSize );
-		
-		
 		cout << "Game " << gameIndex << ": ";
-
-		PlanarPosition curPos( gameSize );
-
-		CentrosymmetricPlan optimizeSquare( gameSize );
-
-		bool bResult = Search( squaresArray,gameSize, curPos, allSquares, optimizeSquare );
+		bool bResult = finder.Search();
 		
-		/*if ( counter > maxNum - 10 )
+		int endTime = ::GetTickCount();
+
+		cout << "time" << (endTime-beginTime) << std::endl;
+
+		if( bResult )
 		{
-			cout << "Possible" << endl;			
+			cout << "Possible" << endl;
+
+
+			finder.OutPutTheResult();
 		}
-		else*/
+		else
 		{
-			if( bResult )
-			{
-				cout << "Possible" << endl;
-
-
-				//OutPutTheResult( squaresArray, gameSize );
-			}
-			else
-			{
-				cout << "Impossible" <<endl;
-			}
+			cout << "Impossible" <<endl;
 		}
-		
-		
-	
-//		cout << counter << endl;
-//		counter = 0;
-
-		Destroy( squaresArray, gameSize );
-
-		for( int i=0; i<gameSize; i++ )
-		{
-			delete allSquares[i];
-		}
-		delete[] allSquares;
-
 	}
 
 
