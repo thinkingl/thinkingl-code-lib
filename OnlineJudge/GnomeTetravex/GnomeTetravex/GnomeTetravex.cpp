@@ -16,6 +16,21 @@
 //////////////////////////////////////////////////////////////////////////
 // 更新日志.
 
+// 2007.5.9.
+// 意识到,这是一个没有正解的题目.
+// 需要合并相同的块....不对相同的块在同一个地方进行重试..
+
+// 2007.5.1. 0:22.
+// 仍然超时..
+// 做进一步的努力:
+// 将方块分类,确定方块能够存在的位置..
+// 位置有3种: 内部 边上 角上
+// 分别为方块的四个数字找另外的方块上的相同数字.方块不能重复.从数目少的方块开始优先找.
+// 能找到4个的是内部方块,有可能放在方块的任何位置.
+// 能找到3个的是边上方块.有可能放在边上或角上.
+// 相邻的2个数字能找到的是 角上方块,只能放在4个角上.
+
+
 // 2007.4.30
 //	(1). 查找有两个目标: 
 //	1	2
@@ -52,7 +67,13 @@
 #include <iostream>
 #include <math.h>
 
+#ifdef _DEBUG
+
 #include <windows.h>
+
+#endif
+#include <map>
+#include <vector>
 
 using namespace std;
 
@@ -61,12 +82,12 @@ class PlanarPosition;
 void OutPutTheResult(Square *** curSquare, int gameSize , PlanarPosition curPos );
 
 // 优化的游戏矩阵
-class OptimizeGameSquare
-{
-public:
-protected:
-private:
-};
+//class OptimizeGameSquare
+//{
+//public:
+//protected:
+//private:
+//};
 
 
 // class for Position on a plan.
@@ -158,6 +179,7 @@ bool PlanarPosition::IsOverEnd() const
     return true;
 }
 
+
 // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 // 用于优化的中心对称正方形.
 class CentrosymmetricPlan 
@@ -166,12 +188,26 @@ public:
 	CentrosymmetricPlan( const int& plainSize );
 	virtual ~CentrosymmetricPlan();
 
+	void Reset();
+
 	// 设置一个点以及它的旋转后的点..
+	// 将和它相同的点也设置..
 	void SetPoint( int index, bool bValue, int x, int y );
 	void SetPoint( int index, bool bValue, PlanarPosition pos );
+
+	// 单纯的设置一个点..
+	void SetOnePoint( int index, bool bValue, int x, int y );
+
+
 	// 获取一个点的状态.
 	bool GetPoint( int index, int x, int y );
 	bool GetPoint( int index, PlanarPosition pos );
+
+	// 设置方块合并map.
+	void SetSameSquareMap( std::multimap<int,int> sameSquareMap )
+	{
+		this->m_sameSquareMap = sameSquareMap;
+	}
 
 protected:
 	// 真实的矩阵.
@@ -179,6 +215,10 @@ protected:
 
 	// 大小.
 	int m_size;
+
+	// 相同方块归类..
+	// 映射关系: 方块序号 -> 相同方块序号.
+	std::multimap<int, int> m_sameSquareMap;
 private:
 };
 
@@ -199,9 +239,21 @@ CentrosymmetricPlan::CentrosymmetricPlan(const int& plainSize )
 				m_square[squareCount][i][n] = true;
 			}
 		}
-	}
+	}	
+}
 
-	
+void CentrosymmetricPlan::Reset()
+{
+	for ( int squareCount = 0 ; squareCount< m_size*m_size ; squareCount ++ )
+	{
+		for ( int i=0; i<m_size; i++ )
+		{
+			for( int n=0; n<m_size; n++ )
+			{
+				m_square[squareCount][i][n] = true;
+			}
+		}
+	}
 }
 
 CentrosymmetricPlan::~CentrosymmetricPlan()
@@ -218,13 +270,28 @@ CentrosymmetricPlan::~CentrosymmetricPlan()
 	
 }
 
-void CentrosymmetricPlan::SetPoint(int index, bool bValue, int x, int y )
+void CentrosymmetricPlan::SetOnePoint(int index, bool bValue, int x, int y )
 {
 	int zeroSize = m_size - 1;
 	this->m_square[index][y][x] = bValue;
 	this->m_square[index][y][-x+zeroSize] = bValue;
 	m_square[index][-x+zeroSize][-y+zeroSize] = bValue;
 	m_square[index][-y+zeroSize][x] = bValue;
+}
+
+void CentrosymmetricPlan::SetPoint(int index, bool bValue, int x, int y )
+{	
+	this->SetOnePoint( index, bValue, x, y );
+	// 将它的相同的点的状态也设置上...
+	std::pair< std::multimap<int,int>::iterator, std::multimap<int,int>::iterator> targetIterPair = this->m_sameSquareMap.equal_range( index );
+	std::multimap<int,int>::iterator iter = targetIterPair.first;
+	while ( iter != targetIterPair.second )
+	{
+		int sameIndex = iter->second;
+		this->SetOnePoint( sameIndex, bValue, x, y );
+		iter ++;
+	}
+
 }
 
 void CentrosymmetricPlan::SetPoint( int index, bool bValue, PlanarPosition pos)
@@ -258,6 +325,11 @@ public:
 
 	// 顺时针旋转1下.
 	Square &operator ++(int);
+
+	bool CompleteEqual(  const Square& another )
+	{
+		return( this->m_left==another.m_left && this->m_bottom == another.m_bottom && this->m_right == another.m_right && this->m_top == another.m_top );
+	}
 
 public:
 	int m_left;
@@ -305,6 +377,33 @@ public:
 		this->InitSquares();
 		this->InitHashTable();
 
+		//Square kkkk( 0,0,0,0 );
+		//Square wwww( 0,0,0,0 );
+
+		//bool result = ( kkkk.CompleteEqual( wwww ) );
+ 
+		// 初始化归类
+		for ( int i=0; i<this->m_squareCount; i++ )
+		{
+			for ( int k=0; k<this->m_squareCount; k++ )
+			{
+				if ( i!=k )
+				{
+					// 比较第i个和第k个是否一样..
+					for ( int j=0; j<4; j++ )
+					{
+						if ( this->m_squareNodeArray[i].m_square[0]->CompleteEqual( *( this->m_squareNodeArray[k].m_square[j] ) )  )
+						{
+							// 找到了一对相同的..
+							this->m_sameSquareMap.insert( std::pair<int,int>( i, k ) );
+						}
+					}
+				}
+			}
+		}
+
+		this->m_optimizeSquare.SetSameSquareMap( this->m_sameSquareMap );
+
 		// 把初始的状态打出来..
 		for ( int i=0; i<m_gameSize; i++ )
 		{
@@ -313,7 +412,11 @@ public:
 				this->m_gameModel[i][k] = this->m_squareNodeArray[i*m_gameSize + k].m_square[3];
 			}
 		}
+
+#ifdef _DEBUG
 		this->OutPutTheResult();
+#endif
+		
 
 	}
 	~SearchQuickly()
@@ -336,7 +439,7 @@ public:
 		{
 			if ( this->m_optimizeSquare.GetPoint( i, beginPos ) )
 			{
-				this->m_optimizeSquare.SetPoint( i, false, beginPos );
+//				this->m_optimizeSquare.SetPoint( i, false, beginPos );
 				for ( int k=0; k<4; k++ )
 				{
 					this->m_gameModel[beginPos.m_y][beginPos.m_x] = this->m_squareNodeArray[i].m_square[k];
@@ -348,6 +451,8 @@ public:
 					else
 					{
 						this->m_squareNodeArray[i].m_isUsed = false;
+
+						this->m_optimizeSquare.SetPoint( i, false, 0, 0 );
 					}
 				}
 			}
@@ -411,38 +516,67 @@ protected:
 		
 		if ( !leftPos.IsOverEnd() )
 		{
+			std::vector<int> clickOutNum;
+
 			int numberCount = this->m_hashTableLeft[leftSquare->m_right].m_Count;
 			for ( int i=0; i<numberCount; i++ )
 			{
-				SquareNode *curNode = &this->m_squareNodeArray[ this->m_hashTableLeft[leftSquare->m_right].m_hashTable[i][0] ];
-				Square *curSquare = curNode->m_square[ this->m_hashTableLeft[leftSquare->m_right].m_hashTable[i][1] ];
-				// 看看上边是否合适..
-				if ( ( !curNode->m_isUsed ) 					
-					&& this->m_optimizeSquare.GetPoint( this->m_hashTableLeft[leftSquare->m_right].m_hashTable[i][0], curPos ) 
-					&& ( ( upPos.IsOverEnd() || upSquare->m_bottom == curSquare->m_top ) )
-					)
+				int curSquareIndex = this->m_hashTableLeft[leftSquare->m_right].m_squareIndex[i];
+				SquareNode *curNode = &this->m_squareNodeArray[curSquareIndex];
+
+				if ( !this->m_optimizeSquare.GetPoint( curSquareIndex , curPos ) )
 				{
-					// 这个可以..
-					this->m_gameModel[curPos.m_y][curPos.m_x] = curSquare;
-					curNode->m_isUsed = true;			
+					continue;
+				}
 
-
-					//this->/*OutPutTheResult*/( curPos );
-
-
-					// 搜索下一个..						
-					if ( this->Search( nextPos ) )
+				for ( int k=0; k<4; k++ )
+				{
+					Square *curSquare = this->m_hashTableLeft[leftSquare->m_right].m_hashTable[curSquareIndex][k];
+					if( curSquare == 0 )
 					{
-						return true;
+						break;
 					}
 					else
 					{
-						// 没有找到,释放,找下一个.
-						curNode->m_isUsed = false;
-			//			this->m_optimizeSquare.SetPoint( this->m_hashTableLeft[leftSquare->m_right].m_hashTable[i][0], false, curPos);
+						// 看看上边是否合适..
+						
+						if ( ( !curNode->m_isUsed ) 					
+							&& ( ( upPos.IsOverEnd() || upSquare->m_bottom == curSquare->m_top ) )
+							)
+						{
+							// 这个可以..
+							this->m_gameModel[curPos.m_y][curPos.m_x] = curSquare;
+							curNode->m_isUsed = true;			
+
+#ifdef _DEBUG
+this->OutPutTheResult( curPos );
+#endif
+
+							
+
+
+							// 搜索下一个..						
+							if ( this->Search( nextPos ) )
+							{
+								return true;
+							}
+							else
+							{
+								// 没有找到,释放,找下一个.
+								curNode->m_isUsed = false;
+								//			this->m_optimizeSquare.SetPoint( this->m_hashTableLeft[leftSquare->m_right].m_hashTable[i][0], false, curPos);
+							}
+						}
 					}
 				}
-				
+
+				this->m_optimizeSquare.SetPoint( curSquareIndex, false, curPos );
+				clickOutNum.push_back( curSquareIndex );				
+			}
+
+			for( int i=0; i<clickOutNum.size(); i++ )
+			{
+				this->m_optimizeSquare.SetPoint( clickOutNum[i], true, curPos );
 			}
 			
 		}
@@ -451,34 +585,63 @@ protected:
 			if ( !upPos.IsOverEnd() )
 			{
 				int numberCount = this->m_hashTableTop[upSquare->m_bottom].m_Count;
+
+				std::vector<int> clickOutNum;
+
 				for ( int i=0; i<numberCount; i++ )
 				{
-					SquareNode *curNode = &this->m_squareNodeArray[ this->m_hashTableTop[upSquare->m_bottom].m_hashTable[i][0] ];
-					Square *curSquare = curNode->m_square[ this->m_hashTableTop[upSquare->m_bottom].m_hashTable[i][1] ];
-					// 看看是否合适..
-					if ( !curNode->m_isUsed 
-						&& this->m_optimizeSquare.GetPoint( this->m_hashTableTop[upSquare->m_bottom].m_hashTable[i][0], curPos ))
+					int curSquareIndex = this->m_hashTableTop[upSquare->m_bottom].m_squareIndex[i];
+					SquareNode *curNode = &this->m_squareNodeArray[curSquareIndex];
+
+					if ( this->m_optimizeSquare.GetPoint(curSquareIndex, curPos ) )
 					{
-						// 这个可以..
-						this->m_gameModel[curPos.m_y][curPos.m_x] = curSquare;
-						curNode->m_isUsed = true;
-
-						//this->OutPutTheResult( curPos );
-
-
-						// 搜索下一个..						
-						if ( this->Search( nextPos ) )
+						for ( int k=0;k<4; k++ )
 						{
-							return true;
+							Square *curSquare = this->m_hashTableTop[upSquare->m_bottom].m_hashTable[curSquareIndex][k];
+							if ( curSquare == 0 )
+							{
+								break;
+							}
+							else
+							{
+								// 看看是否合适..
+								if ( !curNode->m_isUsed )
+								{
+									// 这个可以..
+									this->m_gameModel[curPos.m_y][curPos.m_x] = curSquare;
+									curNode->m_isUsed = true;
+
+#ifdef _DEBUG
+this->OutPutTheResult( curPos );
+#endif
+									
+
+
+									// 搜索下一个..						
+									if ( this->Search( nextPos ) )
+									{
+										return true;
+									}
+									else
+									{
+										// 没有找到,释放,找下一个.
+										curNode->m_isUsed = false;
+										//	this->m_optimizeSquare.SetPoint( this->m_hashTableTop[upSquare->m_bottom].m_hashTable[i][0], false, curPos);
+									}
+								}
+							}
 						}
-						else
-						{
-							// 没有找到,释放,找下一个.
-							curNode->m_isUsed = false;
-						//	this->m_optimizeSquare.SetPoint( this->m_hashTableTop[upSquare->m_bottom].m_hashTable[i][0], false, curPos);
-						}
-					}
+
+						this->m_optimizeSquare.SetPoint( curSquareIndex, false, curPos );
+						clickOutNum.push_back( curSquareIndex );
+					}					
 				}
+
+				for( int i=0; i<clickOutNum.size(); i++ )
+				{
+					this->m_optimizeSquare.SetPoint( clickOutNum[i], true, curPos );
+				}
+
 			}
 			else
 			{
@@ -486,6 +649,7 @@ protected:
 			}
 		}
 
+		// 当前的这个方块
 		return false;
 	}
 
@@ -512,11 +676,10 @@ protected:
 			for ( int i=0; i<4; i++ )
 			{
 				int topValue = this->m_squareNodeArray[squareIndex].m_square[i]->m_top;
-				int temp[2] = { squareIndex, i };
-				this->m_hashTableTop[topValue].AddNode( temp );
+				this->m_hashTableTop[topValue].AddSquare( squareIndex, m_squareNodeArray[squareIndex].m_square[i] );
 
 				int leftValue = this->m_squareNodeArray[squareIndex].m_square[i]->m_left;
-				this->m_hashTableLeft[leftValue].AddNode( temp );
+				this->m_hashTableLeft[leftValue].AddSquare( squareIndex, this->m_squareNodeArray[squareIndex].m_square[i] );
 			}
 		}
 	}
@@ -579,6 +742,10 @@ private:
 	// 游戏内存模型.
 	Square *** m_gameModel;
 
+	// 相同方块归类..
+	// 映射关系: 方块序号 -> 相同方块序号.
+	std::multimap<int, int> m_sameSquareMap;
+
 	// 一个方块.
 	class SquareNode
 	{
@@ -588,16 +755,29 @@ private:
 		{
 			m_isUsed = false;
 
-			/*int top, right, bottom, left;
-			cin >> top >>  right  >>  bottom >> left ;	
-			Square temp(  top, right, bottom, left );	*/
+
+			
 
 			/*static int kkk = 0;
 			kkk ++;*/
 		//	Square temp(  rand()%9,rand()%9,rand()%9,rand()%9 );
 
-			int limit = 9;
+#ifdef _DEBUG
+			int limit = 1;
 			Square temp(  rand()%limit,rand()%limit,rand()%limit,rand()%limit );	
+
+			static int kkk = 0;
+			kkk ++;
+			if ( kkk == 25 )
+			{
+				temp.m_bottom = temp.m_left = temp.m_right = temp.m_top = 2;
+			}
+#else
+			int top, right, bottom, left;
+			cin >> top >>  right  >>  bottom >> left ;	
+			Square temp(  top, right, bottom, left );	
+#endif
+			
 
 			for ( int k=0; k<4; k++ )
 			{
@@ -623,6 +803,7 @@ private:
 
 	// 用于优化性能的一个中心对称矩阵...可以防止一个方块在中心对称的位置上重复试.
 	CentrosymmetricPlan m_optimizeSquare;
+
 	
 	class HashTableNode
 	{
@@ -630,22 +811,52 @@ private:
 		HashTableNode()
 		{
 			m_Count = 0;
+			//memset( m_hashTable, 0, M)
+			for ( int i=0; i<MaxSquare; i++ )
+			{
+				for( int k=0; k<4; k++ )
+				{
+					this->m_hashTable[i][k] = 0;
+				}
+			}
 		}
 
 		// 添加一项..
-		void AddNode( int* oneSquare )
+		void AddSquare( int squareIndex, Square* oneSquare )
 		{
-			m_hashTable[m_Count][0] = oneSquare[0];
-			m_hashTable[m_Count][1] = oneSquare[1];
-			m_Count ++;
+			bool bHas = false;
+			for ( int i=0; i<m_Count; i++ )
+			{
+				if ( m_squareIndex[i] == squareIndex )
+				{
+					bHas = true;
+					break;
+				}
+			}
+			this->m_squareIndex[m_Count] = squareIndex;
+			for ( int i=0; i<4; i++ )
+			{
+				if ( this->m_hashTable[squareIndex][i] == 0 )
+				{
+					this->m_hashTable[squareIndex][i] = oneSquare;
+					break;
+				}
+			}
+			
+			if ( !bHas )
+			{
+				m_Count ++;
+			}			
 		}
-		// 这个数的数量..
+		//// 这个数的数量..
 		int m_Count;
 		// 数据.
-		int m_hashTable[MaxSquare][2];
+		Square * m_hashTable[MaxSquare][4];
+		int m_squareIndex[MaxSquare];
 	protected:
 	private:
 	};
+
 	// 用于优化查找性能的类哈希结构.
 	HashTableNode m_hashTableTop[MaxNumber];
 	HashTableNode m_hashTableLeft[MaxNumber];
@@ -701,13 +912,17 @@ int main()
 	int gameIndex = 0;
 	while( cin >> gameSize )
 	{
-		int beginTime = ::GetTickCount();
+#ifdef _DEBUG
+int beginTime = ::GetTickCount();
+#endif
+		
 		gameIndex ++;
 		if( gameSize == 0 )
 		{
 			return 0;
 		}
 		SearchQuickly finder( gameSize );
+
 
 			//5 9 1 4
 			//4 4 5 6
@@ -728,16 +943,21 @@ int main()
 		cout << "Game " << gameIndex << ": ";
 		bool bResult = finder.Search();
 		
+#ifdef _DEBUG
 		int endTime = ::GetTickCount();
 
 		cout << "time" << (endTime-beginTime) << std::endl;
+#endif
+		
 
 		if( bResult )
 		{
 			cout << "Possible" << endl;
 
-
-			finder.OutPutTheResult();
+#ifdef _DEBUG
+		finder.OutPutTheResult();
+#endif
+			
 		}
 		else
 		{
