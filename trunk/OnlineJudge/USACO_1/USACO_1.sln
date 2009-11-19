@@ -11,6 +11,11 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PrefaceNumbering", "Preface
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SubsetSums", "SubsetSums\SubsetSums.vcproj", "{B61716CF-C521-433B-9A39-B8F6C2CDA41C}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{0DBFC577-4752-4844-9DFE-83442AB670FE}"
+	ProjectSection(SolutionItems) = preProject
+		readme.txt = readme.txt
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
