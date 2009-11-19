@@ -91,8 +91,55 @@ int main()
         return 0;
     }
 
-   
+    int nNum, nBits, nDistance;
+    fin >> nNum >> nBits >> nDistance;
 
+    int nMaxNum = ( 1 << nBits ) - 1 ;
+
+    typedef std::vector<int> TNumList;
+    TNumList tNumList;
+    for ( int i=0; i<=nMaxNum && tNumList.size() < nNum; ++i )
+    {
+        bool bOk = true;
+        for ( int k=0; k<tNumList.size(); ++k )
+        {
+            // ÇóÈ¡distance¡£
+            int nAnother = tNumList[k];
+            int nMask = 1;
+            int nDis = 0;
+            for ( int j=0; j<nBits; (++j), (nMask <<= 1) )
+            {
+                if ( ( nAnother & nMask ) != ( i & nMask ) )
+                {
+                    nDis ++;
+                }
+            }
+
+            if ( nDis < nDistance )
+            {
+                bOk = false;
+                break;
+            }
+        }
+        
+        if ( bOk )
+        {
+            tNumList.push_back( i );
+        }
+    }
+
+    for ( int i=0; i<tNumList.size(); ++i )
+    {
+        fout << tNumList[i];
+        if ( ( i+1 ) % 10 == 0 || i == tNumList.size() - 1 )
+        {
+            fout << endl;
+        }
+        else
+        {
+            fout << " ";
+        }
+    }
 
     fin.close();
     fout.close();
