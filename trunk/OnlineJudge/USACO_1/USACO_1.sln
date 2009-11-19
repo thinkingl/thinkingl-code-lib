@@ -9,6 +9,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "HammingCodes", "HammingCode
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PrefaceNumbering", "PrefaceNumbering\PrefaceNumbering.vcproj", "{880A5A7D-275E-41E1-AC7B-8D2630E443C5}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SubsetSums", "SubsetSums\SubsetSums.vcproj", "{B61716CF-C521-433B-9A39-B8F6C2CDA41C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -31,6 +33,10 @@ Global
 		{880A5A7D-275E-41E1-AC7B-8D2630E443C5}.Debug|Win32.Build.0 = Debug|Win32
 		{880A5A7D-275E-41E1-AC7B-8D2630E443C5}.Release|Win32.ActiveCfg = Release|Win32
 		{880A5A7D-275E-41E1-AC7B-8D2630E443C5}.Release|Win32.Build.0 = Release|Win32
+		{B61716CF-C521-433B-9A39-B8F6C2CDA41C}.Debug|Win32.ActiveCfg = Debug|Win32
+		{B61716CF-C521-433B-9A39-B8F6C2CDA41C}.Debug|Win32.Build.0 = Debug|Win32
+		{B61716CF-C521-433B-9A39-B8F6C2CDA41C}.Release|Win32.ActiveCfg = Release|Win32
+		{B61716CF-C521-433B-9A39-B8F6C2CDA41C}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
