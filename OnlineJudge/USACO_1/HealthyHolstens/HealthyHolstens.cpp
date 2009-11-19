@@ -111,7 +111,14 @@ public:
     void InputData( ifstream& infile );
  //   void OutputData( ofstream& outfile );
     void OutputData( basic_ostream<char, char_traits<char> >& outStream );
-    bool FeedCow();
+
+    /** Resove the problem. */
+    void Think();
+
+private:
+    typedef std::vector<int> TFeedTypeList;
+
+    bool FeedCow( TFeedTypeList& tCurFeed, int nFeedTypeNum );
 private:
 
     int m_nVitaminNum;
@@ -119,6 +126,8 @@ private:
 
     int m_arVitaminNeed[MAX_VITAMIN_TYPE];
     int m_arFeedVitamin[MAX_FEEDTYPE][MAX_VITAMIN_TYPE];
+
+    TFeedTypeList m_tFeedSolution;
 };
 
 CCowFarm::CCowFarm()
@@ -155,11 +164,78 @@ void CCowFarm::InputData( ifstream& infile )
 
 void CCowFarm::OutputData( basic_ostream<char, char_traits<char> >& outStream )
 {
-
+    outStream << m_tFeedSolution.size() << " ";
+    for ( int i=0; i<m_tFeedSolution.size(); ++i )
+    {
+        outStream << m_tFeedSolution[i] + 1;
+        if ( i != m_tFeedSolution.size() - 1 )
+        {
+            outStream << " ";
+        }
+    }
+    outStream << endl;
 }
 
-bool CCowFarm::FeedCow()
+void CCowFarm::Think()
 {
+    for ( int i=1; i<=m_nFeedtypeNum; ++i )
+    {
+        TFeedTypeList tBeginFeedList;
+        if ( this->FeedCow( tBeginFeedList, i ) )
+        {
+            break;
+        }
+    }
+}
+
+bool CCowFarm::FeedCow( TFeedTypeList& tCurFeed, int nFeedTypeNum )
+{
+    if ( tCurFeed.size() == nFeedTypeNum )
+    {
+        // check vitamin.
+        int arVitaminNum[ MAX_VITAMIN_TYPE ] = {0};
+        for ( int i=0; i<tCurFeed.size(); ++i )
+        {
+            int nFeedType = tCurFeed[i];
+            for ( int nV=0; nV<m_nVitaminNum; ++nV )
+            {
+                arVitaminNum[ nV ] += m_arFeedVitamin[ nFeedType ][ nV ];
+            }
+        }
+
+        for( int nV=0; nV<m_nVitaminNum; ++nV )
+        {
+            if( arVitaminNum[nV] < m_arVitaminNeed[ nV ] )
+            {
+                return false;
+            }
+        }
+
+        // save the solution feed type.
+        this->m_tFeedSolution = tCurFeed;
+
+        return true;
+    }
+    else
+    {
+        // search.
+        int nLastFeedtype = -1;
+        if ( !tCurFeed.empty() )
+        {
+            nLastFeedtype = tCurFeed[ tCurFeed.size() - 1 ];
+        }
+        for ( int i = nLastFeedtype+1; i<m_nFeedtypeNum; ++i )
+        {
+            TFeedTypeList tNewFeedList = tCurFeed;
+            tNewFeedList.push_back( i );
+            bool bResult = this->FeedCow( tNewFeedList, nFeedTypeNum );
+            if ( bResult )
+            {
+                return bResult;
+            }
+        }
+
+    }
     return false;
 }
 
@@ -182,6 +258,9 @@ int main()
 
     CCowFarm farm;
     farm.InputData( fin );
+
+    farm.Think();
+
     farm.OutputData( fout );
     farm.OutputData( cout );
     
