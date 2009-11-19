@@ -53,7 +53,12 @@ V 2
 
 /** 
 思路：
-罗马数字好复杂！！
+罗马数字看起来好复杂！！
+但我已经发现规律了，哈哈，我果然是个天才！
+。。。最近在温习“灌篮高手”呢，有点走火入魔。
+罗马数字是基于加减法而不是进位乘法的，书写时可以从高往低一层层尝试去减，每层分别对应着罗马数字符号：
+1000    900 500 400 100 90  50  40  10  9   5   4   1
+M       CM  D   CD  C   XC  L   XL  X   IX  V   IV  I
 */
 
 
@@ -106,7 +111,166 @@ int main()
         return 0;
     }
 
+    int nPagesNum;
+    fin >> nPagesNum;
+
+ /*     I   1     L   50    M  1000
+        V   5     C  100
+        X  10     D  500*/
+    enum ERomanLetter
+    {
+        RL_I = 0,
+        RL_V,
+        RL_X,
+        RL_L,
+        RL_C,
+        RL_D,
+        RL_M,
+        RL_Count,
+    };
+
+    char arRomanLetter[] = { 'I', 'V', 'X', 'L', 'C', 'D', 'M' };
+
+    //    1000    900 500 400 100 90  50  40  10  9   5   4   1
+    //    M       CM  D   CD  C   XC  L   XL  X   IX  V   IV  I
+
+    int arRomanLetterNum[ RL_Count ] = {0};
+    for ( int i=1; i<=nPagesNum; ++i )
+    {
+        int nNum = i;
+        int nNumBk = nNum;
+        char szNum[ 100 ] = {0};
+        while( nNum > 0 )
+        {
+            if( nNum >= 1000 )
+            {
+                strcat( szNum, "M" );
+                arRomanLetterNum[ RL_M ] ++;
+
+                nNum -= 1000;
+            }
+            else if( nNum >= 900 )
+            {
+                strcat( szNum, "CM" );
+
+                arRomanLetterNum[ RL_C ] ++;
+                arRomanLetterNum[ RL_M ] ++;
+
+                nNum -= 900;
+            }
+            else if( nNum >= 500 )
+            {
+                strcat( szNum, "D" );
+
+                arRomanLetterNum[ RL_D ] ++;
+
+                nNum -= 500;
+            }
+            else if( nNum >= 400 )
+            {
+                strcat( szNum, "CD" );
+
+                arRomanLetterNum[ RL_C ] ++;
+                arRomanLetterNum[ RL_D ] ++;
+
+                nNum -= 400;
+            }
+            else if( nNum >= 100 )
+            {
+                strcat( szNum, "C" );
+
+                arRomanLetterNum[ RL_C ] ++;
+
+                nNum -= 100;
+            }
+            else if( nNum >= 90 )
+            {
+                strcat( szNum, "XC" );
+
+                arRomanLetterNum[ RL_X ] ++;
+                arRomanLetterNum[ RL_C ] ++;
+
+                nNum -= 90;
+            }
+            else if( nNum >= 50 )
+            {
+                strcat( szNum, "L" );
+
+                arRomanLetterNum[ RL_L ] ++;
+
+                nNum -= 50;
+            }
+            else if( nNum >= 40 )
+            {
+                strcat( szNum, "XL" );
+
+                arRomanLetterNum[ RL_X ] ++;
+                arRomanLetterNum[ RL_L ] ++;
+
+                nNum -= 40;
+            }
+            else if( nNum >= 10 )
+            {
+                strcat( szNum, "X" );
+
+                arRomanLetterNum[ RL_X ] ++;
+
+                nNum -= 10;
+            }
+            else if( nNum >= 9 )
+            {
+                strcat( szNum, "IX" );
+
+                arRomanLetterNum[ RL_I ] ++;
+                arRomanLetterNum[ RL_X ] ++;
+
+                nNum -= 9;
+            }
+            else if( nNum >= 5 )
+            {
+                strcat( szNum, "V" );
+
+                arRomanLetterNum[ RL_V ] ++;
+
+                nNum -= 5;
+            }
+            else if( nNum >= 4 )
+            {
+                strcat( szNum, "IV" );
+
+                arRomanLetterNum[ RL_I ] ++;
+                arRomanLetterNum[ RL_V ] ++;
+
+                nNum -= 4;
+            }
+            else if( nNum >= 1 )
+            {
+                strcat( szNum, "I" );
+
+                arRomanLetterNum[ RL_I ] ++;
+
+                nNum -= 1;
+            }
+
+        }  
+
+        cout << "num: " << nNumBk << " : " << szNum << endl;
+    }
     
+    int nStopPos = 0;
+    for ( int i=0; i<RL_Count; ++i )
+    {
+        nStopPos = RL_Count - i - 1;
+        if ( arRomanLetterNum[ nStopPos ] != 0 )
+        {            
+            break;
+        }
+    }
+
+    for ( int i=0; i<=nStopPos; ++i )
+    {
+        fout << arRomanLetter[i] << " " << arRomanLetterNum[i] << endl;
+    }
 
     fin.close();
     fout.close();
