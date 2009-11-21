@@ -1,0 +1,47 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ThinkVPNServerLib", "ThinkVPNServerLib\ThinkVPNServerLib.vcproj", "{97D80EA6-C17C-44FD-A5E3-3DE2B062AACC}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ThinkVPNClientLib", "ThinkVPNClientLib\ThinkVPNClientLib.vcproj", "{1F7C9870-E328-4948-907C-BB3D11B24223}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ThinkVPNServer", "ThinkVPNServer\ThinkVPNServer.vcproj", "{62B69720-6FA6-4261-86B3-6E9EAC311C9D}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ThinkVPNClient", "ThinkVPNClient\ThinkVPNClient.vcproj", "{D2701D4E-033D-49E5-B6C4-BEA7DC26D9BB}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{19932B7C-E606-4F09-B544-2E95D926097C}"
+	ProjectSection(SolutionItems) = preProject
+		ThinkVPNUML.vsd = ThinkVPNUML.vsd
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SubversionScc) = preSolution
+		Svn-Managed = True
+		Manager = AnkhSVN - Subversion Support for Visual Studio
+	EndGlobalSection
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{97D80EA6-C17C-44FD-A5E3-3DE2B062AACC}.Debug|Win32.ActiveCfg = Debug|Win32
+		{97D80EA6-C17C-44FD-A5E3-3DE2B062AACC}.Debug|Win32.Build.0 = Debug|Win32
+		{97D80EA6-C17C-44FD-A5E3-3DE2B062AACC}.Release|Win32.ActiveCfg = Release|Win32
+		{97D80EA6-C17C-44FD-A5E3-3DE2B062AACC}.Release|Win32.Build.0 = Release|Win32
+		{1F7C9870-E328-4948-907C-BB3D11B24223}.Debug|Win32.ActiveCfg = Debug|Win32
+		{1F7C9870-E328-4948-907C-BB3D11B24223}.Debug|Win32.Build.0 = Debug|Win32
+		{1F7C9870-E328-4948-907C-BB3D11B24223}.Release|Win32.ActiveCfg = Release|Win32
+		{1F7C9870-E328-4948-907C-BB3D11B24223}.Release|Win32.Build.0 = Release|Win32
+		{62B69720-6FA6-4261-86B3-6E9EAC311C9D}.Debug|Win32.ActiveCfg = Debug|Win32
+		{62B69720-6FA6-4261-86B3-6E9EAC311C9D}.Debug|Win32.Build.0 = Debug|Win32
+		{62B69720-6FA6-4261-86B3-6E9EAC311C9D}.Release|Win32.ActiveCfg = Release|Win32
+		{62B69720-6FA6-4261-86B3-6E9EAC311C9D}.Release|Win32.Build.0 = Release|Win32
+		{D2701D4E-033D-49E5-B6C4-BEA7DC26D9BB}.Debug|Win32.ActiveCfg = Debug|Win32
+		{D2701D4E-033D-49E5-B6C4-BEA7DC26D9BB}.Debug|Win32.Build.0 = Debug|Win32
+		{D2701D4E-033D-49E5-B6C4-BEA7DC26D9BB}.Release|Win32.ActiveCfg = Release|Win32
+		{D2701D4E-033D-49E5-B6C4-BEA7DC26D9BB}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
