@@ -45,11 +45,12 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
+				AdditionalIncludeDirectories="../include;../../ThinkVPNCommonLib/include"
 				PreprocessorDefinitions="WIN32;_WINDOWS;_DEBUG"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
-				UsePrecompiledHeader="2"
+				UsePrecompiledHeader="0"
 				WarningLevel="3"
 				DebugInformationFormat="4"
 			/>
@@ -60,7 +61,7 @@
 				Name="VCResourceCompilerTool"
 				PreprocessorDefinitions="_DEBUG"
 				Culture="2052"
-				AdditionalIncludeDirectories="$(IntDir)"
+				AdditionalIncludeDirectories="&quot;$(IntDir)&quot;;../include"
 			/>
 			<Tool
 				Name="VCPreLinkEventTool"
@@ -186,31 +187,15 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath=".\stdafx.cpp"
-				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="1"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="1"
-					/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath=".\ThinkVPNClient.cpp"
+				RelativePath="..\source\stdafx.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\ThinkVPNClientDlg.cpp"
+				RelativePath="..\source\ThinkVPNClient.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\source\ThinkVPNClientDlg.cpp"
 				>
 			</File>
 		</Filter>
@@ -220,23 +205,23 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
-				RelativePath=".\Resource.h"
+				RelativePath="..\include\resource.h"
 				>
 			</File>
 			<File
-				RelativePath=".\stdafx.h"
+				RelativePath="..\include\stdafx.h"
 				>
 			</File>
 			<File
-				RelativePath=".\targetver.h"
+				RelativePath="..\include\targetver.h"
 				>
 			</File>
 			<File
-				RelativePath=".\ThinkVPNClient.h"
+				RelativePath="..\include\ThinkVPNClient.h"
 				>
 			</File>
 			<File
-				RelativePath=".\ThinkVPNClientDlg.h"
+				RelativePath="..\include\ThinkVPNClientDlg.h"
 				>
 			</File>
 		</Filter>
@@ -264,5 +249,9 @@
 		</File>
 	</Files>
 	<Globals>
+		<Global
+			Name="RESOURCE_FILE"
+			Value="ThinkVPNClient.rc"
+		/>
 	</Globals>
 </VisualStudioProject>

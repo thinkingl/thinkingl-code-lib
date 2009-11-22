@@ -28,4 +28,7 @@ protected:
 	afx_msg void OnPaint();
 	afx_msg HCURSOR OnQueryDragIcon();
 	DECLARE_MESSAGE_MAP()
+public:
+    DWORD m_dwPID;
+    afx_msg void OnBnClickedBtnInject();
 };
