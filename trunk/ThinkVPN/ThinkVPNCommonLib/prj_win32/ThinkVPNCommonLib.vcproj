@@ -179,6 +179,10 @@
 				RelativePath="..\include\portabledefine.h"
 				>
 			</File>
+			<File
+				RelativePath="..\include\ThinkVPNCommonLib.h"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="资源文件"

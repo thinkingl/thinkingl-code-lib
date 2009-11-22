@@ -244,7 +244,7 @@
 			</File>
 		</Filter>
 		<File
-			RelativePath=".\ReadMe.txt"
+			RelativePath="..\ReadMe.txt"
 			>
 		</File>
 	</Files>

@@ -5,6 +5,8 @@
 #include "ThinkVPNClient.h"
 #include "ThinkVPNClientDlg.h"
 
+#include "ThinkVPNCommonLib.h"
+
 #include <iostream>
 
 using namespace std;
@@ -174,11 +176,13 @@ void CThinkVPNClientDlg::OnBnClickedBtnInject()
     else
     {
         // ≤Â»Îdll
-        LPCTSTR pszLibFile = _T( "E:\\svn\\thinkingl-code-lib\\trunk\\ThinkVPN\\Debug\\ThinkVPNSpyDll.dll" );
+        LPCTSTR pszLibFile = _T( "ThinkVPNSpyDll.dll" );
+
+        tstring strDllFilePath = GetAppDir() + pszLibFile;
 
         // Calculate the number of bytes needed for the DLL's pathname
-        int cch = 1 + lstrlenW(pszLibFile);
-        int cb  = cch * sizeof(WCHAR);
+        int cch = 1 + strDllFilePath.size();
+        int cb  = cch * sizeof(TCHAR);
 
         // Allocate space in the remote process for the pathname
         PWSTR  pszLibFileRemote = (PWSTR) 
