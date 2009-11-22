@@ -12,11 +12,14 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		ThinkVPNUML.vsd = ThinkVPNUML.vsd
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ThinkVPNSpyDll", "ThinkVPNSpyDll\ThinkVPNSpyDll.vcproj", "{F96F0542-004E-4A4D-9AD5-5C37BCD5B1A7}"
-EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ThinkVPNCommonLib", "ThinkVPNCommonLib\prj_win32\ThinkVPNCommonLib.vcproj", "{51F32BBB-53F8-4166-B638-C9F62B5748A0}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ThinkVPNClient", "ThinkVPNClient\prj_win32\ThinkVPNClient.vcproj", "{D2701D4E-033D-49E5-B6C4-BEA7DC26D9BB}"
+	ProjectSection(ProjectDependencies) = postProject
+		{51F32BBB-53F8-4166-B638-C9F62B5748A0} = {51F32BBB-53F8-4166-B638-C9F62B5748A0}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ThinkVPNSpyDll", "ThinkVPNSpyDll\prj_win32\ThinkVPNSpyDll.vcproj", "{F96F0542-004E-4A4D-9AD5-5C37BCD5B1A7}"
 	ProjectSection(ProjectDependencies) = postProject
 		{51F32BBB-53F8-4166-B638-C9F62B5748A0} = {51F32BBB-53F8-4166-B638-C9F62B5748A0}
 	EndProjectSection
@@ -43,10 +46,6 @@ Global
 		{62B69720-6FA6-4261-86B3-6E9EAC311C9D}.Debug|Win32.Build.0 = Debug|Win32
 		{62B69720-6FA6-4261-86B3-6E9EAC311C9D}.Release|Win32.ActiveCfg = Release|Win32
 		{62B69720-6FA6-4261-86B3-6E9EAC311C9D}.Release|Win32.Build.0 = Release|Win32
-		{F96F0542-004E-4A4D-9AD5-5C37BCD5B1A7}.Debug|Win32.ActiveCfg = Debug|Win32
-		{F96F0542-004E-4A4D-9AD5-5C37BCD5B1A7}.Debug|Win32.Build.0 = Debug|Win32
-		{F96F0542-004E-4A4D-9AD5-5C37BCD5B1A7}.Release|Win32.ActiveCfg = Release|Win32
-		{F96F0542-004E-4A4D-9AD5-5C37BCD5B1A7}.Release|Win32.Build.0 = Release|Win32
 		{51F32BBB-53F8-4166-B638-C9F62B5748A0}.Debug|Win32.ActiveCfg = Debug|Win32
 		{51F32BBB-53F8-4166-B638-C9F62B5748A0}.Debug|Win32.Build.0 = Debug|Win32
 		{51F32BBB-53F8-4166-B638-C9F62B5748A0}.Release|Win32.ActiveCfg = Release|Win32
@@ -55,6 +54,10 @@ Global
 		{D2701D4E-033D-49E5-B6C4-BEA7DC26D9BB}.Debug|Win32.Build.0 = Debug|Win32
 		{D2701D4E-033D-49E5-B6C4-BEA7DC26D9BB}.Release|Win32.ActiveCfg = Release|Win32
 		{D2701D4E-033D-49E5-B6C4-BEA7DC26D9BB}.Release|Win32.Build.0 = Release|Win32
+		{F96F0542-004E-4A4D-9AD5-5C37BCD5B1A7}.Debug|Win32.ActiveCfg = Debug|Win32
+		{F96F0542-004E-4A4D-9AD5-5C37BCD5B1A7}.Debug|Win32.Build.0 = Debug|Win32
+		{F96F0542-004E-4A4D-9AD5-5C37BCD5B1A7}.Release|Win32.ActiveCfg = Release|Win32
+		{F96F0542-004E-4A4D-9AD5-5C37BCD5B1A7}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

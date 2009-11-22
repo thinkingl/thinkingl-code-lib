@@ -46,7 +46,7 @@ MU_DECLSPEC BOOL MBtoWC(const char* srcStr, wchar_t * dstStr, int len );
 MU_DECLSPEC BOOL WCtoMB(const wchar_t* srcStr, char *dstStr, int len );
 
 /** 时间->字符串 */
-//MU_DECLSPEC tstring TimeToStr( __time64_t nTime );
+MU_DECLSPEC tstring TimeToStr( __time64_t nTime );
 //MU_DECLSPEC __time64_t StrToTime( LPCTSTR strTime );
 
 /** 判断手机是否有存储卡。 */

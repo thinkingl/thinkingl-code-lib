@@ -384,28 +384,21 @@ __time64_t GetCurTime()
 #endif	
 }
 
-//tstring TimeToStr( __time64_t nTime )
-//{
-//	tstring strTimeResult;
-//#ifdef _WIN32
-//	CTime time( nTime );
-//	CString strTime;
-//	strTime.Format( _T( "%04d%02d%02d%02d%02d%02d" ), time.GetYear(), time.GetMonth(), 
-//		time.GetDay(), time.GetHour(), time.GetMinute(), time.GetSecond() );
-//	strTimeResult = (LPCTSTR)strTime;
-//#else
-//	tm localTime;
-//	if( GetLocalTime( nTime, &localTime ) )
-//	{
-//		tstringstream ssTime;
-//		ssTime << setfill( '0' ) << setw(4) << ( localTime.tm_year + 1900 );
-//		ssTime << setw(2) << localTime.tm_mon + 1 << localTime.tm_mday;
-//		ssTime << setw(2) << localTime.tm_hour << localTime.tm_min << localTime.tm_sec;
-//		strTimeResult = ssTime.str();
-//	}
-//#endif
-//	return strTimeResult;
-//}
+tstring TimeToStr( __time64_t nTime )
+{
+    tstring strTimeResult;
+
+    tm localTime;
+    if( GetLocalTime( nTime, &localTime ) )
+    {
+        tstringstream ssTime;
+        ssTime << setfill( _T( '0' ) ) << setw(4) << ( localTime.tm_year + 1900 );
+        ssTime << setw(2) << localTime.tm_mon + 1 << setw(2) << localTime.tm_mday;
+        ssTime << setw(2) << localTime.tm_hour << setw(2) << localTime.tm_min << setw(2) << localTime.tm_sec;
+        strTimeResult = ssTime.str();
+    }
+    return strTimeResult;
+}
 
 BOOL GetLocalTime( const time_t time, tm * plocalTime )
 {
@@ -433,7 +426,7 @@ TFileList EnumAllFile( LPCTSTR strFolder )
 	{
 		dirent tDirEnt;
 		dirent *pFileResult;
-//		vpn::tlog << _T( "Open dir and enum all file: " ) << strFolder  << endl;
+//		vpn::log << _T( "Open dir and enum all file: " ) << strFolder  << endl;
 		while( TRUE )
 		{			
 			int nResult = readdir_r( pDir, &tDirEnt, &pFileResult );
@@ -448,14 +441,14 @@ TFileList EnumAllFile( LPCTSTR strFolder )
 			}
 			strFilePath += pFileResult->d_name;
 			tFiles.push_back( strFilePath );
-//			vpn::tlog << _T( "find file: " ) << pFileResult->d_name << _T( " i-num: " ) << pFileResult->d_ino << endl;
+//			vpn::log << _T( "find file: " ) << pFileResult->d_name << _T( " i-num: " ) << pFileResult->d_ino << endl;
 		}
 
 		closedir( pDir );
 	}
 	else
 	{
-		vpn::tlog << _T( "EnumAllFile open dir fail! dir: " ) << strFolder << endl;
+		vpn::log << _T( "EnumAllFile open dir fail! dir: " ) << strFolder << endl;
 	}
 
 #endif

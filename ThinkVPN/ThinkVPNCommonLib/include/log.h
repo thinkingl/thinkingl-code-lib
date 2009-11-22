@@ -12,6 +12,7 @@ public:
 	CLog(void);
 	virtual ~CLog(void);
 
+    void SetLogFileDir( LPCTSTR strLogDir, LPCTSTR strPrefix );
 public:
 
 	/** 输出日志。 */
@@ -61,8 +62,17 @@ private:
 	/** 多线程同步锁。 */
 //	SDL_LockMutex
 
+    /** 是否写文件。 */
+    BOOL m_bWriteFile;
+
+    /** 文件对象。 */
+    wofstream m_fLog;
+
+    /** 日志文件夹。 */
+    tstring m_strLogDir;
+
 };
 
 /** 用于日志输出的全局对象。 */
-extern  MU_DECLSPEC vpn::CLog tlog;
+extern  MU_DECLSPEC vpn::CLog log;
 }

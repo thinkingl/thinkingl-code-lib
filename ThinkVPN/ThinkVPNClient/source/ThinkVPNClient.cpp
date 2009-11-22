@@ -4,6 +4,7 @@
 #include "stdafx.h"
 #include "ThinkVPNClient.h"
 #include "ThinkVPNClientDlg.h"
+#include "ThinkVPNCommonLib.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -62,7 +63,16 @@ BOOL CThinkVPNClientApp::InitInstance()
 	// 更改用于存储设置的注册表项
 	// TODO: 应适当修改该字符串，
 	// 例如修改为公司或组织名
-	SetRegistryKey(_T("应用程序向导生成的本地应用程序"));
+	SetRegistryKey(_T("ThinkVPNClient"));
+
+    // E:\svn\thinkingl-code-lib\trunk\ThinkVPN\Debug
+    //wofstream of;
+    //of.open( _T( "E:\\svn\\thinkingl-code-lib\\trunk\\ThinkVPN\\Debug\\aaaaaa.log" )  );
+    //of << "1111111111111111111111111" << endl;
+    //of.flush();
+
+    //of << _T( "2222222222222222222222" ) << endl;
+    //of.close();
 
 	CThinkVPNClientDlg dlg;
 	m_pMainWnd = &dlg;

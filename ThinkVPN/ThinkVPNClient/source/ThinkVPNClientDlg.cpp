@@ -167,9 +167,13 @@ void CThinkVPNClientDlg::OnBnClickedBtnInject()
     DWORD dwDesireAccess = PROCESS_CREATE_THREAD | PROCESS_VM_OPERATION | PROCESS_VM_WRITE;
     HANDLE hProcess = ::OpenProcess( dwDesireAccess, FALSE, m_dwPID );
 
+    tstring strAppDir = GetAppDir();
+    
+    vpn::log.SetLogFileDir( strAppDir.c_str(), _T( "ThinkVPNClient" ) );
+
     if ( NULL == hProcess )
     {
-        cout << "open process fail! errorcode: " << GetLastError << endl;
+        vpn::log << "open process fail! errorcode: " << GetLastError() << endl;
         MessageBox( _T( "Open Process Fail!" ) );
         return;
     }
@@ -180,9 +184,11 @@ void CThinkVPNClientDlg::OnBnClickedBtnInject()
 
         tstring strDllFilePath = GetAppDir() + pszLibFile;
 
+        pszLibFile = strDllFilePath.c_str();
+
         // Calculate the number of bytes needed for the DLL's pathname
-        int cch = 1 + strDllFilePath.size();
-        int cb  = cch * sizeof(TCHAR);
+        int cch = 1 + lstrlenW(pszLibFile);
+        int cb  = cch * sizeof(WCHAR);
 
         // Allocate space in the remote process for the pathname
         PWSTR  pszLibFileRemote = (PWSTR) 
