@@ -5,6 +5,10 @@
 #include "ThinkVPNClient.h"
 #include "ThinkVPNClientDlg.h"
 
+#include <iostream>
+
+using namespace std;
+
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
@@ -48,13 +52,15 @@ END_MESSAGE_MAP()
 
 CThinkVPNClientDlg::CThinkVPNClientDlg(CWnd* pParent /*=NULL*/)
 	: CDialog(CThinkVPNClientDlg::IDD, pParent)
+    , m_dwPID(0)
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 }
 
 void CThinkVPNClientDlg::DoDataExchange(CDataExchange* pDX)
 {
-	CDialog::DoDataExchange(pDX);
+    CDialog::DoDataExchange(pDX);
+    DDX_Text(pDX, IDC_EDIT_PID, m_dwPID);
 }
 
 BEGIN_MESSAGE_MAP(CThinkVPNClientDlg, CDialog)
@@ -62,6 +68,7 @@ BEGIN_MESSAGE_MAP(CThinkVPNClientDlg, CDialog)
 	ON_WM_PAINT()
 	ON_WM_QUERYDRAGICON()
 	//}}AFX_MSG_MAP
+    ON_BN_CLICKED(ID_BTN_INJECT, &CThinkVPNClientDlg::OnBnClickedBtnInject)
 END_MESSAGE_MAP()
 
 
@@ -95,6 +102,7 @@ BOOL CThinkVPNClientDlg::OnInitDialog()
 	SetIcon(m_hIcon, FALSE);		// 设置小图标
 
 	// TODO: 在此添加额外的初始化代码
+   // this->m_dwPID = 
 
 	return TRUE;  // 除非将焦点设置到控件，否则返回 TRUE
 }
@@ -148,3 +156,80 @@ HCURSOR CThinkVPNClientDlg::OnQueryDragIcon()
 	return static_cast<HCURSOR>(m_hIcon);
 }
 
+
+void CThinkVPNClientDlg::OnBnClickedBtnInject()
+{
+    // TODO: 在此添加控件通知处理程序代码
+    UpdateData( TRUE );
+
+    DWORD dwDesireAccess = PROCESS_CREATE_THREAD | PROCESS_VM_OPERATION | PROCESS_VM_WRITE;
+    HANDLE hProcess = ::OpenProcess( dwDesireAccess, FALSE, m_dwPID );
+
+    if ( NULL == hProcess )
+    {
+        cout << "open process fail! errorcode: " << GetLastError << endl;
+        MessageBox( _T( "Open Process Fail!" ) );
+        return;
+    }
+    else
+    {
+        // 插入dll
+        LPCTSTR pszLibFile = _T( "E:\\svn\\thinkingl-code-lib\\trunk\\ThinkVPN\\Debug\\ThinkVPNSpyDll.dll" );
+
+        // Calculate the number of bytes needed for the DLL's pathname
+        int cch = 1 + lstrlenW(pszLibFile);
+        int cb  = cch * sizeof(WCHAR);
+
+        // Allocate space in the remote process for the pathname
+        PWSTR  pszLibFileRemote = (PWSTR) 
+            VirtualAllocEx(hProcess, NULL, cb, MEM_COMMIT, PAGE_READWRITE);
+        if (pszLibFileRemote == NULL)
+        {
+            return;
+        }
+
+        // Copy the DLL's pathname to the remote process's address space
+        if (!WriteProcessMemory(hProcess, pszLibFileRemote, 
+            (PVOID) pszLibFile, cb, NULL)) 
+        {
+            return;
+        }
+
+        // Get the real address of LoadLibraryW in Kernel32.dll
+        PTHREAD_START_ROUTINE pfnThreadRtn = (PTHREAD_START_ROUTINE)
+            GetProcAddress(GetModuleHandle(TEXT("Kernel32")), "LoadLibraryW");
+        if (pfnThreadRtn == NULL) 
+        {
+            return;
+        }
+
+        // Create a remote thread that calls LoadLibraryW(DLLPathname)
+        HANDLE hThread = CreateRemoteThread(hProcess, NULL, 0, 
+            pfnThreadRtn, pszLibFileRemote, 0, NULL);
+        if (hThread == NULL) 
+        {
+            return;
+        }
+
+        // Wait for the remote thread to terminate
+        WaitForSingleObject(hThread, INFINITE);
+
+//        fOk = TRUE; // Everything executed successfully
+
+
+        // Now, we can clean everthing up
+
+        // Free the remote memory that contained the DLL's pathname
+        if (pszLibFileRemote != NULL) 
+            VirtualFreeEx(hProcess, pszLibFileRemote, 0, MEM_RELEASE);
+
+        if (hThread  != NULL) 
+            CloseHandle(hThread);
+
+        if (hProcess != NULL) 
+            CloseHandle(hProcess);
+    
+        
+
+    }
+}
