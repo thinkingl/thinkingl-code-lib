@@ -1,17 +1,44 @@
 
 #include "log.h"
+#include "common.h"
 
 using namespace vpn;
 
-MU_DECLSPEC  CLog  vpn::tlog;
-//__declspec(dllexport) CLog   tlog;
+MU_DECLSPEC  CLog  vpn::log;
+//__declspec(dllexport) CLog   log;
 
 CLog::CLog(void)
 {
+
 }
 
 CLog::~CLog(void)
 {
+}
+
+void CLog::SetLogFileDir( LPCTSTR strLogDir, LPCTSTR strPrefix )
+{
+    if ( m_strLogDir != strLogDir )
+    {
+        m_strLogDir = strLogDir;
+
+        tstring strLogFilePath = strLogDir;
+
+        NormalizeDir( strLogFilePath );
+
+        strLogFilePath += strPrefix;
+        strLogFilePath += _T( "-" );
+
+        strLogFilePath += TimeToStr( GetCurTime() );
+        strLogFilePath += _T( ".log" );
+
+        this->m_fLog.open( strLogFilePath.c_str() );
+
+    }
+    else
+    {
+        // already¡£
+    }
 }
 
 CLog& CLog::operator <<( const wchar_t * strMsg)
@@ -26,6 +53,12 @@ CLog& CLog::operator <<( const wchar_t * strMsg)
 	cout << ( "CLog << fail! cygwin don't support unicode!" ) << endl;
 #endif
 #endif
+
+    if ( this->m_fLog )
+    {
+        m_fLog << strMsg ;
+        m_fLog.flush();
+    }
 	
 	return *this;
 }
@@ -33,6 +66,13 @@ CLog& CLog::operator <<( const wchar_t * strMsg)
 CLog& CLog::operator <<( const char * strMsg )
 {
 	cout << strMsg;
+
+    if ( this->m_fLog )
+    {
+        m_fLog << strMsg ;
+        m_fLog.flush();
+    }
+
 	return *this;
 }
 
@@ -48,8 +88,10 @@ CLog& CLog::operator <<( const wstring& strMsg )
 
 CLog& CLog::operator <<( long nNum )
 {
-	tcout << nNum;
-	return *this;
+    tstringstream ssTmp;
+    ssTmp << nNum;
+	
+	return ( *this << ssTmp.str() );
 }
 /**
 CLog& CLog::operator << ( FunWEndl _Pfn )
@@ -66,8 +108,10 @@ CLog& CLog::operator << ( FunAEndl _Pfn )
 */
 CLog& CLog::operator << ( FunTEndl _Pfn )
 {
-	tcout << _Pfn;
-	return *this;
+    tstringstream ssTmp;
+    ssTmp << _Pfn;
+    
+	return ( *this << ssTmp.str() );
 }
 
 
@@ -75,56 +119,74 @@ CLog& CLog::operator << ( FunTEndl _Pfn )
 
 CLog& CLog::operator <<( int _Val)
 {
-	tcout << _Val;
-	return *this;
+    tstringstream ssTmp;
+    ssTmp << _Val;
+
+    return ( *this << ssTmp.str() );
 }
 
 CLog& CLog::operator <<(const void *_Val)
 {
-	tcout << _Val;
-	return *this;
+    tstringstream ssTmp;
+    ssTmp << _Val;
+
+    return ( *this << ssTmp.str() );
 }
 
 CLog& CLog::operator <<( unsigned int _Val)
 {
-	tcout << _Val;
-	return *this;
+    tstringstream ssTmp;
+    ssTmp << _Val;
+
+    return ( *this << ssTmp.str() );
 }
 
 CLog& CLog::operator <<( unsigned long _Val)
 {
-	tcout << _Val;
-	return *this;
+    tstringstream ssTmp;
+    ssTmp << _Val;
+
+    return ( *this << ssTmp.str() );
 }
 
 CLog& CLog::operator<<( mu_int64 _val )
 {
-	tcout << _val;
-	return *this;
+    tstringstream ssTmp;
+    ssTmp << _val;
+
+    return ( *this << ssTmp.str() );
 }
 
 CLog& CLog::operator<<( mu_uint64 _val )
 {
-	tcout << _val;
-	return *this;
+    tstringstream ssTmp;
+    ssTmp << _val;
+
+    return ( *this << ssTmp.str() );
 }
 
 CLog& CLog::operator <<(double _Val)
 {
-	tcout << _Val;
-	return *this;
+    tstringstream ssTmp;
+    ssTmp << _Val;
+
+    return ( *this << ssTmp.str() );
 }
 
 CLog& CLog::operator <<(short _var )
 {
-	tcout << _var;
-	return *this;
+    tstringstream ssTmp;
+    ssTmp << _var;
+
+    return ( *this << ssTmp.str() );
 }
 
 CLog& CLog::operator <<( const float _var )
 {
-	tcout << _var;
-	return *this;
+    tstringstream ssTmp;
+    ssTmp << _var;
+
+    return ( *this << ssTmp.str() );
 }
 
 

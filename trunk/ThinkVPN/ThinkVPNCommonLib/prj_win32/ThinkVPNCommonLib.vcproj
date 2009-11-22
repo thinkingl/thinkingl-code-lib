@@ -157,6 +157,10 @@
 				RelativePath="..\source\log.cpp"
 				>
 			</File>
+			<File
+				RelativePath="..\source\ThinkVPNDefine.cpp"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Í·ÎÄ¼þ"
@@ -181,6 +185,10 @@
 			</File>
 			<File
 				RelativePath="..\include\ThinkVPNCommonLib.h"
+				>
+			</File>
+			<File
+				RelativePath="..\include\ThinkVPNDefine.h"
 				>
 			</File>
 		</Filter>
