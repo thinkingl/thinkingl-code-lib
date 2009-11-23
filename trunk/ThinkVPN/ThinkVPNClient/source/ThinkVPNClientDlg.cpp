@@ -164,6 +164,35 @@ void CThinkVPNClientDlg::OnBnClickedBtnInject()
     // TODO: 在此添加控件通知处理程序代码
     UpdateData( TRUE );
 
+	if ( m_dwPID == NULL )
+	{
+		PROCESS_INFORMATION tPinfo;
+		memset( &tPinfo, 0, sizeof( tPinfo ) );
+		STARTUPINFO si;
+		PROCESS_INFORMATION pi;
+
+		ZeroMemory( &si, sizeof(si) );
+		si.cb = sizeof(si);
+
+
+		LPCTSTR strCmdLine = _T( "D:\\view\\view.exe" );
+		TCHAR szCmdLine[MAX_PATH] = {0};
+		_tcscpy( szCmdLine, strCmdLine );
+		BOOL bResult = CreateProcess( NULL, szCmdLine, NULL, NULL, NULL, NULL, NULL, NULL, 
+			&si,
+			&tPinfo );
+
+		if ( !bResult )
+		{
+			DWORD dwEr = GetLastError();
+			MessageBox( _T( "CreateProcess Fail!" ) );
+			return;
+		}
+
+		m_dwPID = tPinfo.dwProcessId;
+	}
+	
+
     DWORD dwDesireAccess = PROCESS_CREATE_THREAD | PROCESS_VM_OPERATION | PROCESS_VM_WRITE;
     HANDLE hProcess = ::OpenProcess( dwDesireAccess, FALSE, m_dwPID );
 
@@ -202,6 +231,7 @@ void CThinkVPNClientDlg::OnBnClickedBtnInject()
         if (!WriteProcessMemory(hProcess, pszLibFileRemote, 
             (PVOID) pszLibFile, cb, NULL)) 
         {
+			MessageBox( _T( "WriteProcessMemory Fail!" ) );
             return;
         }
 
@@ -210,6 +240,7 @@ void CThinkVPNClientDlg::OnBnClickedBtnInject()
             GetProcAddress(GetModuleHandle(TEXT("Kernel32")), "LoadLibraryW");
         if (pfnThreadRtn == NULL) 
         {
+			MessageBox( _T( "Get LoadLibraryW addr Fail!" ) );
             return;
         }
 
@@ -218,6 +249,8 @@ void CThinkVPNClientDlg::OnBnClickedBtnInject()
             pfnThreadRtn, pszLibFileRemote, 0, NULL);
         if (hThread == NULL) 
         {
+			DWORD dwEr = GetLastError();
+			MessageBox( _T( "CreateRemoteThread Fail!" ) );
             return;
         }
 

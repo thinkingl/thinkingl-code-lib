@@ -1,5 +1,8 @@
 #include <iostream>
 
+#include <Windows.h>
+#include "APIHook.h"
+
 #include "ThinkVPNCommonLib.h"
 
 using namespace std;
@@ -8,6 +11,20 @@ void test()
 {
     cout << "test dll!!!" << endl;
 };
+
+//WINUSERAPI
+//DECLEAR_EX
+BOOL
+WINAPI
+TestPostMessageA(
+			 __in_opt HWND hWnd,
+			 __in UINT Msg,
+			 __in WPARAM wParam,
+			 __in LPARAM lParam)
+{
+	vpn::log << _T( "PostMessageA call ! msg: " ) << Msg << endl;
+	return PostMessageA( hWnd, Msg, wParam, lParam );
+}
 
 BOOL WINAPI DllMain(HINSTANCE hinstDll, DWORD fdwReason, PVOID fImpLoad)
 {
@@ -20,7 +37,7 @@ BOOL WINAPI DllMain(HINSTANCE hinstDll, DWORD fdwReason, PVOID fImpLoad)
     vpn::log.SetLogFileDir( strLogDir.c_str(), _T( "ThinkVPNSpyDll" )  );
 
     tofstream tmp;
-    tmp.open( _T( "c:\\vpnspydllkkkkkaaaa" ) );
+    tmp.open( _T( "d:\\vpnspydllkkkkkaaaa" ) );
     tmp << "vpn log" << endl;
     tmp << _T( "vpn log" ) << endl;
     tmp << "log dir: " << strLogDir << endl;
