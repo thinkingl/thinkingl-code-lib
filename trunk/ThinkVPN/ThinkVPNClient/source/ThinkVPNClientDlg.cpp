@@ -71,6 +71,7 @@ BEGIN_MESSAGE_MAP(CThinkVPNClientDlg, CDialog)
 	ON_WM_QUERYDRAGICON()
 	//}}AFX_MSG_MAP
     ON_BN_CLICKED(ID_BTN_INJECT, &CThinkVPNClientDlg::OnBnClickedBtnInject)
+    ON_BN_CLICKED(ID_BTN_MESSAGEBOX, &CThinkVPNClientDlg::OnBnClickedBtnMessagebox)
 END_MESSAGE_MAP()
 
 
@@ -275,4 +276,10 @@ void CThinkVPNClientDlg::OnBnClickedBtnInject()
         
 
     }
+}
+
+void CThinkVPNClientDlg::OnBnClickedBtnMessagebox()
+{
+    // TODO: 在此添加控件通知处理程序代码
+    ::MessageBoxW( GetSafeHwnd(), L"Test MessageBoxW", L"Test ", MB_OK );
 }

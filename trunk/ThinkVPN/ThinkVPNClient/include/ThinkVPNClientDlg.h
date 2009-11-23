@@ -31,4 +31,5 @@ protected:
 public:
     DWORD m_dwPID;
     afx_msg void OnBnClickedBtnInject();
+    afx_msg void OnBnClickedBtnMessagebox();
 };
