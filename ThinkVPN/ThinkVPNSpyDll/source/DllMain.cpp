@@ -14,17 +14,21 @@ void test()
 
 //WINUSERAPI
 //DECLEAR_EX
-BOOL
+int
 WINAPI
-TestPostMessageA(
-			 __in_opt HWND hWnd,
-			 __in UINT Msg,
-			 __in WPARAM wParam,
-			 __in LPARAM lParam)
+MessageBoxWHook(
+            __in_opt HWND hWnd,
+            __in_opt LPCWSTR lpText,
+            __in_opt LPCWSTR lpCaption,
+            __in UINT uType)
 {
-	vpn::log << _T( "PostMessageA call ! msg: " ) << Msg << endl;
-	return PostMessageA( hWnd, Msg, wParam, lParam );
+	vpn::log << _T( "MessageBoxW call ! wnd: " ) << hWnd << endl;
+
+     ::MessageBoxW( hWnd, _T( "Spy dll messagebox!" ), _T( "¹þ¹þ£¡"), MB_OK );
+     return ::MessageBoxW( hWnd, lpText, lpCaption, uType );
 }
+
+CAPIHook *g_pAPIHook = NULL;
 
 BOOL WINAPI DllMain(HINSTANCE hinstDll, DWORD fdwReason, PVOID fImpLoad)
 {
@@ -47,6 +51,10 @@ BOOL WINAPI DllMain(HINSTANCE hinstDll, DWORD fdwReason, PVOID fImpLoad)
     case DLL_PROCESS_ATTACH:
         //The DLL is being mapped into the process's address space.
         vpn::log << _T( "VPN Spy DLL! The DLL is being mapped into the process's address space." ) << endl;
+        if ( NULL == g_pAPIHook )
+        {
+            g_pAPIHook = new CAPIHook( ( "USER32.dll" ), ( "MessageBoxW" ), (PROC)MessageBoxWHook );
+        }
         break;
 
     case DLL_THREAD_ATTACH:
@@ -62,6 +70,11 @@ BOOL WINAPI DllMain(HINSTANCE hinstDll, DWORD fdwReason, PVOID fImpLoad)
     case DLL_PROCESS_DETACH:
         //The DLL is being unmapped from the process's address space.
         vpn::log << _T( "VPN Spy DLL! The DLL is being unmapped from the process's address space. " ) << endl;
+        if ( g_pAPIHook )
+        {
+            delete g_pAPIHook;
+            g_pAPIHook = NULL;
+        }
         break;
     }
 
