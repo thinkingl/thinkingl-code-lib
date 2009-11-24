@@ -28,7 +28,7 @@ BOOL CAPIHook::ExcludeAPIHookMod = TRUE;
 ///////////////////////////////////////////////////////////////////////////////
 
 
-CAPIHook::CAPIHook(PSTR pszCalleeModName, PSTR pszFuncName, PROC pfnHook) {
+CAPIHook::CAPIHook(PCSTR pszCalleeModName, PCSTR pszFuncName, PROC pfnHook) {
 
    // Note: the function can be hooked only if the exporting module 
    //       is already loaded. A solution could be to store the function

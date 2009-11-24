@@ -13,7 +13,7 @@ Notices: Copyright (c) 2008 Jeffrey Richter & Christophe Nasarre
 class CAPIHook {
 public:
    // Hook a function in all modules
-   CAPIHook(PSTR pszCalleeModName, PSTR pszFuncName, PROC pfnHook);
+   CAPIHook(PCSTR pszCalleeModName, PCSTR pszFuncName, PROC pfnHook);
 
    // Unhook a function from all modules
    ~CAPIHook();
