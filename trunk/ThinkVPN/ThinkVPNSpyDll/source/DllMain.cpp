@@ -1,6 +1,7 @@
 #include <iostream>
 
 #include <Windows.h>
+#include <Winsock.h>
 #include "APIHook.h"
 
 #include "ThinkVPNCommonLib.h"
@@ -25,10 +26,58 @@ MessageBoxWHook(
 	vpn::log << _T( "MessageBoxW call ! wnd: " ) << hWnd << endl;
 
      ::MessageBoxW( hWnd, _T( "Spy dll messagebox!" ), _T( "¹þ¹þ£¡"), MB_OK );
+
+     
      return ::MessageBoxW( hWnd, lpText, lpCaption, uType );
 }
 
-CAPIHook *g_pAPIHook = NULL;
+int PASCAL FAR WSAStartup_Hook(
+                          IN WORD wVersionRequired,
+                          OUT LPWSADATA lpWSAData)
+{
+    vpn::log << _T( "WSAStartup call!" ) << endl;
+    return WSAStartup( wVersionRequired, lpWSAData );   
+}
+
+int PASCAL FAR bind_Hook (
+                     IN SOCKET s,
+                     IN const struct sockaddr FAR *addr,
+                     IN int namelen)
+{
+    vpn::log << _T( "bind call!" ) << endl;
+    return bind( s, addr, namelen );
+}
+
+struct THookInfo
+{
+    string m_strCalleeModuleName;
+    string m_strFunName;
+    PROC m_pHookFun;
+
+    THookInfo( LPCSTR strModule, LPCSTR strFun, void * funHook )
+    {
+        m_strCalleeModuleName = strModule;
+        m_strFunName = strFun;
+        m_pHookFun = (PROC)funHook;
+    }
+};
+
+THookInfo g_arHookInfo[] =
+{
+    THookInfo( "WSOCK32.dll", "WSAStartup", WSAStartup_Hook ),
+    THookInfo( "WSOCK32.dll", "bind", bind_Hook ),
+    THookInfo( "", "", 0 )
+};
+
+
+
+typedef std::vector< CAPIHook * > TAPIHookList;
+
+TAPIHookList g_tAPIHookList;
+//CAPIHook *g_pAPIHook = NULL;
+
+
+
 
 BOOL WINAPI DllMain(HINSTANCE hinstDll, DWORD fdwReason, PVOID fImpLoad)
 {
@@ -51,10 +100,16 @@ BOOL WINAPI DllMain(HINSTANCE hinstDll, DWORD fdwReason, PVOID fImpLoad)
     case DLL_PROCESS_ATTACH:
         //The DLL is being mapped into the process's address space.
         vpn::log << _T( "VPN Spy DLL! The DLL is being mapped into the process's address space." ) << endl;
-        if ( NULL == g_pAPIHook )
+        //if ( NULL == g_pAPIHook )
+        //{
+        //    g_pAPIHook = new CAPIHook( ( "USER32.dll" ), ( "MessageBoxW" ), (PROC)MessageBoxWHook );
+        //}
+        for ( int i=0; g_arHookInfo[i].m_pHookFun != NULL; ++i )
         {
-            g_pAPIHook = new CAPIHook( ( "USER32.dll" ), ( "MessageBoxW" ), (PROC)MessageBoxWHook );
+            g_tAPIHookList.push_back( new CAPIHook( g_arHookInfo[i].m_strCalleeModuleName.c_str(), 
+                g_arHookInfo[i].m_strFunName.c_str(), g_arHookInfo[i].m_pHookFun ) );
         }
+        
         break;
 
     case DLL_THREAD_ATTACH:
@@ -70,11 +125,17 @@ BOOL WINAPI DllMain(HINSTANCE hinstDll, DWORD fdwReason, PVOID fImpLoad)
     case DLL_PROCESS_DETACH:
         //The DLL is being unmapped from the process's address space.
         vpn::log << _T( "VPN Spy DLL! The DLL is being unmapped from the process's address space. " ) << endl;
-        if ( g_pAPIHook )
+        //if ( g_pAPIHook )
+        //{
+        //    delete g_pAPIHook;
+        //    g_pAPIHook = NULL;
+        //}
+        for ( TAPIHookList::iterator iter = g_tAPIHookList.begin(); iter != g_tAPIHookList.end(); ++iter )
         {
-            delete g_pAPIHook;
-            g_pAPIHook = NULL;
+            delete *iter;
+            *iter = 0;
         }
+
         break;
     }
 
