@@ -193,8 +193,8 @@ void CThinkVPNClientDlg::OnBnClickedBtnInject()
 		m_dwPID = tPinfo.dwProcessId;
 	}
 	
-
-    DWORD dwDesireAccess = PROCESS_CREATE_THREAD | PROCESS_VM_OPERATION | PROCESS_VM_WRITE;
+	// Vista 需要更多的权限才能CreateRemoteThread成功。
+    DWORD dwDesireAccess = PROCESS_ALL_ACCESS;//PROCESS_CREATE_THREAD | PROCESS_VM_OPERATION | PROCESS_VM_WRITE;
     HANDLE hProcess = ::OpenProcess( dwDesireAccess, FALSE, m_dwPID );
 
     tstring strAppDir = GetAppDir();

@@ -180,6 +180,10 @@
 				RelativePath="..\source\DllMain.cpp"
 				>
 			</File>
+			<File
+				RelativePath="..\source\winsockethook.cpp"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Í·ÎÄ¼þ"
@@ -188,6 +192,10 @@
 			>
 			<File
 				RelativePath="..\include\APIHook.h"
+				>
+			</File>
+			<File
+				RelativePath="..\include\winsockethook.h"
 				>
 			</File>
 		</Filter>

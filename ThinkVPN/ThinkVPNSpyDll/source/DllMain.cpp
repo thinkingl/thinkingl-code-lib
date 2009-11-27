@@ -48,6 +48,15 @@ int PASCAL FAR bind_Hook (
     return bind( s, addr, namelen );
 }
 
+SOCKET PASCAL FAR socket_Hook (
+						  IN int af,
+						  IN int type,
+						  IN int protocol)
+{
+	vpn::log << _T( "socket call!" ) << endl;
+	return socket( af, type, protocol );
+}
+
 struct THookInfo
 {
     string m_strCalleeModuleName;
@@ -66,6 +75,11 @@ THookInfo g_arHookInfo[] =
 {
     THookInfo( "WSOCK32.dll", "WSAStartup", WSAStartup_Hook ),
     THookInfo( "WSOCK32.dll", "bind", bind_Hook ),
+	THookInfo( "WSOCK32.dll", "socket", socket_Hook ),
+	THookInfo( "WS2_32.dll", "WSAStartup", WSAStartup_Hook ),
+	THookInfo( "WS2_32.dll", "bind", bind_Hook ),
+	THookInfo( "WS2_32.dll", "socket", socket_Hook ),
+	THookInfo( "USER32.dll", "MessageBoxW", MessageBoxWHook ),
     THookInfo( "", "", 0 )
 };
 
