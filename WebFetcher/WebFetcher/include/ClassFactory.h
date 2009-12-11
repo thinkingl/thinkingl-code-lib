@@ -2,6 +2,7 @@
 
 #include "IHttpFecher.h"
 #include "IApplication.h"
+#include "IHtmlPageParser.h"
 
 class CClassFactory
 {
@@ -12,4 +13,6 @@ public:
 	static IHttpFecher *CreateHttpFecher();
 	
 	static IApplication *CreateApp();
+
+	static IHtmlPageParser *CreateHtmlPageParser();
 };

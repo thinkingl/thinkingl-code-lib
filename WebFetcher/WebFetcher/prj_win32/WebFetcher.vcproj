@@ -185,6 +185,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\src\Log.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\src\main.cpp"
 				>
 			</File>
@@ -211,6 +215,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\include\Log.h"
+				>
+			</File>
+			<File
 				RelativePath="..\include\portabledefine.h"
 				>
 			</File>
@@ -234,6 +242,10 @@
 			</File>
 			<File
 				RelativePath="..\include\IApplication.h"
+				>
+			</File>
+			<File
+				RelativePath="..\include\IHtmlPageParser.h"
 				>
 			</File>
 			<File
