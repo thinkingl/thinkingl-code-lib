@@ -3,6 +3,10 @@
 
 #ifdef _WIN32
 
+#ifndef WINVER
+#define WINVER 0x0600
+#endif
+
 #include <afx.h>
 #include <afxinet.h>
 

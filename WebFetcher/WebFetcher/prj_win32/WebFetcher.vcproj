@@ -173,11 +173,15 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
+				RelativePath="..\src\Common.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\src\Config.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\src\IHttpFecher.cpp"
+				RelativePath="..\src\HtmlPageParser.cpp"
 				>
 			</File>
 			<File
@@ -185,11 +189,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\src\WebFetcherApp.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\src\WinInetHttpFecher.cpp"
+				RelativePath="..\src\UrlParser.cpp"
 				>
 			</File>
 		</Filter>
@@ -199,11 +199,15 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
+				RelativePath="..\include\Common.h"
+				>
+			</File>
+			<File
 				RelativePath="..\include\Config.h"
 				>
 			</File>
 			<File
-				RelativePath="..\include\IHttpFecher.h"
+				RelativePath="..\include\HtmlPageParser.h"
 				>
 			</File>
 			<File
@@ -211,11 +215,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\include\WebFetcherApp.h"
-				>
-			</File>
-			<File
-				RelativePath="..\include\WinInetHttpFecher.h"
+				RelativePath="..\include\UrlParser.h"
 				>
 			</File>
 		</Filter>
@@ -224,6 +224,74 @@
 			Filter="rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav"
 			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}"
 			>
+		</Filter>
+		<Filter
+			Name="interface"
+			>
+			<File
+				RelativePath="..\src\IApplication.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\include\IApplication.h"
+				>
+			</File>
+			<File
+				RelativePath="..\src\IHttpFecher.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\include\IHttpFecher.h"
+				>
+			</File>
+			<File
+				RelativePath="..\src\IHttpFechThread.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\include\IHttpFechThread.h"
+				>
+			</File>
+			<File
+				RelativePath="..\src\IUrlTable.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\include\IUrlTable.h"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="class factory"
+			>
+			<File
+				RelativePath="..\src\ClassFactory.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\include\ClassFactory.h"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="win32 impl"
+			>
+			<File
+				RelativePath="..\src\Win32Application.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\include\Win32Application.h"
+				>
+			</File>
+			<File
+				RelativePath="..\src\WinInetHttpFecher.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\include\WinInetHttpFecher.h"
+				>
+			</File>
 		</Filter>
 	</Files>
 	<Globals>
