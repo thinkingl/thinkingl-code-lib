@@ -3,10 +3,13 @@
 
 
 LPCTSTR CONFIG_INI_FILE = _T( "WEBFETCH.INI" );
-LPCTSTR CONFIG_ENTRY_NAME = _T( "CONFIG" );
+
+LPCTSTR CONFIG_CFG_APP_NAME = _T( "CONFIG" );
+LPCTSTR CONFIG_FILTER_APP = _T( "FETCHFILETER" );
 
 LPCTSTR CONFIG_SERVER_ROOT = _T( "SERVERROOT" );
 LPCTSTR CONFIG_LOCAL_ROOT = _T( "LOCALROOT" );
+LPCTSTR CONFIG_THREAD_COUNT = _T( "THREADCOUNT" );
 
 CIniConfig::CIniConfig(void)
 {
@@ -20,12 +23,12 @@ CIniConfig::~CIniConfig(void)
 
 tstring CIniConfig::GetRootFolder()
 {
-	return this->ReadConfigStr( CONFIG_LOCAL_ROOT );
+	return this->ReadConfigStr( CONFIG_CFG_APP_NAME, CONFIG_LOCAL_ROOT );
 }
 
 tstring CIniConfig::GetRootUrl()
 {
-	return this->ReadConfigStr( CONFIG_SERVER_ROOT );
+	return this->ReadConfigStr( CONFIG_CFG_APP_NAME, CONFIG_SERVER_ROOT );
 }
 
 tstring CIniConfig::GetProxyUserName()
@@ -48,22 +51,66 @@ uint16 CIniConfig::GetProxyPort()
 	return 0;
 }
 
-tstring CIniConfig::ReadConfigStr( LPCTSTR strName )
+tstring CIniConfig::ReadConfigStr( LPCTSTR strApp, LPCTSTR strKey )
 {
 	const int nSize = 10000;
 	TCHAR arBuf[ nSize ] = {0};
-	::GetPrivateProfileString( CONFIG_ENTRY_NAME, strName, NULL, arBuf, nSize, this->m_strIniFilePath.c_str() );
+	::GetPrivateProfileString( strApp, strKey, NULL, arBuf, nSize, this->m_strIniFilePath.c_str() );
 
 	return arBuf;
+}
+
+int32 CIniConfig::ReadConfigInt( LPCTSTR strApp, LPCTSTR strKey )
+{
+	tstring strCfg = this->ReadConfigStr( strApp, strKey );
+	tstringstream ssTmp;
+	ssTmp << strCfg;
+	int32 nCfg = 0;
+	ssTmp >> nCfg;
+	return nCfg;
 }
 
 BOOL CIniConfig::Init()
 {
 	// 获取本App路径。
 	this->m_strIniFilePath = CCommon::GetAppDir() + CONFIG_INI_FILE;
-//	::WritePrivateProfileString( CONFIG_ENTRY_NAME, _T( "TEST" ), _T( "VALUE" ), CONFIG_INI_FILE );
+//	::WritePrivateProfileString( CONFIG_CFG_APP_NAME, _T( "TEST" ), _T( "VALUE" ), CONFIG_INI_FILE );
 
 	// 使用相对路径。
 //	this->m_strIniFilePath = CONFIG_INI_FILE;
 	return TRUE;
+}
+
+uint32 CIniConfig::GetThreadCount()
+{
+	return this->ReadConfigInt( CONFIG_CFG_APP_NAME, CONFIG_THREAD_COUNT );
+}
+
+tstringarray CIniConfig::GetAllFetchFilter()
+{
+	return this->ReadKeys( CONFIG_FILTER_APP );
+}
+
+tstringarray CIniConfig::ReadKeys( LPCTSTR strApp )
+{
+	const int buflen = 100000;
+	TCHAR buf[ buflen ] = { 0 };
+	::GetPrivateProfileString( strApp, NULL, NULL, buf, buflen, this->m_strIniFilePath.c_str() );
+
+	tstringarray tar;
+	LPCTSTR strKey = buf;
+	while ( *strKey )
+	{
+		tar.push_back( strKey );
+
+		strKey += _tcslen( strKey );
+		strKey ++;
+	}
+
+	return tar;
+}
+
+BOOL CIniConfig::IsUrlFilterFetch( LPCTSTR strFilter )
+{
+	return this->ReadConfigInt( CONFIG_FILTER_APP, strFilter );
 }

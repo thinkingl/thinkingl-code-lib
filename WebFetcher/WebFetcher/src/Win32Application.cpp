@@ -118,8 +118,17 @@ int CWin32Application::RunWebFetch()
 
 		CLog() << _T( "暂时只使用单线程抓页面。 " ) << endl;
 		
-		IThread *pThread = CClassFactory::CreatePageFetchThread();
-		pThread->Start();
+		int32 nThreadNum = IConfig::Instance()->GetThreadCount();
+		nThreadNum = max( 1, nThreadNum );
+
+		std::vector< IThread * > tThreadList;
+		for( int i=0; i<nThreadNum; ++i )
+		{
+			IThread *pThread = CClassFactory::CreatePageFetchThread();
+			pThread->Start();
+			tThreadList.push_back( pThread );
+		}
+		
 
 
 		tstring strCmd;
@@ -146,8 +155,12 @@ int CWin32Application::RunWebFetch()
 			}
 		}
 
-		pThread->Stop();
-		delete pThread;
+		for ( size_t i=0; i<tThreadList.size(); ++i )
+		{
+			tThreadList[i]->Stop();
+			delete tThreadList[i];
+			tThreadList[i] = NULL;
+		}
 	}
 
 	return nRetCode;

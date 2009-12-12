@@ -25,6 +25,8 @@ BOOL CHtmlPageParser::Parse( LPCTSTR strHtmlFilePath, LPCTSTR strHtmlServerUrl )
 	m_strHtmlPageLocalPath = strHtmlFilePath;
 
 	// ½âÎöurl¡£
+	this->m_strServerUrl = strHtmlServerUrl;
+
 	tstring strUrl = strHtmlServerUrl;
 	int nPos = strUrl.rfind( _T( '/' ) );
 	this->m_strServerUrlFolder = strUrl.substr( 0, nPos );
@@ -253,6 +255,11 @@ BOOL CHtmlPageParser::GetUrl( LPCTSTR strLine, tstring& strFullUrl, tstring& str
 	
 
 	return !strFullUrl.empty();
+}
+
+tstring CHtmlPageParser::GetCurServerUrl()
+{
+	return this->m_strServerUrl;
 }
 
 

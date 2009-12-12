@@ -190,3 +190,9 @@ BOOL CCommon::IsWebpage( LPCTSTR strPath )
 
 	return FALSE;
 }
+
+tstring CCommon::GetRelativePath( LPCTSTR strSrcPath, LPCTSTR strDstPath )
+{
+	ASSERT( FALSE );
+	return _T( "" );
+}

@@ -19,6 +19,15 @@ public:
 	virtual tstring GetProxyIp() ;
 
 	virtual uint16 GetProxyPort() ;
+
+	virtual uint32 GetThreadCount() ;
+
+	/** 获取所有的URL Filter。 */
+	virtual tstringarray GetAllFetchFilter();
+
+	/** 这个UrL filter项是否要获取。 */
+	virtual BOOL IsUrlFilterFetch( LPCTSTR strFilter );
+
 public:
 	friend class IConfig;
 protected:
@@ -29,8 +38,10 @@ private:
 	/**  */
 	BOOL Init();
 
-	tstring ReadConfigStr( LPCTSTR strName );
-	int32 ReadConfigInt( LPCTSTR strName );
+	tstring ReadConfigStr(  LPCTSTR strApp, LPCTSTR strKey );
+	int32 ReadConfigInt( LPCTSTR strApp, LPCTSTR strKey );
+
+	tstringarray ReadKeys( LPCTSTR strApp );
 
 private:
 	tstring m_strIniFilePath;

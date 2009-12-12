@@ -15,10 +15,11 @@ public:
 	/** 获取一个等待处理的缓存网页。 */
 	virtual BOOL GetCachedPage( tstring& strUrl, tstring& strLocalPath ) ;
 
-	
+	/** 预先获取一个URL对应的缓存文件路径和保存文件路径。 */
+	virtual BOOL GetUrlPagePrePath( LPCTSTR strUrl, tstring& strCachePath, tstring& strSavePath );
 
 	/** 获取URL在本地的保存路径。 */
-	virtual BOOL GetLocalPath( LPCTSTR strUrl, tstring& strLocalPath ) ;
+	virtual BOOL GetPageLocalFilePath( LPCTSTR strUrl, tstring& strLocalPath ) ;
 
 	/** 增加一个缓存的url记录。 */
 	virtual BOOL CachePageUrl( LPCTSTR strUrl, LPCTSTR strLocalPath ) ;

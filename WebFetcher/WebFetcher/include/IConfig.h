@@ -25,6 +25,14 @@ public:
 	
 	virtual uint16 GetProxyPort() = 0;
 
+	virtual uint32 GetThreadCount() = 0;
+
+	/** 获取所有的URL Filter。 */
+	virtual tstringarray GetAllFetchFilter() = 0;
+
+	/** 这个UrL filter项是否要获取。 */
+	virtual BOOL IsUrlFilterFetch( LPCTSTR strFilter ) = 0;
+
 protected:
 	IConfig(void);
 	virtual ~IConfig(void);

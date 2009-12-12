@@ -25,6 +25,9 @@ public:
 	/** 保存。 */
 	virtual BOOL SaveFile( LPCTSTR strPath );
 
+	/** 获取当前正在处理的服务器url。 */
+	virtual tstring GetCurServerUrl() ;
+
 private:
 	BOOL IsContainUrl( LPCTSTR strLine );
 
@@ -36,6 +39,7 @@ private:
 
 	/** url. */
 	tstring m_strServerUrlFolder;
+	tstring m_strServerUrl;
 
 	/** url */
 	typedef std::set< tstring > TUrlSet;

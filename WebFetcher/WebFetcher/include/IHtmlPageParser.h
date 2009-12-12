@@ -19,4 +19,7 @@ public:
 
 	/** 保存。 */
 	virtual BOOL SaveFile( LPCTSTR strPath ) = 0;
+
+	/** 获取当前正在处理的服务器url。 */
+	virtual tstring GetCurServerUrl() = 0;
 };

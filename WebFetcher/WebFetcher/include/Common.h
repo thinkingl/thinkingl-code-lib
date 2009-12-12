@@ -40,4 +40,9 @@ public:
 	*	只根据文件名后缀来判断。
 	*/
 	static BOOL IsWebpage( LPCTSTR strPath );
+
+	/** 获取相对路径。
+	*	在文件strSrc看来，strDstPath的相对路径。
+	*/
+	static tstring GetRelativePath( LPCTSTR strSrcPath, LPCTSTR strDstPath );
 };

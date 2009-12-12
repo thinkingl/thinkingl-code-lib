@@ -2,9 +2,9 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9.00"
-	Name="WebFetcher"
-	ProjectGUID="{919D9F28-823D-422C-9C0B-AF1AC32F6528}"
-	RootNamespace="WebFetcher"
+	Name="TestMaxFileNumInFolder"
+	ProjectGUID="{5ECA7C78-74A6-4008-A796-1166BFD83A5D}"
+	RootNamespace="TestMaxFileNumInFolder"
 	Keyword="Win32Proj"
 	TargetFrameworkVersion="196613"
 	>
@@ -21,7 +21,6 @@
 			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="1"
-			UseOfMFC="2"
 			CharacterSet="1"
 			>
 			<Tool
@@ -42,7 +41,6 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories=".;..\include"
 				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -173,63 +171,7 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath="..\src\Common.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\src\HtmlPageParser.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\src\IConfig.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\src\IDatabase.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\src\IniConfig.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\src\IWebpageManager.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\src\Log.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\src\main.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\src\PageFecher.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\src\ScopeLock.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\src\SqliteDatabase.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\src\UrlParser.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\src\WebpageManager.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\src\Win32Mutex.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\src\Win32PageFetchThread.cpp"
+				RelativePath=".\main.cpp"
 				>
 			</File>
 		</Filter>
@@ -238,70 +180,6 @@
 			Filter="h;hpp;hxx;hm;inl;inc;xsd"
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
-			<File
-				RelativePath="..\include\Common.h"
-				>
-			</File>
-			<File
-				RelativePath="..\include\HtmlPageParser.h"
-				>
-			</File>
-			<File
-				RelativePath="..\include\IConfig.h"
-				>
-			</File>
-			<File
-				RelativePath="..\include\IDatabase.h"
-				>
-			</File>
-			<File
-				RelativePath="..\include\IniConfig.h"
-				>
-			</File>
-			<File
-				RelativePath="..\include\INoCopy.h"
-				>
-			</File>
-			<File
-				RelativePath="..\include\IPageFecher.h"
-				>
-			</File>
-			<File
-				RelativePath="..\include\Log.h"
-				>
-			</File>
-			<File
-				RelativePath="..\include\PageFecher.h"
-				>
-			</File>
-			<File
-				RelativePath="..\include\portabledefine.h"
-				>
-			</File>
-			<File
-				RelativePath="..\include\ScopeLock.h"
-				>
-			</File>
-			<File
-				RelativePath="..\include\SqliteDatabase.h"
-				>
-			</File>
-			<File
-				RelativePath="..\include\UrlParser.h"
-				>
-			</File>
-			<File
-				RelativePath="..\include\WebpageManager.h"
-				>
-			</File>
-			<File
-				RelativePath="..\include\Win32Mutex.h"
-				>
-			</File>
-			<File
-				RelativePath="..\include\Win32PageFetchThread.h"
-				>
-			</File>
 		</Filter>
 		<Filter
 			Name="资源文件"
@@ -309,78 +187,6 @@
 			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}"
 			>
 		</Filter>
-		<Filter
-			Name="interface"
-			>
-			<File
-				RelativePath="..\include\IApplication.h"
-				>
-			</File>
-			<File
-				RelativePath="..\include\IHtmlPageParser.h"
-				>
-			</File>
-			<File
-				RelativePath="..\include\IHttpDownloader.h"
-				>
-			</File>
-			<File
-				RelativePath="..\include\IMutex.h"
-				>
-			</File>
-			<File
-				RelativePath="..\include\IThread.h"
-				>
-			</File>
-			<File
-				RelativePath="..\include\IWebpageManager.h"
-				>
-			</File>
-		</Filter>
-		<Filter
-			Name="class factory"
-			>
-			<File
-				RelativePath="..\src\ClassFactory.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\include\ClassFactory.h"
-				>
-			</File>
-		</Filter>
-		<Filter
-			Name="win32 impl"
-			>
-			<File
-				RelativePath="..\src\Win32Application.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\include\Win32Application.h"
-				>
-			</File>
-			<File
-				RelativePath="..\src\Win32Thread.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\include\Win32Thread.h"
-				>
-			</File>
-			<File
-				RelativePath="..\src\WinInetHttpFecher.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\include\WinInetHttpFecher.h"
-				>
-			</File>
-		</Filter>
-		<File
-			RelativePath="..\..\Debug\WEBFETCH.INI"
-			>
-		</File>
 	</Files>
 	<Globals>
 	</Globals>
