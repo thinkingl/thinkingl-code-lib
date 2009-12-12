@@ -8,7 +8,7 @@ public:
 	IDatabase(void);
 	virtual ~IDatabase(void);
 
-	virtual BOOL CreateTable() = 0;
+	virtual BOOL OpenDatabase( LPCTSTR strPath ) = 0;
 
 
 };
