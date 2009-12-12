@@ -2,7 +2,9 @@
 #include "WinInetHttpFecher.h"
 #include "Win32Application.h"
 #include "HtmlPageParser.h"
-#include "PageFetchThread.h"
+#include "Win32PageFetchThread.h"
+#include "PageFecher.h"
+#include "Win32Mutex.h"
 //CClassFactory::CClassFactory(void)
 //{
 //}
@@ -13,7 +15,7 @@
 
 
 
-IHttpFecher *CClassFactory::CreateHttpFecher()
+IHttpDownloader *CClassFactory::CreateHttpDownloader()
 {
 	return new CWinInetHttpFecher();
 }
@@ -30,5 +32,16 @@ IHtmlPageParser *CClassFactory::CreateHtmlPageParser()
 
 IThread *CClassFactory::CreatePageFetchThread()
 {
-	return new CPageFetchThread();
+	return new CWin32PageFetchThread();
 }
+
+IPageFecher *CClassFactory::CreatePageFetcher()
+{
+	return new CPageFecher();
+}
+
+IMutex *CClassFactory::CreateMutex()
+{
+	return new CWin32Mutex();
+}
+

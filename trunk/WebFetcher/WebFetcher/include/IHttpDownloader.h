@@ -2,12 +2,12 @@
 
 #include "portabledefine.h"
 
-class IHttpFecher
+class IHttpDownloader
 {
 public:
 
     /** 下载文件。 */
-    virtual BOOL FecheFile( LPCTSTR strUrl, LPCTSTR strLocFilePath ) = 0;
+    virtual BOOL DownloadFile( LPCTSTR strUrl, LPCTSTR strLocFilePath ) = 0;
 
 	/** 设置http代理。 */
 	virtual BOOL SetHttpProxy( BOOL bUseProxy,

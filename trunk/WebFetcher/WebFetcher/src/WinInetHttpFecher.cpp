@@ -39,7 +39,7 @@ BOOL CWinInetHttpFecher::SetHttpProxy( BOOL bUseProxy, LPCTSTR strIp, uint16 nPo
     return bResult;
 }
 
-BOOL CWinInetHttpFecher::FecheFile( LPCTSTR strUrl, LPCTSTR strLocFilePath )
+BOOL CWinInetHttpFecher::DownloadFile( LPCTSTR strUrl, LPCTSTR strLocFilePath )
 {
 	BOOL bResult = FALSE;
 	try

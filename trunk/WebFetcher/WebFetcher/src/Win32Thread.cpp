@@ -1,4 +1,6 @@
 #include "Win32Thread.h"
+#include "Log.h"
+#include "scopelock.h"
 
 CWin32Thread::CWin32Thread(void)
 {
@@ -11,11 +13,17 @@ CWin32Thread::CWin32Thread(void)
 
 CWin32Thread::~CWin32Thread(void)
 {
+	if ( this->IsRunning() )
+	{
+		this->Stop();
+	}
 }
 
 BOOL CWin32Thread::Start()
 {
-	if ( m_hThread )
+	SCOPE_LOCK( m_threadSafeLock );
+
+	if ( this->IsRunning() )
 	{
 		CLog() << _T( "Thread Already Run!!!!!!" ) << endl;
 		ASSERT( FALSE );
@@ -30,14 +38,17 @@ BOOL CWin32Thread::Start()
 	}
 	else
 	{
-		CLog() << _T( "Create Thread! handle: " )<< m_hThread << _T( "ThreadId" ) << dwThreadId << endl;
+		CLog() << _T( "Create Thread! handle: " )<< m_hThread << _T( " ThreadId " ) << dwThreadId << endl;
 	}
 	return NULL != m_hThread;
 }
 
 BOOL CWin32Thread::Stop()
 {
-	if ( m_hThread )
+	// 暂时不加锁，防止死锁问题。
+//	SCOPE_LOCK( m_threadSafeLock );
+
+	if ( IsRunning() )
 	{
 		this->SetStopFlag();
 
@@ -49,18 +60,20 @@ BOOL CWin32Thread::Stop()
 			BOOL bRet = ::TerminateThread( m_hThread, -1 );
 			CLog() << _T( "Terminate thread, handle: " ) << m_hThread << _T( " ret: " ) << bRet << endl;
 		}
-		CloseHandle( m_hThread );
+		BOOL bRet = CloseHandle( m_hThread );
+		CLog() << _T( "Win32 Thread Close Handle ret: " ) << bRet << endl;
 		this->m_hThread = NULL;
+
+		return TRUE;
 	}
 	else
 	{
 		CLog() << _T( "Thread Not Run!!!!!!" ) << endl;
 		return FALSE;
 	}
-	return FALSE;
 }
 
-int CWin32Thread::FunThreadS( void * param )
+DWORD CWin32Thread::FunThreadS( void * param )
 {
 	CWin32Thread *pThis = ( CWin32Thread* )param;
 	int nExitCode = -1;
@@ -70,4 +83,62 @@ int CWin32Thread::FunThreadS( void * param )
 	}
 	return nExitCode;
 }
+
+int CWin32Thread::FunThread()
+{
+	int nExitCode = 0;
+	while ( !this->GetStopFlag() )
+	{
+		BOOL bExit = FALSE;
+		nExitCode = this->DoPieceWork( bExit );
+		if ( bExit )
+		{
+			break;
+		}
+	}
+	return nExitCode;
+}
+
+void CWin32Thread::SetTimeOut( uint32 nMilliSeconds )
+{
+	SCOPE_LOCK( m_threadSafeLock );
+
+	this->m_nTimeoutMilliseconds = nMilliSeconds;
+}
+
+void CWin32Thread::SetStopFlag()
+{
+	SCOPE_LOCK( m_threadSafeLock );
+
+	this->m_bRun = FALSE;
+}
+
+BOOL CWin32Thread::IsRunning()
+{
+	SCOPE_LOCK( m_threadSafeLock );
+//	ASSERT( FALSE );
+	BOOL bResult = FALSE;
+	if ( m_hThread )
+	{
+		DWORD dwExitCode = 0;
+		BOOL bRet = ::GetExitCodeThread( m_hThread, &dwExitCode );
+		if ( bRet )
+		{
+			if ( dwExitCode == STILL_ACTIVE )
+			{
+				bResult = TRUE;
+			}
+		}
+	}
+	return bResult;
+}
+
+BOOL CWin32Thread::GetStopFlag()
+{
+	SCOPE_LOCK( m_threadSafeLock );
+
+	return !m_bRun;
+}
+
+
 
