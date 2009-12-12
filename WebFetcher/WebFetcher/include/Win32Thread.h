@@ -1,6 +1,7 @@
 #pragma once
 
 #include "IThread.h"
+#include "Win32Mutex.h"
 
 class CWin32Thread :
 	public IThread
@@ -23,9 +24,9 @@ public:
 	virtual BOOL IsRunning() ;
 
 protected:
-	virtual BOOL IsStopCmd();
+	virtual BOOL GetStopFlag();
 private:
-	static int FunThreadS( void * param );
+	static DWORD WINAPI FunThreadS( void * param );
 
 	int FunThread();
 
@@ -34,5 +35,7 @@ private:
 	volatile BOOL m_bRun;
 
 	uint32 m_nTimeoutMilliseconds;
+
+	CWin32Mutex m_threadSafeLock;
 
 };

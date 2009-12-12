@@ -1,5 +1,6 @@
 #include "Win32Application.h"
 #include "Log.h"
+#include "IConfig.h"
 
 CWin32Application::CWin32Application(void)
 {
@@ -12,16 +13,21 @@ CWin32Application::~CWin32Application(void)
 LPCTSTR CMD_EXIT = _T( "exit" );
 LPCTSTR CMD_TEST_FETCH = _T( "testfetch" );
 LPCTSTR CMD_TEST_PAGE = _T( "testpage" );
+LPCTSTR CMD_TEST_THREAD = _T( "testthread" );
+LPCTSTR CMD_TEST_CFG = _T( "testcfg" );
 
 CWinApp theApp;
 
 BOOL testFetchUrl()
 {
-	IHttpFecher *pFecher = CClassFactory::CreateHttpFecher();
+	IHttpDownloader *pFecher = CClassFactory::CreateHttpDownloader();
 
 	LPCTSTR strUrl = _T( "http://www.verycd.com/" );
 	LPCTSTR strFile = _T( "F:\\download\\verycdindex.htm" );
-	BOOL bRet = pFecher->FecheFile( strUrl, strFile );
+	BOOL bRet = pFecher->DownloadFile( strUrl, strFile );
+
+	delete pFecher;
+
 	return bRet;
 }
 
@@ -51,9 +57,45 @@ BOOL testParsePage()
 
 	pParser->SaveFile( _T( "F:\\download\\replaced.htm" ) );
 
-
+	delete pParser;
 
 	return bResult;
+}
+
+BOOL testThread()
+{
+	IThread *pThread = CClassFactory::CreatePageFetchThread();
+	pThread->Start();
+
+	Sleep( 1000 );
+	BOOL bRun = pThread->IsRunning();
+	ASSERT( TRUE == bRun );
+
+	Sleep( 10000 );
+
+	pThread->Stop();
+
+	bRun = pThread->IsRunning();
+	ASSERT( !bRun );
+
+	pThread->Start();
+	Sleep( 100 );
+	pThread->SetTimeOut( 100 );
+	pThread->Stop();
+
+	delete pThread;
+
+	return TRUE;
+
+}
+
+BOOL testCfg()
+{
+	IConfig *pCfg = IConfig::Instance();
+	pCfg->GetRootFolder();
+	pCfg->GetRootUrl();
+
+	return TRUE;
 }
 
 int CWin32Application::RunWebFetch()
@@ -72,15 +114,14 @@ int CWin32Application::RunWebFetch()
 //		cout << "中文" << endl;
 
 		wcout.imbue(locale(locale(),"",LC_CTYPE)); 
-		wcout << L"2中文222" << endl;
-		
-
-//		wcout.imbue(locale(locale(),"",LC_CTYPE)); 
-
-//		cout << "中文2" << endl;
-		wcout << L"中文2" << endl;
-
 		// TODO: 在此处为应用程序的行为编写代码。
+
+		CLog() << _T( "暂时只使用单线程抓页面。 " ) << endl;
+		
+		IThread *pThread = CClassFactory::CreatePageFetchThread();
+		pThread->Start();
+
+
 		tstring strCmd;
 
 		while( strCmd != CMD_EXIT )
@@ -95,7 +136,18 @@ int CWin32Application::RunWebFetch()
 			{
 				testParsePage();
 			}
+			else if( strCmd == CMD_TEST_THREAD )
+			{
+				testThread();
+			}
+			else if( strCmd == CMD_TEST_CFG )
+			{
+				testCfg();
+			}
 		}
+
+		pThread->Stop();
+		delete pThread;
 	}
 
 	return nRetCode;

@@ -1,15 +1,15 @@
 #pragma once
-#include "ihttpfecher.h"
+#include "ihttpdownloader.h"
 
 class CWinInetHttpFecher :
-    public IHttpFecher
+    public IHttpDownloader
 {
 public:
     CWinInetHttpFecher(void);
     virtual ~CWinInetHttpFecher(void);
 
     /** 下载文件。 */
-    virtual BOOL FecheFile( LPCTSTR strUrl, LPCTSTR strLocFilePath ) ;
+    virtual BOOL DownloadFile( LPCTSTR strUrl, LPCTSTR strLocFilePath ) ;
 
     /** 设置http代理。 */
     virtual BOOL SetHttpProxy( BOOL bUseProxy,

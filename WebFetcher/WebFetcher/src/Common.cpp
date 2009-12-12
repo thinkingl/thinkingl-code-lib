@@ -80,3 +80,113 @@ int CCommon::StrNCmpNocase( LPCTSTR str1, LPCTSTR str2, int nLen )
 
 	return ( nLen == 0 ) ? 0 : ( *str1 == NULL ? -1 : 1 );
 }
+
+tstring CCommon::GetModulePath( void * hm /*= NULL*/ )
+{
+	std::vector< wchar_t > vTemp( MAX_PATH+1, 0 );
+	::GetModuleFileName( (HMODULE)hm, &vTemp[0], MAX_PATH );
+
+	return &vTemp[0];
+}
+
+bool CCommon::TFileNameInfo::operator ==( const CCommon::TFileNameInfo& tAnother ) const
+{
+	if ( this == &tAnother )
+	{
+		return true;
+	}
+	return( tAnother.m_strFilePath == this->m_strFilePath 
+		&& tAnother.m_strFileName == this->m_strFileName
+		&& tAnother.m_strExtName == this->m_strExtName
+		&& tAnother.m_strDirectory == this->m_strDirectory
+		&& tAnother.m_strBaseName == this->m_strBaseName );
+}
+
+
+CCommon::TFileNameInfo CCommon::ParsePath( LPCTSTR strPath )
+{
+	TFileNameInfo tInfo;
+	ParsePath( strPath, tInfo );
+	return tInfo;
+}
+
+BOOL CCommon::ParsePath( LPCTSTR strPath, CCommon::TFileNameInfo& tFileNameInfo )
+{
+	tFileNameInfo.m_strFilePath = strPath;
+
+	tstring strAppPath = strPath;
+
+#if defined( _WIN32_WCE )
+	const TCHAR chDirToken = '\\';
+	const TCHAR chWrongDirToken = '/';
+#else
+	const TCHAR chDirToken = '/';
+	const TCHAR chWrongDirToken = '\\';
+#endif
+
+	replace( strAppPath.begin(), strAppPath.end(), chWrongDirToken, chDirToken );
+
+
+	int nIndex = strAppPath.rfind( chDirToken );
+	if( nIndex >=0 )
+	{	
+		tFileNameInfo.m_strFileName = strAppPath.substr( nIndex + 1 );
+		tFileNameInfo.m_strDirectory = strAppPath.substr( 0, nIndex + 1 );
+	}	
+	else
+	{
+		tFileNameInfo.m_strFileName = strAppPath;
+		tFileNameInfo.m_strDirectory = _T( "" );
+	}
+
+	tstring strAppName = tFileNameInfo.m_strFileName;
+	nIndex = strAppName.rfind( '.' );
+	if( nIndex >= 0 )
+	{
+		tFileNameInfo.m_strBaseName = strAppName.substr( 0, nIndex );
+		tFileNameInfo.m_strExtName = strAppName.substr( nIndex + 1);
+	}
+	else
+	{
+		tFileNameInfo.m_strBaseName = strAppName;
+		tFileNameInfo.m_strExtName = _T( "" );
+	}
+	return TRUE;
+}
+
+
+tstring CCommon::GetAppName()
+{
+
+	return ParsePath( GetModulePath().c_str() ).m_strBaseName;
+
+}
+
+tstring CCommon::GetAppDir()
+{
+	return ParsePath( GetModulePath().c_str() ).m_strDirectory;
+}
+
+BOOL CCommon::IsWebpage( LPCTSTR strPath )
+{
+	tstring strExt = ParsePath( strPath ).m_strExtName;
+
+	LPCTSTR arHtmlFileExt[] = 
+	{
+		_T( "htm" ),
+		_T( "html" ),
+		NULL
+	};
+	
+	int i=0;
+	while ( arHtmlFileExt[i] )
+	{
+		if ( StrNCmpNocase( arHtmlFileExt[i], strExt.c_str(), INT_MAX ) == 0 )
+		{
+			return TRUE;
+		}
+		++i;
+	}
+
+	return FALSE;
+}

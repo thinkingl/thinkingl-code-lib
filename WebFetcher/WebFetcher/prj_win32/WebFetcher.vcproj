@@ -177,11 +177,19 @@
 				>
 			</File>
 			<File
-				RelativePath="..\src\Config.cpp"
+				RelativePath="..\src\HtmlPageParser.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\src\HtmlPageParser.cpp"
+				RelativePath="..\src\IConfig.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\src\IniConfig.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\src\IWebpageManager.cpp"
 				>
 			</File>
 			<File
@@ -193,11 +201,27 @@
 				>
 			</File>
 			<File
-				RelativePath="..\src\PageFetchThread.cpp"
+				RelativePath="..\src\PageFecher.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\src\ScopeLock.cpp"
 				>
 			</File>
 			<File
 				RelativePath="..\src\UrlParser.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\src\WebpageManager.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\src\Win32Mutex.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\src\Win32PageFetchThread.cpp"
 				>
 			</File>
 		</Filter>
@@ -211,11 +235,23 @@
 				>
 			</File>
 			<File
-				RelativePath="..\include\Config.h"
+				RelativePath="..\include\HtmlPageParser.h"
 				>
 			</File>
 			<File
-				RelativePath="..\include\HtmlPageParser.h"
+				RelativePath="..\include\IConfig.h"
+				>
+			</File>
+			<File
+				RelativePath="..\include\IniConfig.h"
+				>
+			</File>
+			<File
+				RelativePath="..\include\INoCopy.h"
+				>
+			</File>
+			<File
+				RelativePath="..\include\IPageFecher.h"
 				>
 			</File>
 			<File
@@ -223,7 +259,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\include\PageFetchThread.h"
+				RelativePath="..\include\PageFecher.h"
 				>
 			</File>
 			<File
@@ -231,7 +267,23 @@
 				>
 			</File>
 			<File
+				RelativePath="..\include\ScopeLock.h"
+				>
+			</File>
+			<File
 				RelativePath="..\include\UrlParser.h"
+				>
+			</File>
+			<File
+				RelativePath="..\include\WebpageManager.h"
+				>
+			</File>
+			<File
+				RelativePath="..\include\Win32Mutex.h"
+				>
+			</File>
+			<File
+				RelativePath="..\include\Win32PageFetchThread.h"
 				>
 			</File>
 		</Filter>
@@ -253,7 +305,11 @@
 				>
 			</File>
 			<File
-				RelativePath="..\include\IHttpFecher.h"
+				RelativePath="..\include\IHttpDownloader.h"
+				>
+			</File>
+			<File
+				RelativePath="..\include\IMutex.h"
 				>
 			</File>
 			<File
@@ -261,7 +317,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\include\IUrlTable.h"
+				RelativePath="..\include\IWebpageManager.h"
 				>
 			</File>
 		</Filter>
