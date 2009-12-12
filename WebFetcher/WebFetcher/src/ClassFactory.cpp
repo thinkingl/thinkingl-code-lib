@@ -2,6 +2,7 @@
 #include "WinInetHttpFecher.h"
 #include "Win32Application.h"
 #include "HtmlPageParser.h"
+#include "PageFetchThread.h"
 //CClassFactory::CClassFactory(void)
 //{
 //}
@@ -25,4 +26,9 @@ IApplication *CClassFactory::CreateApp()
 IHtmlPageParser *CClassFactory::CreateHtmlPageParser()
 {
 	return new CHtmlPageParser();
+}
+
+IThread *CClassFactory::CreatePageFetchThread()
+{
+	return new CPageFetchThread();
 }
