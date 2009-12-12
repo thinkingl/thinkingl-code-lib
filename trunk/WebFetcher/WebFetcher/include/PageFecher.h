@@ -1,6 +1,8 @@
 #pragma once
 #include "ipagefecher.h"
 #include "IHtmlPageParser.h"
+#include <stack>
+#include "ihttpdownloader.h"
 
 class CPageFecher :
 	public IPageFecher
@@ -17,8 +19,26 @@ public:
 	virtual BOOL HasPageWaiting() ;
 
 private:
+	/** 根据过滤条件，决定网页是否需要下载。 
+	*	只有需要解析的网页才需要下载。
+	*	其它文件都需要下载。
+	*	这里不检验是否已经下载过了！
+	*/
+	BOOL IsUrlShouldDownload( LPCTSTR strUrl );
+
+	/** 根据过滤条件，决定网页是否需要解析。
+	*	只有过滤条件中被设置为需要抓取的网页才需要解析。
+	*/
+	BOOL IsPageNeedParse( LPCTSTR strUrl );
+private:
 	IHtmlPageParser *m_pHtmlPageParser;
 
-	IHtmlPageParser::TUrlList m_tUrlWaitingDownload;
+	typedef std::stack< tstring > TStringStack;
+	TStringStack m_tUrlWaitingDownloadStack;
+//	IHtmlPageParser::TUrlList m_tUrlWaitingDownload;
 
+	IHttpDownloader *m_pHtmlDownloader;
+
+	/** 是否有工作做。 */
+	BOOL m_bHasWork;
 };
