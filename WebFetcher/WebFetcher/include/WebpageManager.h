@@ -1,6 +1,7 @@
 #pragma once
 #include "iwebpagemanager.h"
 #include "IDatabase.h"
+#include <stack>
 
 class CWebpageManager :
 	public IWebpageManager
@@ -38,4 +39,14 @@ public:
 private:
 	/** 数据库。 */
 	IDatabase *m_pDatabase;
+
+	/** 记录正在处理的页面。 */
+	typedef std::set< tstring > TStringSet;
+	TStringSet m_tFetchingUrl;
+
+	/** 缓存记录被缓存的页面。 */
+	typedef std::stack< IDatabase::TUrlRecordItem > TDatabaseRecordStack;
+	TDatabaseRecordStack m_tCachedPageStack;
+
+	/** */
 };

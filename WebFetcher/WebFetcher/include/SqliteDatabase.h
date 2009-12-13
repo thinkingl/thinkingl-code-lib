@@ -16,6 +16,14 @@ public:
 	// 关闭。 
 	virtual BOOL Close() ;
 
+	// 根据状态获取一条url记录。
+	/** 根据指定状态获取指定条数的 url记录。*/
+	virtual BOOL GetUrlByStateByNum( EWebpageState eState, 
+		TUrlRecordItemList& tRecordItemList, int nCount ) ;
+
+	/** 查找一条url记录。 */
+	virtual BOOL SearchUrl( LPCTSTR strUrl, TUrlRecordItem& item );
+
 private:
 	/** sqlite databse object. */
 	sqlite3 *m_pSqlite3;
