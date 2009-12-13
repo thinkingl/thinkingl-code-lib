@@ -1,11 +1,32 @@
 #include "WebpageManager.h"
+#include "Log.h"
+#include "ClassFactory.h"
 
 CWebpageManager::CWebpageManager(void)
 {
+	this->m_pDatabase = NULL;
 }
 
 CWebpageManager::~CWebpageManager(void)
 {
+	if ( m_pDatabase )
+	{
+		BOOL bClose = m_pDatabase->Close();
+		CLog() << _T( "Close database ret: " ) << bClose << endl;
+		delete m_pDatabase;
+		m_pDatabase = NULL;
+	}
+}
+
+BOOL CWebpageManager::Init()
+{
+	if ( NULL == m_pDatabase )
+	{
+		m_pDatabase = CClassFactory::CreateDatabase();
+	}
+	BOOL bOpen = m_pDatabase->Open();
+	CLog() << _T( "Open Database ret: " ) << bOpen << endl;
+	return bOpen;
 }
 
 BOOL CWebpageManager::GetCachedPage( tstring& strUrl, tstring& strLocalPath )
@@ -20,7 +41,7 @@ BOOL CWebpageManager::GetPageLocalFilePath( LPCTSTR strUrl, tstring& strLocalPat
 	return FALSE;
 }
 
-BOOL CWebpageManager::CachePageUrl( LPCTSTR strUrl, LPCTSTR strLocalPath )
+BOOL CWebpageManager::CachePageUrl( LPCTSTR strUrl )
 {
 	ASSERT( FALSE );
 	return FALSE;

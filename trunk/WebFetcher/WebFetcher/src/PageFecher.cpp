@@ -82,6 +82,11 @@ BOOL CPageFecher::FetchOnePage()
 					CLog() << _T( "Add Download fail url: " ) << strUrl
 						<< _T( " it's parent: " ) << strParentUrl << endl;
 				}
+				else
+				{
+					BOOL bCacheRet = IWebpageManager::Instance()->CachePageUrl( strUrl.c_str() );
+					CLog() << _T( "Record cached page : " ) << strUrl << _T( " ret: " ) << bCacheRet << endl;
+				}
 			}	
 			else
 			{
@@ -110,13 +115,14 @@ BOOL CPageFecher::FetchOnePage()
 
 		// 清除这个处理完毕的页面下载。
 		m_tUrlWaitingDownloadStack.pop();
-		CLog() << _T( "" ) << endl;
+		CLog() << _T( "waiting download queue pop." ) << endl;
 
 	}
 	else if( m_pHtmlPageParser )
 	{
 		// 已经没有需要下载的url了。
 		// 这个网页已经处理完毕，可以保存了。
+		ASSERT( FALSE );
 
 		// 保存到最终文件夹。
 
@@ -150,6 +156,7 @@ BOOL CPageFecher::FetchOnePage()
 			else
 			{
 				// 保存这个文件到最终保存目录，并记录。
+				ASSERT( FALSE );
 
 			}
 			

@@ -12,12 +12,8 @@ public:
 private:
 	static IWebpageManager *s_instance;
 public:
-	//enum EUrlState
-	//{
-	//	UrlStateSaved,		// 已经保存。
-	//	UrlStateCached,		// 已经被缓存。
-	//	UrlStateFeching,	// 正在获取。
-	//};
+
+	virtual BOOL Init() = 0;
 
 	/** 获取一个等待处理的缓存网页。 */
 	virtual BOOL GetCachedPage( tstring& strUrl, tstring& strLocalPath ) = 0;
@@ -29,7 +25,7 @@ public:
 	virtual BOOL GetPageLocalFilePath( LPCTSTR strUrl, tstring& strLocalPath ) = 0;
 
 	/** 增加一个缓存的url记录。 */
-	virtual BOOL CachePageUrl( LPCTSTR strUrl, LPCTSTR strLocalPath ) = 0;
+	virtual BOOL CachePageUrl( LPCTSTR strUrl ) = 0;
 
 	/** 缓存url变为保存好的网页。 */
 	virtual BOOL CachedPageToSavedPage( LPCTSTR strUrl ) = 0;
