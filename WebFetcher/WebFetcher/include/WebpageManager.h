@@ -1,5 +1,6 @@
 #pragma once
 #include "iwebpagemanager.h"
+#include "IDatabase.h"
 
 class CWebpageManager :
 	public IWebpageManager
@@ -10,6 +11,8 @@ protected:
 
 	CWebpageManager(void);
 	virtual ~CWebpageManager(void);
+
+	virtual BOOL Init();
 
 public:
 	/** 获取一个等待处理的缓存网页。 */
@@ -22,7 +25,7 @@ public:
 	virtual BOOL GetPageLocalFilePath( LPCTSTR strUrl, tstring& strLocalPath ) ;
 
 	/** 增加一个缓存的url记录。 */
-	virtual BOOL CachePageUrl( LPCTSTR strUrl, LPCTSTR strLocalPath ) ;
+	virtual BOOL CachePageUrl( LPCTSTR strUrl ) ;
 
 	/** 缓存url变为保存好的网页。 */
 	virtual BOOL CachedPageToSavedPage( LPCTSTR strUrl ) ;
@@ -33,5 +36,6 @@ public:
 	virtual BOOL AddFailUrl( LPCTSTR strBaseUrl, LPCTSTR strFailUrl ) ;
 
 private:
-
+	/** 数据库。 */
+	IDatabase *m_pDatabase;
 };

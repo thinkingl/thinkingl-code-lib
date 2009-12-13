@@ -7,6 +7,7 @@
 #include "IPageFecher.h"
 #include "IMutex.h"
 #include "IWebpageManager.h"
+#include "IDatabase.h"
 
 class CClassFactory
 {
@@ -26,5 +27,5 @@ public:
 
 	static IMutex *CreateMutex();
 
-
+	static IDatabase *CreateDatabase();
 };

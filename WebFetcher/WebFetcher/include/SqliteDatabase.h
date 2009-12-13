@@ -9,4 +9,14 @@ class CSqliteDatabase :
 public:
 	CSqliteDatabase(void);
 	virtual ~CSqliteDatabase(void);
+
+	// ´ò¿ª¡£
+	virtual BOOL Open() ;
+
+	// ¹Ø±Õ¡£ 
+	virtual BOOL Close() ;
+
+private:
+	/** sqlite databse object. */
+	sqlite3 *m_pSqlite3;
 };

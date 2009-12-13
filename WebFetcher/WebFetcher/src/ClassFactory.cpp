@@ -5,6 +5,7 @@
 #include "Win32PageFetchThread.h"
 #include "PageFecher.h"
 #include "Win32Mutex.h"
+#include "SqliteDatabase.h"
 //CClassFactory::CClassFactory(void)
 //{
 //}
@@ -45,3 +46,7 @@ IMutex *CClassFactory::CreateMutex()
 	return new CWin32Mutex();
 }
 
+IDatabase *CClassFactory::CreateDatabase()
+{
+	return new CSqliteDatabase();
+}
