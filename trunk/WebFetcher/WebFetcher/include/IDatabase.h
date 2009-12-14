@@ -12,7 +12,7 @@ public:
 	{
 		PageStateSaved,		// 已经保存。
 		PageStateCached,	// 已经被缓存。
-	//	PageStateFeching,	// 正在获取。
+		PageStateWaiting,	// 正在下载，仍没有下载到本地。
 	};
 
 	/** 数据库中的记录项。 */

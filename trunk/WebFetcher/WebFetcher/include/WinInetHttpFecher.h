@@ -8,8 +8,13 @@ public:
     CWinInetHttpFecher(void);
     virtual ~CWinInetHttpFecher(void);
 
-    /** 下载文件。 */
-    virtual BOOL DownloadFile( LPCTSTR strUrl, LPCTSTR strLocFilePath ) ;
+	/** 打开Url*/
+	virtual BOOL OpenUrl( LPCTSTR strUrl ) ;
+	/** 获取文件类型。 */
+	virtual BOOL GetFileType( EHttpFileType& eFileType );
+
+	/** 下载文件。 */
+	virtual BOOL DownloadFile( LPCTSTR strLocFilePath ) ;
 
     /** 设置http代理。 */
     virtual BOOL SetHttpProxy( BOOL bUseProxy,
@@ -24,5 +29,9 @@ public:
     virtual BOOL TestNetwork();
 
 private:
+	void Release();
+private:
     CInternetSession m_wininetSession;
+
+	CStdioFile *m_pInetFile;
 };

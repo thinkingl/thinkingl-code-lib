@@ -1,6 +1,7 @@
 #pragma once
 
 #include "portabledefine.h"
+#include "IHttpDownloader.h"
 
 /** url table*/
 
@@ -18,8 +19,13 @@ public:
 	/** 获取一个等待处理的缓存网页。 */
 	virtual BOOL GetCachedPage( tstring& strUrl, tstring& strLocalPath ) = 0;
 
-	/** 预先获取一个URL对应的缓存文件路径和保存文件路径。 */
-	virtual BOOL GetUrlPagePrePath( LPCTSTR strUrl, tstring& strCachePath, tstring& strSavePath ) = 0;
+	/** 预先获取一个URL对应的缓存文件路径和保存文件路径。
+	*	如果存在，返回已经存在的。
+	*/
+	virtual BOOL PreAllocateFilePath( LPCTSTR strUrl, 
+		IHttpDownloader::EHttpFileType eFileType,
+		tstring& strCachePath, 
+		tstring& strSavePath ) = 0;
 
 	/** 获取URL在本地的保存路径。 */
 	virtual BOOL GetPageLocalFilePath( LPCTSTR strUrl, tstring& strLocalPath ) = 0;

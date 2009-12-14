@@ -31,91 +31,162 @@ CPageFecher::~CPageFecher(void)
 BOOL CPageFecher::FetchOnePage()
 {
 	CLog() << _T( "CPageFecher Fetch One Page!" ) << endl;
-//	Sleep( 1000 );
-
 
 	// 是否有需要下载的url？
 	if ( !m_tUrlWaitingDownloadStack.empty() )
 	{
 		tstring strUrl = this->m_tUrlWaitingDownloadStack.top();
 
-		CLog() << _T( "Find url wait for download! url: " ) << strUrl << endl;
-
-		// 是否需要下载。 
-		BOOL bShouldDownload = this->IsUrlShouldDownload( strUrl.c_str() );
-		if ( bShouldDownload )
-		{
-			CLog() << _T( "Url Should be downloaded! url: " ) << strUrl << endl;
-			// 获取理论上页面应该在的位置。
-			tstring strCachePath, strSavePath;
-			IWebpageManager::Instance()->GetUrlPagePrePath( strUrl.c_str(), strCachePath, strSavePath );
-
-			CLog() << _T( "It should be cached to: " ) << strCachePath << endl;
-			CLog() << _T( "It should be saved to: " ) << strSavePath << endl;
-
-			// 是否已经下载。 
-			tstring strLocalPath;
-			BOOL bHaveDownload = IWebpageManager::Instance()->GetPageLocalFilePath( strUrl.c_str(), strLocalPath );
-			if ( !bHaveDownload )
-			{
-				// 下载到缓存目录。
-				if( m_pHtmlDownloader == NULL )
-				{
-					m_pHtmlDownloader = CClassFactory::CreateHttpDownloader();
-				}
-				BOOL bDownloadRet = m_pHtmlDownloader->DownloadFile( strUrl.c_str(), strCachePath.c_str() );
-				CLog() << _T( "Download " ) << strUrl
-					<< _T( " to " ) << strCachePath 
-					<< _T( " ret " ) << bDownloadRet << endl;
-				if ( !bDownloadRet )
-				{
-					tstring strParentUrl;
-					if ( this->m_pHtmlPageParser )
-					{
-						strParentUrl = this->m_pHtmlPageParser->GetCurServerUrl();
-					}
-					else
-					{
-						strParentUrl = IConfig::Instance()->GetRootUrl();
-					}
-					IWebpageManager::Instance()->AddFailUrl( strParentUrl.c_str(), strUrl.c_str() );
-					CLog() << _T( "Add Download fail url: " ) << strUrl
-						<< _T( " it's parent: " ) << strParentUrl << endl;
-				}
-				else
-				{
-					BOOL bCacheRet = IWebpageManager::Instance()->CachePageUrl( strUrl.c_str() );
-					CLog() << _T( "Record cached page : " ) << strUrl << _T( " ret: " ) << bCacheRet << endl;
-				}
-			}	
-			else
-			{
-				CLog() << _T( "No need to download !The url have been downloaded to " ) << strLocalPath << endl;
-			}
-			
-			// 更新网页。
-			if ( this->m_pHtmlPageParser )
-			{
-				tstring strParentUrl = this->m_pHtmlPageParser->GetCurServerUrl();
-				tstring strParentCachePath, strParentSavePath;
-				IWebpageManager::Instance()->GetUrlPagePrePath( strParentUrl.c_str(), strParentCachePath,
-					strParentSavePath );
-				CLog() << _T( "Parent page : " ) << strParentUrl 
-					<< _T( " should cached to: " ) << strParentCachePath 
-					<< _T( " should saved to: " ) << strParentSavePath << endl;
-
-				tstring strRelativePath;
-				strRelativePath = CCommon::GetRelativePath( strParentSavePath.c_str(), strSavePath.c_str() );
-				CLog() << _T( "Relative url on parent page is : " ) << strRelativePath << endl;
-
-				this->m_pHtmlPageParser->ReplaceAllUrl( strUrl.c_str(), strRelativePath.c_str() );
-			}
-
-		}
-
 		// 清除这个处理完毕的页面下载。
 		m_tUrlWaitingDownloadStack.pop();
 		CLog() << _T( "waiting download queue pop." ) << endl;
+
+		CLog() << _T( "Find url wait for download! url: " ) << strUrl << endl;
+
+		BOOL bHaveDownload, bShouldDownload, bNetworkOk;
+		tstring strCachePath, strSavePath;
+		BOOL bRet = this->GetUrlInfo( strUrl.c_str(), bNetworkOk, bHaveDownload, bShouldDownload,
+			strCachePath, strSavePath, &m_pHtmlDownloader );
+		if ( bRet )
+		{
+			CLog() << _T( "GetUrlInfo url: " ) << strUrl
+				<< _T( " network: " ) << bNetworkOk << _T( " bHaveDownload " ) << bHaveDownload 
+				<< _T( " bShouldDownload " ) << bShouldDownload << _T( " strCachePath " ) << strCachePath
+				<< _T( " strSavePath " ) << strSavePath << _T( " m_pHtmlDownloader " ) << m_pHtmlDownloader 
+				<< endl;
+			if( bShouldDownload )
+			{
+				if( !bHaveDownload )
+				{
+					// 下载。
+					ASSERT( m_pHtmlDownloader );
+					if( m_pHtmlDownloader )
+					{
+						BOOL bDownload = m_pHtmlDownloader->DownloadFile( strCachePath.c_str() );
+						ASSERT( bDownload );
+						if ( bDownload )
+						{
+							bHaveDownload = TRUE;
+
+							IWebpageManager::Instance()->CachePageUrl( strUrl.c_str() );
+						}
+					}
+				}
+				
+				// 更新。
+				if ( bHaveDownload )
+				{
+					BOOL bReplaceRet = this->ReplaceUrl( strUrl.c_str(), strSavePath.c_str() );
+					ASSERT( bReplaceRet );
+				}
+					
+			}
+		}
+		else
+		{
+			CLog() << _T( "GetUrlInfo fail!!!" ) << endl;
+
+			this->m_bHasWork = FALSE;
+			return FALSE;
+		}
+		//// 是否已经下载。
+		//tstring strLocalPath;
+		//BOOL bHaveDownload = IWebpageManager::Instance()->GetPageLocalFilePath( strUrl.c_str(), strLocalPath );
+		//if( !bHaveDownload )
+		//{
+		//	// 是否需要下载。
+		//	// 需要打开URL判断URL的类型。
+		//	if( m_pHtmlDownloader == NULL )
+		//	{
+		//		m_pHtmlDownloader = CClassFactory::CreateHttpDownloader();
+		//	}
+		//	BOOL bOpenUrl = m_pHtmlDownloader->OpenUrl( strUrl.c_str() );
+		//	_ASSERT( bOpenUrl );
+		//	if ( !bOpenUrl )
+		//	{
+		//		CLog() << _T( "Open Url Fail!!!! url: " ) << strUrl << endl;
+		//		ASSERT( FALSE );
+
+		//		// 应该做错误处理。
+		//	}
+		//	else
+		//	{
+		//		IHttpDownloader::EHttpFileType eHttpFileType;
+		//		BOOL bGetType = this->m_pHtmlDownloader->GetFileType( eHttpFileType );
+		//		ASSERT( bGetType );
+		//		if ( bGetType )
+		//		{
+		//			// 是否需要下载。 
+		//			BOOL bShouldDownload = this->IsUrlShouldDownload( strUrl.c_str() ); 
+		//			if ( bShouldDownload )
+		//			{
+		//				// 下载。
+		//				CLog() << _T( "Url Should be downloaded! url: " ) << strUrl << endl;
+		//				// 获取理论上页面应该在的位置。
+		//				tstring strCachePath, strSavePath;
+		//				IWebpageManager::Instance()->PreAllocateFilePath( strUrl.c_str(), strCachePath, strSavePath );
+
+		//				CLog() << _T( "It should be cached to: " ) << strCachePath << endl;
+		//				CLog() << _T( "It should be saved to: " ) << strSavePath << endl;
+
+		//				// 下载到缓存目录。
+		//				if( m_pHtmlDownloader == NULL )
+		//				{
+		//					m_pHtmlDownloader = CClassFactory::CreateHttpDownloader();
+		//				}
+		//				BOOL bDownloadRet = m_pHtmlDownloader->DownloadFile( strUrl.c_str(), strCachePath.c_str() );
+		//				CLog() << _T( "Download " ) << strUrl
+		//					<< _T( " to " ) << strCachePath 
+		//					<< _T( " ret " ) << bDownloadRet << endl;
+		//				if ( !bDownloadRet )
+		//				{
+		//					tstring strParentUrl;
+		//					if ( this->m_pHtmlPageParser )
+		//					{
+		//						strParentUrl = this->m_pHtmlPageParser->GetCurServerUrl();
+		//					}
+		//					else
+		//					{
+		//						strParentUrl = IConfig::Instance()->GetRootUrl();
+		//					}
+
+		//					// 这里应该要判断一下是不是能够上网。
+		//					// 如果能上网，则只是这个网页获取失败。
+		//					ASSERT( FALSE );
+		//					// 否则，退出这个线程，因为它已经无法工作了。
+
+		//					IWebpageManager::Instance()->AddFailUrl( strParentUrl.c_str(), strUrl.c_str() );
+		//					CLog() << _T( "Add Download fail url: " ) << strUrl
+		//						<< _T( " it's parent: " ) << strParentUrl << endl;
+		//				}
+		//				else
+		//				{
+		//					BOOL bCacheRet = IWebpageManager::Instance()->CachePageUrl( strUrl.c_str() );
+		//					CLog() << _T( "Record cached page : " ) << strUrl << _T( " ret: " ) << bCacheRet << endl;
+		//				}
+
+		//			}
+		//			else
+		//			{
+		//				delete m_pHtmlDownloader;
+		//				m_pHtmlDownloader = NULL;
+		//			}
+		//		}
+		//	}
+		//}
+		//else
+		//{
+		//	CLog() << _T( "No need to download !The url have been downloaded to " ) << strLocalPath << endl;
+		//}
+
+		//	
+		//// 更新网页。
+		//BOOL bReplaceRet = this->ReplaceUrl( strUrl.c_str(), );
+	
+
+		//}
+
+		
 
 	}
 	else if( m_pHtmlPageParser )
@@ -199,29 +270,38 @@ BOOL CPageFecher::HasPageWaiting()
 
 }
 
-BOOL CPageFecher::IsUrlShouldDownload( LPCTSTR strUrl )
+BOOL CPageFecher::IsUrlShouldDownload( LPCTSTR strUrl, IHttpDownloader::EHttpFileType eType )
 {
 	BOOL bShould = FALSE;
 
 	// 判断它是不是html网页。
-	CLog() << _T( "url should " ) << endl;
-	ASSERT( FALSE );
-
-	// 获取过滤url列表。 
-	tstringarray tar = IConfig::Instance()->GetAllFetchFilter();
-	for ( size_t i=0; i<tar.size(); ++i  )
+	// 
+//	CLog() << _T( "url should not tested!" ) << endl;
+//	ASSERT( FALSE );
+	if ( IHttpDownloader::HttpFileHtmlHtm == eType )
 	{
-		tstring strFilter = tar[i];
-
-		if ( CCommon::StrNCmpNocase( strFilter.c_str(), strUrl, strFilter.length() ) == 0 )
+		// 获取过滤url列表。 
+		tstringarray tar = IConfig::Instance()->GetAllFetchFilter();
+		for ( size_t i=0; i<tar.size(); ++i  )
 		{
-			BOOL bShouldFetch = IConfig::Instance()->IsUrlFilterFetch( strFilter.c_str() );
+			tstring strFilter = tar[i];
 
-			CLog() << _T( "url ") << strUrl << _T( " is filterd to fetch: " ) << bShouldFetch << endl;
-			bShould = bShouldFetch;
+			if ( CCommon::StrNCmpNocase( strFilter.c_str(), strUrl, strFilter.length() ) == 0 )
+			{
+				BOOL bShouldFetch = IConfig::Instance()->IsUrlFilterFetch( strFilter.c_str() );
+
+				CLog() << _T( "url ") << strUrl << _T( " is filterd to fetch: " ) << bShouldFetch << endl;
+				bShould = bShouldFetch;
+			}
 		}
 	}
-	return TRUE;
+	else
+	{
+		bShould = TRUE;
+	}
+
+	
+	return bShould;
 }
 
 BOOL CPageFecher::IsPageNeedParse( LPCTSTR strUrl )
@@ -230,4 +310,127 @@ BOOL CPageFecher::IsPageNeedParse( LPCTSTR strUrl )
 	return TRUE;
 }
 
+BOOL CPageFecher::ReplaceUrl( LPCTSTR strSrcUrl, LPCTSTR strDstUrl )
+{
+	ASSERT( m_pHtmlPageParser );
+	if ( this->m_pHtmlPageParser )
+	{
+		tstring strParentUrl = this->m_pHtmlPageParser->GetCurServerUrl();
+		tstring strParentCachePath, strParentSavePath;
+		// 父页面，肯定是页面。
+		IHttpDownloader::EHttpFileType eType = IHttpDownloader::HttpFileHtmlHtm;
+		IWebpageManager::Instance()->PreAllocateFilePath( strParentUrl.c_str(), eType, strParentCachePath,
+			strParentSavePath );
+		CLog() << _T( "Parent page : " ) << strParentUrl 
+			<< _T( " should cached to: " ) << strParentCachePath 
+			<< _T( " should saved to: " ) << strParentSavePath << endl;
+
+		tstring strRelativePath;
+		strRelativePath = CCommon::GetRelativePath( strParentSavePath.c_str(), strDstUrl );
+		CLog() << _T( "Relative url on parent page is : " ) << strRelativePath << endl;
+
+		this->m_pHtmlPageParser->ReplaceAllUrl( strSrcUrl, strRelativePath.c_str() );
+
+		return TRUE;
+	}
+	else
+	{
+		return FALSE;
+	}
+}
+
+BOOL CPageFecher::GetUrlInfo( LPCTSTR strUrl, BOOL& bNetworkOk, BOOL& bHaveDownload, BOOL& bShouldDownload, tstring& strCache, tstring& strSave, IHttpDownloader **ppDowloader )
+{
+	ASSERT( FALSE );
+
+	BOOL bResult = TRUE;
+
+	bNetworkOk = FALSE;
+	bHaveDownload = FALSE;
+	bShouldDownload = FALSE;
+	strCache.clear();
+	strSave.clear();
+	_ASSERT( NULL == *ppDowloader );
+
+	// 是否已经下载。
+	tstring strLocalPath;
+	bHaveDownload = IWebpageManager::Instance()->GetPageLocalFilePath( strUrl, strLocalPath );
+
+	// 已经下载的页面肯定需要下载。
+	bShouldDownload |= bHaveDownload;
+	if( !bHaveDownload )
+	{
+		// 是否需要下载。
+		// 需要打开URL判断URL的类型。
+		IHttpDownloader *pDownloader = CClassFactory::CreateHttpDownloader();		
+
+		BOOL bOpenUrl = pDownloader->OpenUrl( strUrl );
+		_ASSERT( bOpenUrl );
+		if ( !bOpenUrl )
+		{
+			CLog() << _T( "Open Url Fail!!!! url: " ) << strUrl << endl;
+			ASSERT( FALSE );
+
+			// 应该做错误处理。
+			BOOL bNetWorkOk = pDownloader->TestNetwork();
+			if ( bNetWorkOk )
+			{
+				// 网络正常。这个网址有问题。
+				ASSERT( FALSE );
+				CLog() << _T( "Network is ok! but url can't get! " ) << strUrl << endl;
+				tstring strParentUrl = IConfig::Instance()->GetRootUrl();
+				if ( m_pHtmlPageParser )
+				{
+					strParentUrl = m_pHtmlPageParser->GetCurServerUrl();
+				}
+				IWebpageManager::Instance()->AddFailUrl( strParentUrl.c_str(), strUrl );
+
+				// 不要下载了。
+				bShouldDownload = FALSE;
+
+				bNetWorkOk = TRUE;
+			}
+			else
+			{
+				// 网络不正常。
+				ASSERT( FALSE );
+				bNetWorkOk = FALSE;
+				bResult =  FALSE;
+			}
+
+			delete pDownloader;
+			pDownloader = NULL;
+		}
+		else
+		{
+			// 保存指针。
+			*ppDowloader = pDownloader;
+
+			IHttpDownloader::EHttpFileType eHttpFileType;
+			BOOL bGetType = this->m_pHtmlDownloader->GetFileType( eHttpFileType );
+			ASSERT( bGetType );
+			if ( bGetType )
+			{
+				// 是否需要下载。 
+				bShouldDownload = this->IsUrlShouldDownload( strUrl, eHttpFileType ); 
+				if ( bShouldDownload )
+				{
+					// 下载。
+					CLog() << _T( "Url Should be downloaded! url: " ) << strUrl << endl;
+					// 获取理论上页面应该在的位置。
+					IWebpageManager::Instance()->PreAllocateFilePath( strUrl, eHttpFileType, strCache, strSave );
+
+					CLog() << _T( "It should be cached to: " ) << strCache << endl;
+					CLog() << _T( "It should be saved to: " ) << strSave << endl;
+
+				}
+			}
+			else
+			{
+				bResult = FALSE;
+			}
+		}
+	}
+	return bResult;
+}
 
