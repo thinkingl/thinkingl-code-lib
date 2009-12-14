@@ -157,8 +157,40 @@ BOOL CWebpageManager::AddFailUrl( LPCTSTR strBaseUrl, LPCTSTR strFailUrl )
 	return FALSE;
 }
 
-BOOL CWebpageManager::GetUrlPagePrePath( LPCTSTR strUrl, tstring& strCachePath, tstring& strSavePath )
+BOOL CWebpageManager::PreAllocateFilePath( LPCTSTR strUrl, IHttpDownloader::EHttpFileType eFileType, tstring& strCachePath, tstring& strSavePath )
 {
-	ASSERT( FALSE );
-	return FALSE;
+	BOOL bResult = FALSE;
+	ASSERT( m_pDatabase );
+	if ( m_pDatabase )
+	{
+		IDatabase::TUrlRecordItem existItem;
+		BOOL bHad = m_pDatabase->SearchUrl( strUrl, existItem );
+		if ( bHad )
+		{
+			bResult = TRUE;
+			strCachePath = existItem.m_strCachePath;
+			strSavePath = existItem.m_strSavePath;			
+		}
+		else
+		{
+			// 创建一个。
+			tstring strExt;
+			switch ( eFileType )
+			{
+			case IHttpDownloader::HttpFileHtmlHtm:
+				strExt = _T( "html" );
+				break;
+			case IHttpDownloader::HttpFileOther:
+			default:
+				strExt = _T( "" );
+				ASSERT( FALSE );
+				break;
+			}
+
+			// 保存进数据库。
+			
+		}
+	}
+	ASSERT( bResult );
+	return bResult;
 }
