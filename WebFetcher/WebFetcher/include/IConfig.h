@@ -17,6 +17,10 @@ public:
 
 	virtual tstring GetRootUrl() = 0;
 
+    virtual BOOL IsUseProxy() = 0;
+
+    virtual BOOL IsProxyAuthentication() = 0;
+
 	virtual tstring GetProxyUserName() = 0;
 
 	virtual tstring GetProxyPassword() = 0;

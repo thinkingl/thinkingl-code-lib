@@ -82,3 +82,9 @@ BOOL CWinInetHttpFecher::DownloadFile( LPCTSTR strUrl, LPCTSTR strLocFilePath )
 	}
     return bResult;
 }
+
+BOOL CWinInetHttpFecher::TestNetwork()
+{
+    ASSERT( FALSE );
+    return FALSE;
+}
