@@ -11,6 +11,13 @@ LPCTSTR CONFIG_SERVER_ROOT = _T( "SERVERROOT" );
 LPCTSTR CONFIG_LOCAL_ROOT = _T( "LOCALROOT" );
 LPCTSTR CONFIG_THREAD_COUNT = _T( "THREADCOUNT" );
 
+LPCTSTR CONFIG_USE_PROXY = _T( "USEPROXY" );
+LPCTSTR CONFIG_PROXY_IP = _T( "PROXYIP" );
+LPCTSTR CONFIG_PROXY_PORT = _T( "PROXYPORT" );
+LPCTSTR CONFIG_AUTHENTICATION = _T( "AUTHENTICATION" );
+LPCTSTR COFNIG_PROXY_USER = _T( "PROXYUSER" );
+LPCTSTR CONFIG_PROXY_PASSWORD = _T( "PROXYPASSWORD" );
+
 CIniConfig::CIniConfig(void)
 {
 	BOOL bResult = this->Init();
@@ -31,24 +38,34 @@ tstring CIniConfig::GetRootUrl()
 	return this->ReadConfigStr( CONFIG_CFG_APP_NAME, CONFIG_SERVER_ROOT );
 }
 
+BOOL CIniConfig::IsUseProxy()
+{
+    return this->ReadConfigInt( CONFIG_CFG_APP_NAME, CONFIG_USE_PROXY );
+}
+
+BOOL CIniConfig::IsProxyAuthentication()
+{
+    return this->ReadConfigInt( CONFIG_CFG_APP_NAME, CONFIG_AUTHENTICATION );
+}
+
 tstring CIniConfig::GetProxyUserName()
 {
-	return _T( "" );
+	return this->ReadConfigStr( CONFIG_CFG_APP_NAME, COFNIG_PROXY_USER );
 }
 
 tstring CIniConfig::GetProxyIp()
 {
-	return _T( "" );
+	return this->ReadConfigStr( CONFIG_CFG_APP_NAME, CONFIG_PROXY_IP );
 }
 
 tstring CIniConfig::GetProxyPassword()
 {
-	return _T( "" );
+	return this->ReadConfigStr( CONFIG_CFG_APP_NAME, CONFIG_PROXY_PASSWORD );
 }
 
 uint16 CIniConfig::GetProxyPort()
 {
-	return 0;
+	return (uint16)this->ReadConfigInt( CONFIG_CFG_APP_NAME, CONFIG_PROXY_PORT );
 }
 
 tstring CIniConfig::ReadConfigStr( LPCTSTR strApp, LPCTSTR strKey )

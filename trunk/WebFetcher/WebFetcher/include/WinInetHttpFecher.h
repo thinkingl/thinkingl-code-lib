@@ -18,6 +18,11 @@ public:
         LPCTSTR strUser, 
         LPCTSTR strPassword ) ;
 
+    /** 网络测试。 
+    *   连接抓取目标主页测试。
+    */
+    virtual BOOL TestNetwork();
+
 private:
     CInternetSession m_wininetSession;
 };

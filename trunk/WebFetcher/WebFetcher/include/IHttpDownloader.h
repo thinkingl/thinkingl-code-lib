@@ -15,4 +15,9 @@ public:
 		uint16 strPort, 
 		LPCTSTR strUser, 
 		LPCTSTR strPassword ) = 0;
+
+    /** 网络测试。 
+    *   连接抓取目标主页测试。
+    */
+    virtual BOOL TestNetwork() = 0;
 };
