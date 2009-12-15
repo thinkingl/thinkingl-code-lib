@@ -122,11 +122,13 @@ int CWin32Application::RunWebFetch()
 		// TODO: 在此处为应用程序的行为编写代码。
 
 		CLog() << _T( "暂时只使用单线程抓页面。 " ) << endl;
+
+       
 		
 		int32 nThreadNum = IConfig::Instance()->GetThreadCount();
 		nThreadNum = max( 1, nThreadNum );
 
-		std::vector< IThread * > tThreadList;
+       	std::vector< IThread * > tThreadList;
 		for( int i=0; i<nThreadNum; ++i )
 		{
 			IThread *pThread = CClassFactory::CreatePageFetchThread();
@@ -166,6 +168,8 @@ int CWin32Application::RunWebFetch()
 			delete tThreadList[i];
 			tThreadList[i] = NULL;
 		}
+        IConfig::Release();
+        IWebpageManager::Release();
 	}
 
 	return nRetCode;

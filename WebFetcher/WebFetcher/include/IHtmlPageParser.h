@@ -3,6 +3,8 @@
 class IHtmlPageParser
 {
 public:
+    virtual ~IHtmlPageParser(){};
+
 	typedef std::vector< tstring > TUrlList;
 
 	/** ½âÎö¡£ 

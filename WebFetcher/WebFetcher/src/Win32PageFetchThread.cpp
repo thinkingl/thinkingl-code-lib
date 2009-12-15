@@ -9,11 +9,18 @@ CWin32PageFetchThread::CWin32PageFetchThread(void)
 
 CWin32PageFetchThread::~CWin32PageFetchThread(void)
 {
+    if( m_pPageFecher )
+    {
+        delete m_pPageFecher;
+        m_pPageFecher = NULL;
+    }
 }
 
 int CWin32PageFetchThread::DoPieceWork( BOOL& bExit )
 {
 	bExit = FALSE;
+
+    
 
 	if ( m_pPageFecher == NULL )
 	{

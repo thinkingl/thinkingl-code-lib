@@ -6,6 +6,7 @@
 #include "PageFecher.h"
 #include "Win32Mutex.h"
 #include "SqliteDatabase.h"
+#include "IConfig.h"
 //CClassFactory::CClassFactory(void)
 //{
 //}
@@ -18,7 +19,16 @@
 
 IHttpDownloader *CClassFactory::CreateHttpDownloader()
 {
-	return new CWinInetHttpFecher();
+	IHttpDownloader * pDownloader = new CWinInetHttpFecher();
+    BOOL bUseProxy = IConfig::Instance()->IsUseProxy();
+    tstring strProxyIp = IConfig::Instance()->GetProxyIp();
+    uint16 nProxyPort = IConfig::Instance()->GetProxyPort();
+    tstring strProxyUser = IConfig::Instance()->GetProxyUserName();
+    tstring strproxyPassword = IConfig::Instance()->GetProxyPassword();
+
+    BOOL bOk = pDownloader->SetHttpProxy( bUseProxy, strProxyIp.c_str(), nProxyPort, strProxyUser.c_str(), strproxyPassword.c_str() );
+    ASSERT( bOk );
+    return pDownloader;
 }
 
 IApplication *CClassFactory::CreateApp()

@@ -7,6 +7,10 @@ public:
 	{
 
 	}
+    virtual ~INoCopy()
+    {
+
+    }
 private:
 	INoCopy( const INoCopy& );
 	INoCopy& operator=( const INoCopy& );
