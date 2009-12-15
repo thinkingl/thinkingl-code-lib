@@ -5,6 +5,8 @@
 class IThread
 {
 public:
+    virtual ~IThread(){};
+
 	/** 停止线程时的超时时间。 */
 	virtual void SetTimeOut( uint32 nMilliSeconds ) = 0;
 

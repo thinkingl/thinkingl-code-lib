@@ -12,6 +12,8 @@ public:
 	static void Release();
 private:
 	static IWebpageManager *s_instance;
+protected:
+    virtual ~IWebpageManager(){};
 public:
 
 	virtual BOOL Init() = 0;

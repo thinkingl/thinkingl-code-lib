@@ -181,19 +181,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\src\IConfig.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\src\IDatabase.cpp"
-				>
-			</File>
-			<File
 				RelativePath="..\src\IniConfig.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\src\IWebpageManager.cpp"
 				>
 			</File>
 			<File
@@ -247,19 +235,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\include\IConfig.h"
-				>
-			</File>
-			<File
-				RelativePath="..\include\IDatabase.h"
-				>
-			</File>
-			<File
 				RelativePath="..\include\IniConfig.h"
-				>
-			</File>
-			<File
-				RelativePath="..\include\INoCopy.h"
 				>
 			</File>
 			<File
@@ -317,6 +293,22 @@
 				>
 			</File>
 			<File
+				RelativePath="..\src\IConfig.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\include\IConfig.h"
+				>
+			</File>
+			<File
+				RelativePath="..\src\IDatabase.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\include\IDatabase.h"
+				>
+			</File>
+			<File
 				RelativePath="..\include\IHtmlPageParser.h"
 				>
 			</File>
@@ -329,7 +321,15 @@
 				>
 			</File>
 			<File
+				RelativePath="..\include\INoCopy.h"
+				>
+			</File>
+			<File
 				RelativePath="..\include\IThread.h"
+				>
+			</File>
+			<File
+				RelativePath="..\src\IWebpageManager.cpp"
 				>
 			</File>
 			<File

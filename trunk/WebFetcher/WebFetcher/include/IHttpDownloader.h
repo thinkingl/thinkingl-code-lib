@@ -5,6 +5,8 @@
 class IHttpDownloader
 {
 public:
+    virtual ~IHttpDownloader(){};
+
 	enum EHttpFileType
 	{
 		HttpFileHtmlHtm,	// ÍøÒ³¡£

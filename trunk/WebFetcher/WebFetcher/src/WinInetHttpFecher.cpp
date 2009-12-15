@@ -1,5 +1,6 @@
 #include "WinInetHttpFecher.h"
 #include "log.h"
+#include "IConfig.h"
 CWinInetHttpFecher::CWinInetHttpFecher(void)
 {
 	this->m_pInetFile = NULL;
@@ -19,14 +20,25 @@ BOOL CWinInetHttpFecher::SetHttpProxy( BOOL bUseProxy, LPCTSTR strIp, uint16 nPo
         ssProxy << strIp << _T( ":" ) << nPort;
 
         INTERNET_PROXY_INFO proxyInfo;
-        proxyInfo.dwAccessType = INTERNET_OPEN_TYPE_PROXY;
-        proxyInfo.lpszProxy = ssProxy.str().c_str();
+        memset( &proxyInfo, 0, sizeof( proxyInfo ) );
+
+        tstring strProxyAddr = ssProxy.str();
+        proxyInfo.dwAccessType = bUseProxy ? INTERNET_OPEN_TYPE_PROXY : INTERNET_OPEN_TYPE_DIRECT;
+        proxyInfo.lpszProxy = strProxyAddr.c_str();
+
+        proxyInfo.lpszProxy = _T( "172.16.128.34:2000" );
 
         bResult = this->m_wininetSession.SetOption( INTERNET_OPTION_PROXY, &proxyInfo, sizeof( proxyInfo ) );
 
-        bResult &= this->m_wininetSession.SetOption( INTERNET_OPTION_PROXY_USERNAME, (LPVOID)strUser, _tcslen( strUser ) );
-
-        bResult &= this->m_wininetSession.SetOption( INTERNET_OPTION_PROXY_PASSWORD, (LPVOID)strPassword, _tcslen( strPassword ) );
+        if ( strUser && *strUser )
+        {
+            bResult &= this->m_wininetSession.SetOption( INTERNET_OPTION_PROXY_USERNAME, (LPVOID)strUser, _tcslen( strUser ) );
+        }
+        
+        if ( strPassword && *strPassword )
+        {
+            bResult &= this->m_wininetSession.SetOption( INTERNET_OPTION_PROXY_PASSWORD, (LPVOID)strPassword, _tcslen( strPassword ) );
+        }       
 
     }
     catch (CInternetException* pEx)
@@ -65,6 +77,7 @@ BOOL CWinInetHttpFecher::OpenUrl( LPCTSTR strUrl )
 		TCHAR sz[1024];
 		pEx->GetErrorMessage(sz, 1024);
 		_tprintf_s(_T("ERROR!  %s\n"), sz);
+        CLog() << _T( "Open url ") << strUrl << _T( " fail:" ) << sz << endl;
 		pEx->Delete();
 
 		bResult = FALSE;
@@ -124,8 +137,12 @@ BOOL CWinInetHttpFecher::DownloadFile( LPCTSTR strLocFilePath )
 
 BOOL CWinInetHttpFecher::TestNetwork()
 {
-    ASSERT( FALSE );
-    return FALSE;
+ //   ASSERT( FALSE );
+    tstring strRootUrl = IConfig::Instance()->GetRootUrl();
+
+    BOOL bResult = this->OpenUrl( strRootUrl.c_str() );
+
+    return bResult;
 }
 
 BOOL CWinInetHttpFecher::GetFileType( EHttpFileType& eFileType )

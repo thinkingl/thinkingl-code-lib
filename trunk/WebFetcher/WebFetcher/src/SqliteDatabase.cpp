@@ -103,6 +103,11 @@ BOOL CSqliteDatabase::Open()
 
 BOOL CSqliteDatabase::Close()
 {
+    if( m_pSqlite3 )
+    {
+        sqlite3_close( m_pSqlite3 );
+        m_pSqlite3 = NULL;
+    }
 	ASSERT( FALSE );
 	return FALSE;
 }

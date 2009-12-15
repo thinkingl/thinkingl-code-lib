@@ -7,8 +7,8 @@ CWin32Thread::CWin32Thread(void)
 	this->m_hThread = NULL;
 	this->m_bRun = FALSE;
 
-	// 默认一分钟。
-	this->m_nTimeoutMilliseconds = 60 * 1000;
+	// 默认10分钟。
+	this->m_nTimeoutMilliseconds = 600 * 1000;
 }
 
 CWin32Thread::~CWin32Thread(void)
