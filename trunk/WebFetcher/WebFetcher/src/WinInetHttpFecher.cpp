@@ -26,13 +26,19 @@ BOOL CWinInetHttpFecher::SetHttpProxy( BOOL bUseProxy, LPCTSTR strIp, uint16 nPo
         proxyInfo.dwAccessType = bUseProxy ? INTERNET_OPEN_TYPE_PROXY : INTERNET_OPEN_TYPE_DIRECT;
         proxyInfo.lpszProxy = strProxyAddr.c_str();
 
-        proxyInfo.lpszProxy = _T( "172.16.128.34:2000" );
+        proxyInfo.lpszProxy = _T( "172.16.0.1:808" );
+        strUser = _T( "lizhixing" );
+        strPassword = _T( "lizhixing" );
 
         bResult = this->m_wininetSession.SetOption( INTERNET_OPTION_PROXY, &proxyInfo, sizeof( proxyInfo ) );
 
         if ( strUser && *strUser )
         {
             bResult &= this->m_wininetSession.SetOption( INTERNET_OPTION_PROXY_USERNAME, (LPVOID)strUser, _tcslen( strUser ) );
+            if ( !bResult )
+            {
+                CLog() << _T( "SetOption INTERNET_OPTION_PROXY_USERNAME Fail! er: " ) << GetLastError() << endl;
+            }
         }
         
         if ( strPassword && *strPassword )
