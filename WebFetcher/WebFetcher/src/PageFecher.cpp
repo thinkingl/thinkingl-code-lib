@@ -111,7 +111,7 @@ BOOL CPageFecher::FetchOnePage()
 		//	}
 		//	else
 		//	{
-		//		IHttpDownloader::EHttpFileType eHttpFileType;
+		//		IHttpDownloader::EMimeType eHttpFileType;
 		//		BOOL bGetType = this->m_pHtmlDownloader->GetFileType( eHttpFileType );
 		//		ASSERT( bGetType );
 		//		if ( bGetType )
@@ -270,7 +270,7 @@ BOOL CPageFecher::HasPageWaiting()
 
 }
 
-BOOL CPageFecher::IsUrlShouldDownload( LPCTSTR strUrl, IHttpDownloader::EHttpFileType eType )
+BOOL CPageFecher::IsUrlShouldDownload( LPCTSTR strUrl, IHttpDownloader::EMimeType eType )
 {
 	BOOL bShould = FALSE;
 
@@ -278,7 +278,7 @@ BOOL CPageFecher::IsUrlShouldDownload( LPCTSTR strUrl, IHttpDownloader::EHttpFil
 	// 
 //	CLog() << _T( "url should not tested!" ) << endl;
 //	ASSERT( FALSE );
-	if ( IHttpDownloader::HttpFileHtmlHtm == eType )
+	if ( IHttpDownloader::HttpMimeHtmlHtm == eType )
 	{
 		// 获取过滤url列表。 
 		tstringarray tar = IConfig::Instance()->GetAllFetchFilter();
@@ -318,7 +318,7 @@ BOOL CPageFecher::ReplaceUrl( LPCTSTR strSrcUrl, LPCTSTR strDstUrl )
 		tstring strParentUrl = this->m_pHtmlPageParser->GetCurServerUrl();
 		tstring strParentCachePath, strParentSavePath;
 		// 父页面，肯定是页面。
-		IHttpDownloader::EHttpFileType eType = IHttpDownloader::HttpFileHtmlHtm;
+		IHttpDownloader::EMimeType eType = IHttpDownloader::HttpMimeHtmlHtm;
 		IWebpageManager::Instance()->PreAllocateFilePath( strParentUrl.c_str(), eType, strParentCachePath,
 			strParentSavePath );
 		CLog() << _T( "Parent page : " ) << strParentUrl 
@@ -406,7 +406,7 @@ BOOL CPageFecher::GetUrlInfo( LPCTSTR strUrl, BOOL& bNetworkOk, BOOL& bHaveDownl
 			// 保存指针。
 			*ppDowloader = pDownloader;
 
-			IHttpDownloader::EHttpFileType eHttpFileType;
+			IHttpDownloader::EMimeType eHttpFileType;
 			BOOL bGetType = this->m_pHtmlDownloader->GetFileType( eHttpFileType );
 			ASSERT( bGetType );
 			if ( bGetType )

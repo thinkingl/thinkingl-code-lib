@@ -2,7 +2,8 @@
 #include "ihttpdownloader.h"
 
 class CWinInetHttpFecher :
-    public IHttpDownloader
+    public IHttpDownloader,
+	public CInternetSession
 {
 public:
     CWinInetHttpFecher(void);
@@ -11,7 +12,7 @@ public:
 	/** 打开Url*/
 	virtual BOOL OpenUrl( LPCTSTR strUrl ) ;
 	/** 获取文件类型。 */
-	virtual BOOL GetFileType( EHttpFileType& eFileType );
+	virtual BOOL GetFileType( EMimeType& eFileType );
 
 	/** 下载文件。 */
 	virtual BOOL DownloadFile( LPCTSTR strLocFilePath ) ;
@@ -31,7 +32,9 @@ public:
 private:
 	void Release();
 private:
-    CInternetSession m_wininetSession;
+//    CInternetSession m_wininetSession;
 
 	CStdioFile *m_pInetFile;
+public:
+	virtual void OnStatusCallback(DWORD dwContext, DWORD dwInternetStatus, LPVOID lpvStatusInformation, DWORD dwStatusInformationLength);
 };

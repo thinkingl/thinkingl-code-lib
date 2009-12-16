@@ -157,7 +157,7 @@ BOOL CWebpageManager::AddFailUrl( LPCTSTR strBaseUrl, LPCTSTR strFailUrl )
 	return FALSE;
 }
 
-BOOL CWebpageManager::PreAllocateFilePath( LPCTSTR strUrl, IHttpDownloader::EHttpFileType eFileType, tstring& strCachePath, tstring& strSavePath )
+BOOL CWebpageManager::PreAllocateFilePath( LPCTSTR strUrl, IHttpDownloader::EMimeType eFileType, tstring& strCachePath, tstring& strSavePath )
 {
 	BOOL bResult = FALSE;
 	ASSERT( m_pDatabase );
@@ -177,10 +177,10 @@ BOOL CWebpageManager::PreAllocateFilePath( LPCTSTR strUrl, IHttpDownloader::EHtt
 			tstring strExt;
 			switch ( eFileType )
 			{
-			case IHttpDownloader::HttpFileHtmlHtm:
+			case IHttpDownloader::HttpMimeHtmlHtm:
 				strExt = _T( "html" );
 				break;
-			case IHttpDownloader::HttpFileOther:
+			case IHttpDownloader::HttpMimeOther:
 			default:
 				strExt = _T( "" );
 				ASSERT( FALSE );

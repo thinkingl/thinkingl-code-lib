@@ -26,7 +26,7 @@ BOOL testFetchUrl()
 	LPCTSTR strFile = _T( "F:\\download\\verycdindex.htm" );
 	BOOL bRet = pFecher->OpenUrl( strUrl );
 
-	IHttpDownloader::EHttpFileType eType;
+	IHttpDownloader::EMimeType eType;
 	pFecher->GetFileType( eType );
 
 	pFecher->DownloadFile( strFile );
