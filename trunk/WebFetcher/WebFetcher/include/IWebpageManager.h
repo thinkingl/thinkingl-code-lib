@@ -25,7 +25,7 @@ public:
 	*	如果存在，返回已经存在的。
 	*/
 	virtual BOOL PreAllocateFilePath( LPCTSTR strUrl, 
-		IHttpDownloader::EHttpFileType eFileType,
+		IHttpDownloader::EMimeType eFileType,
 		tstring& strCachePath, 
 		tstring& strSavePath ) = 0;
 
