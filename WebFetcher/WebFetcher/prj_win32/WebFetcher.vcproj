@@ -193,6 +193,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\src\MimeType.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\src\PageFecher.cpp"
 				>
 			</File>
@@ -248,6 +252,10 @@
 			</File>
 			<File
 				RelativePath="..\include\Log.h"
+				>
+			</File>
+			<File
+				RelativePath="..\include\MimeType.h"
 				>
 			</File>
 			<File

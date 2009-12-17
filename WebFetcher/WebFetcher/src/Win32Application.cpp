@@ -1,6 +1,7 @@
 #include "Win32Application.h"
 #include "Log.h"
 #include "IConfig.h"
+#include "MimeType.h"
 
 CWin32Application::CWin32Application(void)
 {
@@ -26,8 +27,8 @@ BOOL testFetchUrl()
 	LPCTSTR strFile = _T( "F:\\download\\verycdindex.htm" );
 	BOOL bRet = pFecher->OpenUrl( strUrl );
 
-	IHttpDownloader::EMimeType eType;
-	pFecher->GetFileType( eType );
+	CMimeType eType;
+	pFecher->GetMimeType( eType );
 
 	pFecher->DownloadFile( strFile );
 

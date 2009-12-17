@@ -347,5 +347,61 @@ __time64_t CCommon::StrToTime( LPCTSTR lpTime )
 
 }
 
+tstring CCommon::Url2FileName( LPCTSTR strUrl )
+{
+	ASSERT( FALSE );
 
+	const TCHAR TokenBegin = _T( '^' );
+	const TCHAR TokenReservedWord = _T( '$' );
+
+	tstringstream ssFileName;
+	ssFileName << TokenBegin;
+
+	/** 
+	Character	Name	Reason
+		/	slash	used as a path name component separator in Unix-like, Windows, and Amiga systems. (The MS-DOS command.com shell would consume it as a switch character, but Windows itself always accepts it as a separator[2])
+		\	backslash	Also used as a path name component separator in MS-DOS, OS/2 and Windows (there is no difference between slash and backslash); allowed in Unix filenames, see Note 1
+		?	question mark	used as a wildcard in Unix, Windows and AmigaOS; marks a single character. Allowed in Unix filenames, see Note 1
+		%	percent sign	used as a wildcard in RT-11; marks a single character.
+		*	asterisk	used as a wildcard in Unix, MS-DOS, RT-11, VMS and Windows. Marks any sequence of characters (Unix, Windows, later versions of MS-DOS) or any sequence of characters in either the basename or extension (thus "*.*" in early versions of MS-DOS means "all files". Allowed in Unix filenames, see note 1
+		:	colon	used to determine the mount point / drive on Windows; used to determine the virtual device or physical device such as a drive on AmigaOS, RT-11 and VMS; used as a pathname separator in classic Mac OS. Doubled after a name on VMS, indicates the DECnet nodename (equivalent to a NetBIOS (Windows networking) hostname preceded by "\\".)
+		|	vertical bar	designates software pipelining in Unix and Windows; allowed in Unix filenames, see Note 1
+		"	quotation mark	used to mark beginning and end of filenames containing spaces in Windows, see Note 1
+		<	less than	used to redirect input, allowed in Unix filenames, see Note 1
+		>	greater than	used to redirect output, allowed in Unix filenames, see Note 1
+		.	period	allowed but the last occurrence will be interpreted to be the extension separator in VMS, MS-DOS and Windows. In other OSes, usually considered as part of the filename, and more than one full stop may be allowed.
+	*/
+	while ( strUrl && *strUrl )
+	{
+		switch( *strUrl )
+		{
+		case _T( '/' ):
+		case _T( '\\' ):
+		case _T( '?' ):
+		case _T( '%' ):
+		case _T( '*' ):
+		case _T( ':' ):
+		case _T( '|' ):
+		case _T( '"' ):
+		case _T( '<' ):
+		case _T( '>' ):
+		case _T( '.' ):
+			{
+				tstringstream ssHex;
+				ssHex << hex << int(*strUrl);
+				tstring strHex = ssHex.str();
+	//			strHex = strHex.substr( strHex.length() - 2 );
+				ssFileName << TokenReservedWord << strHex;
+			}
+			break;
+
+		default:
+			ssFileName << *strUrl;
+		}
+
+		strUrl ++;
+	}
+	
+	return ssFileName.str();
+}
 

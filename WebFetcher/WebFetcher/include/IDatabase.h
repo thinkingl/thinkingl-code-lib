@@ -39,6 +39,9 @@ public:
 	/** 查找一条url记录。 */
 	virtual BOOL SearchUrl( LPCTSTR strUrl, TUrlRecordItem& item ) = 0;
 
+	/** 添加一条记录。 */
+	virtual BOOL AddRecord( const TUrlRecordItem& item ) = 0;
+
 	// 添加一条缓存记录。
 
 

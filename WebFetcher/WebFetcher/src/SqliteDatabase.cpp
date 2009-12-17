@@ -231,3 +231,9 @@ BOOL CSqliteDatabase::SearchUrl( LPCTSTR strUrl, TUrlRecordItem& item )
 	ASSERT( FALSE );
 	return FALSE;
 }
+
+BOOL CSqliteDatabase::AddRecord( const TUrlRecordItem& item )
+{
+	ASSERT( FALSE );
+	return FALSE;
+}

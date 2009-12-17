@@ -31,7 +31,7 @@ private:
 	*	其它文件都需要下载。
 	*	这里不检验是否已经下载过了！
 	*/
-	BOOL IsUrlShouldDownload( LPCTSTR strUrl, IHttpDownloader::EMimeType eType );
+	BOOL IsUrlShouldDownload( LPCTSTR strUrl, const CMimeType& eFileType );
 
 	/** 根据过滤条件，决定网页是否需要解析。
 	*	只有过滤条件中被设置为需要抓取的网页才需要解析。

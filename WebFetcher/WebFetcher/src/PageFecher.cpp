@@ -270,7 +270,7 @@ BOOL CPageFecher::HasPageWaiting()
 
 }
 
-BOOL CPageFecher::IsUrlShouldDownload( LPCTSTR strUrl, IHttpDownloader::EMimeType eType )
+BOOL CPageFecher::IsUrlShouldDownload( LPCTSTR strUrl, const CMimeType& mimetype )
 {
 	BOOL bShould = FALSE;
 
@@ -278,7 +278,7 @@ BOOL CPageFecher::IsUrlShouldDownload( LPCTSTR strUrl, IHttpDownloader::EMimeTyp
 	// 
 //	Log() << _T( "url should not tested!" ) << endl;
 //	ASSERT( FALSE );
-	if ( IHttpDownloader::HttpMimeHtmlHtm == eType )
+	if ( CMimeType::HttpMimeHtmlHtm == mimetype.GetMimeType() )
 	{
 		// 获取过滤url列表。 
 		tstringarray tar = IConfig::Instance()->GetAllFetchFilter();
@@ -317,14 +317,15 @@ BOOL CPageFecher::ReplaceUrl( LPCTSTR strSrcUrl, LPCTSTR strDstUrl )
 	{
 		tstring strParentUrl = this->m_pHtmlPageParser->GetCurServerUrl();
 		tstring strParentCachePath, strParentSavePath;
-		// 父页面，肯定是页面。
-		IHttpDownloader::EMimeType eType = IHttpDownloader::HttpMimeHtmlHtm;
-		IWebpageManager::Instance()->PreAllocateFilePath( strParentUrl.c_str(), eType, strParentCachePath,
+		// 查询父页面的位置.
+		ASSERT( FALSE );
+		BOOL bSerchRet = IWebpageManager::Instance()->SearchPagePath( strParentUrl.c_str(), strParentCachePath,
 			strParentSavePath );
 		Log() << _T( "Parent page : " ) << strParentUrl 
 			<< _T( " should cached to: " ) << strParentCachePath 
 			<< _T( " should saved to: " ) << strParentSavePath << endl;
-
+		ASSERT( bSerchRet );
+		
 		tstring strRelativePath;
 		strRelativePath = CCommon::GetRelativePath( strParentSavePath.c_str(), strDstUrl );
 		Log() << _T( "Relative url on parent page is : " ) << strRelativePath << endl;
@@ -406,19 +407,19 @@ BOOL CPageFecher::GetUrlInfo( LPCTSTR strUrl, BOOL& bNetworkOk, BOOL& bHaveDownl
 			// 保存指针。
 			*ppDowloader = pDownloader;
 
-			IHttpDownloader::EMimeType eHttpFileType;
-			BOOL bGetType = this->m_pHtmlDownloader->GetFileType( eHttpFileType );
+			CMimeType cMimeType;
+			BOOL bGetType = this->m_pHtmlDownloader->GetMimeType( cMimeType );
 			ASSERT( bGetType );
 			if ( bGetType )
 			{
 				// 是否需要下载。 
-				bShouldDownload = this->IsUrlShouldDownload( strUrl, eHttpFileType ); 
+				bShouldDownload = this->IsUrlShouldDownload( strUrl, cMimeType ); 
 				if ( bShouldDownload )
 				{
 					// 下载。
 					Log() << _T( "Url Should be downloaded! url: " ) << strUrl << endl;
 					// 获取理论上页面应该在的位置。
-					IWebpageManager::Instance()->PreAllocateFilePath( strUrl, eHttpFileType, strCache, strSave );
+					IWebpageManager::Instance()->PreAllocateFilePath( strUrl, cMimeType, strCache, strSave );
 
 					Log() << _T( "It should be cached to: " ) << strCache << endl;
 					Log() << _T( "It should be saved to: " ) << strSave << endl;
