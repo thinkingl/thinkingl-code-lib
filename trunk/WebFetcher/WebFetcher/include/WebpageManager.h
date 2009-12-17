@@ -23,9 +23,16 @@ public:
 	*	如果存在，返回已经存在的。
 	*/
 	virtual BOOL PreAllocateFilePath( LPCTSTR strUrl, 
-		IHttpDownloader::EMimeType eFileType,
+		const CMimeType& cMimeType,
 		tstring& strCachePath, 
 		tstring& strSavePath );
+
+	/** 只是在数据库中查找一个URL对应的缓存文件路径和保存文件路径.
+	*	
+	*/
+	virtual BOOL SearchPagePath( LPCTSTR strUrl, 
+		tstring& strCachePath, 
+		tstring& strSavePath ) ;
 
 	/** 获取URL在本地的保存路径。 */
 	virtual BOOL GetPageLocalFilePath( LPCTSTR strUrl, tstring& strLocalPath ) ;

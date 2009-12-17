@@ -200,167 +200,10 @@ BOOL CWinInetHttpFecher::TestNetwork()
     return bResult;
 }
 
-struct TMimeType
-{
-	IHttpDownloader::EMimeType m_eMimeType;
-	tstring m_strContentTypeToken;
-	tstring m_strFileExt;
-	
-	TMimeType(IHttpDownloader::EMimeType eMimeType, LPCTSTR strContentTypeToken, LPCTSTR strFileExt )
-	{
-		this->m_eMimeType = eMimeType;
-		this->m_strContentTypeToken = strContentTypeToken;
-		this->m_strFileExt = strFileExt;
-	}
-};
-
-static const TMimeType s_arMimeTypeDic[]=
-{
-	TMimeType( IHttpDownloader::HttpMimeHtmlHtm, _T( "text/html" ), _T( "html" ) ),
-	TMimeType( IHttpDownloader::HttpMimeHtmlHtm, _T( "text/html" ), _T( "htm" ) ),
-	TMimeType( IHttpDownloader::HttpMimeHqx, _T( "application/mac-binhex40" ), _T( "hqx" ) ),
-	TMimeType( IHttpDownloader::HttpMimeCpt, _T( "xxxxxxxxxx" ), _T( "cpt" ) ),
-	TMimeType( IHttpDownloader::HttpMimeDoc, _T( "xxxxxxxxxx" ), _T( "doc" ) ),
-	TMimeType( IHttpDownloader::HttpMimeBinDmsLhaLzhExeClassSoDll, _T( "application/octet-stream" ), _T( "bin" ) ),
-	TMimeType( IHttpDownloader::HttpMimeBinDmsLhaLzhExeClassSoDll, _T( "application/octet-stream" ), _T( "dms" ) ),
-	TMimeType( IHttpDownloader::HttpMimeBinDmsLhaLzhExeClassSoDll, _T( "application/octet-stream" ), _T( "lha" ) ),
-	TMimeType( IHttpDownloader::HttpMimeBinDmsLhaLzhExeClassSoDll, _T( "application/octet-stream" ), _T( "lzh" ) ),
-	TMimeType( IHttpDownloader::HttpMimeBinDmsLhaLzhExeClassSoDll, _T( "application/octet-stream" ), _T( "exe" ) ),
-	TMimeType( IHttpDownloader::HttpMimeBinDmsLhaLzhExeClassSoDll, _T( "application/octet-stream" ), _T( "class" ) ),
-	TMimeType( IHttpDownloader::HttpMimeBinDmsLhaLzhExeClassSoDll, _T( "application/octet-stream" ), _T( "so" ) ),
-	TMimeType( IHttpDownloader::HttpMimeBinDmsLhaLzhExeClassSoDll, _T( "application/octet-stream" ), _T( "dll" ) ),
-	TMimeType( IHttpDownloader::HttpMimeOda, _T( "application/oda" ), _T( "oda" ) ),
-	TMimeType( IHttpDownloader::HttpMimePdf, _T( "application/pdf" ), _T( "pdf" ) ),
-	TMimeType( IHttpDownloader::HttpMimeAiEpsPs, _T( "application/postscript" ), _T( "ai" ) ),
-	TMimeType( IHttpDownloader::HttpMimeAiEpsPs, _T( "application/postscript" ), _T( "eps" ) ),
-	TMimeType( IHttpDownloader::HttpMimeAiEpsPs, _T( "application/postscript" ), _T( "ps" ) ),
-	TMimeType( IHttpDownloader::HttpMimeSmiSmil, _T( "application/smil" ), _T( "smi" ) ),
-	TMimeType( IHttpDownloader::HttpMimeSmiSmil, _T( "application/smil" ), _T( "smil" ) ),
-	TMimeType( IHttpDownloader::HttpMimeMif, _T( "application/vnd.mif" ), _T( "mif" ) ),
-	TMimeType( IHttpDownloader::HttpMimeXls, _T( "pplication/vnd.ms-excel" ), _T( "xls" ) ),
-	TMimeType( IHttpDownloader::HttpMimePpt, _T( "application/vnd.ms-powerpoint" ), _T( "ppt" ) ),
-	TMimeType( IHttpDownloader::HttpMimeWbxml, _T( "application/vnd.wap.wbxml" ), _T( "wbxml" ) ),
-	TMimeType( IHttpDownloader::HttpMimeWmlc, _T( "application/vnd.wap.wmlc" ), _T( "wmlc" ) ),
-	TMimeType( IHttpDownloader::HttpMimeWmlsc, _T( "application/vnd.wap.wmlscriptc" ), _T( "wmlsc" ) ),
-	TMimeType( IHttpDownloader::HttpMimeBcpio, _T( "application/x-bcpio" ), _T( "bcpio" ) ),
-	TMimeType( IHttpDownloader::HttpMimeVcd, _T( "application/x-cdlink" ), _T( "vcd" ) ),
-	TMimeType( IHttpDownloader::HttpMimePgn, _T( "application/x-chess-pgn" ), _T( "pgn" ) ),
-	TMimeType( IHttpDownloader::HttpMimeCpio, _T( "application/x-cpio" ), _T( "cpio" ) ),
-	TMimeType( IHttpDownloader::HttpMimeCsh, _T( "application/x-csh" ), _T( "csh" ) ),
-	TMimeType( IHttpDownloader::HttpMimeDcrDirDxr, _T( "application/x-director" ), _T( "dcr" ) ),
-	TMimeType( IHttpDownloader::HttpMimeDcrDirDxr, _T( "application/x-director" ), _T( "dir" ) ),
-	TMimeType( IHttpDownloader::HttpMimeDcrDirDxr, _T( "application/x-director" ), _T( "dxr" ) ),
-	TMimeType( IHttpDownloader::HttpMimeDvi, _T( "application/x-dvi" ), _T( "dvi" ) ),
-	TMimeType( IHttpDownloader::HttpMimeSpl, _T( "application/x-futuresplash" ), _T( "spl" ) ),
-	TMimeType( IHttpDownloader::HttpMimeGtar, _T( "application/x-gtar" ), _T( "gtar" ) ),
-	TMimeType( IHttpDownloader::HttpMimeHdf, _T( "application/x-hdf" ), _T( "hdf" ) ),
-	TMimeType( IHttpDownloader::HttpMimeJs, _T( "application/x-javascript" ), _T( "js" ) ),
-	TMimeType( IHttpDownloader::HttpMimeSkpSkdSktSkm, _T( "application/x-koan" ), _T( "skp" ) ),
-	TMimeType( IHttpDownloader::HttpMimeSkpSkdSktSkm, _T( "application/x-koan" ), _T( "skd" ) ),
-	TMimeType( IHttpDownloader::HttpMimeSkpSkdSktSkm, _T( "application/x-koan" ), _T( "skt" ) ),
-	TMimeType( IHttpDownloader::HttpMimeSkpSkdSktSkm, _T( "application/x-koan" ), _T( "skm" ) ),
-	TMimeType( IHttpDownloader::HttpMimeLatex, _T( "application/x-latex" ), _T( "latex" ) ),
-	TMimeType( IHttpDownloader::HttpMimeNcCdf, _T( "application/x-netcdf" ), _T( "nc" ) ),
-	TMimeType( IHttpDownloader::HttpMimeNcCdf, _T( "application/x-netcdf" ), _T( "cdf" ) ),
-	TMimeType( IHttpDownloader::HttpMimeSh, _T( "application/x-sh" ), _T( "sh" ) ),
-	TMimeType( IHttpDownloader::HttpMimeShar, _T( "application/x-shar" ), _T( "shar" ) ),
-	TMimeType( IHttpDownloader::HttpMimeSwf, _T( "application/x-shockwave-flash" ), _T( "swf" ) ),
-	TMimeType( IHttpDownloader::HttpMimeSit, _T( "application/x-stuffit" ), _T( "sit" ) ),
-	TMimeType( IHttpDownloader::HttpMimeSv4cpio, _T( "application/x-sv4cpio" ), _T( "sv4cpio" ) ),
-	TMimeType( IHttpDownloader::HttpMimeSv4crc, _T( "application/x-sv4crc" ), _T( "sv4crc" ) ),
-	TMimeType( IHttpDownloader::HttpMimeTar, _T( "application/x-tar" ), _T( "tar" ) ),
-	TMimeType( IHttpDownloader::HttpMimeTcl, _T( "application/x-tcl" ), _T( "tcl" ) ),
-	TMimeType( IHttpDownloader::HttpMimeTex, _T( "application/x-tex" ), _T( "tex" ) ),
-	TMimeType( IHttpDownloader::HttpMimeTexinfoTexi, _T( "application/x-texinfo" ), _T( "texinfo" ) ),
-	TMimeType( IHttpDownloader::HttpMimeTexinfoTexi, _T( "application/x-texinfo" ), _T( "texi" ) ),
-	TMimeType( IHttpDownloader::HttpMimeT_TrRoff, _T( "application/x-troff" ), _T( "t" ) ),
-	TMimeType( IHttpDownloader::HttpMimeT_TrRoff, _T( "application/x-troff" ), _T( "tr" ) ),
-	TMimeType( IHttpDownloader::HttpMimeT_TrRoff, _T( "application/x-troff" ), _T( "roff" ) ),
-	TMimeType( IHttpDownloader::HttpMimeMan, _T( "application/x-troff-man" ), _T( "man" ) ),
-	TMimeType( IHttpDownloader::HttpMimeMe, _T( "application/x-troff-me" ), _T( "me" ) ),
-	TMimeType( IHttpDownloader::HttpMimeMs, _T( "application/x-troff-ms" ), _T( "ms" ) ),
-	TMimeType( IHttpDownloader::HttpMimeUstar, _T( "application/x-ustar" ), _T( "ustar" ) ),
-	TMimeType( IHttpDownloader::HttpMimeSrc, _T( "application/x-wais-source" ), _T( "src" ) ),
-	TMimeType( IHttpDownloader::HttpMimeXhtmlXht, _T( "application/xhtml+xml" ), _T( "xhtml" ) ),
-	TMimeType( IHttpDownloader::HttpMimeXhtmlXht, _T( "application/xhtml+xml" ), _T( "xht" ) ),
-	TMimeType( IHttpDownloader::HttpMimeZip, _T( "application/zip" ), _T( "zip" ) ),
-	TMimeType( IHttpDownloader::HttpMimeAuSnd, _T( "audio/basic" ), _T( "au" ) ),
-	TMimeType( IHttpDownloader::HttpMimeAuSnd, _T( "audio/basic" ), _T( "snd" ) ),
-	TMimeType( IHttpDownloader::HttpMimeMidMidiKar, _T( "audio/midi" ), _T( "mid" ) ),
-	TMimeType( IHttpDownloader::HttpMimeMidMidiKar, _T( "audio/midi" ), _T( "midi" ) ),
-	TMimeType( IHttpDownloader::HttpMimeMidMidiKar, _T( "audio/midi" ), _T( "kar" ) ),
-	TMimeType( IHttpDownloader::HttpMimeMpgaMp2Mp3, _T( "audio/mpeg" ), _T( "mpga" ) ),
-	TMimeType( IHttpDownloader::HttpMimeMpgaMp2Mp3, _T( "audio/mpeg" ), _T( "mp2" ) ),
-	TMimeType( IHttpDownloader::HttpMimeMpgaMp2Mp3, _T( "audio/mpeg" ), _T( "mp3" ) ),
-	TMimeType( IHttpDownloader::HttpMimeAifAiffAifc, _T( "audio/x-aiff" ), _T( "aif" ) ),
-	TMimeType( IHttpDownloader::HttpMimeAifAiffAifc, _T( "audio/x-aiff" ), _T( "aiff" ) ),
-	TMimeType( IHttpDownloader::HttpMimeAifAiffAifc, _T( "audio/x-aiff" ), _T( "aifc" ) ),
-	TMimeType( IHttpDownloader::HttpMimeM3u, _T( "audio/x-mpegurl" ), _T( "m3u" ) ),
-	TMimeType( IHttpDownloader::HttpMimeRamRm, _T( "audio/x-pn-realaudio" ), _T( "ram" ) ),
-	TMimeType( IHttpDownloader::HttpMimeRamRm, _T( "audio/x-pn-realaudio" ), _T( "rm" ) ),
-	TMimeType( IHttpDownloader::HttpMimeRpm, _T( "audio/x-pn-realaudio-plugin" ), _T( "rpm" ) ),
-	TMimeType( IHttpDownloader::HttpMimeRa, _T( "audio/x-realaudio" ), _T( "ra" ) ),
-	TMimeType( IHttpDownloader::HttpMimeWav, _T( "audio/x-wav" ), _T( "wav" ) ),
-	TMimeType( IHttpDownloader::HttpMimePdb, _T( "chemical/x-pdb" ), _T( "pdb" ) ),
-	TMimeType( IHttpDownloader::HttpMimeXyz, _T( "chemical/x-xyz" ), _T( "xyz" ) ),
-	TMimeType( IHttpDownloader::HttpMimeBmp, _T( "image/bmp" ), _T( "bmp" ) ),
-	TMimeType( IHttpDownloader::HttpMimeGif, _T( "image/gif" ), _T( "gif" ) ),
-	TMimeType( IHttpDownloader::HttpMimeIef, _T( "image/ief" ), _T( "ief" ) ),
-	TMimeType( IHttpDownloader::HttpMimeJpegJpgJpe, _T( "image/jpeg" ), _T( "jpeg" ) ),
-	TMimeType( IHttpDownloader::HttpMimeJpegJpgJpe, _T( "image/jpeg" ), _T( "jpg" ) ),
-	TMimeType( IHttpDownloader::HttpMimeJpegJpgJpe, _T( "image/jpeg" ), _T( "jpe" ) ),
-	TMimeType( IHttpDownloader::HttpMimePng, _T( "image/png" ), _T( "png" ) ),
-	TMimeType( IHttpDownloader::HttpMimeTiffTif, _T( "image/tiff" ), _T( "tiff" ) ),
-	TMimeType( IHttpDownloader::HttpMimeTiffTif, _T( "image/tiff" ), _T( "tif" ) ),
-	TMimeType( IHttpDownloader::HttpMimeDjvuDjv, _T( "image/vnd.djvu" ), _T( "djvu" ) ),
-	TMimeType( IHttpDownloader::HttpMimeDjvuDjv, _T( "image/vnd.djvu" ), _T( "djv" ) ),
-	TMimeType( IHttpDownloader::HttpMimeWbmp, _T( "image/vnd.wap.wbmp" ), _T( "wbmp" ) ),
-	TMimeType( IHttpDownloader::HttpMimeRas, _T( "image/x-cmu-raster" ), _T( "ras" ) ),
-	TMimeType( IHttpDownloader::HttpMimePnm, _T( "image/x-portable-anymap" ), _T( "pnm" ) ),
-	TMimeType( IHttpDownloader::HttpMimePbm, _T( "image/x-portable-bitmap" ), _T( "pbm" ) ),
-	TMimeType( IHttpDownloader::HttpMimePgm, _T( "image/x-portable-graymap" ), _T( "pgm" ) ),
-	TMimeType( IHttpDownloader::HttpMimePpm, _T( "image/x-portable-pixmap" ), _T( "ppm" ) ),
-	TMimeType( IHttpDownloader::HttpMimeRgb, _T( "image/x-rgb" ), _T( "rgb" ) ),
-	TMimeType( IHttpDownloader::HttpMimeXbmXpm, _T( "image/x-xpixmap" ), _T( "xbm" ) ),
-	TMimeType( IHttpDownloader::HttpMimeXbmXpm, _T( "image/x-xpixmap" ), _T( "xpm" ) ),
-	TMimeType( IHttpDownloader::HttpMimeXwd, _T( "image/x-xwindowdump" ), _T( "xwd" ) ),
-	TMimeType( IHttpDownloader::HttpMimeIgsIges, _T( "model/iges" ), _T( "igs" ) ),
-	TMimeType( IHttpDownloader::HttpMimeIgsIges, _T( "model/iges" ), _T( "iges" ) ),
-	TMimeType( IHttpDownloader::HttpMimeMshMeshSilo, _T( "model/mesh" ), _T( "msh" ) ),
-	TMimeType( IHttpDownloader::HttpMimeMshMeshSilo, _T( "model/mesh" ), _T( "mesh" ) ),
-	TMimeType( IHttpDownloader::HttpMimeMshMeshSilo, _T( "model/mesh" ), _T( "silo" ) ),
-	TMimeType( IHttpDownloader::HttpMimeWrlVrml, _T( "model/vrml" ), _T( "wrl" ) ),
-	TMimeType( IHttpDownloader::HttpMimeWrlVrml, _T( "model/vrml" ), _T( "vrml" ) ),
-	TMimeType( IHttpDownloader::HttpMimeCss, _T( "text/css" ), _T( "css" ) ),
-	TMimeType( IHttpDownloader::HttpMimeAscTxt, _T( "text/plain" ), _T( "asc" ) ),
-	TMimeType( IHttpDownloader::HttpMimeAscTxt, _T( "text/plain" ), _T( "txt" ) ),
-	TMimeType( IHttpDownloader::HttpMimeRtx, _T( "text/richtext" ), _T( "rtx" ) ),
-	TMimeType( IHttpDownloader::HttpMimeRtf, _T( "text/rtf" ), _T( "rtf" ) ),
-	TMimeType( IHttpDownloader::HttpMimeSgmlSgm, _T( "text/sgml" ), _T( "sgml" ) ),
-	TMimeType( IHttpDownloader::HttpMimeSgmlSgm, _T( "text/sgml" ), _T( "sgm" ) ),
-	TMimeType( IHttpDownloader::HttpMimeTsv, _T( "text/tab-separated-values" ), _T( "tsv" ) ),
-	TMimeType( IHttpDownloader::HttpMimeWml, _T( "text/vnd.wap.wml" ), _T( "wml" ) ),
-	TMimeType( IHttpDownloader::HttpMimeWmlc, _T( "text/vnd.wap.wmlscript" ), _T( "wmls" ) ),
-	TMimeType( IHttpDownloader::HttpMimeEtx, _T( "text/x-setext" ), _T( "etx" ) ),
-	TMimeType( IHttpDownloader::HttpMimeXslXml, _T( "text/xml" ), _T( "xsl" ) ),
-	TMimeType( IHttpDownloader::HttpMimeXslXml, _T( "text/xml" ), _T( "xml" ) ),
-	TMimeType( IHttpDownloader::HttpMimeMpegMpgMpe, _T( "video/mpeg" ), _T( "mpeg" ) ),
-	TMimeType( IHttpDownloader::HttpMimeMpegMpgMpe, _T( "video/mpeg" ), _T( "mpg" ) )	,
-	TMimeType( IHttpDownloader::HttpMimeMpegMpgMpe, _T( "video/mpeg" ), _T( "mpe" ) ),
-	TMimeType( IHttpDownloader::HttpMimeQtMov, _T( "video/quicktime" ), _T( "qt" ) ),
-	TMimeType( IHttpDownloader::HttpMimeQtMov, _T( "video/quicktime" ), _T( "mov" ) ),
-	TMimeType( IHttpDownloader::HttpMimeMxu, _T( "video/vnd.mpegurl" ), _T( "mxu" ) ),
-	TMimeType( IHttpDownloader::HttpMimeAvi, _T( "video/x-msvideo" ), _T( "avi" ) ),
-	TMimeType( IHttpDownloader::HttpMimeMovie, _T( "video/x-sgi-movie" ), _T( "movie" ) ),
-	TMimeType( IHttpDownloader::HttpMimeIce, _T( "x-conference/x-cooltalk" ), _T( "ice" ) ),
 
 
-	TMimeType( IHttpDownloader::HttpMimeOther, _T(""), _T("") )
 
-};
-
-
-BOOL CWinInetHttpFecher::GetFileType( EMimeType& eFileType )
+BOOL CWinInetHttpFecher::GetMimeType( CMimeType& mimetype )
 {
 	CHttpFile *pHttpFile = dynamic_cast< CHttpFile * > ( this->m_pInetFile );
 	if ( pHttpFile )
@@ -370,30 +213,22 @@ BOOL CWinInetHttpFecher::GetFileType( EMimeType& eFileType )
 		Log() << _T( "GetFileType contenttype: " ) << (LPCTSTR)strType << _T( " ret " ) << bResult << endl;
 		if ( bResult )
 		{
-				if ( strType.Find( _T( "text/html" ) ) != -1 )
-				{
-					eFileType = HttpMimeHtmlHtm;
-				}
-				else
-				{
-					eFileType = HttpMimeOther;
-				}
+				mimetype.Parse( pHttpFile->GetFileURL(), strType );
 		}
 		else
 		{
-			eFileType = HttpMimeOther;
+			bResult = FALSE;
 		}
 
 		pHttpFile->QueryInfo( HTTP_QUERY_RAW_HEADERS_CRLF, strType );
 		Log() << _T( "All http head: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx********" ) << endl 
 			<<  (LPCTSTR)strType << endl << _T( "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx**********" ) << endl;
+
+		return bResult;
 	}
-	else
-	{
-		eFileType = HttpMimeOther;
-	}
+
 //	ASSERT( FALSE );
-	return TRUE;
+	return FALSE;;
 }
 
 void CWinInetHttpFecher::Release()

@@ -1,6 +1,10 @@
 #include "WebpageManager.h"
 #include "Log.h"
 #include "ClassFactory.h"
+#include "Common.h"
+
+LPCTSTR CACHE_FOLDER = _T( "cache" );
+LPCTSTR FINAL_FOLDER = _T( "final" );
 
 CWebpageManager::CWebpageManager(void)
 {
@@ -157,9 +161,64 @@ BOOL CWebpageManager::AddFailUrl( LPCTSTR strBaseUrl, LPCTSTR strFailUrl )
 	return FALSE;
 }
 
-BOOL CWebpageManager::PreAllocateFilePath( LPCTSTR strUrl, IHttpDownloader::EMimeType eFileType, tstring& strCachePath, tstring& strSavePath )
+BOOL CWebpageManager::PreAllocateFilePath( LPCTSTR strUrl, const CMimeType& cMimeType, tstring& strCachePath, tstring& strSavePath )
 {
-	BOOL bResult = FALSE;
+	BOOL bResult = this->SearchPagePath( strUrl, strCachePath, strSavePath );
+	if ( bResult )
+	{
+		return bResult;
+	}
+	else
+	{
+		ASSERT( m_pDatabase );
+		if ( m_pDatabase )
+		{
+			IDatabase::TUrlRecordItem existItem;
+			BOOL bHad = m_pDatabase->SearchUrl( strUrl, existItem );
+			if ( bHad )
+			{
+				bResult = TRUE;
+				strCachePath = existItem.m_strCachePath;
+				strSavePath = existItem.m_strSavePath;			
+			}
+			else
+			{
+				// 创建一个。
+				tstring strExt = cMimeType.GetRecommendFileExt();
+				tstring strBaseName = CCommon::Url2FileName( strUrl );
+
+				tstringstream ssFileName;
+				ssFileName << _T( "\\" ) << strExt << _T( "\\" ) << strBaseName << _T( "." ) << strExt;	
+
+				strCachePath.clear();
+				strCachePath += CACHE_FOLDER;
+				strCachePath += ssFileName.str();
+
+				strSavePath.clear();
+				strSavePath += FINAL_FOLDER;
+				strSavePath += ssFileName.str();
+				
+				ASSERT( FALSE );
+				// 保存进数据库。
+				IDatabase::TUrlRecordItem newItem;
+				newItem.m_strUrl = strUrl;
+				newItem.m_strCachePath = strCachePath;
+				newItem.m_strSavePath = strSavePath;
+				newItem.m_eState = IDatabase::PageStateWaiting;
+				BOOL bret = this->m_pDatabase->AddRecord( newItem );
+				ASSERT( bret );
+				CLog() << _T( "PreAllocate file path: cache: " ) << strCachePath << _T( " final: " ) << strSavePath << endl;
+			}
+		}
+		ASSERT( bResult );
+		return bResult;
+	}
+	
+}
+
+BOOL CWebpageManager::SearchPagePath( LPCTSTR strUrl, tstring& strCachePath, tstring& strSavePath )
+{
+	BOOL bRet = FALSE;
 	ASSERT( m_pDatabase );
 	if ( m_pDatabase )
 	{
@@ -167,30 +226,14 @@ BOOL CWebpageManager::PreAllocateFilePath( LPCTSTR strUrl, IHttpDownloader::EMim
 		BOOL bHad = m_pDatabase->SearchUrl( strUrl, existItem );
 		if ( bHad )
 		{
-			bResult = TRUE;
+			bRet = TRUE;
 			strCachePath = existItem.m_strCachePath;
 			strSavePath = existItem.m_strSavePath;			
 		}
 		else
 		{
-			// 创建一个。
-			tstring strExt;
-			switch ( eFileType )
-			{
-			case IHttpDownloader::HttpMimeHtmlHtm:
-				strExt = _T( "html" );
-				break;
-			case IHttpDownloader::HttpMimeOther:
-			default:
-				strExt = _T( "" );
-				ASSERT( FALSE );
-				break;
-			}
-
-			// 保存进数据库。
-			
+			bRet = FALSE;
 		}
 	}
-	ASSERT( bResult );
-	return bResult;
+	return bRet;
 }

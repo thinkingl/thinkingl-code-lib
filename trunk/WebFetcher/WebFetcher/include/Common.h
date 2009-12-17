@@ -59,4 +59,10 @@ public:
 
     /** 获取当前时间。 UTC 国际标准时间，需要时区转换。 */
     static __time64_t GetCurTime();
+
+	/** Url转换为文件名. */
+	static tstring Url2FileName( LPCTSTR strUrl );
+
+	/** 文件名转换回文件名. */
+	static tstring FileName2Url( LPCTSTR strFileName );
 };

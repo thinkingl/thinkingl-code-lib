@@ -12,7 +12,7 @@ public:
 	/** 打开Url*/
 	virtual BOOL OpenUrl( LPCTSTR strUrl ) ;
 	/** 获取文件类型。 */
-	virtual BOOL GetFileType( EMimeType& eFileType );
+	virtual BOOL GetMimeType( CMimeType& mimetype );
 
 	/** 下载文件。 */
 	virtual BOOL DownloadFile( LPCTSTR strLocFilePath ) ;
