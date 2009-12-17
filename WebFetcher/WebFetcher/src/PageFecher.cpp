@@ -30,7 +30,7 @@ CPageFecher::~CPageFecher(void)
 
 BOOL CPageFecher::FetchOnePage()
 {
-	CLog() << _T( "CPageFecher Fetch One Page!" ) << endl;
+	Log() << _T( "CPageFecher Fetch One Page!" ) << endl;
 
 	// 是否有需要下载的url？
 	if ( !m_tUrlWaitingDownloadStack.empty() )
@@ -39,9 +39,9 @@ BOOL CPageFecher::FetchOnePage()
 
 		// 清除这个处理完毕的页面下载。
 		m_tUrlWaitingDownloadStack.pop();
-		CLog() << _T( "waiting download queue pop." ) << endl;
+		Log() << _T( "waiting download queue pop." ) << endl;
 
-		CLog() << _T( "Find url wait for download! url: " ) << strUrl << endl;
+		Log() << _T( "Find url wait for download! url: " ) << strUrl << endl;
 
 		BOOL bHaveDownload, bShouldDownload, bNetworkOk;
 		tstring strCachePath, strSavePath;
@@ -49,7 +49,7 @@ BOOL CPageFecher::FetchOnePage()
 			strCachePath, strSavePath, &m_pHtmlDownloader );
 		if ( bRet )
 		{
-			CLog() << _T( "GetUrlInfo url: " ) << strUrl
+			Log() << _T( "GetUrlInfo url: " ) << strUrl
 				<< _T( " network: " ) << bNetworkOk << _T( " bHaveDownload " ) << bHaveDownload 
 				<< _T( " bShouldDownload " ) << bShouldDownload << _T( " strCachePath " ) << strCachePath
 				<< _T( " strSavePath " ) << strSavePath << _T( " m_pHtmlDownloader " ) << m_pHtmlDownloader 
@@ -84,7 +84,7 @@ BOOL CPageFecher::FetchOnePage()
 		}
 		else
 		{
-			CLog() << _T( "GetUrlInfo fail!!!" ) << endl;
+			Log() << _T( "GetUrlInfo fail!!!" ) << endl;
 
 			this->m_bHasWork = FALSE;
 			return FALSE;
@@ -104,7 +104,7 @@ BOOL CPageFecher::FetchOnePage()
 		//	_ASSERT( bOpenUrl );
 		//	if ( !bOpenUrl )
 		//	{
-		//		CLog() << _T( "Open Url Fail!!!! url: " ) << strUrl << endl;
+		//		Log() << _T( "Open Url Fail!!!! url: " ) << strUrl << endl;
 		//		ASSERT( FALSE );
 
 		//		// 应该做错误处理。
@@ -121,13 +121,13 @@ BOOL CPageFecher::FetchOnePage()
 		//			if ( bShouldDownload )
 		//			{
 		//				// 下载。
-		//				CLog() << _T( "Url Should be downloaded! url: " ) << strUrl << endl;
+		//				Log() << _T( "Url Should be downloaded! url: " ) << strUrl << endl;
 		//				// 获取理论上页面应该在的位置。
 		//				tstring strCachePath, strSavePath;
 		//				IWebpageManager::Instance()->PreAllocateFilePath( strUrl.c_str(), strCachePath, strSavePath );
 
-		//				CLog() << _T( "It should be cached to: " ) << strCachePath << endl;
-		//				CLog() << _T( "It should be saved to: " ) << strSavePath << endl;
+		//				Log() << _T( "It should be cached to: " ) << strCachePath << endl;
+		//				Log() << _T( "It should be saved to: " ) << strSavePath << endl;
 
 		//				// 下载到缓存目录。
 		//				if( m_pHtmlDownloader == NULL )
@@ -135,7 +135,7 @@ BOOL CPageFecher::FetchOnePage()
 		//					m_pHtmlDownloader = CClassFactory::CreateHttpDownloader();
 		//				}
 		//				BOOL bDownloadRet = m_pHtmlDownloader->DownloadFile( strUrl.c_str(), strCachePath.c_str() );
-		//				CLog() << _T( "Download " ) << strUrl
+		//				Log() << _T( "Download " ) << strUrl
 		//					<< _T( " to " ) << strCachePath 
 		//					<< _T( " ret " ) << bDownloadRet << endl;
 		//				if ( !bDownloadRet )
@@ -156,13 +156,13 @@ BOOL CPageFecher::FetchOnePage()
 		//					// 否则，退出这个线程，因为它已经无法工作了。
 
 		//					IWebpageManager::Instance()->AddFailUrl( strParentUrl.c_str(), strUrl.c_str() );
-		//					CLog() << _T( "Add Download fail url: " ) << strUrl
+		//					Log() << _T( "Add Download fail url: " ) << strUrl
 		//						<< _T( " it's parent: " ) << strParentUrl << endl;
 		//				}
 		//				else
 		//				{
 		//					BOOL bCacheRet = IWebpageManager::Instance()->CachePageUrl( strUrl.c_str() );
-		//					CLog() << _T( "Record cached page : " ) << strUrl << _T( " ret: " ) << bCacheRet << endl;
+		//					Log() << _T( "Record cached page : " ) << strUrl << _T( " ret: " ) << bCacheRet << endl;
 		//				}
 
 		//			}
@@ -176,7 +176,7 @@ BOOL CPageFecher::FetchOnePage()
 		//}
 		//else
 		//{
-		//	CLog() << _T( "No need to download !The url have been downloaded to " ) << strLocalPath << endl;
+		//	Log() << _T( "No need to download !The url have been downloaded to " ) << strLocalPath << endl;
 		//}
 
 		//	
@@ -238,13 +238,13 @@ BOOL CPageFecher::FetchOnePage()
 		{
 			// 获取主页。
 			tstring strRootUrl = IConfig::Instance()->GetRootUrl();
-			CLog() << _T( "No cached web page, deal with the root url: " ) << strRootUrl << endl;
+			Log() << _T( "No cached web page, deal with the root url: " ) << strRootUrl << endl;
 
 			tstring strRootUrlLocalPath;
 			if ( IWebpageManager::Instance()->GetPageLocalFilePath( strRootUrl.c_str(), strRootUrlLocalPath ) )
 			{
 				// 主页获取过了。结束。
-				CLog() << _T( "No cached web page and the root page had been fetched! Fetch work done!!" ) << endl;
+				Log() << _T( "No cached web page and the root page had been fetched! Fetch work done!!" ) << endl;
 				this->m_bHasWork = FALSE;
 			}
 			else
@@ -252,7 +252,7 @@ BOOL CPageFecher::FetchOnePage()
 				// 主页没有获取到，获取主页。
 				// 将主页加入获取列表。下一轮中将会被处理。
 				this->m_tUrlWaitingDownloadStack.push( strRootUrl );
-				CLog() << _T( "The Root Url : " ) << strRootUrl << _T( " has been push to download queue!" ) << endl;
+				Log() << _T( "The Root Url : " ) << strRootUrl << _T( " has been push to download queue!" ) << endl;
 			}
 		}
 
@@ -276,7 +276,7 @@ BOOL CPageFecher::IsUrlShouldDownload( LPCTSTR strUrl, IHttpDownloader::EMimeTyp
 
 	// 判断它是不是html网页。
 	// 
-//	CLog() << _T( "url should not tested!" ) << endl;
+//	Log() << _T( "url should not tested!" ) << endl;
 //	ASSERT( FALSE );
 	if ( IHttpDownloader::HttpMimeHtmlHtm == eType )
 	{
@@ -290,7 +290,7 @@ BOOL CPageFecher::IsUrlShouldDownload( LPCTSTR strUrl, IHttpDownloader::EMimeTyp
 			{
 				BOOL bShouldFetch = IConfig::Instance()->IsUrlFilterFetch( strFilter.c_str() );
 
-				CLog() << _T( "url ") << strUrl << _T( " is filterd to fetch: " ) << bShouldFetch << endl;
+				Log() << _T( "url ") << strUrl << _T( " is filterd to fetch: " ) << bShouldFetch << endl;
 				bShould = bShouldFetch;
 			}
 		}
@@ -321,13 +321,13 @@ BOOL CPageFecher::ReplaceUrl( LPCTSTR strSrcUrl, LPCTSTR strDstUrl )
 		IHttpDownloader::EMimeType eType = IHttpDownloader::HttpMimeHtmlHtm;
 		IWebpageManager::Instance()->PreAllocateFilePath( strParentUrl.c_str(), eType, strParentCachePath,
 			strParentSavePath );
-		CLog() << _T( "Parent page : " ) << strParentUrl 
+		Log() << _T( "Parent page : " ) << strParentUrl 
 			<< _T( " should cached to: " ) << strParentCachePath 
 			<< _T( " should saved to: " ) << strParentSavePath << endl;
 
 		tstring strRelativePath;
 		strRelativePath = CCommon::GetRelativePath( strParentSavePath.c_str(), strDstUrl );
-		CLog() << _T( "Relative url on parent page is : " ) << strRelativePath << endl;
+		Log() << _T( "Relative url on parent page is : " ) << strRelativePath << endl;
 
 		this->m_pHtmlPageParser->ReplaceAllUrl( strSrcUrl, strRelativePath.c_str() );
 
@@ -368,7 +368,7 @@ BOOL CPageFecher::GetUrlInfo( LPCTSTR strUrl, BOOL& bNetworkOk, BOOL& bHaveDownl
 		_ASSERT( bOpenUrl );
 		if ( !bOpenUrl )
 		{
-			CLog() << _T( "Open Url Fail!!!! url: " ) << strUrl << endl;
+			Log() << _T( "Open Url Fail!!!! url: " ) << strUrl << endl;
 			ASSERT( FALSE );
 
 			// 应该做错误处理。
@@ -377,7 +377,7 @@ BOOL CPageFecher::GetUrlInfo( LPCTSTR strUrl, BOOL& bNetworkOk, BOOL& bHaveDownl
 			{
 				// 网络正常。这个网址有问题。
 				ASSERT( FALSE );
-				CLog() << _T( "Network is ok! but url can't get! " ) << strUrl << endl;
+				Log() << _T( "Network is ok! but url can't get! " ) << strUrl << endl;
 				tstring strParentUrl = IConfig::Instance()->GetRootUrl();
 				if ( m_pHtmlPageParser )
 				{
@@ -416,12 +416,12 @@ BOOL CPageFecher::GetUrlInfo( LPCTSTR strUrl, BOOL& bNetworkOk, BOOL& bHaveDownl
 				if ( bShouldDownload )
 				{
 					// 下载。
-					CLog() << _T( "Url Should be downloaded! url: " ) << strUrl << endl;
+					Log() << _T( "Url Should be downloaded! url: " ) << strUrl << endl;
 					// 获取理论上页面应该在的位置。
 					IWebpageManager::Instance()->PreAllocateFilePath( strUrl, eHttpFileType, strCache, strSave );
 
-					CLog() << _T( "It should be cached to: " ) << strCache << endl;
-					CLog() << _T( "It should be saved to: " ) << strSave << endl;
+					Log() << _T( "It should be cached to: " ) << strCache << endl;
+					Log() << _T( "It should be saved to: " ) << strSave << endl;
 
 				}
 			}

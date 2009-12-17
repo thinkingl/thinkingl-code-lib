@@ -26,7 +26,7 @@ BOOL CSqliteDatabase::Open()
 {
 	if ( m_pSqlite3 )
 	{
-		CLog( ) << _T( "Database has opened !!!!!!!!!!" ) << endl;
+		Log( ) << _T( "Database has opened !!!!!!!!!!" ) << endl;
 		ASSERT( FALSE );
 	}
 	tstring strDatasePath = CCommon::GetAppDir();
@@ -35,7 +35,7 @@ BOOL CSqliteDatabase::Open()
 	BOOL bResult = TRUE;
 
 	int nOpenRet = sqlite3_open16( strDatasePath.c_str(), &this->m_pSqlite3 );
-	CLog() << _T( "Open sqlite database file: " ) << strDatasePath << _T( " ret: " ) << nOpenRet << endl;
+	Log() << _T( "Open sqlite database file: " ) << strDatasePath << _T( " ret: " ) << nOpenRet << endl;
 	ASSERT( SQLITE_OK==nOpenRet );
 	bResult &= ( SQLITE_OK == nOpenRet );
 
@@ -55,18 +55,18 @@ BOOL CSqliteDatabase::Open()
 		bResult &= ( nGetTableRet == SQLITE_OK );
 		ASSERT( bResult );
 		ASSERT( nRow <= 1 );
-		CLog() << _T( "sql: " ) << strUtf8Sql.c_str() << _T( " ret: " ) << nGetTableRet 
+		Log() << _T( "sql: " ) << strUtf8Sql.c_str() << _T( " ret: " ) << nGetTableRet 
 			<< _T( " row: " ) << nRow << _T( " col: " ) << nColumn << endl;
 
 		sqlite3_free_table( azResult );
 
 		if ( errMsg )
 		{
-			CLog() << errMsg << endl;
+			Log() << errMsg << endl;
 		}
 		if ( nRow > 0 )
 		{
-			CLog() << _T( "table already exist!!!" ) << endl;
+			Log() << _T( "table already exist!!!" ) << endl;
 		}
 		else
 		{
@@ -85,11 +85,11 @@ BOOL CSqliteDatabase::Open()
 				0, 0, &errMsg );
 			bResult &= ( nCreateTableRet == SQLITE_OK );
 			ASSERT( bResult );
-			CLog() << _T( "Create table ret: " ) << nCreateTableRet << endl;
-			CLog() << _T( "sql: " ) << strUtf8Sql.c_str() << endl;
+			Log() << _T( "Create table ret: " ) << nCreateTableRet << endl;
+			Log() << _T( "sql: " ) << strUtf8Sql.c_str() << endl;
 			if ( errMsg )
 			{
-				CLog() << _T( "Sqlite Error msg: " ) << errMsg << endl;
+				Log() << _T( "Sqlite Error msg: " ) << errMsg << endl;
 			}
 		}
 
@@ -136,11 +136,11 @@ BOOL CSqliteDatabase::GetUrlByStateByNum( EWebpageState eState, TUrlRecordItemLi
 		int nGetTableRet = sqlite3_get_table( this->m_pSqlite3, strUtf8Sql.c_str(),&azResult, &nRow, &nColumn, &errMsg );
 		bResult &= ( nGetTableRet == SQLITE_OK );
 		ASSERT( bResult );
-		CLog() << _T( "sql: " ) << strUtf8Sql.c_str() << _T( " ret: " ) << nGetTableRet 
+		Log() << _T( "sql: " ) << strUtf8Sql.c_str() << _T( " ret: " ) << nGetTableRet 
 			<< _T( " row: " ) << nRow << _T( " col: " ) << nColumn << endl;
 		if ( errMsg )
 		{
-			CLog() << errMsg << endl;
+			Log() << errMsg << endl;
 		}
 
 		// 第一行是列的名称。
@@ -201,11 +201,11 @@ BOOL CSqliteDatabase::SearchUrl( LPCTSTR strUrl, TUrlRecordItem& item )
 		int nGetTableRet = sqlite3_get_table( this->m_pSqlite3, strUtf8Sql.c_str(),&azResult, &nRow, &nColumn, &errMsg );
 		bResult &= ( nGetTableRet == SQLITE_OK );
 		ASSERT( bResult );
-		CLog() << _T( "sql: " ) << strUtf8Sql.c_str() << _T( " ret: " ) << nGetTableRet 
+		Log() << _T( "sql: " ) << strUtf8Sql.c_str() << _T( " ret: " ) << nGetTableRet 
 			<< _T( " row: " ) << nRow << _T( " col: " ) << nColumn << endl;
 		if ( errMsg )
 		{
-			CLog() << errMsg << endl;
+			Log() << errMsg << endl;
 		}
 
 		BOOL bHaveRet = ( nRow > 0 );

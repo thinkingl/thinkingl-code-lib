@@ -33,7 +33,7 @@ BOOL CHtmlPageParser::Parse( LPCTSTR strHtmlFilePath, LPCTSTR strHtmlServerUrl )
 
 	if ( this->m_strServerUrlFolder.empty() )
 	{
-		CLog() << _T( "Server url is empty!!!!" ) << endl;
+		Log() << _T( "Server url is empty!!!!" ) << endl;
 		_ASSERT( FALSE );
 		return FALSE;
 	}
@@ -42,7 +42,7 @@ BOOL CHtmlPageParser::Parse( LPCTSTR strHtmlFilePath, LPCTSTR strHtmlServerUrl )
 	fPage.open( strHtmlFilePath );
 	if ( !fPage )
 	{
-		CLog() << _T( "Can't open file: " ) << strHtmlFilePath << endl;
+		Log() << _T( "Can't open file: " ) << strHtmlFilePath << endl;
 		return FALSE;
 	}
 	else
@@ -57,14 +57,14 @@ BOOL CHtmlPageParser::Parse( LPCTSTR strHtmlFilePath, LPCTSTR strHtmlServerUrl )
 
 			if ( this->IsContainUrl( strUtf16.c_str() ) )
 			{
-				CLog() << strUtf16 << endl;
+				Log() << strUtf16 << endl;
 				//
 				tstring strOriginalUrl, strFullUrl;
 				int nPos = 0;
 				if( GetUrl( strUtf16.c_str(), strFullUrl, strOriginalUrl, nPos ) )
 				{
 					int nCurUrlPos = nUrlPos + nPos;
-					CLog() << strFullUrl << _T( " pos: " ) << nCurUrlPos << endl;
+					Log() << strFullUrl << _T( " pos: " ) << nCurUrlPos << endl;
 
 					// save.
 					TFullUrlOrignalUrl tPairUrl( strFullUrl, strOriginalUrl );
@@ -73,7 +73,7 @@ BOOL CHtmlPageParser::Parse( LPCTSTR strHtmlFilePath, LPCTSTR strHtmlServerUrl )
 				}
 				else
 				{
-					CLog() << _T( "Can't parse the url! : " ) << strUtf16 << endl;
+					Log() << _T( "Can't parse the url! : " ) << strUtf16 << endl;
 //					_ASSERT( FALSE );
 				}				
 				
@@ -117,7 +117,7 @@ BOOL CHtmlPageParser::SaveFile( LPCTSTR strPath )
 
 	if ( !fPageSrc || !fPageDst )
 	{
-		CLog() << _T( "SaveFile Open file Fail!!!!!" ) << endl;
+		Log() << _T( "SaveFile Open file Fail!!!!!" ) << endl;
 		_ASSERT( FALSE );
 		return FALSE;
 	}

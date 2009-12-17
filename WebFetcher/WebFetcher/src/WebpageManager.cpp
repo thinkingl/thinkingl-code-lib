@@ -12,7 +12,7 @@ CWebpageManager::~CWebpageManager(void)
 	if ( m_pDatabase )
 	{
 		BOOL bClose = m_pDatabase->Close();
-		CLog() << _T( "Close database ret: " ) << bClose << endl;
+		Log() << _T( "Close database ret: " ) << bClose << endl;
 		delete m_pDatabase;
 		m_pDatabase = NULL;
 	}
@@ -25,7 +25,7 @@ BOOL CWebpageManager::Init()
 		m_pDatabase = CClassFactory::CreateDatabase();
 	}
 	BOOL bOpen = m_pDatabase->Open();
-	CLog() << _T( "Open Database ret: " ) << bOpen << endl;
+	Log() << _T( "Open Database ret: " ) << bOpen << endl;
 	return bOpen;
 }
 
@@ -45,7 +45,7 @@ BOOL CWebpageManager::GetCachedPage( tstring& strUrl, tstring& strLocalPath )
 			// 将这条记录为正在获取。
 			this->m_tFetchingUrl.insert( strUrl );
 
-			CLog() << _T( "GetCachedPage return a self cached page: " ) << strUrl << endl;
+			Log() << _T( "GetCachedPage return a self cached page: " ) << strUrl << endl;
 			return TRUE;
 		}
 		else
@@ -66,27 +66,27 @@ BOOL CWebpageManager::GetCachedPage( tstring& strUrl, tstring& strLocalPath )
 						{
 							this->m_tCachedPageStack.push( tItemList[i] );
 
-							CLog() << _T( "GetCachedPage cache one page: " ) << strtmpUrl << endl;
+							Log() << _T( "GetCachedPage cache one page: " ) << strtmpUrl << endl;
 						}
 						else
 						{
 							// 这个页面正在获取。
-							CLog() << _T( "GetCachedPage page is fetching, skip it!" ) << strtmpUrl << endl;
+							Log() << _T( "GetCachedPage page is fetching, skip it!" ) << strtmpUrl << endl;
 						}
 					}
-					CLog() << _T( "GetCachedPage recersive call GetCachedPage!!!!!" ) << endl;
+					Log() << _T( "GetCachedPage recersive call GetCachedPage!!!!!" ) << endl;
 					return this->GetCachedPage( strUrl, strLocalPath );
 				}
 				else
 				{
-					CLog() <<_T( "There is no cached page in database record!!" ) << endl;
+					Log() <<_T( "There is no cached page in database record!!" ) << endl;
 					return FALSE; // 查找数据库，结果数据库中没有。
 				}
 				
 			}
 			else
 			{
-				CLog() << _T( "GetCachedPage GetUrlByStateByNum fail!" ) << endl;
+				Log() << _T( "GetCachedPage GetUrlByStateByNum fail!" ) << endl;
 				ASSERT( FALSE );
 				return FALSE;
 			}
@@ -106,7 +106,7 @@ BOOL CWebpageManager::GetPageLocalFilePath( LPCTSTR strUrl, tstring& strLocalPat
 		BOOL bRet = this->m_pDatabase->SearchUrl( strUrl, item );
 		if ( bRet )
 		{
-			CLog() << _T( "GetPageLocalFilePath url: " ) << strUrl
+			Log() << _T( "GetPageLocalFilePath url: " ) << strUrl
 				<< _T( " cache " ) << item.m_strCachePath
 				<< _T( " save " ) << item.m_strSavePath
 				<< _T( " state " ) << item.m_eState << endl;
@@ -123,13 +123,13 @@ BOOL CWebpageManager::GetPageLocalFilePath( LPCTSTR strUrl, tstring& strLocalPat
 				ASSERT( FALSE );
 				return FALSE;
 			}
-			CLog() << _T( "GetPageLocalFilePath url: " ) << strUrl 
+			Log() << _T( "GetPageLocalFilePath url: " ) << strUrl 
 				<< _T( " path: " ) << strLocalPath << endl;
 			return TRUE;
 		}
 		else
 		{
-			CLog() << _T( "GetPageLocalFilePath Can't find url in database: " ) << strUrl << endl;
+			Log() << _T( "GetPageLocalFilePath Can't find url in database: " ) << strUrl << endl;
 			return FALSE;
 		}
 	}

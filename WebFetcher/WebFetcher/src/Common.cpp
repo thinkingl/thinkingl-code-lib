@@ -196,3 +196,156 @@ tstring CCommon::GetRelativePath( LPCTSTR strSrcPath, LPCTSTR strDstPath )
 	ASSERT( FALSE );
 	return _T( "" );
 }
+
+void CCommon::NormalizeDir( tstring& strFolder )
+{
+    if ( strFolder.empty() )
+    {
+        return;
+    }
+
+#if defined( _WIN32_WCE )
+    const TCHAR chDirToken = '\\';
+    const TCHAR chWrongDirToken = '/';
+#else
+    const TCHAR chDirToken = '/';
+    const TCHAR chWrongDirToken = '\\';
+#endif
+
+    replace( strFolder.begin(), strFolder.end(), chWrongDirToken, chDirToken );
+
+    if ( strFolder.at( strFolder.size() - 1 ) != chDirToken )
+    {
+        strFolder += chDirToken;
+    }
+
+}
+
+tstring CCommon::TimeToStr( __time64_t nTime )
+{
+    tstring strTimeResult;
+
+    tm localTime;
+    if( GetLocalTime( nTime, &localTime ) )
+    {
+        tstringstream ssTime;
+        ssTime << setfill( _T( '0' ) ) << setw(4) << ( localTime.tm_year + 1900 );
+        ssTime << setfill( _T( '0' ) ) << setw(2) << localTime.tm_mon + 1 <<setfill( _T( '0' ) ) <<  setw(2) << localTime.tm_mday;
+        ssTime << setfill( _T( '0' ) ) << setw(2) << localTime.tm_hour << setfill( _T( '0' ) ) <<  setw(2) << localTime.tm_min 
+            << setfill( _T( '0' ) ) << setw(2) << localTime.tm_sec;
+        strTimeResult = ssTime.str();
+    }
+    return strTimeResult;
+}
+
+BOOL CCommon::GetLocalTime( const time_t time, tm * plocalTime )
+{
+    BOOL bResult;
+#ifdef _WIN32
+    bResult = ( 0 == _localtime64_s( plocalTime, &time ) );
+#else
+    tm *ptm = localtime( &time );
+    if( ptm )
+    {
+        *plocalTime = *ptm;
+    }
+    bResult = ( NULL != ptm );
+#endif
+    return bResult;
+}
+
+__time64_t CCommon::GetCurTime()
+{	
+#ifdef _WIN32
+    return _time64( NULL );
+#else
+    return time( NULL );
+#endif	
+}
+
+__time64_t CCommon::StrToTime( LPCTSTR lpTime )
+{
+#if defined( _WIN32_WCE ) || defined( _WIN32 )
+    CString strTime = lpTime;
+    SYSTEMTIME tTime;
+    memset( &tTime, 0, sizeof( tTime ) );
+
+    if ( strTime.GetLength() >= 4 )
+    {
+        CString strYear = strTime.Left( 4 );
+        tTime.wYear = (WORD)_ttoi( strYear );
+
+        strTime = strTime.Right( strTime.GetLength() - 4 );
+    }
+
+    if ( strTime.GetLength() >= 2 )
+    {
+        CString strTemp = strTime.Left( 2 );
+        tTime.wMonth = (WORD)_ttoi( strTemp );
+
+        strTime = strTime.Right( strTime.GetLength() - 2 );
+    }
+
+    if ( strTime.GetLength() >= 2 )
+    {
+        CString strTemp = strTime.Left( 2 );
+        tTime.wDay = (WORD)_ttoi( strTemp );
+
+        strTime = strTime.Right( strTime.GetLength() - 2 );
+    }
+
+    if ( strTime.GetLength() >= 2 )
+    {
+        CString strTemp = strTime.Left( 2 );
+        tTime.wHour = (WORD)_ttoi( strTemp );
+
+        strTime = strTime.Right( strTime.GetLength() - 2 );
+    }
+
+    if ( strTime.GetLength() >= 2 )
+    {
+        CString strTemp = strTime.Left( 2 );
+        tTime.wMinute = (WORD)_ttoi( strTemp );
+
+        strTime = strTime.Right( strTime.GetLength() - 2 );
+    }
+
+    if ( strTime.GetLength() >= 2 )
+    {
+        CString strTemp = strTime.Left( 2 );
+        tTime.wSecond = (WORD)_ttoi( strTemp );
+
+        strTime = strTime.Right( strTime.GetLength() - 2 );
+    }
+
+    if( ( tTime.wYear >= 1900 ) && ( tTime.wMonth >= 1 && tTime.wMonth <= 12 ) && ( tTime.wDay >= 1 && tTime.wDay <= 31 ) 
+        && ( tTime.wHour >= 0 && tTime.wHour <= 23 ) && ( tTime.wMinute >= 0 && tTime.wMinute <= 59 ) 
+        && ( tTime.wSecond >= 0 && tTime.wSecond <= 59 ) )
+    {
+        try
+        {
+            return CTime( tTime ).GetTime();
+        }
+        catch (CException* e)
+        {
+            e;
+            return 0;
+        }
+        catch( ... )
+        {
+            return 0;
+        }
+    }
+    else
+    {
+        return 0;
+    }
+#elif defined( __SYMBIAN32__ )
+    return 0;
+#endif
+
+
+}
+
+
+

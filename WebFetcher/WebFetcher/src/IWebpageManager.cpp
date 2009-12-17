@@ -10,7 +10,7 @@ IWebpageManager * IWebpageManager::Instance()
 	{
 		s_instance = new CWebpageManager();
 		BOOL bInit = s_instance->Init();
-		CLog() << _T( "Init WebpageManager : " ) << bInit << endl;
+		Log() << _T( "Init WebpageManager : " ) << bInit << endl;
 		ASSERT( bInit );
 	}
 	return s_instance;

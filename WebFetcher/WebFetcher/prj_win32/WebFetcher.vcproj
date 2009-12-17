@@ -209,6 +209,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\WebFetcherLog.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\src\WebpageManager.cpp"
 				>
 			</File>
@@ -264,6 +268,10 @@
 			</File>
 			<File
 				RelativePath="..\include\UrlParser.h"
+				>
+			</File>
+			<File
+				RelativePath=".\WebFetcherLog.h"
 				>
 			</File>
 			<File

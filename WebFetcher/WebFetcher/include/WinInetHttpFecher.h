@@ -35,6 +35,13 @@ private:
 //    CInternetSession m_wininetSession;
 
 	CStdioFile *m_pInetFile;
+
+    BOOL m_bUseProxy;
+    tstring m_strProxyIp;
+    uint16 m_nProxyPort;
+    tstring m_strProxyUsername;
+    tstring m_strProxyPassword;
+
 public:
 	virtual void OnStatusCallback(DWORD dwContext, DWORD dwInternetStatus, LPVOID lpvStatusInformation, DWORD dwStatusInformationLength);
 };
