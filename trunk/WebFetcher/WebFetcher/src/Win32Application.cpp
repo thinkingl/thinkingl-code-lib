@@ -48,12 +48,12 @@ BOOL testParsePage()
 	IHtmlPageParser::TUrlList tlist;
 	bResult &= pParser->GetAllUrl( tlist );
 
-	CLog() << _T( "parse page url dump: " ) << endl;
+	Log() << _T( "parse page url dump: " ) << endl;
 	for ( size_t i=0; i<tlist.size(); ++i )
 	{
 		tcout << tlist[i] << endl;
 	}
-	CLog() << endl << endl;
+	Log() << endl << endl;
 
 	LPCTSTR lpStrSrc = _T( "http://www.verycd.com/topics/2786155/" );
 //	lpStrSrc = _T( "http://www.verycd.com/specs/opensearch.xml" );
@@ -121,7 +121,7 @@ int CWin32Application::RunWebFetch()
 		wcout.imbue(locale(locale(),"",LC_CTYPE)); 
 		// TODO: 在此处为应用程序的行为编写代码。
 
-		CLog() << _T( "暂时只使用单线程抓页面。 " ) << endl;
+		Log() << _T( "暂时只使用单线程抓页面。 " ) << endl;
 
        
 		

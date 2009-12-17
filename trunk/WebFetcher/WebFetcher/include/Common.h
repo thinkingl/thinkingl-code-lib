@@ -12,6 +12,7 @@ public:
 
 	static void Utf16toUtf8( LPCWSTR strUtf16, string& strUtf8 );
 
+
 	static int StrNCmpNocase( LPCTSTR str1, LPCTSTR str2, int nLen );
 
 	static tstring GetModulePath( void * hm = NULL );
@@ -45,4 +46,17 @@ public:
 	*	在文件strSrc看来，strDstPath的相对路径。
 	*/
 	static tstring GetRelativePath( LPCTSTR strSrcPath, LPCTSTR strDstPath );
+
+    /** 将一个文件夹变成标准的形式。 */
+    static void NormalizeDir( tstring& strFolder );
+
+    /** 时间->字符串 */
+    static tstring TimeToStr( __time64_t nTime );
+    static __time64_t StrToTime( LPCTSTR strTime );
+
+    /** 时区转换，获取本地时间。 */
+    static BOOL GetLocalTime( const time_t time, tm * plocalTime );
+
+    /** 获取当前时间。 UTC 国际标准时间，需要时区转换。 */
+    static __time64_t GetCurTime();
 };

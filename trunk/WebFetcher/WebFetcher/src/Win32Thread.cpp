@@ -25,7 +25,7 @@ BOOL CWin32Thread::Start()
 
 	if ( this->IsRunning() )
 	{
-		CLog() << _T( "Thread Already Run!!!!!!" ) << endl;
+		Log() << _T( "Thread Already Run!!!!!!" ) << endl;
 		ASSERT( FALSE );
 		return TRUE;
 	}
@@ -34,11 +34,11 @@ BOOL CWin32Thread::Start()
 	this->m_hThread = ::CreateThread( NULL, NULL, CWin32Thread::FunThreadS, this, NULL, &dwThreadId );
 	if ( m_hThread == NULL )
 	{
-		CLog() << _T( "Thread Create fail!!! er: " ) << ::GetLastError() << endl;
+		Log() << _T( "Thread Create fail!!! er: " ) << ::GetLastError() << endl;
 	}
 	else
 	{
-		CLog() << _T( "Create Thread! handle: " )<< m_hThread << _T( " ThreadId " ) << dwThreadId << endl;
+		Log() << _T( "Create Thread! handle: " )<< m_hThread << _T( " ThreadId " ) << dwThreadId << endl;
 	}
 	return NULL != m_hThread;
 }
@@ -56,19 +56,19 @@ BOOL CWin32Thread::Stop()
 		DWORD dwRet = ::WaitForSingleObject( m_hThread, this->m_nTimeoutMilliseconds );
 		if ( WAIT_TIMEOUT == dwRet )
 		{
-			CLog() << _T( "Stop thread Timeout!!!!" ) << endl;
+			Log() << _T( "Stop thread Timeout!!!!" ) << endl;
 			BOOL bRet = ::TerminateThread( m_hThread, -1 );
-			CLog() << _T( "Terminate thread, handle: " ) << m_hThread << _T( " ret: " ) << bRet << endl;
+			Log() << _T( "Terminate thread, handle: " ) << m_hThread << _T( " ret: " ) << bRet << endl;
 		}
 		BOOL bRet = CloseHandle( m_hThread );
-		CLog() << _T( "Win32 Thread Close Handle ret: " ) << bRet << endl;
+		Log() << _T( "Win32 Thread Close Handle ret: " ) << bRet << endl;
 		this->m_hThread = NULL;
 
 		return TRUE;
 	}
 	else
 	{
-		CLog() << _T( "Thread Not Run!!!!!!" ) << endl;
+		Log() << _T( "Thread Not Run!!!!!!" ) << endl;
 		return FALSE;
 	}
 }

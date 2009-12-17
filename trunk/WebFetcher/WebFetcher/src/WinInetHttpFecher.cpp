@@ -18,6 +18,12 @@ BOOL CWinInetHttpFecher::SetHttpProxy( BOOL bUseProxy, LPCTSTR strIp, uint16 nPo
     BOOL bResult = FALSE;
     try
     {
+        this->m_bUseProxy = bUseProxy;
+        this->m_strProxyIp = strIp;
+        this->m_nProxyPort = nPort;
+        this->m_strProxyUsername = strUser;
+        this->m_strProxyPassword = strPassword;
+
 		CHttpFile *pHttpFile = dynamic_cast< CHttpFile* >( this->m_pInetFile );
 		if ( pHttpFile )
 		{
@@ -39,7 +45,7 @@ BOOL CWinInetHttpFecher::SetHttpProxy( BOOL bUseProxy, LPCTSTR strIp, uint16 nPo
 					(LPVOID)strUser, _tcslen( strUser ) );
 				if ( !bResult )
 				{
-					CLog() << _T( "SetOption INTERNET_OPTION_PROXY_USERNAME Fail! er: " ) 
+					Log() << _T( "SetOption INTERNET_OPTION_PROXY_USERNAME Fail! er: " ) 
 						<< GetLastError() << endl;
 				}
 			}
@@ -53,7 +59,7 @@ BOOL CWinInetHttpFecher::SetHttpProxy( BOOL bUseProxy, LPCTSTR strIp, uint16 nPo
 		else
 		{
 			ASSERT( FALSE );
-			CLog() << _T( "Set http proxy when Not a http file!!!" ) << endl;
+			Log() << _T( "Set http proxy when Not a http file!!!" ) << endl;
 		}
            
 
@@ -86,7 +92,7 @@ BOOL CWinInetHttpFecher::OpenUrl( LPCTSTR strUrl )
 		}
 		else
 		{
-			CLog() << _T( "OpenUrl fail!! " ) << strUrl << endl;
+			Log() << _T( "OpenUrl fail!! " ) << strUrl << endl;
 			bResult = FALSE;
 		}
 
@@ -101,16 +107,23 @@ BOOL CWinInetHttpFecher::OpenUrl( LPCTSTR strUrl )
 			if ( strStatusCode == _T("407") )
 			{
 				// 代理需要用户名密码校验！
-				CLog() << _T( "CWinInetHttpFecher::OpenUrl need proxy authentication username and password " ) 
+				Log() << _T( "CWinInetHttpFecher::OpenUrl need proxy authentication username and password " ) 
 					<< endl;
+                this->SetHttpProxy( m_bUseProxy, m_strProxyIp.c_str(), m_nProxyPort, m_strProxyUsername.c_str(), m_strProxyPassword.c_str() );
+
+                pHttpFile->QueryInfo( HTTP_QUERY_STATUS_CODE, strStatusCode );
 			}
-			else if( strStatusCode != _T( "200" ) )
+			if( strStatusCode != _T( "200" ) )
 			{
 				// 不是200 ok，说明页面打开失败。
-				CLog() << _T( "Http status code is not 200, is " ) << strStatusCode
+				Log() << _T( "Http status code is not 200, is " ) << strStatusCode
 					<< _T( " Open Url fail!!! " ) << endl;
-				return FALSE;
+				bResult = FALSE;
 			}
+            else
+            {
+                bResult = TRUE;
+            }
 		}
 
 	}
@@ -119,7 +132,7 @@ BOOL CWinInetHttpFecher::OpenUrl( LPCTSTR strUrl )
 		TCHAR sz[1024];
 		pEx->GetErrorMessage(sz, 1024);
 		_tprintf_s(_T("ERROR!  %s\n"), sz);
-        CLog() << _T( "Open url ") << strUrl << _T( " fail:" ) << sz << endl;
+        Log() << _T( "Open url ") << strUrl << _T( " fail:" ) << sz << endl;
 		pEx->Delete();
 
 		bResult = FALSE;
@@ -143,7 +156,7 @@ BOOL CWinInetHttpFecher::DownloadFile( LPCTSTR strLocFilePath )
 			of.open( strLocFilePath, ios::out | ios::binary );
 			if( !of )
 			{
-				CLog() << _T( "open file fail! path: " ) << strLocFilePath << endl;
+				Log() << _T( "open file fail! path: " ) << strLocFilePath << endl;
 				_ASSERT( FALSE );
 				return FALSE;
 			}
@@ -342,7 +355,7 @@ static const TMimeType s_arMimeTypeDic[]=
 	TMimeType( IHttpDownloader::HttpMimeIce, _T( "x-conference/x-cooltalk" ), _T( "ice" ) ),
 
 
-	TMimeType( IHttpDownloader::HttpMimeOther, NULL, NULL )
+	TMimeType( IHttpDownloader::HttpMimeOther, _T(""), _T("") )
 
 };
 
@@ -354,7 +367,7 @@ BOOL CWinInetHttpFecher::GetFileType( EMimeType& eFileType )
 	{
 		CString strType;
 		BOOL bResult = pHttpFile->QueryInfo( HTTP_QUERY_CONTENT_TYPE, strType, NULL );
-		CLog() << _T( "GetFileType contenttype: " ) << (LPCTSTR)strType << _T( " ret " ) << bResult << endl;
+		Log() << _T( "GetFileType contenttype: " ) << (LPCTSTR)strType << _T( " ret " ) << bResult << endl;
 		if ( bResult )
 		{
 				if ( strType.Find( _T( "text/html" ) ) != -1 )
@@ -372,7 +385,7 @@ BOOL CWinInetHttpFecher::GetFileType( EMimeType& eFileType )
 		}
 
 		pHttpFile->QueryInfo( HTTP_QUERY_RAW_HEADERS_CRLF, strType );
-		CLog() << _T( "All http head: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx********" ) << endl 
+		Log() << _T( "All http head: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx********" ) << endl 
 			<<  (LPCTSTR)strType << endl << _T( "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx**********" ) << endl;
 	}
 	else
@@ -516,7 +529,7 @@ void CWinInetHttpFecher::OnStatusCallback(DWORD dwContext, DWORD dwInternetStatu
 		break;
 	}
 
-	CLog() << _T( "Internet session status: " ) << strMsg << endl;
+	Log() << _T( "Internet session status: " ) << strMsg << endl;
 
 	__super::OnStatusCallback(dwContext, dwInternetStatus, lpvStatusInformation, dwStatusInformationLength);
 }
