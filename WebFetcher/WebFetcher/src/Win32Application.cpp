@@ -129,6 +129,10 @@ int CWin32Application::RunWebFetch()
 		int32 nThreadNum = IConfig::Instance()->GetThreadCount();
 		nThreadNum = max( 1, nThreadNum );
 
+		// test
+		nThreadNum = 0;
+		testParsePage();
+
        	std::vector< IThread * > tThreadList;
 		for( int i=0; i<nThreadNum; ++i )
 		{

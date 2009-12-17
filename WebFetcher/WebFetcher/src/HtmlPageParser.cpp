@@ -38,7 +38,7 @@ BOOL CHtmlPageParser::Parse( LPCTSTR strHtmlFilePath, LPCTSTR strHtmlServerUrl )
 		return FALSE;
 	}
 
-	fstream fPage;
+	ifstream fPage;
 	fPage.open( strHtmlFilePath );
 	if ( !fPage )
 	{
@@ -48,40 +48,62 @@ BOOL CHtmlPageParser::Parse( LPCTSTR strHtmlFilePath, LPCTSTR strHtmlServerUrl )
 	else
 	{
 		string strData;
-		int nUrlPos = 0;
-		while( fPage >> strData )
+		
+		// 取得文件长度。
+		int nBeginPos = fPage.tellg();
+		fPage.seekg( 0,ios::end );
+		int nEndPos = fPage.tellg();
+		int nFileLen = nEndPos - nBeginPos;
+
+		if ( nFileLen == 0 )
 		{
-			wstring strUtf16;
-			CCommon::Utf8toUtf16( strData.c_str(), strUtf16 );
-			
-
-			if ( this->IsContainUrl( strUtf16.c_str() ) )
-			{
-				Log() << strUtf16 << endl;
-				//
-				tstring strOriginalUrl, strFullUrl;
-				int nPos = 0;
-				if( GetUrl( strUtf16.c_str(), strFullUrl, strOriginalUrl, nPos ) )
-				{
-					int nCurUrlPos = nUrlPos + nPos;
-					Log() << strFullUrl << _T( " pos: " ) << nCurUrlPos << endl;
-
-					// save.
-					TFullUrlOrignalUrl tPairUrl( strFullUrl, strOriginalUrl );
-					this->m_tUrlSet.insert( strFullUrl );
-					this->m_tUrlPosTable[ nCurUrlPos ] = tPairUrl;
-				}
-				else
-				{
-					Log() << _T( "Can't parse the url! : " ) << strUtf16 << endl;
-//					_ASSERT( FALSE );
-				}				
-				
-			}
-
-			nUrlPos += strUtf16.length();
-			
+			CLog() << _T( "webpage file len is 0 !!!!" ) << endl;
+			return FALSE;
 		}
+
+		vector<char> tCharTmp( nFileLen, 0 );
+		int nUrlPos = 0;
+
+		fPage.seekg( 0, ios::beg );
+		fPage.read( &tCharTmp[0], nFileLen );
+		strData = &tCharTmp[0];
+
+		wstring strUtf16;
+		CCommon::Utf8toUtf16( strData.c_str(), strUtf16 );
+
+//		while( fPage >> strData )
+//		{
+//			wstring strUtf16;
+//			CCommon::Utf8toUtf16( strData.c_str(), strUtf16 );
+//			
+//
+//			if ( this->IsContainUrl( strUtf16.c_str() ) )
+//			{
+//				Log() << strUtf16 << endl;
+//				//
+//				tstring strOriginalUrl, strFullUrl;
+//				int nPos = 0;
+//				if( GetUrl( strUtf16.c_str(), strFullUrl, strOriginalUrl, nPos ) )
+//				{
+//					int nCurUrlPos = nUrlPos + nPos;
+//					Log() << strFullUrl << _T( " pos: " ) << nCurUrlPos << endl;
+//
+//					// save.
+//					TFullUrlOrignalUrl tPairUrl( strFullUrl, strOriginalUrl );
+//					this->m_tUrlSet.insert( strFullUrl );
+//					this->m_tUrlPosTable[ nCurUrlPos ] = tPairUrl;
+//				}
+//				else
+//				{
+//					Log() << _T( "Can't parse the url! : " ) << strUtf16 << endl;
+////					_ASSERT( FALSE );
+//				}				
+//				
+//			}
+//
+//			nUrlPos += strUtf16.length();
+//			
+//		}
 	}
 
 	fPage.close();
