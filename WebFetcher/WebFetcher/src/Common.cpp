@@ -394,6 +394,10 @@ tstring CCommon::Url2FileName( LPCTSTR strUrl )
 				ssFileName << TokenReservedWord << strHex;
 			}
 			break;
+		// 转义符需要转成两个才能区别开来。
+		case TokenReservedWord:
+		case TokenBegin:
+			ssFileName << *strUrl << *strUrl;
 
 		default:
 			ssFileName << *strUrl;
