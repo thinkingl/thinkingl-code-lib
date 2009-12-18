@@ -1,6 +1,8 @@
 #include "WinInetHttpFecher.h"
 #include "log.h"
 #include "IConfig.h"
+#include "Common.h"
+
 CWinInetHttpFecher::CWinInetHttpFecher(void)
 {
 	this->m_pInetFile = NULL;
@@ -58,7 +60,7 @@ BOOL CWinInetHttpFecher::SetHttpProxy( BOOL bUseProxy, LPCTSTR strIp, uint16 nPo
 		}
 		else
 		{
-			ASSERT( FALSE );
+//			ASSERT( FALSE );
 			Log() << _T( "Set http proxy when Not a http file!!!" ) << endl;
 		}
            
@@ -152,6 +154,10 @@ BOOL CWinInetHttpFecher::DownloadFile( LPCTSTR strLocFilePath )
 	{
 		if ( m_pInetFile )
 		{			
+			// ´´½¨Ä¿Â¼¡£
+			tstring strDir = CCommon::ParsePath( strLocFilePath ).m_strDirectory;
+			CCommon::CreateDirRecurse( strDir.c_str() );
+
 			ofstream of;
 			of.open( strLocFilePath, ios::out | ios::binary );
 			if( !of )
@@ -172,6 +178,7 @@ BOOL CWinInetHttpFecher::DownloadFile( LPCTSTR strLocFilePath )
 				else
 				{
 					of.close();
+					bResult = TRUE;
 					break;
 				}
 			}
@@ -299,10 +306,10 @@ void CWinInetHttpFecher::OnStatusCallback(DWORD dwContext, DWORD dwInternetStatu
 		strMsg = _T( "INTERNET_STATUS_REQUEST_SENT " );
 		break;
     case INTERNET_STATUS_RECEIVING_RESPONSE      :
-		strMsg = _T( "INTERNET_STATUS_RECEIVING_RESPONSE " );
+//		strMsg = _T( "INTERNET_STATUS_RECEIVING_RESPONSE " );
 		break;
     case INTERNET_STATUS_RESPONSE_RECEIVED       :
-		strMsg = _T( "INTERNET_STATUS_RESPONSE_RECEIVED " );
+//		strMsg = _T( "INTERNET_STATUS_RESPONSE_RECEIVED " );
 		break;
     case INTERNET_STATUS_CTL_RESPONSE_RECEIVED   :
 		strMsg = _T( "INTERNET_STATUS_CTL_RESPONSE_RECEIVED " );
@@ -364,7 +371,11 @@ void CWinInetHttpFecher::OnStatusCallback(DWORD dwContext, DWORD dwInternetStatu
 		break;
 	}
 
-	Log() << _T( "Internet session status: " ) << strMsg << endl;
+	if ( !strMsg.empty() )
+	{
+		Log() << _T( "Internet session status: " ) << strMsg << endl;
+	}
+	
 
 	__super::OnStatusCallback(dwContext, dwInternetStatus, lpvStatusInformation, dwStatusInformationLength);
 }

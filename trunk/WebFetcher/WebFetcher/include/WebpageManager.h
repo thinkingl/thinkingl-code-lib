@@ -49,6 +49,9 @@ public:
 	virtual BOOL AddFailUrl( LPCTSTR strBaseUrl, LPCTSTR strFailUrl ) ;
 
 private:
+	tstring GetFileFullPath( LPCTSTR strRelativePath );
+
+private:
 	/** Êý¾Ý¿â¡£ */
 	IDatabase *m_pDatabase;
 

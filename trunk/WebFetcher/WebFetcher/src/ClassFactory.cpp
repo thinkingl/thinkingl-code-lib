@@ -27,7 +27,7 @@ IHttpDownloader *CClassFactory::CreateHttpDownloader()
     tstring strproxyPassword = IConfig::Instance()->GetProxyPassword();
 
     BOOL bOk = pDownloader->SetHttpProxy( bUseProxy, strProxyIp.c_str(), nProxyPort, strProxyUser.c_str(), strproxyPassword.c_str() );
-    ASSERT( bOk );
+//    ASSERT( bOk );
     return pDownloader;
 }
 

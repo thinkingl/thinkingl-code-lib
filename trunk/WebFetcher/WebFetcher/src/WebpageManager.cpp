@@ -2,6 +2,7 @@
 #include "Log.h"
 #include "ClassFactory.h"
 #include "Common.h"
+#include "IConfig.h"
 
 LPCTSTR CACHE_FOLDER = _T( "cache" );
 LPCTSTR FINAL_FOLDER = _T( "final" );
@@ -110,10 +111,16 @@ BOOL CWebpageManager::GetPageLocalFilePath( LPCTSTR strUrl, tstring& strLocalPat
 		BOOL bRet = this->m_pDatabase->SearchUrl( strUrl, item );
 		if ( bRet )
 		{
+			item.m_strCachePath = this->GetFileFullPath( item.m_strCachePath.c_str() );
+			item.m_strSavePath = this->GetFileFullPath( item.m_strSavePath.c_str() );
+
 			Log() << _T( "GetPageLocalFilePath url: " ) << strUrl
 				<< _T( " cache " ) << item.m_strCachePath
 				<< _T( " save " ) << item.m_strSavePath
 				<< _T( " state " ) << item.m_eState << endl;
+
+			
+
 			switch ( item.m_eState )
 			{
 			case IDatabase::PageStateCached:
@@ -124,7 +131,7 @@ BOOL CWebpageManager::GetPageLocalFilePath( LPCTSTR strUrl, tstring& strLocalPat
 				break;
 
 			default:
-				ASSERT( FALSE );
+//				ASSERT( FALSE );
 				return FALSE;
 			}
 			Log() << _T( "GetPageLocalFilePath url: " ) << strUrl 
@@ -163,56 +170,56 @@ BOOL CWebpageManager::AddFailUrl( LPCTSTR strBaseUrl, LPCTSTR strFailUrl )
 
 BOOL CWebpageManager::PreAllocateFilePath( LPCTSTR strUrl, const CMimeType& cMimeType, tstring& strCachePath, tstring& strSavePath )
 {
-	BOOL bResult = this->SearchPagePath( strUrl, strCachePath, strSavePath );
-	if ( bResult )
+	BOOL bResult = TRUE;
+	
+	ASSERT( m_pDatabase );
+	if ( m_pDatabase )
 	{
-		return bResult;
-	}
-	else
-	{
-		ASSERT( m_pDatabase );
-		if ( m_pDatabase )
+		IDatabase::TUrlRecordItem existItem;
+		BOOL bHad = m_pDatabase->SearchUrl( strUrl, existItem );
+		if ( bHad )
 		{
-			IDatabase::TUrlRecordItem existItem;
-			BOOL bHad = m_pDatabase->SearchUrl( strUrl, existItem );
-			if ( bHad )
-			{
-				bResult = TRUE;
-				strCachePath = existItem.m_strCachePath;
-				strSavePath = existItem.m_strSavePath;			
-			}
-			else
-			{
-				// 创建一个。
-				tstring strExt = cMimeType.GetRecommendFileExt();
-				tstring strBaseName = CCommon::Url2FileName( strUrl );
-
-				tstringstream ssFileName;
-				ssFileName << _T( "\\" ) << strExt << _T( "\\" ) << strBaseName << _T( "." ) << strExt;	
-
-				strCachePath.clear();
-				strCachePath += CACHE_FOLDER;
-				strCachePath += ssFileName.str();
-
-				strSavePath.clear();
-				strSavePath += FINAL_FOLDER;
-				strSavePath += ssFileName.str();
-				
-				ASSERT( FALSE );
-				// 保存进数据库。
-				IDatabase::TUrlRecordItem newItem;
-				newItem.m_strUrl = strUrl;
-				newItem.m_strCachePath = strCachePath;
-				newItem.m_strSavePath = strSavePath;
-				newItem.m_eState = IDatabase::PageStateWaiting;
-				BOOL bret = this->m_pDatabase->AddRecord( newItem );
-				ASSERT( bret );
-				CLog() << _T( "PreAllocate file path: cache: " ) << strCachePath << _T( " final: " ) << strSavePath << endl;
-			}
+			bResult = TRUE;
+			strCachePath = existItem.m_strCachePath;
+			strSavePath = existItem.m_strSavePath;			
 		}
-		ASSERT( bResult );
-		return bResult;
+		else
+		{
+			// 创建一个。
+			tstring strExt = cMimeType.GetRecommendFileExt();
+			tstring strBaseName = CCommon::Url2FileName( strUrl );
+
+			tstringstream ssFileName;
+			ssFileName << _T( "\\" ) << strExt << _T( "\\" ) << strBaseName << _T( "." ) << strExt;	
+
+			strCachePath.clear();
+			strCachePath += CACHE_FOLDER;
+			strCachePath += ssFileName.str();
+
+			strSavePath.clear();
+			strSavePath += FINAL_FOLDER;
+			strSavePath += ssFileName.str();
+			
+			ASSERT( FALSE );
+			// 保存进数据库。
+			IDatabase::TUrlRecordItem newItem;
+			newItem.m_strUrl = strUrl;
+			newItem.m_strCachePath = strCachePath;
+			newItem.m_strSavePath = strSavePath;
+			newItem.m_eState = IDatabase::PageStateWaiting;
+			BOOL bret = this->m_pDatabase->AddRecord( newItem );
+			ASSERT( bret );				
+		
+		}
+		
+		// 数据库中存放的是相对路径，还需要添加根目录。
+		strCachePath = this->GetFileFullPath( strCachePath.c_str() );
+		strSavePath = this->GetFileFullPath( strSavePath.c_str() );
+
+		CLog() << _T( "PreAllocate file path: cache: " ) << strCachePath << _T( " final: " ) << strSavePath << endl;
 	}
+	ASSERT( bResult );
+	return bResult;
 	
 }
 
@@ -227,8 +234,8 @@ BOOL CWebpageManager::SearchPagePath( LPCTSTR strUrl, tstring& strCachePath, tst
 		if ( bHad )
 		{
 			bRet = TRUE;
-			strCachePath = existItem.m_strCachePath;
-			strSavePath = existItem.m_strSavePath;			
+			strCachePath = this->GetFileFullPath( existItem.m_strCachePath.c_str() );
+			strSavePath = this->GetFileFullPath( existItem.m_strSavePath.c_str() );			
 		}
 		else
 		{
@@ -236,4 +243,12 @@ BOOL CWebpageManager::SearchPagePath( LPCTSTR strUrl, tstring& strCachePath, tst
 		}
 	}
 	return bRet;
+}
+
+tstring CWebpageManager::GetFileFullPath( LPCTSTR strRelativePath )
+{
+	tstring strRootFolder = IConfig::Instance()->GetRootFolder();
+	tstring strFullPath = strRootFolder + strRelativePath;
+
+	return strFullPath;
 }

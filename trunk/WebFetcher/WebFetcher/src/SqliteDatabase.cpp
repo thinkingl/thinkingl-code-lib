@@ -48,7 +48,7 @@ BOOL CSqliteDatabase::Open()
 
 		
 		tstringstream ssSql;
-		ssSql << _T( "select name from sqlite_master " << " where name='" ) << DB_TABLE_NAME << _T( "'" );
+		ssSql << _T( "select name from sqlite_master " << " where name='" ) << DB_TABLE_NAME << _T( "';" );
 		string strUtf8Sql;
 		CCommon::Utf16toUtf8( ssSql.str().c_str(), strUtf8Sql );
 		int nGetTableRet = sqlite3_get_table( this->m_pSqlite3, strUtf8Sql.c_str(),&azResult, &nRow, &nColumn, &errMsg );
@@ -77,7 +77,7 @@ BOOL CSqliteDatabase::Open()
 				<< _T( " ( ") << DB_COL_URL << _T( " TEXT PRIMARY KEY, ") 
 				<< DB_COL_CACHE	<< _T( " TEXT, ") 
 				<< DB_COL_SAVE << _T( " TEXT, ")
-				<< DB_COL_STATE << _T( " INTEGER )" );
+				<< DB_COL_STATE << _T( " INTEGER );" );
 			string strUtf8Sql ;
 			CCommon::Utf16toUtf8( ssSql.str().c_str(), strUtf8Sql );
 			int nCreateTableRet = sqlite3_exec( m_pSqlite3, 
@@ -122,7 +122,7 @@ BOOL CSqliteDatabase::GetUrlByStateByNum( EWebpageState eState, TUrlRecordItemLi
 		tstringstream ssSql;
 		ssSql << _T( "SELECT * FROM " ) << DB_TABLE_NAME 
 			<< _T( " WHERE  " ) << DB_COL_STATE << _T( "='" ) << (int)eState << _T( "' " )
-			<< _T( "LIMIT " ) << nCount << _T( "" );
+			<< _T( "LIMIT " ) << nCount << _T( ";" );
 
 		int nRow = 0, nColumn = 0;
 		char **azResult; //二维数组存放结果
@@ -187,7 +187,7 @@ BOOL CSqliteDatabase::SearchUrl( LPCTSTR strUrl, TUrlRecordItem& item )
 		tstringstream ssSql;
 		ssSql << _T( "SELECT * FROM " ) << DB_TABLE_NAME 
 			<< _T( " WHERE  " ) << DB_COL_URL << _T( "='" ) << strUrl << _T( "' " )
-			<< _T( "" );
+			<< _T( ";" );
 
 		int nRow = 0, nColumn = 0;
 		char **azResult; //二维数组存放结果
@@ -235,5 +235,34 @@ BOOL CSqliteDatabase::SearchUrl( LPCTSTR strUrl, TUrlRecordItem& item )
 BOOL CSqliteDatabase::AddRecord( const TUrlRecordItem& item )
 {
 	ASSERT( FALSE );
-	return FALSE;
+
+	BOOL bResult = TRUE;
+	// 插入
+	char *errMsg = NULL;
+	tstringstream ssSql;
+	ssSql << _T( "INSERT INTO " ) << DB_TABLE_NAME
+		<< _T( " ( ") << DB_COL_URL << _T( ", ") 
+		<< DB_COL_CACHE	<< _T( ", ") 
+		<< DB_COL_SAVE << _T( ", ")
+		<< DB_COL_STATE << _T( " )" )
+		<< _T( " VALUES ( '" ) << item.m_strUrl
+		<< _T( "', '" ) << item.m_strCachePath
+		<< _T( "', '" ) << item.m_strSavePath
+		<< _T( "', '" ) << item.m_eState
+		<< _T( "' );" ) ;
+	string strUtf8Sql ;
+	CCommon::Utf16toUtf8( ssSql.str().c_str(), strUtf8Sql );
+	int nInsertRet = sqlite3_exec( m_pSqlite3, 
+		strUtf8Sql.c_str(), 
+		0, 0, &errMsg );
+	bResult &= ( nInsertRet == SQLITE_OK );
+	ASSERT( bResult );
+	Log() << _T( "Insert item ret: " ) << nInsertRet << endl;
+	Log() << _T( "sql: " ) << strUtf8Sql.c_str() << endl;
+	if ( errMsg )
+	{
+		Log() << _T( "Sqlite Error msg: " ) << errMsg << endl;
+	}
+
+	return bResult;
 }

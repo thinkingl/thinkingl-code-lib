@@ -204,7 +204,7 @@ BOOL CMimeType::Parse( LPCTSTR strUrl, LPCTSTR strContentType )
 			}
 		}
 
-		ASSERT( FALSE );
+//		ASSERT( FALSE );
 		return TRUE;
 	}
 	
@@ -212,12 +212,12 @@ BOOL CMimeType::Parse( LPCTSTR strUrl, LPCTSTR strContentType )
 
 tstring CMimeType::GetRecommendFileExt() const
 {
-	ASSERT( FALSE );
+//	ASSERT( FALSE );
 	return this->m_strRemommendExt;
 }
 
 CMimeType::EMimeType CMimeType::GetMimeType() const
 {
-	ASSERT( FALSE );
+//	ASSERT( FALSE );
 	return this->m_eMimeType;
 }

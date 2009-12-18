@@ -342,7 +342,7 @@ BOOL CPageFecher::ReplaceUrl( LPCTSTR strSrcUrl, LPCTSTR strDstUrl )
 
 BOOL CPageFecher::GetUrlInfo( LPCTSTR strUrl, BOOL& bNetworkOk, BOOL& bHaveDownload, BOOL& bShouldDownload, tstring& strCache, tstring& strSave, IHttpDownloader **ppDowloader )
 {
-	ASSERT( FALSE );
+//	ASSERT( FALSE );
 
 	BOOL bResult = TRUE;
 
