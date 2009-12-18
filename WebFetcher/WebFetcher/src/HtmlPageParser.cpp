@@ -71,6 +71,58 @@ BOOL CHtmlPageParser::Parse( LPCTSTR strHtmlFilePath, LPCTSTR strHtmlServerUrl )
 		wstring strUtf16;
 		CCommon::Utf8toUtf16( strData.c_str(), strUtf16 );
 
+		int nStrLen = strUtf16.length();
+
+		for ( int i=0; s_arToken[i]; ++i )
+		{
+			LPCTSTR strUrlToken = s_arToken[i];
+			// 查找标志。
+			int nFindCursor = 0;
+			int nPos = strUtf16.find( strUrlToken, nFindCursor );
+			// 解析这一段。
+			// URL在紧接的引号里。
+			// 要考虑部分页面错误的可能。
+			int nUrlPos =  nPos + _tcslen( strUrlToken );
+			TCHAR quotes = strUtf16.at( nUrlPos );
+			BOOL bRightQuotes = FALSE;
+			switch ( quotes )
+			{
+			case _T( '\'' ):
+			case _T( '"' ):
+				bRightQuotes = TRUE;
+				break;
+			default:
+				CLog() << _T( "Parse url error! token: " ) << quotes << endl;
+				bRightQuotes = FALSE;
+				break;
+			}
+
+			if ( !bRightQuotes )
+			{
+				continue;
+			}
+			else
+			{
+				// 两个引号引起来的是url。
+				nUrlPos ++;
+
+				int nUrlBegin = nUrlPos;
+				// 
+				tstringstream ssUrl;
+				while( nUrlPos < nStrLen && strUtf16.at( nUrlPos ) != quotes )
+				{
+					ssUrl << strUtf16.at( nUrlPos );
+					nUrlPos ++;
+				}
+
+				tstring strUrl = ssUrl.str();
+				// save.
+				TFullUrlOrignalUrl tPairUrl( strFullUrl, strOriginalUrl );
+				this->m_tUrlSet.insert( strFullUrl );
+				this->m_tUrlPosTable[ nUrlBegin ] = tPairUrl;
+			}
+		}
+
 //		while( fPage >> strData )
 //		{
 //			wstring strUtf16;
