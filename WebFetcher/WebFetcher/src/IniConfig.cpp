@@ -30,7 +30,18 @@ CIniConfig::~CIniConfig(void)
 
 tstring CIniConfig::GetRootFolder()
 {
-	return this->ReadConfigStr( CONFIG_CFG_APP_NAME, CONFIG_LOCAL_ROOT );
+	tstring strRootFolder = this->ReadConfigStr( CONFIG_CFG_APP_NAME, CONFIG_LOCAL_ROOT );
+	if ( strRootFolder.empty() )
+	{
+		strRootFolder = CCommon::GetAppDir();
+	}
+
+	if ( !strRootFolder.empty() && ( strRootFolder.at( strRootFolder.length() - 1 ) != '\\' ) )
+	{
+		strRootFolder += '\\';
+	}
+
+	return strRootFolder;
 }
 
 tstring CIniConfig::GetRootUrl()

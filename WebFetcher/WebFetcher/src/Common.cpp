@@ -349,7 +349,7 @@ __time64_t CCommon::StrToTime( LPCTSTR lpTime )
 
 tstring CCommon::Url2FileName( LPCTSTR strUrl )
 {
-	ASSERT( FALSE );
+//	ASSERT( FALSE );
 
 	const TCHAR TokenBegin = _T( '^' );
 	const TCHAR TokenReservedWord = _T( '$' );
@@ -408,4 +408,22 @@ tstring CCommon::Url2FileName( LPCTSTR strUrl )
 	
 	return ssFileName.str();
 }
+
+BOOL CCommon::CreateDirRecurse( LPCTSTR strDir )
+{
+	tstring strCurDir = strDir;
+	if ( strCurDir.at( strCurDir.length() - 1 ) == '\\' || strCurDir.at( strCurDir.length() - 1 ) == '/' )
+	{
+		strCurDir = strCurDir.substr( 0, strCurDir.length() - 1 );
+	}
+	
+	tstring strUpDir = ParsePath( strCurDir.c_str() ).m_strDirectory;
+	if ( !strUpDir.empty() && _taccess( strUpDir.c_str(), 0 ) != 0 )
+	{
+		CreateDirRecurse( strUpDir.c_str() );
+	}
+	
+	return _tmkdir( strDir );
+}
+
 

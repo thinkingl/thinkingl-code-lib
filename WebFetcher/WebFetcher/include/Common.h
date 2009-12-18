@@ -65,4 +65,7 @@ public:
 
 	/** 文件名转换回文件名. */
 	static tstring FileName2Url( LPCTSTR strFileName );
+
+	/** 递归的创建文件夹。 */
+	static BOOL CreateDirRecurse( LPCTSTR strDir );
 };
