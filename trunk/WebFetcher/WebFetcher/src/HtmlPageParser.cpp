@@ -62,7 +62,7 @@ BOOL CHtmlPageParser::Parse( LPCTSTR strHtmlFilePath, LPCTSTR strHtmlServerUrl )
 		}
 
 		vector<char> tCharTmp( nFileLen, 0 );
-		int nUrlPos = 0;
+//		int nUrlPos = 0;
 
 		fPage.seekg( 0, ios::beg );
 		fPage.read( &tCharTmp[0], nFileLen );
@@ -78,49 +78,72 @@ BOOL CHtmlPageParser::Parse( LPCTSTR strHtmlFilePath, LPCTSTR strHtmlServerUrl )
 			LPCTSTR strUrlToken = s_arToken[i];
 			// 查找标志。
 			int nFindCursor = 0;
-			int nPos = strUtf16.find( strUrlToken, nFindCursor );
-			// 解析这一段。
-			// URL在紧接的引号里。
-			// 要考虑部分页面错误的可能。
-			int nUrlPos =  nPos + _tcslen( strUrlToken );
-			TCHAR quotes = strUtf16.at( nUrlPos );
-			BOOL bRightQuotes = FALSE;
-			switch ( quotes )
+			while ( nFindCursor < nStrLen )
 			{
-			case _T( '\'' ):
-			case _T( '"' ):
-				bRightQuotes = TRUE;
-				break;
-			default:
-				CLog() << _T( "Parse url error! token: " ) << quotes << endl;
-				bRightQuotes = FALSE;
-				break;
-			}
-
-			if ( !bRightQuotes )
-			{
-				continue;
-			}
-			else
-			{
-				// 两个引号引起来的是url。
-				nUrlPos ++;
-
-				int nUrlBegin = nUrlPos;
-				// 
-				tstringstream ssUrl;
-				while( nUrlPos < nStrLen && strUtf16.at( nUrlPos ) != quotes )
+				nFindCursor = strUtf16.find( strUrlToken, nFindCursor );
+				if ( -1 == nFindCursor )
 				{
-					ssUrl << strUtf16.at( nUrlPos );
-					nUrlPos ++;
+					break;
+				}
+				// 解析这一段。
+				// URL在紧接的引号里。
+				// 要考虑部分页面错误的可能。
+				nFindCursor += _tcslen( strUrlToken );
+				// 当前的位置应该是引号。
+				TCHAR quotes = strUtf16.at( nFindCursor );
+				BOOL bRightQuotes = FALSE;
+				switch ( quotes )
+				{
+				case _T( '\'' ):
+				case _T( '"' ):
+					bRightQuotes = TRUE;
+					break;
+				default:
+					CLog() << _T( "Parse url error! token: " ) << quotes << endl;
+					bRightQuotes = FALSE;
+					break;
 				}
 
-				tstring strUrl = ssUrl.str();
-				// save.
-				TFullUrlOrignalUrl tPairUrl( strFullUrl, strOriginalUrl );
-				this->m_tUrlSet.insert( strFullUrl );
-				this->m_tUrlPosTable[ nUrlBegin ] = tPairUrl;
+				if ( !bRightQuotes )
+				{
+					continue;
+				}
+				else
+				{
+					// 两个引号引起来的是url。
+					nFindCursor ++;
+
+					// 保存下url起始的位置。
+					int nUrlBegin = nFindCursor;
+					// 
+					tstringstream ssUrl;
+					while( nFindCursor < nStrLen && strUtf16.at( nFindCursor ) != quotes )
+					{
+						ssUrl << strUtf16.at( nFindCursor );
+						nFindCursor ++;
+					}
+					// 跳过引号。
+					nFindCursor ++;
+
+					tstring strOriginalUrl = ssUrl.str();
+					tstring strFullUrl;
+					if ( this->GetFullUrl( strOriginalUrl.c_str(), strFullUrl ) )
+					{
+						// save.
+						TFullUrlOrignalUrl tPairUrl( strFullUrl, strOriginalUrl );
+						this->m_tUrlSet.insert( strFullUrl );
+						this->m_tUrlPosTable[ nUrlBegin ] = tPairUrl;
+
+						CLog() << _T( "Find url: " ) << strFullUrl << endl;
+					}
+					else
+					{
+						CLog() << _T( "Get full url fail!! url: " ) << strOriginalUrl << endl;
+					}
+					
+				}
 			}
+			
 		}
 
 //		while( fPage >> strData )
@@ -239,60 +262,27 @@ BOOL CHtmlPageParser::SaveFile( LPCTSTR strPath )
 	return FALSE;
 }
 
-BOOL CHtmlPageParser::IsContainUrl( LPCTSTR strLine )
+//BOOL CHtmlPageParser::IsContainUrl( LPCTSTR strLine )
+//{
+//	int i=0;
+//	while ( s_arToken[i] )
+//	{
+//		LPCTSTR strToken = s_arToken[i];
+//		int nTokenLen = _tcslen( strToken ) ;
+//		if ( 0 == CCommon::StrNCmpNocase( strToken, strLine, nTokenLen ) )
+//		{
+//			return TRUE;
+//		}
+//
+//		++i;
+//	}
+//
+//	return FALSE;
+//}
+
+BOOL CHtmlPageParser::GetFullUrl( LPCTSTR lpstrOriginalUrl, tstring& strFullUrl )
 {
-	int i=0;
-	while ( s_arToken[i] )
-	{
-		LPCTSTR strToken = s_arToken[i];
-		int nTokenLen = _tcslen( strToken ) ;
-		if ( 0 == CCommon::StrNCmpNocase( strToken, strLine, nTokenLen ) )
-		{
-			return TRUE;
-		}
-
-		++i;
-	}
-
-	return FALSE;
-}
-
-BOOL CHtmlPageParser::GetUrl( LPCTSTR strLine, tstring& strFullUrl, tstring& strOriginalUrl, int &nPos )
-{
-	// 2个引号中间的是url。
-	LPCTSTR strUrlContainer = strLine;
-	const TCHAR cToken1 = _T( '"' );
-	const TCHAR cToken2 = _T( '\'' );
-	int nCount = 0;
-	nPos = 0;
-	tstringstream ssUrl;
-	while ( *strUrlContainer != NULL && nCount < 2 )
-	{
-		if ( nCount < 1 )
-		{
-			nPos ++;	// 没遇到引号之前寻找位置。
-		}
-
-		if ( cToken1 == *strUrlContainer || cToken2 == *strUrlContainer )
-		{
-			nCount ++;
-		}
-		else if ( nCount == 1 )
-		{
-			ssUrl << *strUrlContainer;
-		}
-
-
-
-
-		strUrlContainer ++;
-	}
-	if ( nCount < 2 )
-	{
-		ssUrl.clear();
-	}
-	
-	strOriginalUrl = ssUrl.str();
+	tstring strOriginalUrl = lpstrOriginalUrl;
 	strFullUrl = strOriginalUrl;
 	if ( strOriginalUrl.empty() )
 	{
@@ -314,22 +304,156 @@ BOOL CHtmlPageParser::GetUrl( LPCTSTR strLine, tstring& strFullUrl, tstring& str
 			return FALSE;
 		}
 
-		LPCTSTR strHttp = _T( "http://" );
-		if ( 0 != CCommon::StrNCmpNocase( strHttp, strOriginalUrl.c_str(), _tcslen( strHttp ) ) )
+		LPCTSTR arProtocolHead[] = 
 		{
-			if ( strOriginalUrl[0] != '/' )
+			_T( "http://" ),
+			_T( "ftp://" ),
+			_T( "file://" ),
+			NULL
+		};
+		LPCTSTR strProtocol = NULL;
+		for ( int i=0; arProtocolHead[i] != NULL; ++i )
+		{
+			if ( 0 == CCommon::StrNCmpNocase( arProtocolHead[i], strOriginalUrl.c_str(), _tcslen( arProtocolHead[i] ) ) )
 			{
-				strFullUrl = tstring( _T( "/" ) ) + strOriginalUrl;
+				strProtocol = arProtocolHead[i];
+				break;
+			}
+		}
+		if ( NULL == strProtocol )
+		{
+			// 原始url不是绝对url，需要拼接。
+
+			// 将Url中的"\"都替换为"/".
+			CCommon::NormalizeUrl( strOriginalUrl );
+
+			tstring strBaseFolder = this->m_strServerUrlFolder;
+			CCommon::NormalizeUrl( strBaseFolder );
+
+
+			if ( strOriginalUrl[0] == '/' )
+			{
+				strOriginalUrl = strOriginalUrl.substr( 1 );
+			}
+
+			if ( strBaseFolder.at( strBaseFolder.length() - 1 ) == '/' )
+			{
+				strBaseFolder = strBaseFolder.substr( 0, strBaseFolder.length() - 1 );
+			}
+
+			LPCTSTR PathCurrent = _T( "./" );
+			LPCTSTR PathParent = _T( "../" );
+		
+			
+
+			while( 1 )
+			{
+				if ( 0 == CCommon::StrNCmpNocase( PathCurrent, strOriginalUrl.c_str(), _tcslen( PathCurrent ) ) )
+				{
+					strOriginalUrl = strOriginalUrl.substr( _tcslen( PathCurrent ) );
+				}
+				else if ( 0 == CCommon::StrNCmpNocase( PathParent, strOriginalUrl.c_str(), _tcslen( PathParent ) ) )
+				{
+					strOriginalUrl = strOriginalUrl.substr( _tcslen( PathParent ) );
+
+					// 上一级。
+					int nPos = strBaseFolder.rfind( '/' );
+					if ( -1 != nPos )
+					{
+						strBaseFolder = strBaseFolder.substr( 0, nPos );
+					}
+					else
+					{
+						ASSERT( FALSE );
+						return FALSE;
+					}
+				}
+				else
+				{
+					break;
+				}
 			}
 			
-			strFullUrl = this->m_strServerUrlFolder + strFullUrl;
+
+			strFullUrl = strBaseFolder + _T( "/" ) + strOriginalUrl;
 		}
 	}
-
-	
-
-	return !strFullUrl.empty();
+	return TRUE;
 }
+
+//BOOL CHtmlPageParser::GetUrl( LPCTSTR strLine, tstring& strFullUrl, tstring& strOriginalUrl, int &nPos )
+//{
+//	// 2个引号中间的是url。
+//	LPCTSTR strUrlContainer = strLine;
+//	const TCHAR cToken1 = _T( '"' );
+//	const TCHAR cToken2 = _T( '\'' );
+//	int nCount = 0;
+//	nPos = 0;
+//	tstringstream ssUrl;
+//	while ( *strUrlContainer != NULL && nCount < 2 )
+//	{
+//		if ( nCount < 1 )
+//		{
+//			nPos ++;	// 没遇到引号之前寻找位置。
+//		}
+//
+//		if ( cToken1 == *strUrlContainer || cToken2 == *strUrlContainer )
+//		{
+//			nCount ++;
+//		}
+//		else if ( nCount == 1 )
+//		{
+//			ssUrl << *strUrlContainer;
+//		}
+//
+//
+//
+//
+//		strUrlContainer ++;
+//	}
+//	if ( nCount < 2 )
+//	{
+//		ssUrl.clear();
+//	}
+//	
+//	strOriginalUrl = ssUrl.str();
+//	strFullUrl = strOriginalUrl;
+//	if ( strOriginalUrl.empty() )
+//	{
+//		return FALSE;
+//	}
+//	else
+//	{
+//		if( strOriginalUrl[0] == '#' )
+//		{
+//			strOriginalUrl.clear();
+//			strFullUrl.clear();
+//			return FALSE;
+//		}
+//		LPCTSTR lpstrJS = _T( "javascript" );
+//		if( 0 == CCommon::StrNCmpNocase( lpstrJS, strOriginalUrl.c_str(), _tcslen( lpstrJS ) ) )
+//		{
+//			strOriginalUrl.clear();
+//			strFullUrl.clear();
+//			return FALSE;
+//		}
+//
+//		LPCTSTR strHttp = _T( "http://" );
+//		if ( 0 != CCommon::StrNCmpNocase( strHttp, strOriginalUrl.c_str(), _tcslen( strHttp ) ) )
+//		{
+//			if ( strOriginalUrl[0] != '/' )
+//			{
+//				strFullUrl = tstring( _T( "/" ) ) + strOriginalUrl;
+//			}
+//			
+//			strFullUrl = this->m_strServerUrlFolder + strFullUrl;
+//		}
+//	}
+//
+//	
+//
+//	return !strFullUrl.empty();
+//}
 
 tstring CHtmlPageParser::GetCurServerUrl()
 {
