@@ -56,12 +56,16 @@ BOOL testParsePage()
 	}
 	Log() << endl << endl;
 
-	LPCTSTR lpStrSrc = _T( "http://www.verycd.com/topics/2786155/" );
+	LPCTSTR lpStrSrc = _T( "http://www.verycd.com/topics/2787816/" );
 //	lpStrSrc = _T( "http://www.verycd.com/specs/opensearch.xml" );
 	LPCTSTR lpStrDst = _T( "http://www.g.cn" );
 	pParser->ReplaceAllUrl( lpStrSrc, lpStrDst );
 
+	lpStrSrc = _T( "http://www.verycd.com/sto/movie/" );
+	lpStrDst = _T( "/abc/d.html" );
+
 	pParser->SaveFile( _T( "F:\\download\\replaced.htm" ) );
+	pParser->ReplaceAllUrl( lpStrSrc, lpStrDst );
 
 	delete pParser;
 
