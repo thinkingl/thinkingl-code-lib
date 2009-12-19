@@ -50,6 +50,9 @@ public:
     /** 将一个文件夹变成标准的形式。 */
     static void NormalizeDir( tstring& strFolder );
 
+	/** 将一个url转成标准形式。用 / 替换 \ .*/
+	static void NormalizeUrl( tstring& strUrl );
+
     /** 时间->字符串 */
     static tstring TimeToStr( __time64_t nTime );
     static __time64_t StrToTime( LPCTSTR strTime );

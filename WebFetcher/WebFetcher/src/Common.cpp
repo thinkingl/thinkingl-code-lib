@@ -221,6 +221,18 @@ void CCommon::NormalizeDir( tstring& strFolder )
 
 }
 
+void CCommon::NormalizeUrl( tstring& strUrl )
+{
+	// 将Url中的"\"都替换为"/".
+	for ( size_t i=0; i<strUrl.length(); ++i )
+	{
+		if ( strUrl.at(i) == '\\' )
+		{
+			strUrl.at(i) = '/';
+		}
+	}
+}
+
 tstring CCommon::TimeToStr( __time64_t nTime )
 {
     tstring strTimeResult;
