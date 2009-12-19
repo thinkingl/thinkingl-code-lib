@@ -71,6 +71,9 @@ BOOL CHtmlPageParser::Parse( LPCTSTR strHtmlFilePath, LPCTSTR strHtmlServerUrl )
 		wstring strUtf16;
 		CCommon::Utf8toUtf16( strData.c_str(), strUtf16 );
 
+		// 保存网页内容。
+		this->m_strHtmlPageContent = strUtf16;
+
 		int nStrLen = strUtf16.length();
 
 		for ( int i=0; s_arToken[i]; ++i )
@@ -206,60 +209,95 @@ BOOL CHtmlPageParser::ReplaceAllUrl( LPCTSTR strSrcUrl, LPCTSTR strDstUrl )
 
 BOOL CHtmlPageParser::SaveFile( LPCTSTR strPath )
 {
-	ifstream fPageSrc;
-	fPageSrc.open( this->m_strHtmlPageLocalPath.c_str() );
 
 	ofstream fPageDst;
 	fPageDst.open( strPath );
-
-	if ( !fPageSrc || !fPageDst )
+	if ( !fPageDst )
 	{
-		Log() << _T( "SaveFile Open file Fail!!!!!" ) << endl;
-		_ASSERT( FALSE );
+		CLog() << _T( "CHtmlPageParser::SaveFile Open file fail! " ) << strPath << endl;
 		return FALSE;
 	}
 
-	int nPosCount = 0;
-	string strData;
-	TUrlPosTable::iterator iter = this->m_tUrlPosTable.begin();
-	while ( fPageSrc >> strData )
+	tstringstream ssReplacedHtmlPage;
+	for( size_t nCurPos = 0; nCurPos < this->m_strHtmlPageContent.length(); ++nCurPos )
 	{
-		wstring strUtf16;
-		CCommon::Utf8toUtf16( strData.c_str(), strUtf16 );
-
-		int nLen = strUtf16.length();
-
-		if ( iter != this->m_tUrlPosTable.end() 
-			&& nPosCount < iter->first && nPosCount + nLen > iter->first )
+		TUrlPosTable::iterator iterPos = this->m_tUrlPosTable.find( nCurPos );
+		if ( iterPos != this->m_tUrlPosTable.end() )
 		{
+			// 替换掉这个url。
 			// 替换表中存储的是完整的url。
-			tstring strRepUrl = iter->second.first;
+			tstring strRepUrl = iterPos->second.first;
 			// 在原始数据中被替换的是原始的url。
-			tstring strOriUrl = iter->second.second;
+			tstring strOriUrl = iterPos->second.second;
 			TUrlReplaceTable::iterator iterRep = this->m_tReplaceTable.find( strRepUrl );
 			if ( iterRep != this->m_tReplaceTable.end() )
 			{
 				tstring strDstUrl = iterRep->second;
-				int nUrlPos = iter->first - nPosCount;
+				ssReplacedHtmlPage << strDstUrl;
 
-				tstring strHead = strUtf16.substr( 0, nUrlPos );
-				tstring strEnd = strUtf16.substr( nUrlPos + strOriUrl.length() );
+				// 直接跳到url后面。
+				nCurPos += strOriUrl.length();
 
-				tstring strFinal = strHead + strDstUrl + strEnd;
-
-				CCommon::Utf16toUtf8( strFinal.c_str(), strData );
+				tstring strTmp0 = this->m_strHtmlPageContent.substr( nCurPos - 20, 20 );
+				tstring strTmp = this->m_strHtmlPageContent.substr( nCurPos, 10 );
 			}
-			
-
-			++iter;
 		}
-
-		fPageDst << strData << " ";
-
-		nPosCount += nLen;
-		
+		else
+		{
+			// 继续。
+			ssReplacedHtmlPage << this->m_strHtmlPageContent.at( nCurPos );
+			
+		}
 	}
-	return FALSE;
+
+	string strUtf8Page;
+	CCommon::Utf16toUtf8( ssReplacedHtmlPage.str().c_str() , strUtf8Page );
+	
+	fPageDst.write( strUtf8Page.c_str(), strUtf8Page.length() );
+	fPageDst.close();
+	return TRUE;
+
+	//int nPosCount = 0;
+	//string strData;
+	//TUrlPosTable::iterator iter = this->m_tUrlPosTable.begin();
+	//while ( fPageSrc >> strData )
+	//{
+	//	wstring strUtf16;
+	//	CCommon::Utf8toUtf16( strData.c_str(), strUtf16 );
+
+	//	int nLen = strUtf16.length();
+
+	//	if ( iter != this->m_tUrlPosTable.end() 
+	//		&& nPosCount < iter->first && nPosCount + nLen > iter->first )
+	//	{
+	//		// 替换表中存储的是完整的url。
+	//		tstring strRepUrl = iter->second.first;
+	//		// 在原始数据中被替换的是原始的url。
+	//		tstring strOriUrl = iter->second.second;
+	//		TUrlReplaceTable::iterator iterRep = this->m_tReplaceTable.find( strRepUrl );
+	//		if ( iterRep != this->m_tReplaceTable.end() )
+	//		{
+	//			tstring strDstUrl = iterRep->second;
+	//			int nUrlPos = iter->first - nPosCount;
+
+	//			tstring strHead = strUtf16.substr( 0, nUrlPos );
+	//			tstring strEnd = strUtf16.substr( nUrlPos + strOriUrl.length() );
+
+	//			tstring strFinal = strHead + strDstUrl + strEnd;
+
+	//			CCommon::Utf16toUtf8( strFinal.c_str(), strData );
+	//		}
+	//		
+
+	//		++iter;
+	//	}
+
+	//	fPageDst << strData << " ";
+
+	//	nPosCount += nLen;
+	//	
+	//}
+	//return FALSE;
 }
 
 //BOOL CHtmlPageParser::IsContainUrl( LPCTSTR strLine )

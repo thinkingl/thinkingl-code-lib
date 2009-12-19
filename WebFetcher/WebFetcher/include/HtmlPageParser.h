@@ -37,6 +37,9 @@ private:
 	/** ÍøÒ³Â·¾¶¡£ */
 	tstring m_strHtmlPageLocalPath;;
 
+	/** ÍøÒ³ÄÚÈİ¡£ */
+	tstring m_strHtmlPageContent;
+
 	/** url. */
 	tstring m_strServerUrlFolder;
 	tstring m_strServerUrl;
