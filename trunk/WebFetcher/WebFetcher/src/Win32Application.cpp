@@ -64,8 +64,10 @@ BOOL testParsePage()
 	lpStrSrc = _T( "http://www.verycd.com/sto/movie/" );
 	lpStrDst = _T( "/abc/d.html" );
 
-	pParser->SaveFile( _T( "F:\\download\\replaced.htm" ) );
 	pParser->ReplaceAllUrl( lpStrSrc, lpStrDst );
+
+	pParser->SaveFile( _T( "F:\\download\\replaced.htm" ) );
+	
 
 	delete pParser;
 
