@@ -39,7 +39,7 @@ BOOL CHtmlPageParser::Parse( LPCTSTR strHtmlFilePath, LPCTSTR strHtmlServerUrl )
 	}
 
 	ifstream fPage;
-	fPage.open( strHtmlFilePath );
+	fPage.open( strHtmlFilePath, ios::in | ios::binary );
 	if ( !fPage )
 	{
 		Log() << _T( "Can't open file: " ) << strHtmlFilePath << endl;
@@ -61,12 +61,16 @@ BOOL CHtmlPageParser::Parse( LPCTSTR strHtmlFilePath, LPCTSTR strHtmlServerUrl )
 			return FALSE;
 		}
 
-		vector<char> tCharTmp( nFileLen, 0 );
+		// 一定要为字符串保留一个0结尾！文件不会读取到0结尾！！！
+		vector<char> tCharTmp( nFileLen + 1, 0 );
 //		int nUrlPos = 0;
 
 		fPage.seekg( 0, ios::beg );
-		fPage.read( &tCharTmp[0], nFileLen );
+		fPage.read( &tCharTmp[0], nFileLen  );
+		
 		strData = &tCharTmp[0];
+
+//		string strkkkkk = strData.substr( strData.length() - 50 );
 
 		wstring strUtf16;
 		CCommon::Utf8toUtf16( strData.c_str(), strUtf16 );
@@ -222,8 +226,11 @@ BOOL CHtmlPageParser::SaveFile( LPCTSTR strPath )
 	for( size_t nCurPos = 0; nCurPos < this->m_strHtmlPageContent.length(); ++nCurPos )
 	{
 		TUrlPosTable::iterator iterPos = this->m_tUrlPosTable.find( nCurPos );
+
+		BOOL bReplace = FALSE;
 		if ( iterPos != this->m_tUrlPosTable.end() )
 		{
+			TCHAR cCurPosWord = this->m_strHtmlPageContent.at( nCurPos );
 			// 替换掉这个url。
 			// 替换表中存储的是完整的url。
 			tstring strRepUrl = iterPos->second.first;
@@ -235,14 +242,22 @@ BOOL CHtmlPageParser::SaveFile( LPCTSTR strPath )
 				tstring strDstUrl = iterRep->second;
 				ssReplacedHtmlPage << strDstUrl;
 
+//				tstring tmp = ssReplacedHtmlPage.str();
+//				tstring tmp222 = tmp.substr(  tmp.length() - 40 );
+
 				// 直接跳到url后面。
 				nCurPos += strOriUrl.length();
+				// 循环中会+1，所以这里先减去。
+				nCurPos --;
 
-				tstring strTmp0 = this->m_strHtmlPageContent.substr( nCurPos - 20, 20 );
-				tstring strTmp = this->m_strHtmlPageContent.substr( nCurPos, 10 );
+//				tstring strTmp0 = this->m_strHtmlPageContent.substr( nCurPos - 50 );
+//				tstring strTmp = this->m_strHtmlPageContent.substr( nCurPos, 10 );
+
+				bReplace = TRUE;
 			}
 		}
-		else
+		
+		if( !bReplace )
 		{
 			// 继续。
 			ssReplacedHtmlPage << this->m_strHtmlPageContent.at( nCurPos );
@@ -250,8 +265,13 @@ BOOL CHtmlPageParser::SaveFile( LPCTSTR strPath )
 		}
 	}
 
+	tstring strXXX = ssReplacedHtmlPage.str().substr( ssReplacedHtmlPage.str().length() - 50 );
+
 	string strUtf8Page;
 	CCommon::Utf16toUtf8( ssReplacedHtmlPage.str().c_str() , strUtf8Page );
+
+	string strtmppp = strUtf8Page.substr( strUtf8Page.length() - 50 );
+
 	
 	fPageDst.write( strUtf8Page.c_str(), strUtf8Page.length() );
 	fPageDst.close();
