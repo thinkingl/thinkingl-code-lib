@@ -191,8 +191,61 @@ BOOL CCommon::IsWebpage( LPCTSTR strPath )
 	return FALSE;
 }
 
-tstring CCommon::GetRelativePath( LPCTSTR strSrcPath, LPCTSTR strDstPath )
+tstring CCommon::GetRelativePath( LPCTSTR strSrcPath, LPCTSTR lpstrDstPath )
 {
+	// 取目录。
+	tstring strSrcDir = CCommon::ParsePath( strSrcPath ).m_strDirectory;
+	if ( strSrcDir.at( strSrcDir.length() - 1 ) == '/' )
+	{
+		strSrcDir = strSrcDir.substr( 0, strSrcDir.length() - 1 );
+	}
+
+	// 一定要有协议头。 xxxx:// 。
+	if ( strSrcDir.empty() || ( strSrcDir.find( _T( "//" ) ) == -1 ) )
+	{
+		return lpstrDstPath;
+	}
+
+	LPCTSTR strCurDir = _T( "./" );
+	LPCTSTR strUpDir = _T( "../" );
+
+	tstring strDstPath = lpstrDstPath;
+	if ( strDstPath.find( strSrcDir ) == 0 )
+	{
+		// 可以了。
+		tstring strRelativePath = strCurDir + strDstPath.substr( strSrcDir.length() + 1 );
+
+		return strRelativePath;
+	}
+	else
+	{
+		// 继续找原目录的上级目录的相对位置。
+		tstring strUpRelativePath = GetRelativePath( strSrcDir.c_str(), lpstrDstPath );
+		if ( strUpRelativePath.empty() || strUpRelativePath == strDstPath )
+		{
+			return  strUpRelativePath;
+		}
+		else
+		{
+			// 如果有上级目录存在，去掉本机目录。
+			if ( StrNCmpNocase( strUpRelativePath.c_str(), strCurDir, _tcslen( strCurDir ) ) == 0 )
+			{
+				strUpRelativePath = strUpRelativePath.substr( _tcslen( strCurDir ) );
+			}
+			tstring strRelativePath = _T( "../" ) + strUpRelativePath;
+			return strRelativePath;
+		}
+		
+	}
+
+	//tstring strDstDir = CCommon::ParsePath( strDstPath ).m_strDirectory;
+	//if ( strDstDir.at( strSrcDir.length() - 1 ) == '/' )
+	//{
+	//	strDstDir = strDstDir.substr( 0, strDstDir.length() - 1 );
+	//}
+
+	
+
 	ASSERT( FALSE );
 	return _T( "" );
 }

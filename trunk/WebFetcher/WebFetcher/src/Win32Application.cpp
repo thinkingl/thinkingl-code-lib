@@ -2,6 +2,7 @@
 #include "Log.h"
 #include "IConfig.h"
 #include "MimeType.h"
+#include "Common.h"
 
 CWin32Application::CWin32Application(void)
 {
@@ -110,6 +111,33 @@ BOOL testCfg()
 	return TRUE;
 }
 
+BOOL testCommon()
+{
+	//testParsePage();
+	tstring strRelative;
+	strRelative = CCommon::GetRelativePath( _T( "http://www.verycd.com/a/b/c/1.htm" ), _T( "http://www.verycd.com/a/2.html" ) );
+	ASSERT( strRelative == _T( "../../2.html" ) );
+
+	strRelative = CCommon::GetRelativePath( _T( "http://www.verycd.com/a/b/c/1.htm" ), _T( "http://www.verycd.com/a/b/c/d/e/f/5.html" ) );
+	ASSERT( strRelative == _T( "./d/e/f/5.html" ) );
+
+	strRelative = CCommon::GetRelativePath( _T( "http://www.verycd.com/a/b/c/1.htm" ), _T( "http://www.verycd.com/a/kao/23/l/5.html" ) );
+	ASSERT( strRelative == _T( "../../kao/23/l/5.html" ) );
+
+	strRelative = CCommon::GetRelativePath( _T( "http://www.verycd.com/a/b/c/1.htm" ), _T( "http://www.verycd.com/a/b/c/1.htm" ) );
+	ASSERT( strRelative == _T( "./1.htm" ) );
+
+	strRelative = CCommon::GetRelativePath( _T( "http://www.verycd.com/a/b/c/1.htm" ), _T( "http://verycd.com/a/b/c/1.htm" ) );
+	ASSERT( strRelative == _T( "http://verycd.com/a/b/c/1.htm" ) );
+
+	return TRUE;
+}
+
+BOOL unitTest()
+{
+	return testCommon();
+}
+
 int CWin32Application::RunWebFetch()
 {
 	int nRetCode = 0;
@@ -137,7 +165,11 @@ int CWin32Application::RunWebFetch()
 
 		// test
 		nThreadNum = 0;
-		testParsePage();
+
+		BOOL bUnittestSuccess = unitTest();
+		ASSERT( bUnittestSuccess );
+
+		
 
        	std::vector< IThread * > tThreadList;
 		for( int i=0; i<nThreadNum; ++i )
