@@ -29,6 +29,10 @@ public:
 	virtual tstring GetCurServerUrl() ;
 
 private:
+
+	BOOL IsUrl( LPCTSTR strUrl );
+
+private:
 //	BOOL IsContainUrl( LPCTSTR strLine );
 
 //	BOOL GetUrl( LPCTSTR strLine, tstring& strFullUrl, tstring& strOriginalUrl, int &nPos );

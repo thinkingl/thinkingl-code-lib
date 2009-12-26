@@ -81,6 +81,10 @@ BOOL CWinInetHttpFecher::SetHttpProxy( BOOL bUseProxy, LPCTSTR strIp, uint16 nPo
 BOOL CWinInetHttpFecher::OpenUrl( LPCTSTR strUrl )
 {
 //	this->Release();
+	if ( this->m_pInetFile )
+	{
+		m_pInetFile->Close();
+	}
 
 	BOOL bResult = FALSE;
 	try
@@ -163,7 +167,7 @@ BOOL CWinInetHttpFecher::DownloadFile( LPCTSTR strLocFilePath )
 			if( !of )
 			{
 				Log() << _T( "open file fail! path: " ) << strLocFilePath << endl;
-				_ASSERT( FALSE );
+//				_ASSERT( FALSE );
 				return FALSE;
 			}
 			const int nReadLen = 1000;
@@ -240,142 +244,148 @@ BOOL CWinInetHttpFecher::GetMimeType( CMimeType& mimetype )
 
 void CWinInetHttpFecher::Release()
 {
-	this->Close();
-	m_pInetFile = NULL;
-}
-void CWinInetHttpFecher::OnStatusCallback(DWORD dwContext, DWORD dwInternetStatus, LPVOID lpvStatusInformation, DWORD dwStatusInformationLength)
-{
-	// TODO: 在此添加专用代码和/或调用基类
-
-	/** 
-	INTERNET_STATUS_RESOLVING_NAME
-	Looking up the IP address of the name contained in lpvStatusInformation.
-
-	INTERNET_STATUS_NAME_RESOLVED
-	Successfully found the IP address of the name contained in lpvStatusInformation.
-
-	INTERNET_STATUS_CONNECTING_TO_SERVER
-	Connecting to the socket address (SOCKADDR) pointed to by lpvStatusInformation.
-
-	INTERNET_STATUS_CONNECTED_TO_SERVER
-	Successfully connected to the socket address (SOCKADDR) pointed to by lpvStatusInformation.
-
-	INTERNET_STATUS_SENDING_REQUEST
-	Sending the information request to the server. The lpvStatusInformation parameter is NULL.
-
-	INTERNET_STATUS_ REQUEST_SENT
-	Successfully sent the information request to the server. The lpvStatusInformation parameter is NULL.
-
-	INTERNET_STATUS_RECEIVING_RESPONSE
-	Waiting for the server to respond to a request. The lpvStatusInformation parameter is NULL.
-
-	INTERNET_STATUS_RESPONSE_RECEIVED
-	Successfully received a response from the server. The lpvStatusInformation parameter is NULL.
-
-	INTERNET_STATUS_CLOSING_CONNECTION
-	Closing the connection to the server. The lpvStatusInformation parameter is NULL.
-
-	INTERNET_STATUS_CONNECTION_CLOSED
-	Successfully closed the connection to the server. The lpvStatusInformation parameter is NULL.
-
-	INTERNET_STATUS_HANDLE_CREATED
-	Used by the Win32 API function InternetConnect to indicate that it has created the new handle. This lets the application call the Win32 function InternetCloseHandle from another thread if the connect is taking too long. See the Windows SDK for more information about these functions.
-
-	INTERNET_STATUS_HANDLE_CLOSING
-	Successfully terminated this handle value.
-	*/
-	tstring strMsg;
-	switch ( dwInternetStatus )
+//	this->Close();
+	if ( this->m_pInetFile )
 	{
-	case INTERNET_STATUS_RESOLVING_NAME:
-		strMsg = _T( "INTERNET_STATUS_RESOLVING_NAME " ) ;//+ (LPCTSTR)lpvStatusInformation;
-		break;
-    case INTERNET_STATUS_NAME_RESOLVED           :
-		strMsg = _T( "INTERNET_STATUS_NAME_RESOLVED " ) ;//+ (LPCTSTR)lpvStatusInformation;
-		break;
-    case INTERNET_STATUS_CONNECTING_TO_SERVER    :
-		strMsg = _T( "INTERNET_STATUS_CONNECTING_TO_SERVER " ) ;
-		break;
-    case INTERNET_STATUS_CONNECTED_TO_SERVER     :
-		strMsg = _T( "INTERNET_STATUS_CONNECTED_TO_SERVER " );
-		break;
-    case INTERNET_STATUS_SENDING_REQUEST         :
-		strMsg = _T( "INTERNET_STATUS_SENDING_REQUEST " );
-		break;
-    case INTERNET_STATUS_REQUEST_SENT            :
-		strMsg = _T( "INTERNET_STATUS_REQUEST_SENT " );
-		break;
-    case INTERNET_STATUS_RECEIVING_RESPONSE      :
-//		strMsg = _T( "INTERNET_STATUS_RECEIVING_RESPONSE " );
-		break;
-    case INTERNET_STATUS_RESPONSE_RECEIVED       :
-//		strMsg = _T( "INTERNET_STATUS_RESPONSE_RECEIVED " );
-		break;
-    case INTERNET_STATUS_CTL_RESPONSE_RECEIVED   :
-		strMsg = _T( "INTERNET_STATUS_CTL_RESPONSE_RECEIVED " );
-		break;
-    case INTERNET_STATUS_PREFETCH                :
-		strMsg = _T( "INTERNET_STATUS_PREFETCH " );
-		break;
-    case INTERNET_STATUS_CLOSING_CONNECTION      :
-		strMsg = _T( "INTERNET_STATUS_CLOSING_CONNECTION " );
-		break;
-    case INTERNET_STATUS_CONNECTION_CLOSED       :
-		strMsg = _T( "INTERNET_STATUS_CONNECTION_CLOSED " );
-		break;
-    case INTERNET_STATUS_HANDLE_CREATED          :
-		strMsg = _T( "INTERNET_STATUS_HANDLE_CREATED " );
-		break;
-    case INTERNET_STATUS_HANDLE_CLOSING          :
-		strMsg = _T( "INTERNET_STATUS_HANDLE_CLOSING " );
-		break;
-    case INTERNET_STATUS_DETECTING_PROXY         :
-		strMsg = _T( "INTERNET_STATUS_DETECTING_PROXY " );
-		break;
-    case INTERNET_STATUS_REQUEST_COMPLETE        :
-		strMsg = _T( "INTERNET_STATUS_REQUEST_COMPLETE " );
-		break;
-    case INTERNET_STATUS_REDIRECT                :
-		strMsg = _T( "INTERNET_STATUS_REDIRECT " );
-		break;
-    case INTERNET_STATUS_INTERMEDIATE_RESPONSE   :
-		strMsg = _T( "INTERNET_STATUS_INTERMEDIATE_RESPONSE " );
-		break;
-    case INTERNET_STATUS_USER_INPUT_REQUIRED     :
-		strMsg = _T( "INTERNET_STATUS_USER_INPUT_REQUIRED " );
-		break;
-    case INTERNET_STATUS_STATE_CHANGE            :
-		strMsg = _T( "INTERNET_STATUS_STATE_CHANGE " );
-		break;
-    case INTERNET_STATUS_COOKIE_SENT             :
-		strMsg = _T( "INTERNET_STATUS_COOKIE_SENT " );
-		break;
-    case INTERNET_STATUS_COOKIE_RECEIVED         :
-		strMsg = _T( "INTERNET_STATUS_COOKIE_RECEIVED " );
-		break;
-    case INTERNET_STATUS_PRIVACY_IMPACTED        :
-		strMsg = _T( "INTERNET_STATUS_PRIVACY_IMPACTED " );
-		break;
-    case INTERNET_STATUS_P3P_HEADER              :
-		strMsg = _T( "INTERNET_STATUS_P3P_HEADER " );
-		break;
-    case INTERNET_STATUS_P3P_POLICYREF           :
-		strMsg = _T( "INTERNET_STATUS_P3P_POLICYREF " );
-		break;
-    case INTERNET_STATUS_COOKIE_HISTORY          :
-		strMsg = _T( "INTERNET_STATUS_COOKIE_HISTORY " );
-		break;
-	default:
-		strMsg = _T( "Unknown status!" );
-		ASSERT( FALSE );
-		break;
-	}
+		m_pInetFile->Close();
 
-	if ( !strMsg.empty() )
-	{
-		Log() << _T( "Internet session status: " ) << strMsg << endl;
+		delete m_pInetFile;
+		m_pInetFile = NULL;
 	}
-	
-
-	__super::OnStatusCallback(dwContext, dwInternetStatus, lpvStatusInformation, dwStatusInformationLength);
 }
+//void CWinInetHttpFecher::OnStatusCallback(DWORD dwContext, DWORD dwInternetStatus, LPVOID lpvStatusInformation, DWORD dwStatusInformationLength)
+//{
+//	// TODO: 在此添加专用代码和/或调用基类
+//
+//	/** 
+//	INTERNET_STATUS_RESOLVING_NAME
+//	Looking up the IP address of the name contained in lpvStatusInformation.
+//
+//	INTERNET_STATUS_NAME_RESOLVED
+//	Successfully found the IP address of the name contained in lpvStatusInformation.
+//
+//	INTERNET_STATUS_CONNECTING_TO_SERVER
+//	Connecting to the socket address (SOCKADDR) pointed to by lpvStatusInformation.
+//
+//	INTERNET_STATUS_CONNECTED_TO_SERVER
+//	Successfully connected to the socket address (SOCKADDR) pointed to by lpvStatusInformation.
+//
+//	INTERNET_STATUS_SENDING_REQUEST
+//	Sending the information request to the server. The lpvStatusInformation parameter is NULL.
+//
+//	INTERNET_STATUS_ REQUEST_SENT
+//	Successfully sent the information request to the server. The lpvStatusInformation parameter is NULL.
+//
+//	INTERNET_STATUS_RECEIVING_RESPONSE
+//	Waiting for the server to respond to a request. The lpvStatusInformation parameter is NULL.
+//
+//	INTERNET_STATUS_RESPONSE_RECEIVED
+//	Successfully received a response from the server. The lpvStatusInformation parameter is NULL.
+//
+//	INTERNET_STATUS_CLOSING_CONNECTION
+//	Closing the connection to the server. The lpvStatusInformation parameter is NULL.
+//
+//	INTERNET_STATUS_CONNECTION_CLOSED
+//	Successfully closed the connection to the server. The lpvStatusInformation parameter is NULL.
+//
+//	INTERNET_STATUS_HANDLE_CREATED
+//	Used by the Win32 API function InternetConnect to indicate that it has created the new handle. This lets the application call the Win32 function InternetCloseHandle from another thread if the connect is taking too long. See the Windows SDK for more information about these functions.
+//
+//	INTERNET_STATUS_HANDLE_CLOSING
+//	Successfully terminated this handle value.
+//	*/
+//	tstring strMsg;
+//	switch ( dwInternetStatus )
+//	{
+//	case INTERNET_STATUS_RESOLVING_NAME:
+//		strMsg = _T( "INTERNET_STATUS_RESOLVING_NAME " ) ;//+ (LPCTSTR)lpvStatusInformation;
+//		break;
+//    case INTERNET_STATUS_NAME_RESOLVED           :
+//		strMsg = _T( "INTERNET_STATUS_NAME_RESOLVED " ) ;//+ (LPCTSTR)lpvStatusInformation;
+//		break;
+//    case INTERNET_STATUS_CONNECTING_TO_SERVER    :
+//		strMsg = _T( "INTERNET_STATUS_CONNECTING_TO_SERVER " ) ;
+//		break;
+//    case INTERNET_STATUS_CONNECTED_TO_SERVER     :
+//		strMsg = _T( "INTERNET_STATUS_CONNECTED_TO_SERVER " );
+//		break;
+//    case INTERNET_STATUS_SENDING_REQUEST         :
+//		strMsg = _T( "INTERNET_STATUS_SENDING_REQUEST " );
+//		break;
+//    case INTERNET_STATUS_REQUEST_SENT            :
+//		strMsg = _T( "INTERNET_STATUS_REQUEST_SENT " );
+//		break;
+//    case INTERNET_STATUS_RECEIVING_RESPONSE      :
+////		strMsg = _T( "INTERNET_STATUS_RECEIVING_RESPONSE " );
+//		break;
+//    case INTERNET_STATUS_RESPONSE_RECEIVED       :
+////		strMsg = _T( "INTERNET_STATUS_RESPONSE_RECEIVED " );
+//		break;
+//    case INTERNET_STATUS_CTL_RESPONSE_RECEIVED   :
+//		strMsg = _T( "INTERNET_STATUS_CTL_RESPONSE_RECEIVED " );
+//		break;
+//    case INTERNET_STATUS_PREFETCH                :
+//		strMsg = _T( "INTERNET_STATUS_PREFETCH " );
+//		break;
+//    case INTERNET_STATUS_CLOSING_CONNECTION      :
+//		strMsg = _T( "INTERNET_STATUS_CLOSING_CONNECTION " );
+//		break;
+//    case INTERNET_STATUS_CONNECTION_CLOSED       :
+//		strMsg = _T( "INTERNET_STATUS_CONNECTION_CLOSED " );
+//		break;
+//    case INTERNET_STATUS_HANDLE_CREATED          :
+//		strMsg = _T( "INTERNET_STATUS_HANDLE_CREATED " );
+//		break;
+//    case INTERNET_STATUS_HANDLE_CLOSING          :
+//		strMsg = _T( "INTERNET_STATUS_HANDLE_CLOSING " );
+//		break;
+//    case INTERNET_STATUS_DETECTING_PROXY         :
+//		strMsg = _T( "INTERNET_STATUS_DETECTING_PROXY " );
+//		break;
+//    case INTERNET_STATUS_REQUEST_COMPLETE        :
+//		strMsg = _T( "INTERNET_STATUS_REQUEST_COMPLETE " );
+//		break;
+//    case INTERNET_STATUS_REDIRECT                :
+//		strMsg = _T( "INTERNET_STATUS_REDIRECT " );
+//		break;
+//    case INTERNET_STATUS_INTERMEDIATE_RESPONSE   :
+//		strMsg = _T( "INTERNET_STATUS_INTERMEDIATE_RESPONSE " );
+//		break;
+//    case INTERNET_STATUS_USER_INPUT_REQUIRED     :
+//		strMsg = _T( "INTERNET_STATUS_USER_INPUT_REQUIRED " );
+//		break;
+//    case INTERNET_STATUS_STATE_CHANGE            :
+//		strMsg = _T( "INTERNET_STATUS_STATE_CHANGE " );
+//		break;
+//    case INTERNET_STATUS_COOKIE_SENT             :
+//		strMsg = _T( "INTERNET_STATUS_COOKIE_SENT " );
+//		break;
+//    case INTERNET_STATUS_COOKIE_RECEIVED         :
+//		strMsg = _T( "INTERNET_STATUS_COOKIE_RECEIVED " );
+//		break;
+//    case INTERNET_STATUS_PRIVACY_IMPACTED        :
+//		strMsg = _T( "INTERNET_STATUS_PRIVACY_IMPACTED " );
+//		break;
+//    case INTERNET_STATUS_P3P_HEADER              :
+//		strMsg = _T( "INTERNET_STATUS_P3P_HEADER " );
+//		break;
+//    case INTERNET_STATUS_P3P_POLICYREF           :
+//		strMsg = _T( "INTERNET_STATUS_P3P_POLICYREF " );
+//		break;
+//    case INTERNET_STATUS_COOKIE_HISTORY          :
+//		strMsg = _T( "INTERNET_STATUS_COOKIE_HISTORY " );
+//		break;
+//	default:
+//		strMsg = _T( "Unknown status!" );
+//		ASSERT( FALSE );
+//		break;
+//	}
+//
+//	if ( !strMsg.empty() )
+//	{
+//		Log() << _T( "Internet session status: " ) << strMsg << endl;
+//	}
+//	
+//
+//	__super::OnStatusCallback(dwContext, dwInternetStatus, lpvStatusInformation, dwStatusInformationLength);
+//}

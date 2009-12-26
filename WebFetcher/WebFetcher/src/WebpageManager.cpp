@@ -47,6 +47,12 @@ BOOL CWebpageManager::GetCachedPage( tstring& strUrl, tstring& strLocalPath )
 			strUrl = item.m_strUrl;
 			strLocalPath = item.m_strCachePath;
 
+			// 出栈。
+			this->m_tCachedPageStack.pop();
+
+			// 获取完整路径。
+			strLocalPath = this->GetFileFullPath( strLocalPath.c_str() );
+
 			// 将这条记录为正在获取。
 			this->m_tFetchingUrl.insert( strUrl );
 
@@ -55,7 +61,7 @@ BOOL CWebpageManager::GetCachedPage( tstring& strUrl, tstring& strLocalPath )
 		}
 		else
 		{
-			const int MAX_NUM = 1000;
+			const int MAX_NUM = 100;
 			IDatabase::TUrlRecordItemList tItemList;
 			BOOL bResult = m_pDatabase->GetUrlByStateByNum( IDatabase::PageStateCached,
 				tItemList, MAX_NUM );
@@ -152,19 +158,42 @@ BOOL CWebpageManager::GetPageLocalFilePath( LPCTSTR strUrl, tstring& strLocalPat
 
 BOOL CWebpageManager::CachePageUrl( LPCTSTR strUrl )
 {
-	ASSERT( FALSE );
+//	ASSERT( FALSE ); 
+	ASSERT( this->m_pDatabase );
+	if ( m_pDatabase )
+	{
+
+		// 清掉自己的缓存。
+		this->m_tFetchingUrl.erase( strUrl );
+		CLog() << _T( "CWebpageManager::CachePageUrl erase self cache url!! " ) << strUrl << endl;
+
+		return this->m_pDatabase->ModifyWebpageState( strUrl, IDatabase::PageStateCached );
+	}
 	return FALSE;
 }
 
 BOOL CWebpageManager::CachedPageToSavedPage( LPCTSTR strUrl )
 {
-	ASSERT( FALSE );
+//	ASSERT( FALSE ); 
+	ASSERT( this->m_pDatabase );
+	if ( m_pDatabase )
+	{
+		// 清掉自己缓存的。
+		this->m_tCachedPageStack;
+
+		return this->m_pDatabase->ModifyWebpageState( strUrl, IDatabase::PageStateSaved );
+	}
 	return FALSE;
 }
 
 BOOL CWebpageManager::AddFailUrl( LPCTSTR strBaseUrl, LPCTSTR strFailUrl )
 {
-	ASSERT( FALSE );
+//	ASSERT( FALSE ); 
+	ASSERT( this->m_pDatabase );
+	if ( m_pDatabase )
+	{
+		return this->m_pDatabase->AddFailUrl( strFailUrl, strBaseUrl );
+	}
 	return FALSE;
 }
 
@@ -200,7 +229,7 @@ BOOL CWebpageManager::PreAllocateFilePath( LPCTSTR strUrl, const CMimeType& cMim
 			strSavePath += FINAL_FOLDER;
 			strSavePath += ssFileName.str();
 			
-			ASSERT( FALSE );
+//			ASSERT( FALSE );
 			// 保存进数据库。
 			IDatabase::TUrlRecordItem newItem;
 			newItem.m_strUrl = strUrl;

@@ -27,6 +27,19 @@ public:
 	/** 添加一条记录。 */
 	virtual BOOL AddRecord( const TUrlRecordItem& item ) ;
 
+	/** 修改一条已经存在的记录。 */
+	virtual BOOL ModifyRecord( const TUrlRecordItem& item );
+
+	/** 只修改一条记录中的状态。 */
+	virtual BOOL ModifyWebpageState( LPCTSTR strUrl, EWebpageState eStat );
+
+	/** 添加一条失败url记录. */
+	virtual BOOL AddFailUrl( LPCTSTR strFailUrl, LPCTSTR strPageOfUrl ) ;
+
+private:
+	/** 创建表。 */
+	BOOL CreateTable();
+
 private:
 	/** sqlite databse object. */
 	sqlite3 *m_pSqlite3;

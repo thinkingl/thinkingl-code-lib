@@ -13,6 +13,11 @@ LPCTSTR DB_COL_SAVE = _T( "Save" );
 LPCTSTR DB_COL_STATE = _T( "State" );
 
 
+/** 错误url表。 */
+LPCTSTR DB_TABLE_ERROR_URL = _T( "failurl" );
+LPCTSTR DB_COL_FAIL_URL = _T( "FailUrl" );
+LPCTSTR DB_COL_FAIL_PAGE_OF_URL = _T( "Page" );
+
 CSqliteDatabase::CSqliteDatabase(void)
 {
 	this->m_pSqlite3 = NULL;
@@ -97,6 +102,64 @@ BOOL CSqliteDatabase::Open()
 		
 	}	
 
+	if ( m_pSqlite3 && bResult )
+	{
+		// 检测表是否存在。
+		int nRow = 0, nColumn = 0;
+		char **azResult; //二维数组存放结果
+		char *errMsg = NULL;
+
+
+		tstringstream ssSql;
+		ssSql << _T( "select name from sqlite_master " << " where name='" ) << DB_TABLE_ERROR_URL << _T( "';" );
+		string strUtf8Sql;
+		CCommon::Utf16toUtf8( ssSql.str().c_str(), strUtf8Sql );
+		int nGetTableRet = sqlite3_get_table( this->m_pSqlite3, strUtf8Sql.c_str(),&azResult, &nRow, &nColumn, &errMsg );
+		bResult &= ( nGetTableRet == SQLITE_OK );
+		ASSERT( bResult );
+		ASSERT( nRow <= 1 );
+		Log() << _T( "sql: " ) << strUtf8Sql.c_str() << _T( " ret: " ) << nGetTableRet 
+			<< _T( " row: " ) << nRow << _T( " col: " ) << nColumn << endl;
+
+		sqlite3_free_table( azResult );
+
+		if ( errMsg )
+		{
+			Log() << errMsg << endl;
+		}
+		if ( nRow > 0 )
+		{
+			Log() << _T( "table already exist!!!" ) << endl;
+		}
+		else
+		{
+			// 创建表。
+			errMsg = NULL;
+			tstringstream ssSql;
+			ssSql << _T( "CREATE TABLE " ) << DB_TABLE_ERROR_URL
+				<< _T( " ( ") << DB_COL_FAIL_URL << _T( " TEXT PRIMARY KEY, ") 
+				<< DB_COL_FAIL_PAGE_OF_URL	<< _T( " TEXT ") 
+				<< _T( " );" );
+
+			string strUtf8Sql ;
+			CCommon::Utf16toUtf8( ssSql.str().c_str(), strUtf8Sql );
+			int nCreateTableRet = sqlite3_exec( m_pSqlite3, 
+				strUtf8Sql.c_str(), 
+				0, 0, &errMsg );
+			bResult &= ( nCreateTableRet == SQLITE_OK );
+			ASSERT( bResult );
+			Log() << _T( "Create table ret: " ) << nCreateTableRet << endl;
+			Log() << _T( "sql: " ) << strUtf8Sql.c_str() << endl;
+			if ( errMsg )
+			{
+				Log() << _T( "Sqlite Error msg: " ) << errMsg << endl;
+			}
+		}
+
+
+
+	}	
+
 	ASSERT( bResult );
 	return bResult;
 }
@@ -144,7 +207,7 @@ BOOL CSqliteDatabase::GetUrlByStateByNum( EWebpageState eState, TUrlRecordItemLi
 		}
 
 		// 第一行是列的名称。
-		for ( int i=1; i<nRow; ++i )
+		for ( int i=1; i<nRow+1; ++i )
 		{			
 			if ( i > 0 )
 			{				
@@ -200,7 +263,7 @@ BOOL CSqliteDatabase::SearchUrl( LPCTSTR strUrl, TUrlRecordItem& item )
 
 		int nGetTableRet = sqlite3_get_table( this->m_pSqlite3, strUtf8Sql.c_str(),&azResult, &nRow, &nColumn, &errMsg );
 		bResult &= ( nGetTableRet == SQLITE_OK );
-		ASSERT( bResult );
+//		ASSERT( bResult );
 		Log() << _T( "sql: " ) << strUtf8Sql.c_str() << _T( " ret: " ) << nGetTableRet 
 			<< _T( " row: " ) << nRow << _T( " col: " ) << nColumn << endl;
 		if ( errMsg )
@@ -234,7 +297,7 @@ BOOL CSqliteDatabase::SearchUrl( LPCTSTR strUrl, TUrlRecordItem& item )
 
 BOOL CSqliteDatabase::AddRecord( const TUrlRecordItem& item )
 {
-	ASSERT( FALSE );
+//	ASSERT( FALSE );
 
 	BOOL bResult = TRUE;
 	// 插入
@@ -258,6 +321,76 @@ BOOL CSqliteDatabase::AddRecord( const TUrlRecordItem& item )
 	bResult &= ( nInsertRet == SQLITE_OK );
 	ASSERT( bResult );
 	Log() << _T( "Insert item ret: " ) << nInsertRet << endl;
+	Log() << _T( "sql: " ) << strUtf8Sql.c_str() << endl;
+	if ( errMsg )
+	{
+		Log() << _T( "Sqlite Error msg: " ) << errMsg << endl;
+	}
+
+	return bResult;
+}
+
+BOOL CSqliteDatabase::ModifyRecord( const TUrlRecordItem& item )
+{
+	_ASSERT( FALSE );
+	Log() << _T( "CSqliteDatabase::ModifyRecord have no code!!!" ) << endl;
+	return FALSE;
+}
+
+BOOL CSqliteDatabase::ModifyWebpageState( LPCTSTR strUrl, EWebpageState eStat )
+{
+//	_ASSERT( FALSE );
+
+	BOOL bResult = TRUE;
+	// 修改
+	// UPDATE 表名称 SET 列名称 = 新值 WHERE 列名称 = 某值
+	char *errMsg = NULL;
+	tstringstream ssSql;
+	ssSql << _T( "UPDATE " ) << DB_TABLE_NAME
+		<< _T( " SET ") << DB_COL_STATE << _T( " = '") 
+		<< eStat		
+		<< _T( "' WHERE " ) << DB_COL_URL
+		<< _T( " = '" ) << strUrl
+		<< _T( "' ;" ) ;
+	string strUtf8Sql ;
+	CCommon::Utf16toUtf8( ssSql.str().c_str(), strUtf8Sql );
+	int nInsertRet = sqlite3_exec( m_pSqlite3, 
+		strUtf8Sql.c_str(), 
+		0, 0, &errMsg );
+	bResult &= ( nInsertRet == SQLITE_OK );
+	ASSERT( bResult );
+	Log() << _T( "Update item ret: " ) << nInsertRet << endl;
+	Log() << _T( "sql: " ) << strUtf8Sql.c_str() << endl;
+	if ( errMsg )
+	{
+		Log() << _T( "Sqlite Error msg: " ) << errMsg << endl;
+	}
+	return bResult;
+}
+
+BOOL CSqliteDatabase::AddFailUrl( LPCTSTR strFailUrl, LPCTSTR strPageOfUrl )
+{
+//	ASSERT( FALSE );
+
+	BOOL bResult = TRUE;
+	// 插入
+	char *errMsg = NULL;
+	tstringstream ssSql;
+	ssSql << _T( "INSERT INTO " ) << DB_TABLE_ERROR_URL
+		<< _T( " ( ") << DB_COL_FAIL_URL << _T( ", ") 
+		<< DB_COL_FAIL_PAGE_OF_URL 
+		<< _T( " )" )
+		<< _T( " VALUES ( '" ) << strFailUrl
+		<< _T( "', '" ) << strPageOfUrl
+		<< _T( "' );" ) ;
+	string strUtf8Sql ;
+	CCommon::Utf16toUtf8( ssSql.str().c_str(), strUtf8Sql );
+	int nInsertRet = sqlite3_exec( m_pSqlite3, 
+		strUtf8Sql.c_str(), 
+		0, 0, &errMsg );
+	bResult &= ( nInsertRet == SQLITE_OK );
+//	ASSERT( bResult );
+	Log() << _T( "Insert fail item ret: " ) << nInsertRet << endl;
 	Log() << _T( "sql: " ) << strUtf8Sql.c_str() << endl;
 	if ( errMsg )
 	{

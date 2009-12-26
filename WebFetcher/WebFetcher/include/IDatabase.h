@@ -42,7 +42,13 @@ public:
 	/** 添加一条记录。 */
 	virtual BOOL AddRecord( const TUrlRecordItem& item ) = 0;
 
-	// 添加一条缓存记录。
+	/** 修改一条已经存在的记录。 */
+	virtual BOOL ModifyRecord( const TUrlRecordItem& item ) = 0;
 
+	/** 只修改一条记录中的状态。 */
+	virtual BOOL ModifyWebpageState( LPCTSTR strUrl, EWebpageState eStat ) = 0;
+
+	/** 添加一条失败url记录. */
+	virtual BOOL AddFailUrl( LPCTSTR strFailUrl, LPCTSTR strPageOfUrl ) = 0;
 
 };

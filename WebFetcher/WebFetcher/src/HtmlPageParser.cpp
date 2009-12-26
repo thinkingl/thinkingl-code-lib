@@ -136,12 +136,20 @@ BOOL CHtmlPageParser::Parse( LPCTSTR strHtmlFilePath, LPCTSTR strHtmlServerUrl )
 					tstring strFullUrl;
 					if ( this->GetFullUrl( strOriginalUrl.c_str(), strFullUrl ) )
 					{
-						// save.
-						TFullUrlOrignalUrl tPairUrl( strFullUrl, strOriginalUrl );
-						this->m_tUrlSet.insert( strFullUrl );
-						this->m_tUrlPosTable[ nUrlBegin ] = tPairUrl;
+						if ( this->IsUrl( strFullUrl.c_str() ) )
+						{
+							// save.
+							TFullUrlOrignalUrl tPairUrl( strFullUrl, strOriginalUrl );
+							this->m_tUrlSet.insert( strFullUrl );
+							this->m_tUrlPosTable[ nUrlBegin ] = tPairUrl;
 
-						CLog() << _T( "Find url: " ) << strFullUrl << endl;
+							CLog() << _T( "Find url: " ) << strFullUrl << endl;
+						}
+						else
+						{
+							CLog() << _T( "url is not invalid!!! " ) << strFullUrl << endl;
+						}
+						
 					}
 					else
 					{
@@ -213,6 +221,8 @@ BOOL CHtmlPageParser::ReplaceAllUrl( LPCTSTR strSrcUrl, LPCTSTR strDstUrl )
 
 BOOL CHtmlPageParser::SaveFile( LPCTSTR strPath )
 {
+	tstring strDir = CCommon::ParsePath( strPath ).m_strDirectory;
+	CCommon::CreateDirRecurse( strDir.c_str() );
 
 	ofstream fPageDst;
 	fPageDst.open( strPath );
@@ -265,12 +275,12 @@ BOOL CHtmlPageParser::SaveFile( LPCTSTR strPath )
 		}
 	}
 
-	tstring strXXX = ssReplacedHtmlPage.str().substr( ssReplacedHtmlPage.str().length() - 50 );
+//	tstring strXXX = ssReplacedHtmlPage.str().substr( ssReplacedHtmlPage.str().length() - 50 );
 
 	string strUtf8Page;
 	CCommon::Utf16toUtf8( ssReplacedHtmlPage.str().c_str() , strUtf8Page );
 
-	string strtmppp = strUtf8Page.substr( strUtf8Page.length() - 50 );
+//	string strtmppp = strUtf8Page.substr( strUtf8Page.length() - 50 );
 
 	
 	fPageDst.write( strUtf8Page.c_str(), strUtf8Page.length() );
@@ -388,10 +398,25 @@ BOOL CHtmlPageParser::GetFullUrl( LPCTSTR lpstrOriginalUrl, tstring& strFullUrl 
 			tstring strBaseFolder = this->m_strServerUrlFolder;
 			CCommon::NormalizeUrl( strBaseFolder );
 
+			// 解析服务器域名。
+			tstring strServerUrl;
+			int nPos = strBaseFolder.find( '/', _tcslen( _T( "http://" ) ) );
+			if ( nPos != -1 )
+			{
+				strServerUrl = strBaseFolder.substr( 0, nPos );
+			}
+			else
+			{
+				strServerUrl = strBaseFolder;
+			}
 
+
+			// / 表示路径是相对于网站根目录的。
 			if ( strOriginalUrl[0] == '/' )
 			{
 				strOriginalUrl = strOriginalUrl.substr( 1 );
+
+				strBaseFolder = strServerUrl;
 			}
 
 			if ( strBaseFolder.at( strBaseFolder.length() - 1 ) == '/' )
@@ -518,4 +543,36 @@ tstring CHtmlPageParser::GetCurServerUrl()
 	return this->m_strServerUrl;
 }
 
+BOOL CHtmlPageParser::IsUrl( LPCTSTR lpstrUrl )
+{
+	tstring strUrl = lpstrUrl;
+
+	// 临时。。。
+	if ( strUrl.find( _T( " + " ) ) != -1 )
+	{
+		return FALSE;
+	}
+
+	if ( strUrl.find( _T( "][" ) ) != -1 )
+	{
+		return FALSE;
+	}
+
+	if ( strUrl.find( _T( "'" ) ) != -1 )
+	{
+		return FALSE;
+	}
+
+	if ( strUrl.find( _T( "\"" ) ) != -1 )
+	{
+		return FALSE;
+	}
+
+	if ( strUrl.find( _T( "/comments/" ) ) != -1  )
+	{
+		return FALSE;
+	}
+
+	return TRUE;
+}
 
