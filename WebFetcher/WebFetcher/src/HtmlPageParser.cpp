@@ -57,7 +57,7 @@ BOOL CHtmlPageParser::Parse( LPCTSTR strHtmlFilePath, LPCTSTR strHtmlServerUrl )
 
 		if ( nFileLen == 0 )
 		{
-			CLog() << _T( "webpage file len is 0 !!!!" ) << endl;
+			Log() << _T( "webpage file len is 0 !!!!" ) << endl;
 			return FALSE;
 		}
 
@@ -106,7 +106,7 @@ BOOL CHtmlPageParser::Parse( LPCTSTR strHtmlFilePath, LPCTSTR strHtmlServerUrl )
 					bRightQuotes = TRUE;
 					break;
 				default:
-					CLog() << _T( "Parse url error! token: " ) << quotes << endl;
+					Log() << _T( "Parse url error! token: " ) << quotes << endl;
 					bRightQuotes = FALSE;
 					break;
 				}
@@ -143,17 +143,17 @@ BOOL CHtmlPageParser::Parse( LPCTSTR strHtmlFilePath, LPCTSTR strHtmlServerUrl )
 							this->m_tUrlSet.insert( strFullUrl );
 							this->m_tUrlPosTable[ nUrlBegin ] = tPairUrl;
 
-							CLog() << _T( "Find url: " ) << strFullUrl << endl;
+							Log() << _T( "Find url: " ) << strFullUrl << endl;
 						}
 						else
 						{
-							CLog() << _T( "url is not invalid!!! " ) << strFullUrl << endl;
+							Log() << _T( "url is not invalid!!! " ) << strFullUrl << endl;
 						}
 						
 					}
 					else
 					{
-						CLog() << _T( "Get full url fail!! url: " ) << strOriginalUrl << endl;
+						Log() << _T( "Get full url fail!! url: " ) << strOriginalUrl << endl;
 					}
 					
 				}
@@ -228,7 +228,7 @@ BOOL CHtmlPageParser::SaveFile( LPCTSTR strPath )
 	fPageDst.open( strPath );
 	if ( !fPageDst )
 	{
-		CLog() << _T( "CHtmlPageParser::SaveFile Open file fail! " ) << strPath << endl;
+		Log() << _T( "CHtmlPageParser::SaveFile Open file fail! " ) << strPath << endl;
 		return FALSE;
 	}
 

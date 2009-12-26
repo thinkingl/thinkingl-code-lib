@@ -16,6 +16,11 @@ CLog::CLog(void)
 
 CLog::~CLog(void)
 {
+	if ( this->m_pThreadSafeLock )
+	{
+		delete m_pThreadSafeLock;
+		m_pThreadSafeLock = NULL;
+	}
 }
 
 

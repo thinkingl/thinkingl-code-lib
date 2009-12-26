@@ -34,8 +34,8 @@ BOOL CPageFecher::FetchOnePage()
 
 	if ( m_pHtmlDownloader )
 	{
-		delete m_pHtmlDownloader;
-		m_pHtmlDownloader = NULL;
+//		delete m_pHtmlDownloader;
+//		m_pHtmlDownloader = NULL;
 	}
 
 	// 是否有需要下载的url？
@@ -53,6 +53,8 @@ BOOL CPageFecher::FetchOnePage()
 		tstring strCachePath, strSavePath;
 		BOOL bRet = this->GetUrlInfo( strUrl.c_str(), bNetworkOk, bHaveDownload, bShouldDownload,
 			strCachePath, strSavePath, &m_pHtmlDownloader );
+
+
 		if ( bRet )
 		{
 			Log() << _T( "GetUrlInfo url: " ) << strUrl

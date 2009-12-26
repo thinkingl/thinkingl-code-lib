@@ -165,7 +165,7 @@ BOOL CWebpageManager::CachePageUrl( LPCTSTR strUrl )
 
 		// 清掉自己的缓存。
 		this->m_tFetchingUrl.erase( strUrl );
-		CLog() << _T( "CWebpageManager::CachePageUrl erase self cache url!! " ) << strUrl << endl;
+		Log() << _T( "CWebpageManager::CachePageUrl erase self cache url!! " ) << strUrl << endl;
 
 		return this->m_pDatabase->ModifyWebpageState( strUrl, IDatabase::PageStateCached );
 	}
@@ -245,7 +245,7 @@ BOOL CWebpageManager::PreAllocateFilePath( LPCTSTR strUrl, const CMimeType& cMim
 		strCachePath = this->GetFileFullPath( strCachePath.c_str() );
 		strSavePath = this->GetFileFullPath( strSavePath.c_str() );
 
-		CLog() << _T( "PreAllocate file path: cache: " ) << strCachePath << _T( " final: " ) << strSavePath << endl;
+		Log() << _T( "PreAllocate file path: cache: " ) << strCachePath << _T( " final: " ) << strSavePath << endl;
 	}
 	ASSERT( bResult );
 	return bResult;
