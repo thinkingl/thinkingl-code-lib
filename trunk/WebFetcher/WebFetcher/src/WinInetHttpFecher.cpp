@@ -249,8 +249,6 @@ void CWinInetHttpFecher::Release()
 	{
 		m_pInetFile->Close();
 
-		delete m_pInetFile;
-		m_pInetFile = NULL;
 	}
 }
 //void CWinInetHttpFecher::OnStatusCallback(DWORD dwContext, DWORD dwInternetStatus, LPVOID lpvStatusInformation, DWORD dwStatusInformationLength)
