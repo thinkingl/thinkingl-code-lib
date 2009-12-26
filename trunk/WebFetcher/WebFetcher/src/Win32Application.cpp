@@ -164,10 +164,10 @@ int CWin32Application::RunWebFetch()
 		nThreadNum = max( 1, nThreadNum );
 
 		// test
-		nThreadNum = 0;
+		//nThreadNum = 0;
 
-		BOOL bUnittestSuccess = unitTest();
-		ASSERT( bUnittestSuccess );
+		//BOOL bUnittestSuccess = unitTest();
+		//ASSERT( bUnittestSuccess );
 
 		
 

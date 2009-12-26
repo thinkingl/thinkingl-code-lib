@@ -78,7 +78,17 @@ int CCommon::StrNCmpNocase( LPCTSTR str1, LPCTSTR str2, int nLen )
 		nLen --;
 	}
 
-	return ( nLen == 0 ) ? 0 : ( *str1 == NULL ? -1 : 1 );
+	if ( nLen == 0 
+		|| ( *str1 == 0 && *str2 == 0 ) )
+	{
+		return 0;
+	}
+	else
+	{
+		return ( *str1 == NULL ? -1 : 1 );
+	}
+
+	
 }
 
 tstring CCommon::GetModulePath( void * hm /*= NULL*/ )
@@ -191,25 +201,50 @@ BOOL CCommon::IsWebpage( LPCTSTR strPath )
 	return FALSE;
 }
 
-tstring CCommon::GetRelativePath( LPCTSTR strSrcPath, LPCTSTR lpstrDstPath )
+tstring CCommon::GetRelativePath( LPCTSTR lpstrSrcPath, LPCTSTR lpstrDstPath )
 {
+	// 转换斜杠。。
+	tstring strSrcPath = lpstrSrcPath;
+	tstring strDstPath = lpstrDstPath;
+
+	for ( size_t i=0; i<strSrcPath.length(); ++i )
+	{
+		 if( strSrcPath[i] == '\\' )
+		 {
+			 strSrcPath[i] = '/';
+		 }
+	}
+
+	for ( size_t i=0; i<strDstPath.length(); ++i )
+	{
+		if ( strDstPath[i] == '\\' )
+		{
+			strDstPath[i] = '/';
+		}
+	}
+
+
 	// 取目录。
-	tstring strSrcDir = CCommon::ParsePath( strSrcPath ).m_strDirectory;
+	tstring strSrcDir = CCommon::ParsePath( strSrcPath.c_str() ).m_strDirectory;
 	if ( strSrcDir.at( strSrcDir.length() - 1 ) == '/' )
 	{
 		strSrcDir = strSrcDir.substr( 0, strSrcDir.length() - 1 );
 	}
 
 	// 一定要有协议头。 xxxx:// 。
-	if ( strSrcDir.empty() || ( strSrcDir.find( _T( "//" ) ) == -1 ) )
+	BOOL bFile = ( strSrcDir.find( _T( ":/" ) ) != -1 );
+	BOOL bInet = ( strSrcDir.find( _T( "://" ) ) != -1 );
+
+	if (  !bFile && !bInet  )
 	{
+		ASSERT( FALSE );
 		return lpstrDstPath;
 	}
 
 	LPCTSTR strCurDir = _T( "./" );
 	LPCTSTR strUpDir = _T( "../" );
 
-	tstring strDstPath = lpstrDstPath;
+	
 	if ( strDstPath.find( strSrcDir ) == 0 )
 	{
 		// 可以了。

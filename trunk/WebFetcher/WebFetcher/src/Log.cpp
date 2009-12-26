@@ -56,13 +56,14 @@ CLog& CLog::operator <<( const wchar_t * strMsg)
 
 #if defined( _WIN32_WCE ) || defined ( _WIN32 ) 
     OutputDebugString( strMsg );
-#else	
+#endif
+
 #ifndef __CYGWIN__	// cygwin ²»Ö§³Öunicode!
     std::wcout << strMsg;
 #else
     cout << ( "CLog << fail! cygwin don't support unicode!" ) << endl;
 #endif
-#endif
+
 
     if ( this->m_fLog )
     {
@@ -78,6 +79,10 @@ CLog& CLog::operator <<( const char * strMsg )
     SCOPE_LOCK( *m_pThreadSafeLock );
 
     cout << strMsg;
+
+#if defined( _WIN32 )
+	OutputDebugStringA( strMsg );
+#endif
 
     if ( this->m_fLog )
     {

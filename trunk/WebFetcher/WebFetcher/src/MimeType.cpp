@@ -1,4 +1,5 @@
 #include "..\include\MimeType.h"
+#include "log.h"
 
 struct TMimeType
 {
@@ -55,6 +56,10 @@ static const TMimeType s_arMimeTypeDic[]=
 	TMimeType( CMimeType::HttpMimeGtar, _T( "application/x-gtar" ), _T( "gtar" ) ),
 	TMimeType( CMimeType::HttpMimeHdf, _T( "application/x-hdf" ), _T( "hdf" ) ),
 	TMimeType( CMimeType::HttpMimeJs, _T( "application/x-javascript" ), _T( "js" ) ),
+
+	//	strContentType = 0x009eda78 "text/javascript; charset=utf-8"
+	TMimeType( CMimeType::HttpMimeJs, _T( "text/javascript" ), _T( "js" ) ),
+
 	TMimeType( CMimeType::HttpMimeSkpSkdSktSkm, _T( "application/x-koan" ), _T( "skp" ) ),
 	TMimeType( CMimeType::HttpMimeSkpSkdSktSkm, _T( "application/x-koan" ), _T( "skd" ) ),
 	TMimeType( CMimeType::HttpMimeSkpSkdSktSkm, _T( "application/x-koan" ), _T( "skt" ) ),
@@ -144,6 +149,10 @@ static const TMimeType s_arMimeTypeDic[]=
 	TMimeType( CMimeType::HttpMimeEtx, _T( "text/x-setext" ), _T( "etx" ) ),
 	TMimeType( CMimeType::HttpMimeXslXml, _T( "text/xml" ), _T( "xsl" ) ),
 	TMimeType( CMimeType::HttpMimeXslXml, _T( "text/xml" ), _T( "xml" ) ),
+
+	// add by thinkingl !!!!
+	TMimeType( CMimeType::HttpMimeXslXml, _T( "application/xml" ), _T( "xml" ) ),
+
 	TMimeType( CMimeType::HttpMimeMpegMpgMpe, _T( "video/mpeg" ), _T( "mpeg" ) ),
 	TMimeType( CMimeType::HttpMimeMpegMpgMpe, _T( "video/mpeg" ), _T( "mpg" ) )	,
 	TMimeType( CMimeType::HttpMimeMpegMpgMpe, _T( "video/mpeg" ), _T( "mpe" ) ),
@@ -186,6 +195,8 @@ BOOL CMimeType::Parse( LPCTSTR strUrl, LPCTSTR strContentType )
 	if ( arFileExt.empty() )
 	{
 		ASSERT( FALSE );
+		Log() << _T( "CMimeType::Parse Unknown content type! type: " ) << strContentType 
+			<< _T( " url " ) << strUrl << endl;
 		return FALSE;
 	}
 	else
