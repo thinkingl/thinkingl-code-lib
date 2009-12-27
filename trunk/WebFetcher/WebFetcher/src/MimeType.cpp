@@ -89,6 +89,10 @@ static const TMimeType s_arMimeTypeDic[]=
 	TMimeType( CMimeType::HttpMimeXhtmlXht, _T( "application/xhtml+xml" ), _T( "xhtml" ) ),
 	TMimeType( CMimeType::HttpMimeXhtmlXht, _T( "application/xhtml+xml" ), _T( "xht" ) ),
 	TMimeType( CMimeType::HttpMimeZip, _T( "application/zip" ), _T( "zip" ) ),
+
+	// strContentType = 0x04dc3fe0 "application/x-zip-compressed"
+	TMimeType( CMimeType::HttpMimeZip, _T( "application/x-zip-compressed" ), _T( "zip" ) ),
+
 	TMimeType( CMimeType::HttpMimeAuSnd, _T( "audio/basic" ), _T( "au" ) ),
 	TMimeType( CMimeType::HttpMimeAuSnd, _T( "audio/basic" ), _T( "snd" ) ),
 	TMimeType( CMimeType::HttpMimeMidMidiKar, _T( "audio/midi" ), _T( "mid" ) ),
