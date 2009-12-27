@@ -31,8 +31,18 @@ public:
 
 	virtual uint32 GetThreadCount() = 0;
 
-	/** 获取所有的URL Filter。 */
+	/** 获取所有的URL Filter。 
+	*	获取到的所有网站(或目录)都是需要下载页面的网站.
+	*/
 	virtual tstringarray GetAllFetchFilter() = 0;
+
+	/** 获取所有被屏蔽的网站.
+	*	被屏蔽的网站不去下载.
+	*/
+	virtual tstringarray GetAllBanUrl() = 0;
+
+	/** Url 是不是被屏蔽了。 */
+	virtual BOOL IsUrlBan( LPCTSTR strUrl ) = 0;
 
 	/** 这个UrL filter项是否要获取。 */
 	virtual BOOL IsUrlFilterFetch( LPCTSTR strFilter ) = 0;

@@ -37,6 +37,9 @@ private:
 	*	只有过滤条件中被设置为需要抓取的网页才需要解析。
 	*/
 	BOOL IsPageNeedParse( LPCTSTR strUrl );
+
+	/** 判断是否是禁止下载的页面. */
+	BOOL IsBanUrl( LPCTSTR strUrl );
 private:
 	IHtmlPageParser *m_pHtmlPageParser;
 
