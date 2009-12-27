@@ -97,104 +97,7 @@ BOOL CPageFecher::FetchOnePage()
 			this->m_bHasWork = FALSE;
 			return FALSE;
 		}
-		//// 是否已经下载。
-		//tstring strLocalPath;
-		//BOOL bHaveDownload = IWebpageManager::Instance()->GetPageLocalFilePath( strUrl.c_str(), strLocalPath );
-		//if( !bHaveDownload )
-		//{
-		//	// 是否需要下载。
-		//	// 需要打开URL判断URL的类型。
-		//	if( m_pHtmlDownloader == NULL )
-		//	{
-		//		m_pHtmlDownloader = CClassFactory::CreateHttpDownloader();
-		//	}
-		//	BOOL bOpenUrl = m_pHtmlDownloader->OpenUrl( strUrl.c_str() );
-		//	_ASSERT( bOpenUrl );
-		//	if ( !bOpenUrl )
-		//	{
-		//		Log() << _T( "Open Url Fail!!!! url: " ) << strUrl << endl;
-		//		ASSERT( FALSE );
-
-		//		// 应该做错误处理。
-		//	}
-		//	else
-		//	{
-		//		IHttpDownloader::EMimeType eHttpFileType;
-		//		BOOL bGetType = this->m_pHtmlDownloader->GetFileType( eHttpFileType );
-		//		ASSERT( bGetType );
-		//		if ( bGetType )
-		//		{
-		//			// 是否需要下载。 
-		//			BOOL bShouldDownload = this->IsUrlShouldDownload( strUrl.c_str() ); 
-		//			if ( bShouldDownload )
-		//			{
-		//				// 下载。
-		//				Log() << _T( "Url Should be downloaded! url: " ) << strUrl << endl;
-		//				// 获取理论上页面应该在的位置。
-		//				tstring strCachePath, strSavePath;
-		//				IWebpageManager::Instance()->PreAllocateFilePath( strUrl.c_str(), strCachePath, strSavePath );
-
-		//				Log() << _T( "It should be cached to: " ) << strCachePath << endl;
-		//				Log() << _T( "It should be saved to: " ) << strSavePath << endl;
-
-		//				// 下载到缓存目录。
-		//				if( m_pHtmlDownloader == NULL )
-		//				{
-		//					m_pHtmlDownloader = CClassFactory::CreateHttpDownloader();
-		//				}
-		//				BOOL bDownloadRet = m_pHtmlDownloader->DownloadFile( strUrl.c_str(), strCachePath.c_str() );
-		//				Log() << _T( "Download " ) << strUrl
-		//					<< _T( " to " ) << strCachePath 
-		//					<< _T( " ret " ) << bDownloadRet << endl;
-		//				if ( !bDownloadRet )
-		//				{
-		//					tstring strParentUrl;
-		//					if ( this->m_pHtmlPageParser )
-		//					{
-		//						strParentUrl = this->m_pHtmlPageParser->GetCurServerUrl();
-		//					}
-		//					else
-		//					{
-		//						strParentUrl = IConfig::Instance()->GetRootUrl();
-		//					}
-
-		//					// 这里应该要判断一下是不是能够上网。
-		//					// 如果能上网，则只是这个网页获取失败。
-		//					ASSERT( FALSE );
-		//					// 否则，退出这个线程，因为它已经无法工作了。
-
-		//					IWebpageManager::Instance()->AddFailUrl( strParentUrl.c_str(), strUrl.c_str() );
-		//					Log() << _T( "Add Download fail url: " ) << strUrl
-		//						<< _T( " it's parent: " ) << strParentUrl << endl;
-		//				}
-		//				else
-		//				{
-		//					BOOL bCacheRet = IWebpageManager::Instance()->CachePageUrl( strUrl.c_str() );
-		//					Log() << _T( "Record cached page : " ) << strUrl << _T( " ret: " ) << bCacheRet << endl;
-		//				}
-
-		//			}
-		//			else
-		//			{
-		//				delete m_pHtmlDownloader;
-		//				m_pHtmlDownloader = NULL;
-		//			}
-		//		}
-		//	}
-		//}
-		//else
-		//{
-		//	Log() << _T( "No need to download !The url have been downloaded to " ) << strLocalPath << endl;
-		//}
-
-		//	
-		//// 更新网页。
-		//BOOL bReplaceRet = this->ReplaceUrl( strUrl.c_str(), );
 	
-
-		//}
-
-		
 
 	}
 	else if( m_pHtmlPageParser )
@@ -455,7 +358,7 @@ BOOL CPageFecher::GetUrlInfo( LPCTSTR strUrl, BOOL& bNetworkOk, BOOL& bHaveDownl
 			delete pDownloader;
 			pDownloader = NULL;
 			pDownloader = CClassFactory::CreateHttpDownloader();
-//			*ppDowloader = pDownloader;
+			*ppDowloader = pDownloader;
 
 			bOpenUrl = pDownloader->OpenUrl( strUrl );
 		}
@@ -497,6 +400,7 @@ BOOL CPageFecher::GetUrlInfo( LPCTSTR strUrl, BOOL& bNetworkOk, BOOL& bHaveDownl
 
 			delete pDownloader;
 			pDownloader = NULL;
+			*ppDowloader = pDownloader;
 		}
 		else
 		{
