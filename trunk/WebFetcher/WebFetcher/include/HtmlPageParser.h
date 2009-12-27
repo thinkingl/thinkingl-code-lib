@@ -32,6 +32,9 @@ private:
 
 	BOOL IsUrl( LPCTSTR strUrl );
 
+	/** 当前位置是否在Scrip标签里。 */
+	BOOL IsInScript( int nPos );
+
 private:
 //	BOOL IsContainUrl( LPCTSTR strLine );
 

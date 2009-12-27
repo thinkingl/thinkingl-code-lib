@@ -136,6 +136,14 @@ BOOL CHtmlPageParser::Parse( LPCTSTR strHtmlFilePath, LPCTSTR strHtmlServerUrl )
 					tstring strFullUrl;
 					if ( this->GetFullUrl( strOriginalUrl.c_str(), strFullUrl ) )
 					{
+						//if ( tstring( strUrlToken ) == _T( "href=" ) )
+						//{
+						//	if ( this->IsInScript( nUrlBegin ) )
+						//	{
+						//		Log() << _T( "Href url is in Script !! Ignore it!!!!" ) << endl;
+						//		continue;
+						//	}
+						//}
 						if ( this->IsUrl( strFullUrl.c_str() ) )
 						{
 							// save.
@@ -574,5 +582,26 @@ BOOL CHtmlPageParser::IsUrl( LPCTSTR lpstrUrl )
 	}
 
 	return TRUE;
+}
+
+BOOL CHtmlPageParser::IsInScript( int nPos )
+{
+	// 在网页内容中找标签。
+	// 假定 <script 标签都是小写的！！！！
+
+	int nScriptStartPos = this->m_strHtmlPageContent.rfind( _T( "<script" ), nPos );
+	if ( -1 == nScriptStartPos )
+	{
+		return FALSE;
+	}
+
+	int nScriptEndPos = this->m_strHtmlPageContent.rfind( _T( "</script" ), nPos );
+	if ( -1 == nScriptEndPos )
+	{
+		return TRUE;
+	}
+
+	return nScriptEndPos < nScriptStartPos;
+
 }
 

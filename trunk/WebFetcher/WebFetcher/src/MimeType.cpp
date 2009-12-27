@@ -118,6 +118,10 @@ static const TMimeType s_arMimeTypeDic[]=
 	TMimeType( CMimeType::HttpMimeJpegJpgJpe, _T( "image/jpeg" ), _T( "jpeg" ) ),
 	TMimeType( CMimeType::HttpMimeJpegJpgJpe, _T( "image/jpeg" ), _T( "jpg" ) ),
 	TMimeType( CMimeType::HttpMimeJpegJpgJpe, _T( "image/jpeg" ), _T( "jpe" ) ),
+
+	// strContentType = 0x027e17f0 "image/jpg"
+	TMimeType( CMimeType::HttpMimeJpegJpgJpe, _T( "image/jpg" ), _T( "jpg" ) ),
+
 	TMimeType( CMimeType::HttpMimePng, _T( "image/png" ), _T( "png" ) ),
 	TMimeType( CMimeType::HttpMimeTiffTif, _T( "image/tiff" ), _T( "tiff" ) ),
 	TMimeType( CMimeType::HttpMimeTiffTif, _T( "image/tiff" ), _T( "tif" ) ),
