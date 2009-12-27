@@ -385,6 +385,7 @@ BOOL CHtmlPageParser::GetFullUrl( LPCTSTR lpstrOriginalUrl, tstring& strFullUrl 
 			_T( "http://" ),
 			_T( "ftp://" ),
 			_T( "file://" ),
+			_T( "ed2k://" ),
 			NULL
 		};
 		LPCTSTR strProtocol = NULL;
@@ -578,6 +579,13 @@ BOOL CHtmlPageParser::IsUrl( LPCTSTR lpstrUrl )
 
 	if ( strUrl.find( _T( "/comments/" ) ) != -1  )
 	{
+		return FALSE;
+	}
+
+	LPCTSTR strE2kProtocol = _T( "ed2k://" );
+	if ( CCommon::StrNCmpNocase( strE2kProtocol, strUrl.c_str(), _tcslen( strE2kProtocol ) ) == 0 )
+	{
+		// 电骡链接，不是需要的url。
 		return FALSE;
 	}
 
