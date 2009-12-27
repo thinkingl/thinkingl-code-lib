@@ -6,6 +6,7 @@ LPCTSTR CONFIG_INI_FILE = _T( "WEBFETCH.INI" );
 
 LPCTSTR CONFIG_CFG_APP_NAME = _T( "CONFIG" );
 LPCTSTR CONFIG_FILTER_APP = _T( "FETCHFILETER" );
+LPCTSTR CONFIG_BAN_APP = _T( "BANURL" );
 
 LPCTSTR CONFIG_SERVER_ROOT = _T( "SERVERROOT" );
 LPCTSTR CONFIG_LOCAL_ROOT = _T( "LOCALROOT" );
@@ -117,6 +118,16 @@ uint32 CIniConfig::GetThreadCount()
 tstringarray CIniConfig::GetAllFetchFilter()
 {
 	return this->ReadKeys( CONFIG_FILTER_APP );
+}
+
+tstringarray CIniConfig::GetAllBanUrl()
+{
+	return this->ReadKeys( CONFIG_BAN_APP );
+}
+
+BOOL CIniConfig::IsUrlBan( LPCTSTR strUrl )
+{
+	return this->ReadConfigInt( CONFIG_BAN_APP, strUrl );
 }
 
 tstringarray CIniConfig::ReadKeys( LPCTSTR strApp )

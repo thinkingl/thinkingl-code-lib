@@ -321,6 +321,12 @@ BOOL CPageFecher::GetUrlInfo( LPCTSTR strUrl, BOOL& bNetworkOk, BOOL& bHaveDownl
 	strSave.clear();
 //	_ASSERT( NULL == *ppDowloader );
 
+	// 是否被屏蔽下载，直接返回。
+	if ( this->IsBanUrl( strUrl ) )
+	{
+		return TRUE;
+	}
+
 	// 是否已经下载。
 	tstring strLocalPath;
 	bHaveDownload = IWebpageManager::Instance()->GetPageLocalFilePath( strUrl, strLocalPath );
@@ -437,5 +443,25 @@ BOOL CPageFecher::GetUrlInfo( LPCTSTR strUrl, BOOL& bNetworkOk, BOOL& bHaveDownl
 		}
 	}
 	return bResult;
+}
+
+BOOL CPageFecher::IsBanUrl( LPCTSTR strUrl )
+{
+	BOOL bShould = FALSE;
+	tstringarray tar = IConfig::Instance()->GetAllBanUrl();
+	for ( size_t i=0; i<tar.size(); ++i )
+	{
+		tstring strBan = tar[i];
+
+		if ( CCommon::StrNCmpNocase( strBan.c_str(), strUrl, strBan.length() ) == 0 )
+		{
+			BOOL bShouldBan = IConfig::Instance()->IsUrlBan( strBan.c_str() );
+
+			Log() << _T( "url ") << strUrl << _T( " is ban to open: " ) << bShouldBan << endl;
+			bShould = bShouldBan;
+		}
+	}
+
+	return bShould;
 }
 
