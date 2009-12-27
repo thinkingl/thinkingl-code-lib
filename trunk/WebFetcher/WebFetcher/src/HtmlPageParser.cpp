@@ -1,6 +1,7 @@
 #include "HtmlPageParser.h"
 #include "Log.h"
 #include "Common.h"
+#include <stack>
 
 CHtmlPageParser::CHtmlPageParser( )
 {
@@ -79,6 +80,10 @@ BOOL CHtmlPageParser::Parse( LPCTSTR strHtmlFilePath, LPCTSTR strHtmlServerUrl )
 		this->m_strHtmlPageContent = strUtf16;
 
 		int nStrLen = strUtf16.length();
+
+		// 解析出所有的script段。
+	//	THtmlTokenPosList tAllScriptList;
+	//	this->ParseAllScriptToken( strUtf16.c_str(), tAllScriptList );
 
 		for ( int i=0; s_arToken[i]; ++i )
 		{
@@ -582,6 +587,12 @@ BOOL CHtmlPageParser::IsUrl( LPCTSTR lpstrUrl )
 		return FALSE;
 	}
 
+	// document.write('<script type="text\/javascript" src="http:\/\/stat.verycd.com\/counters\/folder\/2746340"><\/'+'script>');
+	if ( strUrl.find( _T( "\\/" ) ) != -1  )
+	{
+		return FALSE;
+	}
+
 	LPCTSTR strE2kProtocol = _T( "ed2k://" );
 	if ( CCommon::StrNCmpNocase( strE2kProtocol, strUrl.c_str(), _tcslen( strE2kProtocol ) ) == 0 )
 	{
@@ -613,3 +624,81 @@ BOOL CHtmlPageParser::IsInScript( int nPos )
 
 }
 
+BOOL CHtmlPageParser::ParseAllScriptToken( LPCTSTR strHtmlContent, THtmlTokenPosList& tAllTokenList )
+{
+	LPCTSTR strScriptBeginToken = _T( "script" );
+	LPCTSTR strScriptEndToken = _T( "/script" );
+
+	tAllTokenList.clear();
+
+	std::stack<int> tTokenPos;
+
+	LPCTSTR lpCursor = strHtmlContent;
+	while( *lpCursor )
+	{
+		if ( '<' == *lpCursor )
+		{
+			// 读取 < 后面的标签。
+			int nTokenBegin = lpCursor - strHtmlContent;
+			lpCursor ++;
+			
+			LPCTSTR lpTmp = lpCursor;
+			LPCTSTR lpFilter = strScriptBeginToken;
+			// 比较是不是 script 开始。
+			BOOL bBegin = TRUE;
+			BOOL bEnd = TRUE;
+			while( *lpTmp && *lpFilter )
+			{
+				int nOffset = lpTmp - lpCursor;
+				if ( 0 != CCommon::StrNCmpNocase( lpTmp, lpFilter, 1 ) )
+				{
+					bBegin = FALSE ;
+					break;
+				}
+				lpTmp ++;
+				lpFilter ++;
+			}
+
+			// 比较是不是 script 结束。
+			lpTmp = lpCursor;
+			lpFilter = strScriptEndToken;
+			while( *lpTmp && *lpFilter )
+			{
+				int nOffset = lpTmp - lpCursor;
+				if ( 0 != CCommon::StrNCmpNocase( lpTmp, lpFilter, 1 ) )
+				{
+					bEnd = FALSE ;
+					break;
+				}
+				lpTmp ++;
+				lpFilter ++;
+			}
+
+			// 比较，是否是script.
+			if ( bBegin )
+			{
+				// 是开始。
+				tTokenPos.push( nTokenBegin );
+			}
+			else if( bEnd )
+			{
+				// 是结束。
+				if ( !tTokenPos.empty() )
+				{
+					int nBeginPos = tTokenPos.top();
+					tTokenPos.pop();
+
+					tAllTokenList.push_back( TTokenBeginEnd( nBeginPos, nTokenBegin) );
+				}
+				else
+				{
+					Log() << _T( "Parse script token stack error!!!!!" ) << endl;
+				}
+
+			}
+		}
+		lpCursor ++;
+	}
+
+	return TRUE;
+}
