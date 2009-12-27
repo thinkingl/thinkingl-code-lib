@@ -35,6 +35,12 @@ private:
 	/** 当前位置是否在Scrip标签里。 */
 	BOOL IsInScript( int nPos );
 
+	/** 解析出所有 script 标签的位置。 */
+	typedef std::pair< int,int > TTokenBeginEnd;
+	typedef std::vector< TTokenBeginEnd > THtmlTokenPosList;
+	
+	BOOL ParseAllScriptToken( LPCTSTR strHtmlContent, THtmlTokenPosList& tAllTokenList );
+
 private:
 //	BOOL IsContainUrl( LPCTSTR strLine );
 
@@ -68,4 +74,6 @@ private:
 	/** 记录url替换映射关系。 */
 	typedef std::map< tstring , tstring > TUrlReplaceTable;
 	TUrlReplaceTable m_tReplaceTable;
+
+	/** 记录所有脚本的位置，过滤。 */
 };
