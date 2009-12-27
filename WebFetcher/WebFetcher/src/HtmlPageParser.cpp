@@ -588,7 +588,7 @@ BOOL CHtmlPageParser::IsUrl( LPCTSTR lpstrUrl )
 	}
 
 	// document.write('<script type="text\/javascript" src="http:\/\/stat.verycd.com\/counters\/folder\/2746340"><\/'+'script>');
-	if ( strUrl.find( _T( "\\/" ) ) != -1  )
+	if ( strUrl.find( _T( "////" ) ) != -1  )
 	{
 		return FALSE;
 	}
