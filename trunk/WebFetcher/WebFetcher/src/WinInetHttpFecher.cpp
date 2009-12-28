@@ -231,9 +231,9 @@ BOOL CWinInetHttpFecher::GetMimeType( CMimeType& mimetype )
 			bResult = FALSE;
 		}
 
-		pHttpFile->QueryInfo( HTTP_QUERY_RAW_HEADERS_CRLF, strType );
-		Log() << _T( "All http head: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx********" ) << endl 
-			<<  (LPCTSTR)strType << endl << _T( "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx**********" ) << endl;
+//		pHttpFile->QueryInfo( HTTP_QUERY_RAW_HEADERS_CRLF, strType );
+//		Log() << _T( "All http head: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx********" ) << endl 
+//			<<  (LPCTSTR)strType << endl << _T( "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx**********" ) << endl;
 
 		return bResult;
 	}
