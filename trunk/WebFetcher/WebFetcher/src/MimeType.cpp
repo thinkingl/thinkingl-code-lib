@@ -193,6 +193,9 @@ BOOL CMimeType::Parse( LPCTSTR strUrl, LPCTSTR strContentType )
 	this->m_strUrl = strUrl;
 	this->m_strContentType = strContentType;
 
+	// 默认的类型是其它。
+	this->m_eMimeType = HttpMimeOther;
+
 	tstringarray arFileExt;
 	for ( int i=0; !s_arMimeTypeDic[i].m_strContentTypeToken.empty(); ++i )
 	{
@@ -210,7 +213,7 @@ BOOL CMimeType::Parse( LPCTSTR strUrl, LPCTSTR strContentType )
 		strUrlExt = this->m_strUrl.substr( nPos );
 	}
 
-	if ( arFileExt.empty() )
+	if ( arFileExt.empty() || this->m_eMimeType == HttpMimeOther )
 	{
 //		ASSERT( FALSE );
 		Log() << _T( "CMimeType::Parse Unknown content type! type: " ) << strContentType 

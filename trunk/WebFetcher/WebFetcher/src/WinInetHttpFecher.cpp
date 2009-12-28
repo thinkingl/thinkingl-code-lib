@@ -228,7 +228,9 @@ BOOL CWinInetHttpFecher::GetMimeType( CMimeType& mimetype )
 		}
 		else
 		{
-			bResult = FALSE;
+			Log() << _T( "CWinInetHttpFecher::GetMimeType Fail!!!!! " ) << endl;
+			mimetype.Parse( pHttpFile->GetFileURL(), strType );
+			bResult = TRUE;	// 不失败。获取不到就用默认的。
 		}
 
 //		pHttpFile->QueryInfo( HTTP_QUERY_RAW_HEADERS_CRLF, strType );
