@@ -123,7 +123,7 @@ static const TMimeType s_arMimeTypeDic[]=
 	TMimeType( CMimeType::HttpMimeJpegJpgJpe, _T( "image/jpg" ), _T( "jpg" ) ),
 
 	// strContentType = 0x0464fcd0 "httpd/yahoo-send-as-is"
-	TMimeType( CMimeType::HttpMimeJpegJpgJpe, _T( "httpd/yahoo-send-as-is" ), _T( "jpg" ) ),
+//	TMimeType( CMimeType::HttpMimeJpegJpgJpe, _T( "httpd/yahoo-send-as-is" ), _T( "jpg" ) ),
 
 	TMimeType( CMimeType::HttpMimePng, _T( "image/png" ), _T( "png" ) ),
 	TMimeType( CMimeType::HttpMimeTiffTif, _T( "image/tiff" ), _T( "tiff" ) ),
@@ -221,10 +221,8 @@ BOOL CMimeType::Parse( LPCTSTR strUrl, LPCTSTR strContentType )
 	else
 	{
 		this->m_strRemommendExt = arFileExt[0];
-		int nPos = m_strUrl.rfind( _T( '.' ) );
-		if ( nPos != -1 )
-		{
-			tstring strUrlExt = this->m_strUrl.substr( nPos );
+		if ( !strUrlExt.empty() )
+		{			
 			for ( size_t i=0; i<arFileExt.size(); ++i )
 			{
 				if ( strUrlExt == arFileExt[i] )
