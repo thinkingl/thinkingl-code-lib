@@ -362,16 +362,16 @@ BOOL CPageFecher::GetUrlInfo( LPCTSTR strUrl, BOOL& bNetworkOk, BOOL& bHaveDownl
 		}
 
 		BOOL bOpenUrl = pDownloader->OpenUrl( strUrl );
-		if ( !bOpenUrl )
-		{
-			// 可能是因为inet对象内部错误，所以重新创建一次测试网络。。。
-			delete pDownloader;
-			pDownloader = NULL;
-			pDownloader = CClassFactory::CreateHttpDownloader();
-			*ppDowloader = pDownloader;
+		//if ( !bOpenUrl )
+		//{
+		//	// 可能是因为inet对象内部错误，所以重新创建一次测试网络。。。
+		//	delete pDownloader;
+		//	pDownloader = NULL;
+		//	pDownloader = CClassFactory::CreateHttpDownloader();
+		//	*ppDowloader = pDownloader;
 
-			bOpenUrl = pDownloader->OpenUrl( strUrl );
-		}
+		//	bOpenUrl = pDownloader->OpenUrl( strUrl );
+		//}
 
 //		_ASSERT( bOpenUrl );
 		if ( !bOpenUrl )
