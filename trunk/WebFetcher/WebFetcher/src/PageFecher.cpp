@@ -408,9 +408,9 @@ BOOL CPageFecher::GetUrlInfo( LPCTSTR strUrl, BOOL& bNetworkOk, BOOL& bHaveDownl
 				bResult =  FALSE;
 			}
 
-			delete pDownloader;
-			pDownloader = NULL;
-			*ppDowloader = pDownloader;
+			//delete pDownloader;
+			//pDownloader = NULL;
+			//*ppDowloader = pDownloader;
 		}
 		else
 		{
