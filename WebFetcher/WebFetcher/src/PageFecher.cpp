@@ -91,7 +91,19 @@ BOOL CPageFecher::FetchOnePage()
 					BOOL bReplaceRet = this->ReplaceUrl( strUrl.c_str(), strSavePath.c_str() );
 					ASSERT( bReplaceRet );
 				}
+				else if( m_pHtmlPageParser )
+				{
+					// 不需要下载也替换一下，这样页面上就都是完整的url了。
+					BOOL bReplaceRet = this->m_pHtmlPageParser->ReplaceAllUrl( strUrl.c_str(), strUrl.c_str() );
+					ASSERT( bReplaceRet );
+				}
 					
+			}
+			else if ( m_pHtmlPageParser )
+			{
+				// 不需要下载也替换一下，这样页面上就都是完整的url了。
+				BOOL bReplaceRet = this->m_pHtmlPageParser->ReplaceAllUrl( strUrl.c_str(), strUrl.c_str() );
+				ASSERT( bReplaceRet );
 			}
 		}
 		else
