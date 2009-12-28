@@ -171,7 +171,7 @@ BOOL CSqliteDatabase::Close()
         sqlite3_close( m_pSqlite3 );
         m_pSqlite3 = NULL;
     }
-	ASSERT( FALSE );
+//	ASSERT( FALSE );
 	return FALSE;
 }
 

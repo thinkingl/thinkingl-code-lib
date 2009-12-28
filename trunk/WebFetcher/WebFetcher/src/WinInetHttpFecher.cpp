@@ -124,7 +124,7 @@ BOOL CWinInetHttpFecher::OpenUrl( LPCTSTR strUrl )
 				// 不是200 ok，说明页面打开失败。
 				Log() << _T( "Http status code is not 200, is " ) << strStatusCode
 					<< _T( " Open Url fail!!! " ) << endl;
-				bResult = FALSE;
+				bResult = TRUE;
 			}
             else
             {
@@ -247,11 +247,11 @@ BOOL CWinInetHttpFecher::GetMimeType( CMimeType& mimetype )
 void CWinInetHttpFecher::Release()
 {
 //	this->Close();
-	if ( this->m_pInetFile )
-	{
-		m_pInetFile->Close();
+	//if ( this->m_pInetFile )
+	//{
+	//	m_pInetFile->Close();
 
-	}
+	//}
 }
 //void CWinInetHttpFecher::OnStatusCallback(DWORD dwContext, DWORD dwInternetStatus, LPVOID lpvStatusInformation, DWORD dwStatusInformationLength)
 //{
