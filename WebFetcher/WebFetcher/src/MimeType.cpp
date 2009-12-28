@@ -122,6 +122,9 @@ static const TMimeType s_arMimeTypeDic[]=
 	// strContentType = 0x027e17f0 "image/jpg"
 	TMimeType( CMimeType::HttpMimeJpegJpgJpe, _T( "image/jpg" ), _T( "jpg" ) ),
 
+	// strContentType = 0x0464fcd0 "httpd/yahoo-send-as-is"
+	TMimeType( CMimeType::HttpMimeJpegJpgJpe, _T( "httpd/yahoo-send-as-is" ), _T( "jpg" ) ),
+
 	TMimeType( CMimeType::HttpMimePng, _T( "image/png" ), _T( "png" ) ),
 	TMimeType( CMimeType::HttpMimeTiffTif, _T( "image/tiff" ), _T( "tiff" ) ),
 	TMimeType( CMimeType::HttpMimeTiffTif, _T( "image/tiff" ), _T( "tif" ) ),
@@ -200,12 +203,20 @@ BOOL CMimeType::Parse( LPCTSTR strUrl, LPCTSTR strContentType )
 		}
 	}
 
+	tstring strUrlExt;
+	int nPos = m_strUrl.rfind( _T( '.' ) );
+	if ( nPos != -1 )
+	{
+		strUrlExt = this->m_strUrl.substr( nPos );
+	}
+
 	if ( arFileExt.empty() )
 	{
-		ASSERT( FALSE );
+//		ASSERT( FALSE );
 		Log() << _T( "CMimeType::Parse Unknown content type! type: " ) << strContentType 
 			<< _T( " url " ) << strUrl << endl;
-		return FALSE;
+		this->m_strRemommendExt = strUrlExt;
+		return TRUE;
 	}
 	else
 	{

@@ -78,6 +78,10 @@ BOOL CPageFecher::FetchOnePage()
 
 							IWebpageManager::Instance()->CachePageUrl( strUrl.c_str() );
 						}
+						else
+						{
+							Log() << _T( "DownloadFile fail!!!!! url: " ) << strUrl << endl;
+						}
 					}
 				}
 				
