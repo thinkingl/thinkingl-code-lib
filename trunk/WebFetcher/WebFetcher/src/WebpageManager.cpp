@@ -163,8 +163,7 @@ BOOL CWebpageManager::CachePageUrl( LPCTSTR strUrl )
 	if ( m_pDatabase )
 	{
 
-		// 清掉自己的缓存。
-		this->m_tFetchingUrl.erase( strUrl );
+		
 		Log() << _T( "CWebpageManager::CachePageUrl erase self cache url!! " ) << strUrl << endl;
 
 		return this->m_pDatabase->ModifyWebpageState( strUrl, IDatabase::PageStateCached );
@@ -178,8 +177,8 @@ BOOL CWebpageManager::CachedPageToSavedPage( LPCTSTR strUrl )
 	ASSERT( this->m_pDatabase );
 	if ( m_pDatabase )
 	{
-		// 清掉自己缓存的。
-		this->m_tCachedPageStack;
+		// 清掉自己的缓存。
+		this->m_tFetchingUrl.erase( strUrl );
 
 		return this->m_pDatabase->ModifyWebpageState( strUrl, IDatabase::PageStateSaved );
 	}
