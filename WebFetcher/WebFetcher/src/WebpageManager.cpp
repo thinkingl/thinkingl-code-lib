@@ -180,6 +180,11 @@ BOOL CWebpageManager::CachedPageToSavedPage( LPCTSTR strUrl )
 		// 清掉自己的缓存。
 		this->m_tFetchingUrl.erase( strUrl );
 
+		if ( !this->m_tFetchingUrl.empty() )
+		{
+			Log() << _T( "CachedPageToSavedPage fetching list is not empty!!!!!!!!!!!" ) << endl;
+		}
+
 		return this->m_pDatabase->ModifyWebpageState( strUrl, IDatabase::PageStateSaved );
 	}
 	return FALSE;
