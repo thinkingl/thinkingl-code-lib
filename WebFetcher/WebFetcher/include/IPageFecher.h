@@ -5,6 +5,10 @@
 class IPageFecher
 {
 public:
+	virtual ~IPageFecher()
+	{
+
+	}
 
 	/** 抓取一个网页。
 	*/

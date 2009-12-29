@@ -249,11 +249,12 @@ BOOL CWinInetHttpFecher::GetMimeType( CMimeType& mimetype )
 void CWinInetHttpFecher::Release()
 {
 //	this->Close();
-	//if ( this->m_pInetFile )
-	//{
-	//	m_pInetFile->Close();
-
-	//}
+	if ( this->m_pInetFile )
+	{
+		m_pInetFile->Close();
+		delete m_pInetFile;
+		m_pInetFile = NULL;
+	}
 }
 //void CWinInetHttpFecher::OnStatusCallback(DWORD dwContext, DWORD dwInternetStatus, LPVOID lpvStatusInformation, DWORD dwStatusInformationLength)
 //{
