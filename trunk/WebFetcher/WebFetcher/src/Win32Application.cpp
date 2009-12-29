@@ -211,8 +211,12 @@ int CWin32Application::RunWebFetch()
 			delete tThreadList[i];
 			tThreadList[i] = NULL;
 		}
-        IConfig::Release();
+        
+		IConfig::Release();
         IWebpageManager::Release();
+		
+
+
 	}
 
 	return nRetCode;

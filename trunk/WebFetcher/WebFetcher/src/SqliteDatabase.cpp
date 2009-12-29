@@ -25,6 +25,7 @@ CSqliteDatabase::CSqliteDatabase(void)
 
 CSqliteDatabase::~CSqliteDatabase(void)
 {
+	this->Close();
 }
 
 BOOL CSqliteDatabase::Open()
