@@ -84,6 +84,8 @@ BOOL CWinInetHttpFecher::OpenUrl( LPCTSTR strUrl )
 	if ( this->m_pInetFile )
 	{
 		m_pInetFile->Close();
+		delete m_pInetFile;
+		this->m_pInetFile = NULL;
 	}
 
 	BOOL bResult = FALSE;
