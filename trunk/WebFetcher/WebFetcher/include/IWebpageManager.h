@@ -43,8 +43,13 @@ public:
 	/** 增加一个缓存的url记录。 */
 	virtual BOOL CachePageUrl( LPCTSTR strUrl ) = 0;
 
+	/** 因为错误，一些页面没有了，把它们转换为没有获取过的，重新获取。 */
+	virtual BOOL UnCachePageUrl( LPCTSTR strUrl ) =0;
+
 	/** 缓存url变为保存好的网页。 */
 	virtual BOOL CachedPageToSavedPage( LPCTSTR strUrl ) = 0;
+
+	
 
 	/** 记录一个获取失败的网页。 
 	*	在获取 strBaseUrl 时，无法获取到 strFailUrl。

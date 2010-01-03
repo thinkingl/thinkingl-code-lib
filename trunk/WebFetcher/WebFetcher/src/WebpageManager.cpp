@@ -171,6 +171,19 @@ BOOL CWebpageManager::CachePageUrl( LPCTSTR strUrl )
 	return FALSE;
 }
 
+BOOL CWebpageManager::UnCachePageUrl( LPCTSTR strUrl )
+{
+	ASSERT( this->m_pDatabase );
+	if ( m_pDatabase )
+	{
+		Log() << _T( "CWebpageManager::CachePageUrl erase self cache url!! " ) << strUrl << endl;
+
+		return this->m_pDatabase->ModifyWebpageState( strUrl, IDatabase::PageStateWaiting );
+	}
+	return FALSE;
+}
+
+
 BOOL CWebpageManager::CachedPageToSavedPage( LPCTSTR strUrl )
 {
 //	ASSERT( FALSE ); 

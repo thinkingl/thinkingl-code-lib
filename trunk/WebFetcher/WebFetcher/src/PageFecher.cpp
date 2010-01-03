@@ -4,6 +4,7 @@
 #include "ClassFactory.h"
 #include "Common.h"
 #include "IConfig.h"
+#include <io.h>
 
 CPageFecher::CPageFecher(void)
 {
@@ -155,6 +156,13 @@ BOOL CPageFecher::FetchOnePage()
 		if ( IWebpageManager::Instance()->GetCachedPage( strUrl, strLocalPath ) )
 		{
 			// 处理这个文件。
+			if ( 0 != _taccess( strLocalPath.c_str(), 0 ) )
+			{
+				// 这个文件不存在！！！！
+				IWebpageManager::Instance()->UnCachePageUrl( strUrl.c_str() );
+				Log() << _T( "Cache file don't exist!!! file: " ) << strLocalPath
+					<< _T( " url: " ) << strUrl << endl;
+			}
 
 			// 判断是否是网页。
 			if ( CCommon::IsWebpage( strLocalPath.c_str() ) )
