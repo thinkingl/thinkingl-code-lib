@@ -210,7 +210,7 @@ BOOL CMimeType::Parse( LPCTSTR strUrl, LPCTSTR strContentType )
 	int nPos = m_strUrl.rfind( _T( '.' ) );
 	if ( nPos != -1 )
 	{
-		strUrlExt = this->m_strUrl.substr( nPos );
+		strUrlExt = this->m_strUrl.substr( nPos+1 );
 	}
 
 	if ( arFileExt.empty() || this->m_eMimeType == HttpMimeOther )

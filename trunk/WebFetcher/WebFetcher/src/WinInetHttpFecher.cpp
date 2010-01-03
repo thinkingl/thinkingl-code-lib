@@ -241,6 +241,24 @@ BOOL CWinInetHttpFecher::GetMimeType( CMimeType& mimetype )
 
 		return bResult;
 	}
+	else if( m_pInetFile )
+	{
+		CInternetFile *pInetFile = dynamic_cast< CInternetFile* >( this->m_pInetFile );
+		if ( pInetFile )
+		{
+			Log() << _T( "CWinInetHttpFecher::GetMimeType not http!!!!! " ) << endl;
+			mimetype.Parse( pInetFile->GetFilePath(), _T( "" ) );
+			//		bResult = TRUE;	// 不失败。获取不到就用默认的。
+			return TRUE;
+		}
+		else
+		{
+			Log() << _T( "CWinInetHttpFecher::GetMimeType fail! null inet file!!!!! " ) << endl;
+			ASSERT( FALSE );
+			return FALSE;
+		}
+		
+	}
 
 //	ASSERT( FALSE );
 	return FALSE;;
