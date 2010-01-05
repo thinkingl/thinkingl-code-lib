@@ -3,6 +3,7 @@
 #include "ClassFactory.h"
 #include "Common.h"
 #include "IConfig.h"
+#include "ScopeLock.h"
 
 LPCTSTR CACHE_FOLDER = _T( "cache" );
 LPCTSTR FINAL_FOLDER = _T( "final" );
@@ -10,10 +11,14 @@ LPCTSTR FINAL_FOLDER = _T( "final" );
 CWebpageManager::CWebpageManager(void)
 {
 	this->m_pDatabase = NULL;
+
+	this->m_pThreadSafeLock = CClassFactory::CreateMutex();
 }
 
 CWebpageManager::~CWebpageManager(void)
 {
+	SCOPE_LOCK( *m_pThreadSafeLock );
+
 	if ( m_pDatabase )
 	{
 		BOOL bClose = m_pDatabase->Close();
@@ -25,6 +30,8 @@ CWebpageManager::~CWebpageManager(void)
 
 BOOL CWebpageManager::Init()
 {
+	SCOPE_LOCK( *m_pThreadSafeLock );
+
 	if ( NULL == m_pDatabase )
 	{
 		m_pDatabase = CClassFactory::CreateDatabase();
@@ -36,6 +43,8 @@ BOOL CWebpageManager::Init()
 
 BOOL CWebpageManager::GetCachedPage( tstring& strUrl, tstring& strLocalPath )
 {
+	SCOPE_LOCK( *m_pThreadSafeLock );
+
 	ASSERT( m_pDatabase );
 	if ( m_pDatabase )
 	{
@@ -110,6 +119,8 @@ BOOL CWebpageManager::GetCachedPage( tstring& strUrl, tstring& strLocalPath )
 
 BOOL CWebpageManager::GetPageLocalFilePath( LPCTSTR strUrl, tstring& strLocalPath )
 {
+	SCOPE_LOCK( *m_pThreadSafeLock );
+
 	ASSERT( m_pDatabase );
 	if ( m_pDatabase )
 	{
@@ -159,6 +170,8 @@ BOOL CWebpageManager::GetPageLocalFilePath( LPCTSTR strUrl, tstring& strLocalPat
 BOOL CWebpageManager::CachePageUrl( LPCTSTR strUrl )
 {
 //	ASSERT( FALSE ); 
+	SCOPE_LOCK( *m_pThreadSafeLock );
+
 	ASSERT( this->m_pDatabase );
 	if ( m_pDatabase )
 	{
@@ -173,6 +186,8 @@ BOOL CWebpageManager::CachePageUrl( LPCTSTR strUrl )
 
 BOOL CWebpageManager::UnCachePageUrl( LPCTSTR strUrl )
 {
+	SCOPE_LOCK( *m_pThreadSafeLock );
+
 	ASSERT( this->m_pDatabase );
 	if ( m_pDatabase )
 	{
@@ -187,6 +202,8 @@ BOOL CWebpageManager::UnCachePageUrl( LPCTSTR strUrl )
 BOOL CWebpageManager::CachedPageToSavedPage( LPCTSTR strUrl )
 {
 //	ASSERT( FALSE ); 
+	SCOPE_LOCK( *m_pThreadSafeLock );
+
 	ASSERT( this->m_pDatabase );
 	if ( m_pDatabase )
 	{
@@ -206,6 +223,8 @@ BOOL CWebpageManager::CachedPageToSavedPage( LPCTSTR strUrl )
 BOOL CWebpageManager::AddFailUrl( LPCTSTR strBaseUrl, LPCTSTR strFailUrl )
 {
 //	ASSERT( FALSE ); 
+	SCOPE_LOCK( *m_pThreadSafeLock );
+
 	ASSERT( this->m_pDatabase );
 	if ( m_pDatabase )
 	{
@@ -216,6 +235,8 @@ BOOL CWebpageManager::AddFailUrl( LPCTSTR strBaseUrl, LPCTSTR strFailUrl )
 
 BOOL CWebpageManager::PreAllocateFilePath( LPCTSTR strUrl, const CMimeType& cMimeType, tstring& strCachePath, tstring& strSavePath )
 {
+	SCOPE_LOCK( *m_pThreadSafeLock );
+
 	BOOL bResult = TRUE;
 	
 	ASSERT( m_pDatabase );
@@ -271,6 +292,8 @@ BOOL CWebpageManager::PreAllocateFilePath( LPCTSTR strUrl, const CMimeType& cMim
 
 BOOL CWebpageManager::SearchPagePath( LPCTSTR strUrl, tstring& strCachePath, tstring& strSavePath )
 {
+	SCOPE_LOCK( *m_pThreadSafeLock );
+
 	BOOL bRet = FALSE;
 	ASSERT( m_pDatabase );
 	if ( m_pDatabase )
@@ -293,6 +316,8 @@ BOOL CWebpageManager::SearchPagePath( LPCTSTR strUrl, tstring& strCachePath, tst
 
 tstring CWebpageManager::GetFileFullPath( LPCTSTR strRelativePath )
 {
+	SCOPE_LOCK( *m_pThreadSafeLock );
+
 	tstring strRootFolder = IConfig::Instance()->GetRootFolder();
 	tstring strFullPath = strRootFolder + strRelativePath;
 

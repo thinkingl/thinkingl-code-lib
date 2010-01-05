@@ -2,22 +2,23 @@
 #include "ClassFactory.h"
 #include "ScopeLock.h"
 #include "Common.h"
+#include "LogManager.h"
 //
 CLog& Log( ELogLevel eLogLev )
 {
-    static CLog s_log;
+	CLog *pLog = CLogManager::Instance()->GetCurThreadLog();	
 
-	BOOL bWriteLog = s_log.IsLogout( eLogLev );
+	BOOL bWriteLog = pLog->IsLogout( eLogLev );
 
-	s_log.SetIsLogout( bWriteLog );
-    return s_log;
+	pLog->SetIsLogout( bWriteLog );
+    return *pLog;
 }
 
 CLog::CLog(void)
 {
     this->m_pThreadSafeLock = CClassFactory::CreateMutex();
 
-	this->m_bWriteLog = TRUE;
+	this->m_bConsoleLogout = TRUE;
 	this->m_eLogLev = LogLevHigh;
 }
 
@@ -33,12 +34,17 @@ CLog::~CLog(void)
 void CLog::SetIsLogout( BOOL bLog )
 {
 	SCOPE_LOCK( *m_pThreadSafeLock );
-	this->m_bWriteLog = bLog;
+	this->m_bConsoleLogout = bLog;
 }
 
 BOOL CLog::IsLogout( ELogLevel eLev )
 {
 	return eLev >= m_eLogLev;
+}
+
+void CLog::SetConsleLogLev( ELogLevel eLev )
+{
+	this->m_eLogLev = eLev;
 }
 
 
@@ -53,6 +59,8 @@ void CLog::SetLogFileDir( LPCTSTR strLogDir, LPCTSTR strPrefix )
         tstring strLogFilePath = strLogDir;
 
         CCommon::NormalizeDir( strLogFilePath );
+
+		CCommon::CreateDirRecurse( strLogFilePath.c_str() );
 
         strLogFilePath += strPrefix;
         strLogFilePath += _T( "-" );
@@ -77,9 +85,14 @@ CLog& CLog::operator <<( const wchar_t * strMsg)
 {
     SCOPE_LOCK( *m_pThreadSafeLock );
 
+
 #if defined( _WIN32_WCE ) || defined ( _WIN32 ) 
     OutputDebugString( strMsg );
 #endif
+
+	if ( m_bConsoleLogout )
+	{
+
 
 #ifndef __CYGWIN__	// cygwin ²»Ö§³Öunicode!
     std::wcout << strMsg;
@@ -87,11 +100,12 @@ CLog& CLog::operator <<( const wchar_t * strMsg)
     cout << ( "CLog << fail! cygwin don't support unicode!" ) << endl;
 #endif
 
+	}
 
     if ( this->m_fLog )
     {
         m_fLog << strMsg ;
-        m_fLog.flush();
+ //       m_fLog.flush();
     }
 
     return *this;
@@ -101,7 +115,11 @@ CLog& CLog::operator <<( const char * strMsg )
 {
     SCOPE_LOCK( *m_pThreadSafeLock );
 
-    cout << strMsg;
+	if ( m_bConsoleLogout )
+	{
+		cout << strMsg;
+	}
+    
 
 #if defined( _WIN32 )
 	OutputDebugStringA( strMsg );
@@ -110,7 +128,7 @@ CLog& CLog::operator <<( const char * strMsg )
     if ( this->m_fLog )
     {
         m_fLog << strMsg ;
-        m_fLog.flush();
+//        m_fLog.flush();
     }
 
     return *this;

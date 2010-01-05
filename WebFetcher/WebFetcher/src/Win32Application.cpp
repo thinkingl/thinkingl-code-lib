@@ -3,6 +3,7 @@
 #include "IConfig.h"
 #include "MimeType.h"
 #include "Common.h"
+#include "LogManager.h"
 
 CWin32Application::CWin32Application(void)
 {
@@ -156,12 +157,16 @@ int CWin32Application::RunWebFetch()
 		wcout.imbue(locale(locale(),"",LC_CTYPE)); 
 		// TODO: 在此处为应用程序的行为编写代码。
 
-		Log() << _T( "暂时只使用单线程抓页面。 " ) << endl;
+		Log().SetConsleLogLev( LogLevLow );
+
+//		Log() << _T( "暂时只使用单线程抓页面。 " ) << endl;
 
        
 		
 		int32 nThreadNum = IConfig::Instance()->GetThreadCount();
 		nThreadNum = max( 1, nThreadNum );
+
+		Log() << _T( "线程数目： " ) << nThreadNum << endl;
 
 		// test
 		//nThreadNum = 0;
@@ -205,6 +210,8 @@ int CWin32Application::RunWebFetch()
 			}
 		}
 
+		Log() << _T( "正在结束线程。。。" ) << endl;
+
 		for ( size_t i=0; i<tThreadList.size(); ++i )
 		{
 			tThreadList[i]->Stop();
@@ -214,7 +221,7 @@ int CWin32Application::RunWebFetch()
         
 		IConfig::Release();
         IWebpageManager::Release();
-		
+		CLogManager::Release();
 
 
 	}

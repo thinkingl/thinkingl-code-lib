@@ -2,6 +2,7 @@
 #include "iwebpagemanager.h"
 #include "IDatabase.h"
 #include <stack>
+#include "IMutex.h"
 
 class CWebpageManager :
 	public IWebpageManager
@@ -66,5 +67,6 @@ private:
 	typedef std::stack< IDatabase::TUrlRecordItem > TDatabaseRecordStack;
 	TDatabaseRecordStack m_tCachedPageStack;
 
-	/** */
+	/** 线程安全 */
+	IMutex *m_pThreadSafeLock;
 };
