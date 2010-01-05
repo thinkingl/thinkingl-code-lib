@@ -3,6 +3,12 @@
 #include "portabledefine.h"
 #include "IMutex.h"
 
+enum ELogLevel
+{
+	LogLevLow,
+	LogLevNormal,
+	LogLevHigh,
+};
 
 
 
@@ -13,6 +19,10 @@ public:
 	virtual ~CLog(void);
 
     void SetLogFileDir( LPCTSTR strLogDir, LPCTSTR strPrefix );
+
+	void SetIsLogout( BOOL bLog );
+
+	BOOL IsLogout( ELogLevel eLev );
 public:
 
     /** 输出日志。 */
@@ -70,9 +80,16 @@ private:
 
     /** 日志文件夹。 */
     tstring m_strLogDir;
+
+	/** 日志开关。 */
+	BOOL m_bWriteLog;
+
+	/** 当前的日志输出等级。 */
+	ELogLevel m_eLogLev;
 };
 
-CLog& Log();
+
+CLog& Log( ELogLevel eLev = LogLevNormal );
 
 //#define CLog() tcout
 
