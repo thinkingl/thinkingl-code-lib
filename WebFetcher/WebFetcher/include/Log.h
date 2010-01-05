@@ -78,10 +78,14 @@ private:
     BOOL m_bWriteFile;
 
     /** 文件对象。 */
-    wofstream m_fLog;
+//    wofstream m_fLog;
+	CFile m_fLog;
 
     /** 日志文件夹。 */
     tstring m_strLogDir;
+
+	/** 日志路径。 */
+	tstring m_strLogFilePath;
 
 	/** 日志开关。 */
 	BOOL m_bConsoleLogout;
