@@ -70,9 +70,12 @@ void CLog::SetLogFileDir( LPCTSTR strLogDir, LPCTSTR strPrefix )
 
         // 某些版本的iostram的open不支持16bit unicode版本的open。
         //        this->m_fLog.open( strLogFilePath.c_str() );
-        string strUtf8 ;
-         CCommon::Utf16toUtf8( strLogFilePath.c_str(), strUtf8 );
-        this->m_fLog.open( strUtf8.c_str() );
+//        string strUtf8 ;
+//         CCommon::Utf16toUtf8( strLogFilePath.c_str(), strUtf8 );
+//		 this->m_fLog.open( strUtf8.c_str(), ios::out | ios::binary );
+		 this->m_fLog.Open( strLogFilePath.c_str(), CFile::modeWrite | CFile::modeCreate | CFile::modeNoTruncate | CFile::shareDenyWrite );
+
+		this->m_strLogFilePath = strLogFilePath;
 
     }
     else
@@ -102,11 +105,24 @@ CLog& CLog::operator <<( const wchar_t * strMsg)
 
 	}
 
-    if ( this->m_fLog )
+	if ( m_fLog.m_hFile != CFile::hFileNull )
     {
-        m_fLog << strMsg ;
- //       m_fLog.flush();
+		if ( m_fLog.GetLength() > 100000000 )
+		{
+			m_fLog.Close();
+			m_fLog.Open( m_strLogFilePath.c_str(), CFile::modeWrite | CFile::modeCreate | CFile::shareDenyWrite );
+		}
+
+		string strUtf8;
+		CCommon::Utf16toUtf8( strMsg, strUtf8 );
+		m_fLog.Write( strUtf8.c_str(), strUtf8.length() );
+//        m_fLog << strMsg ;
+//        m_fLog.flush();
     }
+	else if( !m_strLogFilePath.empty() )
+	{
+		ASSERT( FALSE );
+	}
 
     return *this;
 }
@@ -125,11 +141,16 @@ CLog& CLog::operator <<( const char * strMsg )
 	OutputDebugStringA( strMsg );
 #endif
 
-    if ( this->m_fLog )
-    {
-        m_fLog << strMsg ;
-//        m_fLog.flush();
-    }
+	if ( m_fLog.m_hFile != CFile::hFileNull )
+	{
+		m_fLog.Write( strMsg, strlen( strMsg ) * sizeof( strMsg[0] ) );
+		//        m_fLog << strMsg ;
+		//        m_fLog.flush();
+	}
+	else if( !m_strLogFilePath.empty() )
+	{
+		ASSERT( FALSE );
+	}
 
     return *this;
 }
