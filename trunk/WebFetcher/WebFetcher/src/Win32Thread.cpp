@@ -1,6 +1,8 @@
 #include "Win32Thread.h"
 #include "Log.h"
 #include "scopelock.h"
+#include "IConfig.h"
+
 
 CWin32Thread::CWin32Thread(void)
 {
@@ -86,6 +88,14 @@ DWORD CWin32Thread::FunThreadS( void * param )
 
 int CWin32Thread::FunThread()
 {
+	// 初始化日志。
+	tstring strDir = IConfig::Instance()->GetRootFolder();
+	strDir += _T( "log\\" );
+	uint32 uThreadId = ::GetCurrentThreadId();
+	tstringstream ssThreadId;
+	ssThreadId << _T( "thread" ) << uThreadId;
+	Log().SetLogFileDir( strDir.c_str(), ssThreadId.str().c_str() );
+
 	int nExitCode = 0;
 	while ( !this->GetStopFlag() )
 	{

@@ -191,6 +191,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\src\LogManager.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\src\main.cpp"
 				>
 			</File>
@@ -254,6 +258,10 @@
 			</File>
 			<File
 				RelativePath="..\include\Log.h"
+				>
+			</File>
+			<File
+				RelativePath="..\include\LogManager.h"
 				>
 			</File>
 			<File

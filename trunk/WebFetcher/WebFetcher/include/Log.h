@@ -23,6 +23,8 @@ public:
 	void SetIsLogout( BOOL bLog );
 
 	BOOL IsLogout( ELogLevel eLev );
+
+	void SetConsleLogLev( ELogLevel eLev );
 public:
 
     /** 输出日志。 */
@@ -82,7 +84,7 @@ private:
     tstring m_strLogDir;
 
 	/** 日志开关。 */
-	BOOL m_bWriteLog;
+	BOOL m_bConsoleLogout;
 
 	/** 当前的日志输出等级。 */
 	ELogLevel m_eLogLev;
