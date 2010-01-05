@@ -3,15 +3,22 @@
 #include "ScopeLock.h"
 #include "Common.h"
 //
-CLog& Log()
+CLog& Log( ELogLevel eLogLev )
 {
     static CLog s_log;
+
+	BOOL bWriteLog = s_log.IsLogout( eLogLev );
+
+	s_log.SetIsLogout( bWriteLog );
     return s_log;
 }
 
 CLog::CLog(void)
 {
     this->m_pThreadSafeLock = CClassFactory::CreateMutex();
+
+	this->m_bWriteLog = TRUE;
+	this->m_eLogLev = LogLevHigh;
 }
 
 CLog::~CLog(void)
@@ -21,6 +28,17 @@ CLog::~CLog(void)
 		delete m_pThreadSafeLock;
 		m_pThreadSafeLock = NULL;
 	}
+}
+
+void CLog::SetIsLogout( BOOL bLog )
+{
+	SCOPE_LOCK( *m_pThreadSafeLock );
+	this->m_bWriteLog = bLog;
+}
+
+BOOL CLog::IsLogout( ELogLevel eLev )
+{
+	return eLev >= m_eLogLev;
 }
 
 

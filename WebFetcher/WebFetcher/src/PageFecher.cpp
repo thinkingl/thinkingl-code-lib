@@ -81,7 +81,7 @@ BOOL CPageFecher::FetchOnePage()
 						}
 						else
 						{
-							Log() << _T( "DownloadFile fail!!!!! url: " ) << strUrl << endl;
+							Log( LogLevHigh ) << _T( "DownloadFile fail!!!!! url: " ) << strUrl << endl;
 						}
 					}
 				}
@@ -144,7 +144,7 @@ BOOL CPageFecher::FetchOnePage()
 		BOOL bDel = ::DeleteFile( strCache.c_str() );
 		ASSERT( bDel );
 
-		Log() << _T( "Url is completed!!! Save to final path!!! url: " ) <<
+		Log(  LogLevHigh  ) << _T( "Url is completed!!! Save to final path!!! url: " ) <<
 			strUrl << _T( " save to " ) <<  strFinalPath << endl;
 	}
 	else
