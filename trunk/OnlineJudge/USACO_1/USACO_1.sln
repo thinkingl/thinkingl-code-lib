@@ -18,6 +18,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "RunAroundNumbers", "RunAroundNumbers\RunAroundNumbers.vcproj", "{CB6CB1F8-B209-467E-87CF-A50FFBD0017A}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PartyLamps", "PartyLamps\PartyLamps.vcproj", "{A37DBB76-7FFD-4FB5-9206-58FF9F837425}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -48,6 +50,10 @@ Global
 		{CB6CB1F8-B209-467E-87CF-A50FFBD0017A}.Debug|Win32.Build.0 = Debug|Win32
 		{CB6CB1F8-B209-467E-87CF-A50FFBD0017A}.Release|Win32.ActiveCfg = Release|Win32
 		{CB6CB1F8-B209-467E-87CF-A50FFBD0017A}.Release|Win32.Build.0 = Release|Win32
+		{A37DBB76-7FFD-4FB5-9206-58FF9F837425}.Debug|Win32.ActiveCfg = Debug|Win32
+		{A37DBB76-7FFD-4FB5-9206-58FF9F837425}.Debug|Win32.Build.0 = Debug|Win32
+		{A37DBB76-7FFD-4FB5-9206-58FF9F837425}.Release|Win32.ActiveCfg = Release|Win32
+		{A37DBB76-7FFD-4FB5-9206-58FF9F837425}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
