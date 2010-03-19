@@ -20,6 +20,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "RunAroundNumbers", "RunArou
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PartyLamps", "PartyLamps\PartyLamps.vcproj", "{A37DBB76-7FFD-4FB5-9206-58FF9F837425}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LongestPrefix", "LongestPrefix\LongestPrefix.vcproj", "{9E2EE720-C8D7-450A-9FAD-AE45F80772AE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -54,6 +56,10 @@ Global
 		{A37DBB76-7FFD-4FB5-9206-58FF9F837425}.Debug|Win32.Build.0 = Debug|Win32
 		{A37DBB76-7FFD-4FB5-9206-58FF9F837425}.Release|Win32.ActiveCfg = Release|Win32
 		{A37DBB76-7FFD-4FB5-9206-58FF9F837425}.Release|Win32.Build.0 = Release|Win32
+		{9E2EE720-C8D7-450A-9FAD-AE45F80772AE}.Debug|Win32.ActiveCfg = Debug|Win32
+		{9E2EE720-C8D7-450A-9FAD-AE45F80772AE}.Debug|Win32.Build.0 = Debug|Win32
+		{9E2EE720-C8D7-450A-9FAD-AE45F80772AE}.Release|Win32.ActiveCfg = Release|Win32
+		{9E2EE720-C8D7-450A-9FAD-AE45F80772AE}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
