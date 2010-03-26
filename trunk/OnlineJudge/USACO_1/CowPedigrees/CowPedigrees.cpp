@@ -41,7 +41,10 @@ Two possible pedigrees have 5 nodes and height equal to 3:
 
 /** 
 思路：
- 
+*	对高度做限制求组合的话太乱了，我搞了好久也没搞出来。
+*	转换为高度为K的树的数目=高度不小于K的树的数目-高度不小于K-1的树的数目。
+*	高度不小于K的树的数目相对来说简单多了。
+*	对于每个数，看左右两边，左边从1到N-2，剩余的放在右边，求两边子树的数目。
 
 */
 
@@ -76,84 +79,44 @@ typedef unsigned long long u64;
 #define THINKINGL 1
 #endif
 
-int Log2( int nNum )
+
+u64 g_arCount[100][200];
+
+u64 CountDP(  int nCowNum, int nTreeHeight )
 {
-// 	if ( nNum == 0 )
-// 	{
-// 		return -9999999;
-// 	}
-// 	int nRet = 0;
-// 	while( nNum != 0x1 )
-// 	{
-// 		nNum >>= 1;
-// 		++nRet;
-// 	}
-	float fRet = log( (float)nNum ) / log( 2.0 );
-	int nRet = fRet + 0.5;
-	return nRet;
-}
-
-int Count( int nCowNum, int nTreeHeight )
-{
-	if ( nCowNum <= 3 || nTreeHeight <= 2 )
+	if ( nCowNum <= 1 || nTreeHeight <= 1 )
 	{
-		return 1;
-	}
-	
-	// - root cow.
-	nCowNum -= 1;
-	// height left.
-	nTreeHeight -= 1;
-
-	int nMinCowToHeight = ( nTreeHeight << 1 ) - 1; // <<1 == *2.
-	int nMaxCowToHeight = ( 1 << ( nTreeHeight ) ) - 1;
-
-	int nCount = 0;
-
-	// nToHeightCow one side to reach nTreeHeight height.
-	for ( int nToHeightCow = nMinCowToHeight; nToHeightCow <= nMaxCowToHeight; nToHeightCow += 2 )
-	{
-		int nToHeightCount = Count( nToHeightCow, nTreeHeight );
-
-		int nLeftCow = nCowNum - nToHeightCow;
-		if ( nLeftCow < 1 || nLeftCow > nMaxCowToHeight ) // 
+		if ( nCowNum == 1 )
 		{
-			break;
-		}
-
-		int nMinHeight = Log2( nLeftCow + 1 );
-		int nMaxHeight = ( nLeftCow + 1 ) >> 1; // >> 1 == /2.
-
-		nMaxHeight = min( nMaxHeight, nTreeHeight );
-
-		int nAnotherCount = 0;
-		for ( int nAnotherHeight = nMinHeight; nAnotherHeight <= nMaxHeight; ++ nAnotherHeight )
-		{
-			nAnotherCount += Count( nLeftCow, nAnotherHeight );
-		}
-
-		if ( nLeftCow == nToHeightCow )
-		{
-			// 减去限制长度那边的被对称的，每种都会有两种对称情况，一种是中间轴对称，一种是平移全等。
-			// 可能不对。
-			nCount += ( nToHeightCount * nToHeightCount*2 - 2 * nToHeightCount); 
-		}
-		else if( nLeftCow <= nMaxCowToHeight && nLeftCow >= nMinCowToHeight )
-		{
-			nCount += ( nToHeightCount * nAnotherCount  );
+			return 1;
 		}
 		else
 		{
-			nCount += ( nToHeightCount * nAnotherCount * 2 );	// 数目不相等，肯定不会对称。
-		}		
-	}	
-
-	// 
-	if ( nCount < 1 )
-	{
-		nCount = 1;
+			return 0;
+		}
 	}
-	return nCount;
+	else if ( (u64)-1 != g_arCount[nTreeHeight][nCowNum] )
+	{
+		return g_arCount[nTreeHeight][nCowNum];
+	}
+	else
+	{
+		u64 count = 0;
+		--nCowNum;
+		for ( int i=1; i<nCowNum; ++i )
+		{
+			u64 countLeft = CountDP( i, nTreeHeight - 1 );
+			u64 countRight = CountDP( nCowNum - i, nTreeHeight - 1 );
+			
+			count += countLeft * countRight;
+		}
+
+		count %= 9901;
+		g_arCount[nTreeHeight][nCowNum+1] = count;
+
+		return count;
+	}
+
 }
 
 int main()
@@ -173,10 +136,16 @@ int main()
 		return 0;
 	}
 
+	memset( g_arCount, -1, sizeof( g_arCount ) );
+
 	int nCowNum, nTreeHeight;
 	fin >> nCowNum >> nTreeHeight;
 
-	int nCount = Count( nCowNum, nTreeHeight );
+	u64 count1 = CountDP( nCowNum, nTreeHeight );
+	u64 count2 = CountDP( nCowNum, nTreeHeight - 1 );
+	u64 nCount = count1 - count2 + 9901; // maybe count2 < count1.
+
+	nCount %= 9901;
 
 	fout << nCount << endl;
 
