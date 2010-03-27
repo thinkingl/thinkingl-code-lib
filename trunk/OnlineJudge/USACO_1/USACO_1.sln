@@ -24,6 +24,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LongestPrefix", "LongestPre
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CowPedigrees", "CowPedigrees\CowPedigrees.vcproj", "{36906398-9EB0-41AA-8E15-7417277D4736}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ZeroSum", "ZeroSum\ZeroSum.vcproj", "{429F6E40-4A71-4207-86DC-169A3BCCB681}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -66,6 +68,10 @@ Global
 		{36906398-9EB0-41AA-8E15-7417277D4736}.Debug|Win32.Build.0 = Debug|Win32
 		{36906398-9EB0-41AA-8E15-7417277D4736}.Release|Win32.ActiveCfg = Release|Win32
 		{36906398-9EB0-41AA-8E15-7417277D4736}.Release|Win32.Build.0 = Release|Win32
+		{429F6E40-4A71-4207-86DC-169A3BCCB681}.Debug|Win32.ActiveCfg = Debug|Win32
+		{429F6E40-4A71-4207-86DC-169A3BCCB681}.Debug|Win32.Build.0 = Debug|Win32
+		{429F6E40-4A71-4207-86DC-169A3BCCB681}.Release|Win32.ActiveCfg = Release|Win32
+		{429F6E40-4A71-4207-86DC-169A3BCCB681}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
