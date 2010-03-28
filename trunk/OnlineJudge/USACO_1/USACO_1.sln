@@ -26,6 +26,10 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CowPedigrees", "CowPedigree
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ZeroSum", "ZeroSum\ZeroSum.vcproj", "{429F6E40-4A71-4207-86DC-169A3BCCB681}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MoneySystems", "MoneySystems\MoneySystems.vcproj", "{FDAAFBEA-81EE-487C-AB4D-50CF3498FE55}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ControllingCompanies", "ControllingCompanies\ControllingCompanies.vcproj", "{9FE26AB1-8DE0-4E85-8AB5-9122AD27AFFF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -72,6 +76,14 @@ Global
 		{429F6E40-4A71-4207-86DC-169A3BCCB681}.Debug|Win32.Build.0 = Debug|Win32
 		{429F6E40-4A71-4207-86DC-169A3BCCB681}.Release|Win32.ActiveCfg = Release|Win32
 		{429F6E40-4A71-4207-86DC-169A3BCCB681}.Release|Win32.Build.0 = Release|Win32
+		{FDAAFBEA-81EE-487C-AB4D-50CF3498FE55}.Debug|Win32.ActiveCfg = Debug|Win32
+		{FDAAFBEA-81EE-487C-AB4D-50CF3498FE55}.Debug|Win32.Build.0 = Debug|Win32
+		{FDAAFBEA-81EE-487C-AB4D-50CF3498FE55}.Release|Win32.ActiveCfg = Release|Win32
+		{FDAAFBEA-81EE-487C-AB4D-50CF3498FE55}.Release|Win32.Build.0 = Release|Win32
+		{9FE26AB1-8DE0-4E85-8AB5-9122AD27AFFF}.Debug|Win32.ActiveCfg = Debug|Win32
+		{9FE26AB1-8DE0-4E85-8AB5-9122AD27AFFF}.Debug|Win32.Build.0 = Debug|Win32
+		{9FE26AB1-8DE0-4E85-8AB5-9122AD27AFFF}.Release|Win32.ActiveCfg = Release|Win32
+		{9FE26AB1-8DE0-4E85-8AB5-9122AD27AFFF}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
