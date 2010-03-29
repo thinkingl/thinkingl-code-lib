@@ -32,6 +32,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ControllingCompanies", "Con
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TheTamworthTwo", "TheTamworthTwo\TheTamworthTwo.vcproj", "{B20485B9-56D7-40B8-9852-9BE8E1B01F51}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Overfencing", "Overfencing\Overfencing.vcproj", "{B9B72FAB-8C7B-4C36-8E84-45716F800961}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -90,6 +92,10 @@ Global
 		{B20485B9-56D7-40B8-9852-9BE8E1B01F51}.Debug|Win32.Build.0 = Debug|Win32
 		{B20485B9-56D7-40B8-9852-9BE8E1B01F51}.Release|Win32.ActiveCfg = Release|Win32
 		{B20485B9-56D7-40B8-9852-9BE8E1B01F51}.Release|Win32.Build.0 = Release|Win32
+		{B9B72FAB-8C7B-4C36-8E84-45716F800961}.Debug|Win32.ActiveCfg = Debug|Win32
+		{B9B72FAB-8C7B-4C36-8E84-45716F800961}.Debug|Win32.Build.0 = Debug|Win32
+		{B9B72FAB-8C7B-4C36-8E84-45716F800961}.Release|Win32.ActiveCfg = Release|Win32
+		{B9B72FAB-8C7B-4C36-8E84-45716F800961}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
