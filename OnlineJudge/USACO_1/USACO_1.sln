@@ -30,6 +30,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MoneySystems", "MoneySystem
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ControllingCompanies", "ControllingCompanies\ControllingCompanies.vcproj", "{9FE26AB1-8DE0-4E85-8AB5-9122AD27AFFF}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TheTamworthTwo", "TheTamworthTwo\TheTamworthTwo.vcproj", "{B20485B9-56D7-40B8-9852-9BE8E1B01F51}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -84,6 +86,10 @@ Global
 		{9FE26AB1-8DE0-4E85-8AB5-9122AD27AFFF}.Debug|Win32.Build.0 = Debug|Win32
 		{9FE26AB1-8DE0-4E85-8AB5-9122AD27AFFF}.Release|Win32.ActiveCfg = Release|Win32
 		{9FE26AB1-8DE0-4E85-8AB5-9122AD27AFFF}.Release|Win32.Build.0 = Release|Win32
+		{B20485B9-56D7-40B8-9852-9BE8E1B01F51}.Debug|Win32.ActiveCfg = Debug|Win32
+		{B20485B9-56D7-40B8-9852-9BE8E1B01F51}.Debug|Win32.Build.0 = Debug|Win32
+		{B20485B9-56D7-40B8-9852-9BE8E1B01F51}.Release|Win32.ActiveCfg = Release|Win32
+		{B20485B9-56D7-40B8-9852-9BE8E1B01F51}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
