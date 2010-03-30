@@ -15,6 +15,9 @@ CWinApp theApp;
 
 using namespace std;
 
+
+
+
 int _tmain(int argc, TCHAR* argv[], TCHAR* envp[])
 {
 	int nRetCode = 0;
@@ -29,6 +32,10 @@ int _tmain(int argc, TCHAR* argv[], TCHAR* envp[])
 	else
 	{
 		// TODO: 在此处为应用程序的行为编写代码。
+
+		
+
+
 	}
 
 	return nRetCode;

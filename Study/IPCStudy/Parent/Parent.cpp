@@ -29,6 +29,7 @@ int _tmain(int argc, TCHAR* argv[], TCHAR* envp[])
 	else
 	{
 		// TODO: 在此处为应用程序的行为编写代码。
+		CreateProcess( _T( "son.exe" ), NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL );
 	}
 
 	return nRetCode;
