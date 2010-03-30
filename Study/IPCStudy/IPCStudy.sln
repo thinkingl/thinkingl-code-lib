@@ -1,0 +1,30 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Parent", "Parent\Parent.vcproj", "{B88EBF2F-C446-41CE-84F4-31492BD3C356}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Son", "Son\Son.vcproj", "{F269F602-ECDB-49AC-BAE7-F125C6B9E9D2}"
+EndProject
+Global
+	GlobalSection(SubversionScc) = preSolution
+		Svn-Managed = True
+		Manager = AnkhSVN - Subversion Support for Visual Studio
+	EndGlobalSection
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B88EBF2F-C446-41CE-84F4-31492BD3C356}.Debug|Win32.ActiveCfg = Debug|Win32
+		{B88EBF2F-C446-41CE-84F4-31492BD3C356}.Debug|Win32.Build.0 = Debug|Win32
+		{B88EBF2F-C446-41CE-84F4-31492BD3C356}.Release|Win32.ActiveCfg = Release|Win32
+		{B88EBF2F-C446-41CE-84F4-31492BD3C356}.Release|Win32.Build.0 = Release|Win32
+		{F269F602-ECDB-49AC-BAE7-F125C6B9E9D2}.Debug|Win32.ActiveCfg = Debug|Win32
+		{F269F602-ECDB-49AC-BAE7-F125C6B9E9D2}.Debug|Win32.Build.0 = Debug|Win32
+		{F269F602-ECDB-49AC-BAE7-F125C6B9E9D2}.Release|Win32.ActiveCfg = Release|Win32
+		{F269F602-ECDB-49AC-BAE7-F125C6B9E9D2}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
