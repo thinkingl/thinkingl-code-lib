@@ -224,6 +224,8 @@ void RotateMatrixSpace2Time( float fRotateDegree, const TMatrix& tSrcMatrix, TMa
 
 	if ( bShouldReinit )
 	{
+		s_fRotateDegree = fRotateDegree;
+
 		// 旋转单位向量
 		TFloatComplex rotateUnit( cos( fRotateDegree ), sin( fRotateDegree ) );
 		TFloatComplex unrotateUnit( cos( -fRotateDegree ), sin( -fRotateDegree ) );
@@ -344,7 +346,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	const int PIC_DST_HEIGHT = 352;
 	char outbuf[ PIC_DST_WIDTH * PIC_DST_HEIGHT * 3 / 2 ] = {0};
 
-	fRotateRadians = 45 * toRadian;
+	fRotateRadians = 90 * toRadian;
 	RotateYUV420P( fRotateRadians, inbuf, PIC_SRC_WIDTH, PIC_SRC_HEIGHT, outbuf, PIC_DST_WIDTH, PIC_DST_HEIGHT );
 
 	// 测试优化后的算法，只旋转Y分量,与不优化的算法做内存比较。
