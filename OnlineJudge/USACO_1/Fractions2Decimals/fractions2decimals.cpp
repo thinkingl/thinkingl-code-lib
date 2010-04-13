@@ -103,18 +103,20 @@ int main()
 	TDevisionExpList tDevisionExpList;
 
 	int nLoopN = 0;
+
+	
 	while( 1 )
 	{
+		if ( n == 0  )
+		{
+			// 结束。
+			break;
+		}
+
 		if ( tRemainderSet.find( n ) != tRemainderSet.end() )
 		{
 			// 有循环。
 			nLoopN = n;
-			break;
-		}
-
-		if ( n == 0 )
-		{
-			// 结束。
 			break;
 		}
 
@@ -129,15 +131,17 @@ int main()
 
 	}
 
-	fout << tDevisionExpList[0].second;
+	stringstream ssBuf;
+
+	ssBuf << tDevisionExpList[0].second;
 	if ( tDevisionExpList.size() > 1 )
 	{
-		fout << ".";
+		ssBuf << ".";
 		int i=1;
 		int nRemainder = tDevisionExpList[i].first;
 		while( nRemainder != nLoopN  )
 		{
-			fout << tDevisionExpList[i].second;
+			ssBuf << tDevisionExpList[i].second;
 			++i;
 			if ( i>= tDevisionExpList.size() )
 			{
@@ -148,22 +152,36 @@ int main()
 
 		if (  i < tDevisionExpList.size() )
 		{
-			fout << "(";
+			ssBuf << "(";
 
 			for ( ; i<tDevisionExpList.size(); ++ i )
 			{
-				fout << tDevisionExpList[i].second;
+				ssBuf << tDevisionExpList[i].second;
 			}
 
-			fout << ")";
+			ssBuf << ")";
 		}
 	}
 	else if( nLoopN != 0 )
 	{
-		fout << ".(" << tDevisionExpList[0].second << ")";
+		ssBuf << ".(" << tDevisionExpList[0].second << ")";
+	}
+	else
+	{
+		ssBuf << ".0";
 	}
 	
-	fout << endl;
+	ssBuf << endl;
+
+	string strTmp = ssBuf.str();
+	for ( int i=0; i<strTmp.length(); ++i )
+	{
+		if ( i>0 && ( i % 76 ) == 0 )
+		{
+			fout << endl;
+		}
+		fout << strTmp[i];
+	}
 
 	fin.close();
 	fout.close();
