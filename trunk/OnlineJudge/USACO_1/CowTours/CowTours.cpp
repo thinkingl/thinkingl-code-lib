@@ -96,7 +96,16 @@ SAMPLE OUTPUT (file cowtour.out)
 /** 
 思路：
 
+> Run 7: Execution error: Your program did not produce an answer
+that was judged as correct. The program stopped at 0.032 seconds;
+it used 3216 KB of memory. 
 
+Here are the respective outputs:
+----- our output ---------
+39796.392691
+---- your output ---------
+22693.893986
+--------------------------
 
 */
 #include <stdio.h>
@@ -134,14 +143,14 @@ typedef unsigned long u32;
 #define THINKINGL 1
 #endif
 
-const int MAX_PASTURE_NUM = 150;
-const float MIN_WEIGHT_NOT_CONNECTED = 100000.0 * MAX_PASTURE_NUM * 2; 
+const int MAX_PASTURE_NUM = 150+1;
+const double MIN_WEIGHT_NOT_CONNECTED = 100000.0 * MAX_PASTURE_NUM * 2; 
 
-typedef complex<float> TPasturePos;
+typedef complex<double> TPasturePos;
 
 /** Floyd-Warshall Algorithm.
-*	float arWeightMatrix[] Weight矩阵，矩阵长宽都是nMatrixSize . 输入。
-*	float arDistanceMatrix[] 距离矩阵，矩阵长宽都是nMatrixSize 。输出。
+*	double arWeightMatrix[] Weight矩阵，矩阵长宽都是nMatrixSize . 输入。
+*	double arDistanceMatrix[] 距离矩阵，矩阵长宽都是nMatrixSize 。输出。
 *	int nMatrixSize 矩阵大小
 *	int nVertexNum 节点数目，矩阵中只有节点数目之间距离是有效的。
 *
@@ -158,7 +167,7 @@ typedef complex<float> TPasturePos;
 				if (dist(i,k) + dist(k,j) < dist(i,j)) then	# shorter path?
 				dist(i,j) = dist(i,k) + dist(k,j)
 */
-void FloydWarshall( const float arWeightMatrix[], float arDistanceMatrix[], int nMatrixSize, int nVertexNum )
+void FloydWarshall( const double arWeightMatrix[], double arDistanceMatrix[], int nMatrixSize, int nVertexNum )
 {
 	for ( int i=0; i<nVertexNum; ++i )
 	{
@@ -216,25 +225,25 @@ int main()
 		arPasturePos[i] = TPasturePos( nX, nY );
 	}
 
-	float arWeightTable[MAX_PASTURE_NUM][MAX_PASTURE_NUM];
+	double arWeightTable[MAX_PASTURE_NUM][MAX_PASTURE_NUM];
 
-	float arDistanceTable[MAX_PASTURE_NUM][MAX_PASTURE_NUM];
+	double arDistanceTable[MAX_PASTURE_NUM][MAX_PASTURE_NUM];
 
 	for ( int i=0; i<nPastureNum; ++i )
 	{
 		for ( int j=0; j<nPastureNum; ++j )
 		{
 			TPasturePos tWeight = arPasturePos[i] - arPasturePos[j];
-			float fWeight = abs( tWeight );
+			double fWeight = abs( tWeight );
 
 			arWeightTable[i][j] = fWeight;
 			arWeightTable[j][i] = fWeight;
 
 			char cIn;
 			fin >> cIn;
-			cout << cIn;
+	//		cout << cIn;
 
-			float fDistance;
+			double fDistance;
 			if ( '1' == cIn )
 			{
 				// 是连通的。
@@ -254,16 +263,16 @@ int main()
 	}
 
 	// Floyd - Warshall
-	FloydWarshall( (float*)arDistanceTable, (float*)arDistanceTable, MAX_PASTURE_NUM, nPastureNum );
+	FloydWarshall( (double*)arDistanceTable, (double*)arDistanceTable, MAX_PASTURE_NUM, nPastureNum );
 
 	// 求出每个节点的最大最短距离。
-	float arLongestPath[ MAX_PASTURE_NUM ];
+	double arLongestPath[ MAX_PASTURE_NUM ];
 	for ( int i=0; i<nPastureNum; ++i )
 	{
 		arLongestPath[i] = 0.0;
 		for ( int k=0; k<nPastureNum; ++k )
 		{
-			float fDist = arDistanceTable[ i ][k];
+			double fDist = arDistanceTable[ i ][k];
 			if ( fDist < MIN_WEIGHT_NOT_CONNECTED && fDist > arLongestPath[i] )
 			{
 				arLongestPath[i] = fDist;
@@ -272,7 +281,7 @@ int main()
 	}
 	// 遍历所有的节点组合，寻找在所有不连通的两个节点组合中，两节点的最长最短距离加上两节点间的直线距离的和最小的那个，
 	// 就是题目要求的那个。
-	float fShortestPath = MIN_WEIGHT_NOT_CONNECTED;
+	double fShortestPath = MIN_WEIGHT_NOT_CONNECTED;
 	for( int i=0; i<nPastureNum; ++i )
 	{
 		for ( int k=0; k<nPastureNum; ++k )

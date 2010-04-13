@@ -208,22 +208,25 @@ void DijkstraMain( ofstream& fout, ifstream& fin )
 		fin >> nWeight;
 
 		// 保存有牛的位置。
-		if ( isupper( cPastureFirst ) )
+		bool bHasCow = isupper( cPastureFirst );
+		if ( bHasCow )
 		{
 			cPastureFirst = tolower( cPastureFirst );
-			arHasCow[ cPastureFirst - 'a' ] = true;
 		}
-		
-		if ( isupper( cPastureSecond ) )
+		arHasCow[ cPastureFirst - 'a' ] = bHasCow;
+
+		bHasCow = isupper( cPastureSecond ) ;		
+		if ( bHasCow )
 		{
 			cPastureSecond = tolower( cPastureSecond );
-			arHasCow[ cPastureSecond - 'a' ] = true;
 		}
+		arHasCow[ cPastureSecond - 'a' ] = bHasCow;
+		
 
 		if ( nWeight < arWeightTable[cPastureFirst - 'a'][cPastureSecond - 'a'] )
 		{
 			arWeightTable[cPastureFirst - 'a'][cPastureSecond - 'a'] = nWeight;
-			arWeightTable[cPastureSecond - 'a'][cPastureFirst - 'a'] = nWeight;
+//			arWeightTable[cPastureSecond - 'a'][cPastureFirst - 'a'] = nWeight;
 		}		
 	}
 

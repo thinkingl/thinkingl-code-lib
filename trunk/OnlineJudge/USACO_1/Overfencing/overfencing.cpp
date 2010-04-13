@@ -217,17 +217,25 @@ int DijkstraMain()
 	int nInputHeight = 2 * nHeight  + 1;
 	for ( int h=0; h<nInputHeight; ++h )
 	{
-		char arIn[ 2 * MAX_WIDTH + 1 ];
-		fin.getline( arIn, sizeof( arIn ) );
-		if ( arIn[0] == 0 )
-		{
-			--h;
-			continue;
-		}
+// 		char arIn[ 2 * MAX_WIDTH + 1 ];
+// 		memset( arIn, 0, sizeof( arIn ) );
+// 		fin.getline( arIn, sizeof( arIn ) );
+// 		if ( arIn[0] == 0 )
+// 		{
+// 			--h;
+// 			continue;
+// 		}
 		for ( int w=0; w<nInputWidth; ++w )
 		{
-			char cIn = arIn[ w ];
+			char cIn = 0;// arIn[ w ];
 			//			cout << cIn;
+			fin.get( cIn );
+	//		fin >> cIn;
+			if ( cIn != ' ' && cIn != '|' && cIn != '+' && cIn != '-' )
+			{
+				--w;
+				continue;
+			}
 
 			int nX = ( w - 1 ) / 2;
 			int nY = ( h - 1 ) / 2;
