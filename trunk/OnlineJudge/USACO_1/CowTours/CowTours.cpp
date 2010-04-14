@@ -95,17 +95,8 @@ SAMPLE OUTPUT (file cowtour.out)
 
 /** 
 思路：
-
-> Run 7: Execution error: Your program did not produce an answer
-that was judged as correct. The program stopped at 0.032 seconds;
-it used 3216 KB of memory. 
-
-Here are the respective outputs:
------ our output ---------
-39796.392691
----- your output ---------
-22693.893986
---------------------------
+最短路径。
+注意题意中对Diameter的定义！
 
 */
 #include <stdio.h>
@@ -242,12 +233,16 @@ int main()
 			char cIn;
 			fin >> cIn;
 	//		cout << cIn;
+			if ( '1' != cIn && '0' != cIn )
+			{
+				cout << "invalid input. " << (int)cIn << endl;
+			}
 
 			double fDistance;
 			if ( '1' == cIn )
 			{
 				// 是连通的。
-				fDistance = arWeightTable[i][j];
+				fDistance = fWeight;
 			}
 			else if( i == j )
 			{
@@ -267,6 +262,7 @@ int main()
 
 	// 求出每个节点的最大最短距离。
 	double arLongestPath[ MAX_PASTURE_NUM ];
+
 	for ( int i=0; i<nPastureNum; ++i )
 	{
 		arLongestPath[i] = 0.0;
@@ -276,9 +272,34 @@ int main()
 			if ( fDist < MIN_WEIGHT_NOT_CONNECTED && fDist > arLongestPath[i] )
 			{
 				arLongestPath[i] = fDist;
-			}
+			}			
 		}
 	}
+
+	// 分割field，为每个pasture标上所属的field。
+	int nFieldNum = 0;
+	int arFieldIndex[ MAX_PASTURE_NUM ] = { 0 };
+	double arFieldDiameter[ MAX_PASTURE_NUM ] = { 0.0 };
+	for ( int i=0; i<nPastureNum; ++i )
+	{
+		arFieldIndex[i] = i;
+	}
+	for ( int i=0; i<nPastureNum; ++i )
+	{
+		for ( int k=0; k<nPastureNum; ++k )
+		{
+			if ( arDistanceTable[i][k] < MIN_WEIGHT_NOT_CONNECTED )
+			{
+				arFieldIndex[k] = arFieldIndex[i];
+
+				if ( arFieldDiameter[ arFieldIndex[k] ] < arDistanceTable[i][k] )
+				{
+					arFieldDiameter[ arFieldIndex[k] ] = arDistanceTable[i][k];
+				}
+			}			
+		}
+	}
+
 	// 遍历所有的节点组合，寻找在所有不连通的两个节点组合中，两节点的最长最短距离加上两节点间的直线距离的和最小的那个，
 	// 就是题目要求的那个。
 	double fShortestPath = MIN_WEIGHT_NOT_CONNECTED;
@@ -286,10 +307,24 @@ int main()
 	{
 		for ( int k=0; k<nPastureNum; ++k )
 		{
-			if ( arDistanceTable[i][k] > MIN_WEIGHT_NOT_CONNECTED	// 不连通。
+			if ( arDistanceTable[i][k] >= MIN_WEIGHT_NOT_CONNECTED	// 不连通。
 				&& arLongestPath[i] + arLongestPath[k] + arWeightTable[ i ][k] < fShortestPath )
 			{
 				fShortestPath = arLongestPath[i] + arLongestPath[k] + arWeightTable[i][k];
+
+				// 原农场的直径（最大两节点最短距离）
+				int nFieldIndex = arFieldIndex[i];
+				if ( arFieldDiameter[ nFieldIndex ] > fShortestPath )
+				{
+					fShortestPath = arFieldDiameter[ nFieldIndex ];
+				}
+
+				nFieldIndex = arFieldIndex[k];
+				if ( arFieldDiameter[ nFieldIndex ] > fShortestPath )
+				{
+					fShortestPath = arFieldDiameter[ nFieldIndex ];
+				}
+				
 			}
 		}
 	}
