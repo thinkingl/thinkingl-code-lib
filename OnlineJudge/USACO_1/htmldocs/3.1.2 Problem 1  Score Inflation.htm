@@ -1,0 +1,86 @@
+
+<!-- saved from url=(0055)http://ace.delos.com/usacoprob2?a=qytLrJG9z1o&S=inflate -->
+<HTML><HEAD><META http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"> <TITLE>Problem 1: Score Inflation</TITLE> </HEAD><BODY background="./3.1.2 Problem 1  Score Inflation_files/bg3.jpg">
+<IMG src="./3.1.2 Problem 1  Score Inflation_files/cow1.jpg" width="742" height="118">
+<CENTER>
+<B><FONT size="7">Score Inflation</FONT></B><BR>
+</CENTER>
+
+<P>The more points students score in our contests, the happier we here
+at the USACO are. We try to design our contests so that people can score
+as many points as possible, and would like your assistance.
+
+</P><P> We have several categories from which problems can be chosen, where
+a "category" is an unlimited set of contest problems which
+all require the same amount of time to solve and deserve the same number
+of points for a correct solution. Your task is write a program which
+tells the USACO staff how many problems from each category to include
+in a contest so as to maximize the total number of points in the chosen
+problems while keeping the total solution time within the length of the
+contest.
+
+</P><P>The input includes the length of the contest, M (1 &lt;= M &lt;=
+10,000) (don't worry, you won't have to compete in the longer contests
+until training camp) and N, the number of problem categories, where 1
+&lt;= N &lt;= 10,000.
+
+</P><P>Each of the subsequent N lines contains two integers describing a
+category:  the first integer tells the number of  points a problem from
+that category is worth (1 &lt;= points &lt;= 10000); the second tells
+the number of minutes a problem from that category takes to solve (1
+&lt;= minutes &lt;= 10000).
+
+</P><P> Your program should determine the number of problems we should
+take from each category to make the highest-scoring contest solvable
+within the length of the contest. Remember, the number from any
+category can be any nonnegative integer (0, one, or many). Calculate
+the maximum number of possible points.
+
+</P><H3>PROGRAM NAME: inflate</H3>
+
+<H3>INPUT FORMAT</H3>
+
+<TABLE border="1">
+<TBODY><TR> <TD> Line 1: </TD> <TD>M, N -- contest minutes and number of problem
+classes </TD> </TR>
+<TR> <TD> Lines 2-N+1: </TD> <TD> Two integers: the points and minutes for
+each class</TD> </TR>
+</TBODY></TABLE>
+
+<H3>SAMPLE INPUT (file inflate.in) </H3>
+
+<PRE>300 4
+100 60
+250 120
+120 100
+35 20
+</PRE>
+
+<H3>OUTPUT FORMAT</H3>
+
+A single line with the maximum number of points possible given the
+constraints.
+
+<H3>SAMPLE OUTPUT (file inflate.out)</H3>
+
+<PRE>605
+</PRE>
+
+<I>(Take two problems from #2 and three from #4.)</I>
+
+<BR>
+<HR>
+<FORM action="http://ace.delos.com/upload3" enctype="multipart/form-data" method="POST">
+<B>Submission file Name:</B> <INPUT type="file" name="filename">
+<INPUT type="submit" value="Send it in!">
+<INPUT type="hidden" name="a" value="qytLrJG9z1o">
+<INPUT type="hidden" name="S" value="inflate">
+</FORM>
+
+<CENTER>
+<A href="http://ace.delos.com/usacogate?a=qytLrJG9z1o"> USACO Gateway </A> &nbsp;| &nbsp;
+<A href="mailto:kolstad@ace.delos.com">Comment or Question </A>
+</CENTER>
+
+
+</BODY></HTML>

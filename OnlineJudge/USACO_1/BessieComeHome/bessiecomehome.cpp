@@ -38,7 +38,7 @@ B 11
 
 /** 
 思路：
-
+*	晕死！大写的字母和小写的字母表示的是不同的Pasture！！！！我郁闷了。
 
 
 */
@@ -77,7 +77,7 @@ typedef unsigned long u32;
 #endif
 
 
-const int MAX_PASTURE_NUM = 26;
+const int MAX_PASTURE_NUM = 26*2;
 
 const u32 MIN_WEIGHT_NOT_CONNECTED = 10001 * MAX_PASTURE_NUM * 2;
 
@@ -188,7 +188,7 @@ void DijkstraMain( ofstream& fout, ifstream& fin )
 	fin >> nPathNum;
 
 	// 存放有牛的位置。
-	bool arHasCow[ MAX_PASTURE_NUM ] = {false};
+//	bool arHasCow[ MAX_PASTURE_NUM ] = {false};
 
 	// 节点间的weight。
 	u32 arWeightTable[MAX_PASTURE_NUM][MAX_PASTURE_NUM];
@@ -202,31 +202,40 @@ void DijkstraMain( ofstream& fout, ifstream& fin )
 
 	for ( int i=0; i<nPathNum; ++i )
 	{
-		char cPastureFirst, cPastureSecond;
+		unsigned char cPastureFirst, cPastureSecond;
 		fin >> cPastureFirst >> cPastureSecond;
 		u32 nWeight;
 		fin >> nWeight;
 
-		// 保存有牛的位置。
-		bool bHasCow = isupper( cPastureFirst );
-		if ( bHasCow )
+// 		// 保存有牛的位置。
+// 		bool bHasCow = isupper( cPastureFirst );
+// 		if ( bHasCow )
+// 		{
+// 			cPastureFirst = 'z' + 1 + cPastureFirst - 'A';
+// 		}
+// 		arHasCow[ cPastureFirst - 'A' ] = bHasCow;
+// 
+// 		bHasCow = isupper( cPastureSecond ) ;		
+// 		if ( bHasCow )
+// 		{
+// 			cPastureSecond = tolower( cPastureSecond );
+// 		}
+// 		arHasCow[ cPastureSecond - 'A' ] = bHasCow;
+		if ( cPastureFirst <= 'Z' )
 		{
-			cPastureFirst = tolower( cPastureFirst );
+			cPastureFirst = 'z' + 1 + cPastureFirst - 'A';
 		}
-		arHasCow[ cPastureFirst - 'a' ] = bHasCow;
 
-		bHasCow = isupper( cPastureSecond ) ;		
-		if ( bHasCow )
+		if ( cPastureSecond <= 'Z' )
 		{
-			cPastureSecond = tolower( cPastureSecond );
+			cPastureSecond = 'z' + 1 + cPastureSecond - 'A';
 		}
-		arHasCow[ cPastureSecond - 'a' ] = bHasCow;
 		
 
 		if ( nWeight < arWeightTable[cPastureFirst - 'a'][cPastureSecond - 'a'] )
 		{
 			arWeightTable[cPastureFirst - 'a'][cPastureSecond - 'a'] = nWeight;
-//			arWeightTable[cPastureSecond - 'a'][cPastureFirst - 'a'] = nWeight;
+			arWeightTable[cPastureSecond - 'a'][cPastureFirst - 'a'] = nWeight;
 		}		
 	}
 
@@ -253,19 +262,16 @@ void DijkstraMain( ofstream& fout, ifstream& fin )
 
 	u32 nShortestPath = MIN_WEIGHT_NOT_CONNECTED;
 	int nNearestCowIndex = 0;
-	for ( int i=0; i<MAX_PASTURE_NUM-1; ++i )
+	for ( int i='z'-'a'+1; i<MAX_PASTURE_NUM-1; ++i )
 	{
-		if ( arHasCow[i] )
+		if ( arDistance[i] < nShortestPath )
 		{
-			if ( arDistance[i] < nShortestPath )
-			{
-				nShortestPath = arDistance[i];
-				nNearestCowIndex = i;
-			}
+			nShortestPath = arDistance[i];
+			nNearestCowIndex = i;
 		}
 	}
 	
-	fout << (char)( nNearestCowIndex + 'A' ) << " " << nShortestPath << endl;
+	fout << (char)( nNearestCowIndex - 26 + 'A' ) << " " << nShortestPath << endl;
 }
 
 int main()

@@ -1,0 +1,432 @@
+
+<!-- saved from url=(0056)http://ace.delos.com/usacotext2?a=qytLrJG9z1o&S=spantree -->
+<HTML><HEAD><META http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"><TITLE>Minimum Spanning Tree
+</TITLE>
+</HEAD><BODY bgcolor="#f0f0f0">
+<FONT face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">
+<DIV style="width:45em;background-color:white;border-style:solid;border-width:1px;padding:1em;">
+<TABLE cellspacing="8">
+   <TBODY><TR><TD><IMG src="./3.1.0 text Minimum Spanning Tree_files/cowhead2.gif"></TD>
+       <TD>&nbsp;&nbsp;&nbsp;</TD>
+       <TD><B><FONT size="5">
+	<FONT face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">
+	Minimum Spanning Tree
+</FONT></FONT></B><FONT size="5"></FONT></TD>
+   </TR>
+</TBODY></TABLE>
+<H4>Sample Problem: Agri-Net [Russ Cox, Winter 1999 USACO Open]
+
+<P> Farmer John is bringing internet connectivity to all farms in
+the area.  He has ordered a high speed connection for his farm and
+is going to share his connectivity with the other farmers. To
+minimize cost, he wants to minimize the length of optical fiber to
+connect his farm to all the other farms.
+
+</P><P> Given a list of how much fiber it takes to connect each pair
+of farms, find the minimum amount of fiber needed to connect them
+all together.  Each farm must connect to some other farm such that
+a path exists from any farm to any other farm. Some farms might
+have 1, 2, 3, or more connections to them.
+
+</P></H4><H4>The Abstraction
+
+<P>Given: an undirected, connected graph with weighted edges 
+
+</P><P> A <I>spanning tree</I> of a graph is any sub-graph which is a
+connected tree (i.e., there exists a path between any nodes of the
+original graph which lies entirely in the sub-graph).
+
+</P><P> A <I>minimal</I> spanning tree is a spanning tree which has
+minimal `cost' (where cost is the sum of the weights of the edges
+in the tree).
+
+</P></H4><H4> Prim's algorithm to construct a Minimal Spanning Tree 
+
+<P> Given: lists of nodes, edges, and edge costs
+
+</P><P> The algorithm (greedily) builds the minimal spanning tree by
+iteratively adding nodes into a working tree.
+
+</P><UL>
+
+<LI> Start with a tree which contains only one node. Iteratively
+find the closest node to that one and add the edge between them.</LI>
+
+<LI> Let the distance from each node not in the tree to the tree
+be the edge (connection) of minimal weight between that node and
+some node in the tree. If there is no such edge, then assume the
+distance is infinity (this shouldn't happen).</LI>
+
+<LI> At each step, identify a node (outside the tree) which is
+closest to the tree and add the minimum weight edge from that node
+to some node in the tree and incorporate the additional node as a
+part of the tree.</LI>
+
+</UL>
+
+<P> For analysis of why this works, consult Chapter 24 of [Cormen,
+Leiserson, Rivest].
+
+</P><P> Here is pseudocode for the algorithm:
+
+<BR>
+<TT><FONT size="2"> <BR>
+&nbsp;&nbsp;#&nbsp;distance(j)&nbsp;is&nbsp;distance&nbsp;from&nbsp;tree&nbsp;to&nbsp;node&nbsp;j<BR>
+&nbsp;&nbsp;#&nbsp;source(j)&nbsp;is&nbsp;which&nbsp;node&nbsp;of&nbsp;so-far&nbsp;connected&nbsp;MST<BR>
+&nbsp;&nbsp;#&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;is&nbsp;closest&nbsp;to&nbsp;node&nbsp;j<BR>
+&nbsp;1&nbsp;&nbsp;&nbsp;For&nbsp;all&nbsp;nodes&nbsp;i<BR>
+&nbsp;2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;distance(i)&nbsp;=&nbsp;infinity&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;no&nbsp;connections<BR>
+&nbsp;3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;intree(i)&nbsp;=&nbsp;False&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;no&nbsp;nodes&nbsp;in&nbsp;tree<BR>
+&nbsp;4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;source(i)&nbsp;=&nbsp;nil&nbsp;<BR><BR>
+&nbsp;5&nbsp;&nbsp;&nbsp;treesize&nbsp;=&nbsp;1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;add&nbsp;node&nbsp;1&nbsp;to&nbsp;tree<BR>
+&nbsp;6&nbsp;&nbsp;&nbsp;treecost&nbsp;=&nbsp;0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<BR>
+&nbsp;7&nbsp;&nbsp;&nbsp;intree(1)&nbsp;=&nbsp;True<BR>
+&nbsp;8&nbsp;&nbsp;&nbsp;For&nbsp;all&nbsp;neighbors&nbsp;j&nbsp;of&nbsp;node&nbsp;1&nbsp;&nbsp;&nbsp;#&nbsp;update&nbsp;distances<BR>
+&nbsp;9&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;distance(j)&nbsp;=&nbsp;weight(1,j)<BR>
+10&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;source(j)&nbsp;=&nbsp;1&nbsp;<BR><BR>
+11&nbsp;&nbsp;&nbsp;while&nbsp;(treesize&nbsp;&lt;&nbsp;graphsize)<BR>
+12&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;find&nbsp;node&nbsp;with&nbsp;minimum&nbsp;distance&nbsp;to&nbsp;tree;&nbsp;call&nbsp;it&nbsp;node&nbsp;i<BR>
+13&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert&nbsp;(distance(i)&nbsp;!=&nbsp;infinity,&nbsp;"Graph&nbsp;Is&nbsp;Not&nbsp;Connected")&nbsp;<BR><BR>
+&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;add&nbsp;edge&nbsp;source(i),i&nbsp;to&nbsp;MST<BR>
+14&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;treesize&nbsp;=&nbsp;treesize&nbsp;+&nbsp;1<BR>
+15&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;treecost&nbsp;=&nbsp;treecost&nbsp;+&nbsp;distance(i)<BR>
+16&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;intree(i)&nbsp;=&nbsp;True&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;mark&nbsp;node&nbsp;i&nbsp;as&nbsp;in&nbsp;tree&nbsp;<BR><BR>
+&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;update&nbsp;distance&nbsp;after&nbsp;node&nbsp;i&nbsp;added<BR>
+17&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;all&nbsp;neighbors&nbsp;j&nbsp;of&nbsp;node&nbsp;i<BR>
+18&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;(distance(j)&nbsp;&gt;&nbsp;weight(i,j))<BR>
+19&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;distance(j)&nbsp;=&nbsp;weight(i,j)<BR>
+20&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;source(j)&nbsp;=&nbsp;i<BR>
+</FONT></TT>
+
+</P><P> Running time of this formulation is O(<I>N<SUP>2</SUP></I>).
+You can obtain O(<I>N</I> log <I>N</I>) for sparse graphs, but it
+normally isn't worth the extra programming time.
+
+</P></H4><H4>Execution Example
+
+<P> Consider the following graph with weighted edges:
+
+<BR><IMG src="./3.1.0 text Minimum Spanning Tree_files/mst1.gif"><BR>
+
+The goal is to find the minimal spanning tree. The algorithm will
+start at node 1 which connects to nodes 2, 6, and 3 with the weights
+shown on the edges:
+
+<BR><IMG src="./3.1.0 text Minimum Spanning Tree_files/mst2.gif"><BR>
+
+</P><CENTER>
+<TABLE border="1">
+<TBODY><TR><TD align="center">Node</TD> <TD align="center">distance</TD> <TD align="center">intree</TD> <TD align="center">source</TD></TR>
+<TR><TD align="center">1</TD> <TD align="center">infinity</TD> <TD align="center">True</TD> <TD align="center">nil</TD></TR>
+<TR><TD align="center">2</TD> <TD align="center">30</TD> <TD align="center">False</TD> <TD align="center">1</TD></TR>
+<TR><TD align="center">3</TD> <TD align="center">20</TD> <TD align="center">False</TD> <TD align="center">1</TD></TR>
+<TR><TD align="center">6</TD> <TD align="center">25</TD> <TD align="center">False</TD> <TD align="center">1</TD></TR>
+</TBODY></TABLE>
+</CENTER>
+
+<P>All nodes not shown have infinite distance,
+
+intree=False, and source=nil.
+
+</P><P>The smallest distance <B>for a node not in the tree</B> is 20,
+so the listed edge to node 3 is added to the tree:
+
+<BR><IMG src="./3.1.0 text Minimum Spanning Tree_files/mst3.gif"><BR>
+
+</P><CENTER>
+<TABLE border="1">
+<TBODY><TR>
+<TD align="center">Node</TD>  <TD align="center">distance</TD> 
+<TD align="center">intree</TD>  <TD align="center">source</TD> </TR>
+<TR>
+<TD align="center">1</TD>  <TD align="center">infinity</TD> 
+<TD align="center">True</TD>  <TD align="center">nil</TD> </TR>
+<TR>
+<TD align="center">2</TD>  <TD align="center"><B>9</B></TD> 
+<TD align="center">False</TD>  <TD align="center"><B>3</B></TD> </TR>
+<TR>
+<TD align="center">3</TD>  <TD align="center">20</TD> 
+<TD align="center"><B>True</B></TD>  <TD align="center">1</TD> </TR>
+<TR>
+<TD align="center">6</TD>  <TD align="center">25</TD> 
+<TD align="center">False</TD>  <TD align="center">1</TD> </TR>
+<TR>
+<TD align="center"><B>7</B></TD>  <TD align="center">7</TD> 
+<TD align="center">False</TD>  <TD align="center">3</TD> </TR>
+</TBODY></TABLE>
+</CENTER>
+
+<P> Note that node 3 is now `in the tree'. Node 2's distance changed
+to 9 while the source changed to 3.
+
+</P><P> The smallest distance is 7, so the edge from node 3 to node 7
+(coincidental name!) is connected:
+
+<BR><IMG src="./3.1.0 text Minimum Spanning Tree_files/mst4.gif"><BR>
+
+</P><CENTER>
+<TABLE border="1">
+<TBODY><TR>
+<TD align="center">Node</TD>  <TD align="center">distance</TD> 
+<TD align="center">intree</TD>  <TD align="center">source</TD> </TR>
+<TR>
+<TD align="center">1</TD>  <TD align="center">infinity</TD> 
+<TD align="center">True</TD>  <TD align="center">nil</TD> </TR>
+<TR>
+<TD align="center">2</TD>  <TD align="center">9</TD> 
+<TD align="center">False</TD>  <TD align="center">3</TD> </TR>
+<TR>
+<TD align="center">3</TD>  <TD align="center">20</TD> 
+<TD align="center">True</TD>  <TD align="center">1</TD> </TR>
+<TR>
+<TD align="center">6</TD>  <TD align="center"><B>10</B></TD> 
+<TD align="center">False</TD>  <TD align="center"><B>7</B></TD> </TR>
+<TR>
+<TD align="center">7</TD>  <TD align="center">7</TD> 
+<TD align="center"><B>True</B></TD>  <TD align="center">3</TD> </TR>
+</TBODY></TABLE>
+</CENTER>
+
+<P> Node 2's distance is 9, the smallest of any node not in the
+tree.  Adding the edge from node 3 to node 2 results in a graph
+that looks like this:
+
+<BR><IMG src="./3.1.0 text Minimum Spanning Tree_files/mst5.gif"><BR>
+
+</P><CENTER>
+<TABLE border="1">
+<TBODY><TR>
+<TD align="center">Node</TD>  <TD align="center">distance</TD> 
+<TD align="center">intree</TD>  <TD align="center">source</TD> </TR>
+<TR>
+<TD align="center">1</TD>  <TD align="center">infinity</TD> 
+<TD align="center">True</TD>  <TD align="center">nil</TD> </TR>
+<TR>
+<TD align="center">2</TD>  <TD align="center">9</TD> 
+<TD align="center"><B>True</B></TD>  <TD align="center">3</TD> </TR>
+<TR>
+<TD align="center">3</TD>  <TD align="center">20</TD> 
+<TD align="center">True</TD>  <TD align="center">1</TD> </TR>
+<TR>
+<TD align="center"><B>4</B></TD>  <TD align="center">21</TD> 
+<TD align="center">False</TD>  <TD align="center">2</TD> </TR>
+<TR>
+<TD align="center"><B>5</B></TD>  <TD align="center">9</TD> 
+<TD align="center">False</TD>  <TD align="center">2</TD> </TR>
+<TR>
+<TD align="center">6</TD>  <TD align="center">10</TD> 
+<TD align="center">False</TD>  <TD align="center">7</TD> </TR>
+<TR>
+<TD align="center">7</TD>  <TD align="center">7</TD> 
+<TD align="center">True</TD>  <TD align="center">3</TD> </TR>
+</TBODY></TABLE>
+</CENTER>
+
+<P>Add the edge from node 2 to node 5:
+
+<BR><IMG src="./3.1.0 text Minimum Spanning Tree_files/mst6.gif"><BR>
+
+</P><CENTER>
+<TABLE border="1">
+<TBODY><TR>
+<TD align="center">Node</TD>  <TD align="center">distance</TD> 
+<TD align="center">intree</TD>  <TD align="center">source</TD> </TR>
+<TR>
+<TD align="center">1</TD>  <TD align="center">infinity</TD> 
+<TD align="center">True</TD>  <TD align="center">nil</TD> </TR>
+<TR>
+<TD align="center">2</TD>  <TD align="center">9</TD> 
+<TD align="center"><B>True</B></TD>  <TD align="center">3</TD> </TR>
+<TR>
+<TD align="center">3</TD>  <TD align="center">20</TD> 
+<TD align="center">True</TD>  <TD align="center">1</TD> </TR>
+<TR>
+<TD align="center">4</TD>  <TD align="center"><B>8</B></TD> 
+<TD align="center">False</TD>  <TD align="center"><B>5</B></TD> </TR>
+<TR>
+<TD align="center">5</TD>  <TD align="center">9</TD> 
+<TD align="center"><B>True</B></TD>  <TD align="center">2</TD> </TR>
+<TR>
+<TD align="center">6</TD>  <TD align="center">10</TD> 
+<TD align="center">False</TD>  <TD align="center">7</TD> </TR>
+<TR>
+<TD align="center">7</TD>  <TD align="center">7</TD> 
+<TD align="center">True</TD>  <TD align="center">3</TD> </TR>
+<TR>
+<TD align="center"><B>8</B></TD>  <TD align="center">12</TD> 
+<TD align="center">False</TD>  <TD align="center">5</TD> </TR>
+</TBODY></TABLE>
+</CENTER>
+
+<P> Adding the edge from node 5 to node 4 is the next step:
+
+<BR><IMG src="./3.1.0 text Minimum Spanning Tree_files/mst7.gif"><BR>
+
+</P><CENTER>
+<TABLE border="1">
+<TBODY><TR>
+<TD align="center">Node</TD>  <TD align="center">distance</TD> 
+<TD align="center">intree</TD>  <TD align="center">source</TD> </TR>
+<TR>
+<TD align="center">1</TD>  <TD align="center">infinity</TD> 
+<TD align="center">True</TD>  <TD align="center">nil</TD> </TR>
+<TR>
+<TD align="center">2</TD>  <TD align="center">9</TD> 
+<TD align="center">True</TD>  <TD align="center">3</TD> </TR>
+<TR>
+<TD align="center">3</TD>  <TD align="center">20</TD> 
+<TD align="center">True</TD>  <TD align="center">1</TD> </TR>
+<TR>
+<TD align="center">4</TD>  <TD align="center">8</TD> 
+<TD align="center"><B>True</B></TD>  <TD align="center">5</TD> </TR>
+<TR>
+<TD align="center">5</TD>  <TD align="center">9</TD> 
+<TD align="center">True</TD>  <TD align="center">2</TD> </TR>
+<TR>
+<TD align="center">6</TD>  <TD align="center">10</TD> 
+<TD align="center">False</TD>  <TD align="center">7</TD> </TR>
+<TR>
+<TD align="center">7</TD>  <TD align="center">7</TD> 
+<TD align="center">True</TD>  <TD align="center">3</TD> </TR>
+<TR>
+<TD align="center"><B>8</B></TD>  <TD align="center">12</TD> 
+<TD align="center">False</TD>  <TD align="center">5</TD> </TR>
+</TBODY></TABLE>
+</CENTER>
+
+Next up: edge connecting nodes 6 and 7:
+
+<BR><IMG src="./3.1.0 text Minimum Spanning Tree_files/mst8.gif"><BR>
+
+<CENTER>
+<TABLE border="1">
+<TBODY><TR>
+<TD align="center">Node</TD>  <TD align="center">distance</TD> 
+<TD align="center">intree</TD>  <TD align="center">source</TD> </TR>
+<TR>
+<TD align="center">1</TD>  <TD align="center">infinity</TD> 
+<TD align="center">True</TD>  <TD align="center">nil</TD> </TR>
+<TR>
+<TD align="center">2</TD>  <TD align="center">9</TD> 
+<TD align="center">True</TD>  <TD align="center">3</TD> </TR>
+<TR>
+<TD align="center">3</TD>  <TD align="center">20</TD> 
+<TD align="center">True</TD>  <TD align="center">1</TD> </TR>
+<TR>
+<TD align="center">4</TD>  <TD align="center">8</TD> 
+<TD align="center">True</TD>  <TD align="center">5</TD> </TR>
+<TR>
+<TD align="center">5</TD>  <TD align="center">9</TD> 
+<TD align="center">True</TD>  <TD align="center">2</TD> </TR>
+<TR>
+<TD align="center">6</TD>  <TD align="center">10</TD> 
+<TD align="center"><B>True</B></TD>  <TD align="center">7</TD> </TR>
+<TR>
+<TD align="center">7</TD>  <TD align="center">7</TD> 
+<TD align="center">True</TD>  <TD align="center">3</TD> </TR>
+<TR>
+<TD align="center">8</TD>  <TD align="center"><B>11</B></TD> 
+<TD align="center">False</TD>  <TD align="center"><B>6</B></TD> </TR>
+</TBODY></TABLE>
+</CENTER>
+
+<P> Finally, add the edge from node 6 to node 8:
+
+<BR><IMG src="./3.1.0 text Minimum Spanning Tree_files/mst9.gif"><BR>
+
+</P><CENTER>
+<TABLE border="1">
+<TBODY><TR>
+<TD align="center">Node</TD>  <TD align="center">distance</TD> 
+<TD align="center">intree</TD>  <TD align="center">source</TD> </TR>
+<TR>
+<TD align="center">1</TD>  <TD align="center">infinity</TD> 
+<TD align="center">True</TD>  <TD align="center">nil</TD> </TR>
+<TR>
+<TD align="center">2</TD>  <TD align="center">9</TD> 
+<TD align="center">True</TD>  <TD align="center">3</TD> </TR>
+<TR>
+<TD align="center">3</TD>  <TD align="center">20</TD> 
+<TD align="center">True</TD>  <TD align="center">1</TD> </TR>
+<TR>
+<TD align="center">4</TD>  <TD align="center">8</TD> 
+<TD align="center">True</TD>  <TD align="center">5</TD> </TR>
+<TR>
+<TD align="center">5</TD>  <TD align="center">9</TD> 
+<TD align="center">True</TD>  <TD align="center">2</TD> </TR>
+<TR>
+<TD align="center">6</TD>  <TD align="center">10</TD> 
+<TD align="center">True</TD>  <TD align="center">7</TD> </TR>
+<TR>
+<TD align="center">7</TD>  <TD align="center">7</TD> 
+<TD align="center">True</TD>  <TD align="center">3</TD> </TR>
+<TR>
+<TD align="center">8</TD>  <TD align="center">11</TD> 
+<TD align="center"><B>True</B></TD>  <TD align="center">6</TD> </TR>
+</TBODY></TABLE>
+</CENTER>
+
+<P>And the minimal spanning tree is easily seen here.
+
+</P></H4><H4> Dangerous Curve 
+
+<P> Understand that changing any element in a tree requires complete
+recalculation - incremental recalculation of a spanning tree when
+changing isolated nodes, for example, is not generally possible.
+
+</P></H4><H4> Problem Cues 
+
+<P> If the problem mentions wanting an optimal, connected sub-graph,
+a minimum cost way to connect a system together, or a path between
+any two parts of the system, it is very likely to be a minimum
+spanning tree problem.
+
+</P></H4><H4> Extensions 
+
+<P> If you subject the tree to any other constraints (no two nodes
+may be very far away or the average distance must be low), this
+algorithm breaks down and altering the program to handle such
+constraints is very difficult.
+
+</P><P> There is obviously no problem with multiple edges between two nodes (you
+ignore all but the smallest weight).
+
+</P><P> Prim's algorithm does not extend to directed graphs (where you
+want strong connectedness), either.
+
+</P></H4><H4>Sample Problems  
+
+</H4><H5>Package Routing</H5>
+
+<P> Given: a set of locations of cities and the cost of connecting
+each pair of cities for a shipping company. Find the cheapest set
+of pairs of cities such that a package can be routed from any city
+to any other city.
+
+</P><H5>Highway Building</H5>
+
+<P> Lower Slobbovia has made the plunge and has decided to connect
+all their cities with roads. Of course, being cheap, they want to
+spend as little money as possible. The cost of a highway is linearly
+proportional to its length. Given the x,y coordinates of the cities
+in L.S., find the cheapest way to interconnect the cities.
+
+</P><H5> Bovile Phones (abridged) [USACO Training Camp 1998, Contest 2] </H5>
+
+<P> Given: a collection of stationary cows and haystacks in the
+field along with a cost function for connecting two (arbitrary)
+locations. Using only the haystacks and cows, calculate which
+haystacks one should include in a network to minimize the total
+cost.
+
+</P><P> Analysis: For each possible set of haystacks (i.e., about 2
+<SUP> <I>n</I></SUP> sets), calculate the cost of the minimal
+spanning tree of the haystacks in that set along with all the cows.
+Find the combination of haystacks that minimizes the cost.
+</P></DIV>
+<BR>
+<CENTER>
+<A href="http://ace.delos.com/usacogate?a=qytLrJG9z1o">USACO Gateway</A> | <A href="mailto:kolstad@ace.delos.com">Comment or Question</A>
+</CENTER>
+
+</FONT></BODY></HTML>
