@@ -1,0 +1,78 @@
+
+<!-- saved from url=(0055)http://ace.delos.com/usacoprob2?a=qytLrJG9z1o&S=agrinet -->
+<HTML><HEAD><META http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"> <TITLE>Problem 102: Agri-Net</TITLE> </HEAD><BODY background="./3.1.1 Problem 102  Agri-Net_files/bg3.jpg">
+<IMG src="./3.1.1 Problem 102  Agri-Net_files/cow1.jpg" width="742" height="118">
+<CENTER>
+<B><FONT size="7">Agri-Net</FONT></B><BR>
+<B>Russ Cox</B>
+</CENTER>
+
+<P> Farmer John has been elected mayor of his town!  One of his campaign
+promises was to bring internet connectivity to all farms in the area.
+He needs your help, of course.
+
+</P><P> Farmer John ordered a high speed connection for his farm and is
+going to share his connectivity with the other farmers.  To minimize
+cost, he wants to lay the minimum amount of optical fiber to connect
+his farm to all the other farms.
+
+</P><P> Given a list of how much fiber it takes to connect each pair of
+farms, you must find the minimum amount of fiber needed to connect them
+all together.  Each farm must connect to some other farm such that a
+packet can flow from any one farm to any other farm.
+
+</P><P>The distance between any two farms will not exceed 100,000.
+
+
+</P><H3>PROGRAM NAME: agrinet</H3>
+
+<H3>INPUT FORMAT</H3>
+
+<TABLE border="1">
+<TBODY><TR> <TD> Line 1: </TD> <TD> The number of farms, N (3 &lt;= N &lt;=
+		             100).  </TD> </TR>
+<TR> <TD> Line 2..end: </TD> <TD>
+The subsequent lines contain the N x N connectivity matrix, where each
+element shows the distance from on farm to another. Logically, they are
+N lines of N space-separated integers.  Physically, they are limited in
+length to 80 characters, so some lines continue onto others.  Of course,
+the diagonal will be 0, since the distance from farm i to itself is not
+interesting for this problem.
+</TD> </TR>
+
+</TBODY></TABLE>
+
+<H3>SAMPLE INPUT (file agrinet.in) </H3>
+
+<PRE>4
+0 4 9 21
+4 0 8 17
+9 8 0 16
+21 17 16 0
+</PRE>
+
+<H3>OUTPUT FORMAT</H3>
+
+<P>The single output contains the integer length that is the sum of the
+minimum length of fiber required to connect the entire set of farms.
+
+</P><H3>SAMPLE OUTPUT (file agrinet.out)</H3>
+
+<PRE>28
+</PRE>
+<BR>
+<HR>
+<FORM action="http://ace.delos.com/upload3" enctype="multipart/form-data" method="POST">
+<B>Submission file Name:</B> <INPUT type="file" name="filename">
+<INPUT type="submit" value="Send it in!">
+<INPUT type="hidden" name="a" value="qytLrJG9z1o">
+<INPUT type="hidden" name="S" value="agrinet">
+</FORM>
+
+<CENTER>
+<A href="http://ace.delos.com/usacogate?a=qytLrJG9z1o"> USACO Gateway </A> &nbsp;| &nbsp;
+<A href="mailto:kolstad@ace.delos.com">Comment or Question </A>
+</CENTER>
+
+
+</BODY></HTML>

@@ -1,0 +1,97 @@
+
+<!-- saved from url=(0055)http://ace.delos.com/usacoprob2?a=qytLrJG9z1o&S=contact -->
+<HTML><HEAD><META http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"> <TITLE>Problem 11: Contact</TITLE> </HEAD><BODY background="./3.1.5 Problem 11  Contact_files/bg3.jpg">
+<IMG src="./3.1.5 Problem 11  Contact_files/cow1.jpg" width="742" height="118">
+<CENTER>
+<B><FONT size="7">Contact</FONT></B><BR>
+<B>IOI'98</B>
+</CENTER>
+
+<P>The cows have developed a new interest in scanning the universe
+outside their farm with radiotelescopes.  Recently, they noticed a very
+curious microwave pulsing emission sent right from the centre of the
+galaxy. They wish to know if the emission is transmitted by some
+extraterrestrial form of intelligent life or if it is nothing but the
+usual heartbeat of the stars.
+
+</P><P>Help the cows to find the Truth by providing a tool to analyze bit
+patterns in the files they record. They are seeking bit patterns of
+length <B>A</B> through <B>B</B> inclusive (1 &lt;= A &lt;= B &lt;= 12)
+that repeat themselves most often in each day's data file. They are
+looking for the patterns that repeat themselves most often.  An input
+limit tells how many of the most frequent patterns to output.
+
+</P><P> Pattern occurrences may overlap, and only patterns that occur at
+least once are taken into account.
+
+</P><H3>PROGRAM NAME: contact</H3>
+
+<H3>INPUT FORMAT</H3>
+
+<TABLE border="1">
+<TBODY><TR> <TD> Line 1: </TD> <TD>Three space-separated integers: A, B, N; (1
+&lt;= N &lt; 50) </TD>
+</TR><TR> <TD> Lines 2 and beyond: </TD> <TD>A sequence of as many as 200,000
+characters, all 0 or 1; the characters are presented 80 per line, except
+potentially the last line.</TD>
+</TR></TBODY></TABLE>
+
+<H3>SAMPLE INPUT (file contact.in) </H3>
+
+<PRE>2 4 10
+01010010010001000111101100001010011001111000010010011110010000000
+
+</PRE>
+<P>In this example, pattern 100 occurs 12 times, and pattern 1000 occurs
+5 times. The most frequent pattern is 00, with 23 occurrences.
+
+</P><H3>OUTPUT FORMAT</H3>
+
+<P>Lines that list the N highest frequencies (in descending order of
+frequency) along with the patterns that occur in those frequencies.
+Order those patterns by shortest-to-longest and increasing binary number
+for those of the same frequency.  If fewer than N highest frequencies
+are available, print only those that are.
+
+</P><P>Print the frequency alone by itself on a line.  Then print the actual
+patterns space separated, six to a line (unless fewer than six remain).
+
+</P><H3>SAMPLE OUTPUT (file contact.out)</H3>
+
+<PRE>23
+00
+15
+01 10
+12
+100
+11
+11 000 001
+10
+010
+8
+0100
+7
+0010 1001
+6
+111 0000
+5
+011 110 1000
+4
+0001 0011 1100
+</PRE>
+<BR>
+<HR>
+<FORM action="http://ace.delos.com/upload3" enctype="multipart/form-data" method="POST">
+<B>Submission file Name:</B> <INPUT type="file" name="filename">
+<INPUT type="submit" value="Send it in!">
+<INPUT type="hidden" name="a" value="qytLrJG9z1o">
+<INPUT type="hidden" name="S" value="contact">
+</FORM>
+
+<CENTER>
+<A href="http://ace.delos.com/usacogate?a=qytLrJG9z1o"> USACO Gateway </A> &nbsp;| &nbsp;
+<A href="mailto:kolstad@ace.delos.com">Comment or Question </A>
+</CENTER>
+
+
+</BODY></HTML>
