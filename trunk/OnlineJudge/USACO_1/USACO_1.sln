@@ -60,6 +60,8 @@ Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "htmldocs", "htmldocs\", "{C
 		VWDPort = "52458"
 	EndProjectSection
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "AgriNet", "AgriNet\AgriNet.vcproj", "{0AE99F70-8839-4409-973E-4CA9F06FC987}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -250,6 +252,16 @@ Global
 		{CE510604-4DF9-420E-AEE7-415D60B6DB71}.Release|Mixed Platforms.ActiveCfg = Debug|Any CPU
 		{CE510604-4DF9-420E-AEE7-415D60B6DB71}.Release|Mixed Platforms.Build.0 = Debug|Any CPU
 		{CE510604-4DF9-420E-AEE7-415D60B6DB71}.Release|Win32.ActiveCfg = Debug|Any CPU
+		{0AE99F70-8839-4409-973E-4CA9F06FC987}.Debug|Any CPU.ActiveCfg = Debug|Win32
+		{0AE99F70-8839-4409-973E-4CA9F06FC987}.Debug|Mixed Platforms.ActiveCfg = Debug|Win32
+		{0AE99F70-8839-4409-973E-4CA9F06FC987}.Debug|Mixed Platforms.Build.0 = Debug|Win32
+		{0AE99F70-8839-4409-973E-4CA9F06FC987}.Debug|Win32.ActiveCfg = Debug|Win32
+		{0AE99F70-8839-4409-973E-4CA9F06FC987}.Debug|Win32.Build.0 = Debug|Win32
+		{0AE99F70-8839-4409-973E-4CA9F06FC987}.Release|Any CPU.ActiveCfg = Release|Win32
+		{0AE99F70-8839-4409-973E-4CA9F06FC987}.Release|Mixed Platforms.ActiveCfg = Release|Win32
+		{0AE99F70-8839-4409-973E-4CA9F06FC987}.Release|Mixed Platforms.Build.0 = Release|Win32
+		{0AE99F70-8839-4409-973E-4CA9F06FC987}.Release|Win32.ActiveCfg = Release|Win32
+		{0AE99F70-8839-4409-973E-4CA9F06FC987}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
