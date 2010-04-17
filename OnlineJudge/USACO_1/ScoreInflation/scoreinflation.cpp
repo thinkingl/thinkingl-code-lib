@@ -117,15 +117,15 @@ int main()
 		u32 lastPoint = 0;
 		for ( int nNum=0; nNum < nCategoryNum; ++ nNum )
 		{
-			if ( nTime - arCategoryTime[nNum] < 0 )
+			if ( nTime - arCategoryTime[nNum] < 0 )	// 总时间不足以放下这种题目。
 			{
 				arMaxPoint[nTime] = lastPoint;
 			}
 			else
 			{
 				arMaxPoint[nTime] = max(
-					arMaxPoint[ nTime - arCategoryTime[nNum] ] + arCategoryPoint[ nNum ] ,
-					lastPoint
+					arMaxPoint[ nTime - arCategoryTime[nNum] ] + arCategoryPoint[ nNum ] ,	// 如果当前这种题目参与的最大分数。
+					lastPoint	// 如果当前这种题目不参与的最大分数，就是上次的分数。
 					);
 			}
 			lastPoint = arMaxPoint[ nTime ];
