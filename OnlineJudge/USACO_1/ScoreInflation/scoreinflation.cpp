@@ -40,7 +40,13 @@ SAMPLE OUTPUT (file inflate.out)
 
 /** 
 思路：
-*	
+*	之前做过至少一道背包问题了，但我没有意识到。直到这道题，我绞尽脑汁想，突然灵光一现，想到了背包问题。
+	和其它背包问题一样，动态规划可以解决。
+	如果用 M（i，t）来表示用i个catalogies中的问题凑t分钟的比赛能得到的最高分，那么
+	M（i+1,t） = max{ M（i+1， t- Time（i+1） ） + Points（i+1）） ， M（i，t） }
+	因为，增加一个category后有两种情况，一种是新的category能参与，则至少有一个，是前面的表达式。
+	另一种情况是新的第（i+1）个category不参与，则由前i个组成t分钟，是后面的表达式。
+	两种情况中大的那个，就是用i+1种catalogies组成不少于t分钟题目的最大分数。
 */
 #include <stdio.h>
 #include <stdlib.h>
@@ -92,7 +98,41 @@ int main()
 		return 0;
 	}
 
+	int nContentTime, nCategoryNum;
+	fin >> nContentTime >> nCategoryNum;
 
+	const int MAX_CATEGORY_NUM = 10000+1;
+	const int MAX_TIME = 10000+1;
+	int arCategoryTime[ MAX_CATEGORY_NUM ];
+	int arCategoryPoint[ MAX_CATEGORY_NUM ];
+	for ( int i=0; i<nCategoryNum; ++i )
+	{
+		fin >> arCategoryPoint[i] >> arCategoryTime[i];
+	}
+
+	u32 arMaxPoint[MAX_CATEGORY_NUM] = { 0 };
+	
+	for ( int nTime = 0; nTime <= nContentTime; ++nTime )
+	{
+		u32 lastPoint = 0;
+		for ( int nNum=0; nNum < nCategoryNum; ++ nNum )
+		{
+			if ( nTime - arCategoryTime[nNum] < 0 )
+			{
+				arMaxPoint[nTime] = lastPoint;
+			}
+			else
+			{
+				arMaxPoint[nTime] = max(
+					arMaxPoint[ nTime - arCategoryTime[nNum] ] + arCategoryPoint[ nNum ] ,
+					lastPoint
+					);
+			}
+			lastPoint = arMaxPoint[ nTime ];
+		}
+	}
+
+	fout << arMaxPoint[ nContentTime ] << endl;
 
 	fin.close();
 	fout.close();
