@@ -64,6 +64,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "AgriNet", "AgriNet\AgriNet.
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ScoreInflation", "ScoreInflation\ScoreInflation.vcproj", "{363D8F55-9D0E-4FBE-B42D-0868348557E5}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "HumbleNumbers", "HumbleNumbers\HumbleNumbers.vcproj", "{229AA6A8-3C9A-46A9-8205-2DB01F907FED}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -273,6 +275,16 @@ Global
 		{363D8F55-9D0E-4FBE-B42D-0868348557E5}.Release|Mixed Platforms.Build.0 = Release|Win32
 		{363D8F55-9D0E-4FBE-B42D-0868348557E5}.Release|Win32.ActiveCfg = Release|Win32
 		{363D8F55-9D0E-4FBE-B42D-0868348557E5}.Release|Win32.Build.0 = Release|Win32
+		{229AA6A8-3C9A-46A9-8205-2DB01F907FED}.Debug|Any CPU.ActiveCfg = Debug|Win32
+		{229AA6A8-3C9A-46A9-8205-2DB01F907FED}.Debug|Mixed Platforms.ActiveCfg = Debug|Win32
+		{229AA6A8-3C9A-46A9-8205-2DB01F907FED}.Debug|Mixed Platforms.Build.0 = Debug|Win32
+		{229AA6A8-3C9A-46A9-8205-2DB01F907FED}.Debug|Win32.ActiveCfg = Debug|Win32
+		{229AA6A8-3C9A-46A9-8205-2DB01F907FED}.Debug|Win32.Build.0 = Debug|Win32
+		{229AA6A8-3C9A-46A9-8205-2DB01F907FED}.Release|Any CPU.ActiveCfg = Release|Win32
+		{229AA6A8-3C9A-46A9-8205-2DB01F907FED}.Release|Mixed Platforms.ActiveCfg = Release|Win32
+		{229AA6A8-3C9A-46A9-8205-2DB01F907FED}.Release|Mixed Platforms.Build.0 = Release|Win32
+		{229AA6A8-3C9A-46A9-8205-2DB01F907FED}.Release|Win32.ActiveCfg = Release|Win32
+		{229AA6A8-3C9A-46A9-8205-2DB01F907FED}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
