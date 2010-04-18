@@ -61,7 +61,16 @@ SAMPLE OUTPUT (file rect1.out)
 
 /** 
 思路：
-*	
+*	模拟过程。
+*	每次放一个新的颜色的时候，将下面的方块分割成小的方块。
++--------+      +-+--+--+
+|        |      | |2 |  |
+|        |      + +--+  |
+|  +-+   |  --> | |  |  |
+|  +-+   |      |1|  |3 |
+|        |      | +--+  |
+|        |      | | 4|  |
++--------+      +-+--+--+
 */
 #include <stdio.h>
 #include <stdlib.h>
@@ -102,18 +111,35 @@ class CRectangle
 {
 //	CRect ;
 public:
+	typedef std::vector< CRectangle > TRectList;
+
 	CRectangle();
-	CRectangle( int left, int bottom, int right, int top );
+	CRectangle( int left, int bottom, int right, int top, int nColor );
 	/** 求面积。 */
 	int Area() const;
+
+	/** 分割一个方框。
+	*	将两个方块的交集部分从目标方块中挖去，然后将剩余部分旋转切割成多个方块。
+	*/
+	bool CutRect( const CRectangle& another, TRectList& tRectList );
+
+	/** 是否相交。 */
+	bool HasIntersection( const CRectangle& another );
+
+	int GetColor() const
+	{
+		return m_nColor;
+	}
+
 	/** 求交集，交集肯定也是个矩形。 */
-	CRectangle IntersectionRect( const CRectangle& another );
+//	BOOL IntersectionRect( const CRectangle& another ,CRectangle& intersection );
 protected:
 private:
 	int m_nLeft;
 	int m_nBottom;
 	int m_nRight;
 	int m_nTop;
+	int m_nColor;
 };
 
 CRectangle::CRectangle()
@@ -122,13 +148,20 @@ CRectangle::CRectangle()
 	this->m_nRight = 0;
 	this->m_nBottom = 0;
 	this->m_nTop = 0;
+	this->m_nColor = 0;
 }
-CRectangle::CRectangle(int left, int bottom, int right, int top)
+CRectangle::CRectangle(int left, int bottom, int right, int top, int color)
 {
 	this->m_nLeft = left;
 	this->m_nBottom = bottom;
 	this->m_nRight = right;
 	this->m_nTop = top;
+	this->m_nColor = color;
+
+	if ( left == right || bottom == top )
+	{
+		int dfw = 0;
+	}
 }
 
 int CRectangle::Area() const
@@ -136,14 +169,66 @@ int CRectangle::Area() const
 	return (m_nRight-m_nLeft)*(m_nTop-m_nBottom);
 }
 
-CRectangle CRectangle::IntersectionRect( const CRectangle& another )
+bool CRectangle::HasIntersection( const CRectangle& another )
 {
-	int nLeft = max( this->m_nLeft, another.m_nLeft );
-	int nRight = min( this->m_nRight, another.m_nRight );
-	int nTop = min( this->m_nTop, another.m_nTop );
-	int nBottom = max( this->m_nBottom, another.m_nBottom );
-	return CRectangle( nLeft, nBottom, nRight, nTop );
+	// 注意！在这一题中，相等时也是不交叉的！
+	bool bx = ( this->m_nLeft >= another.m_nRight ) || ( this->m_nRight <= another.m_nLeft );	// 水平没有交叉。
+	bool by = ( this->m_nBottom >= another.m_nTop ) || ( this->m_nTop <= another.m_nBottom );	// 垂直没有交叉。
+
+	if ( bx || by )
+	{
+		return false;
+	}
+	else
+	{
+		return true;
+	}
 }
+
+bool CRectangle::CutRect(const CRectangle &another, CRectangle::TRectList &tRectList)
+{
+	if( this->HasIntersection( another ) )
+	{
+		// 旋转切割。
+
+		// 左边，从上到下。
+		if ( this->m_nLeft > another.m_nLeft && this->m_nLeft < another.m_nRight )
+		{
+			tRectList.push_back( CRectangle( another.m_nLeft, another.m_nBottom, this->m_nLeft, another.m_nTop, another.m_nColor ) );
+		}
+
+		// 上边，从左边上面切过的地方到右头。
+		if ( this->m_nTop > another.m_nBottom && this->m_nTop < another.m_nTop )
+		{
+			int nLeft = max( this->m_nLeft, another.m_nLeft );
+			tRectList.push_back( CRectangle( nLeft, this->m_nTop, another.m_nRight, another.m_nTop, another.m_nColor ) );
+		}
+
+		// 右边，从上边切过的地方到下头。
+		if ( this->m_nRight > another.m_nLeft && this->m_nRight < another.m_nRight )
+		{
+			int nTop = min( this->m_nTop, another.m_nTop );
+			tRectList.push_back( CRectangle( this->m_nRight, another.m_nBottom, another.m_nRight, nTop, another.m_nColor) );
+		}
+
+		// 下边，从左边切过的地方到右边切过的地方。
+		if ( this->m_nBottom > another.m_nBottom && this->m_nBottom < another.m_nTop )
+		{
+			int nLeft = max( this->m_nLeft, another.m_nLeft );
+			int nRight = min( this->m_nRight, another.m_nRight );
+			tRectList.push_back( CRectangle( nLeft, another.m_nBottom, nRight, this->m_nBottom, another.m_nColor ) );
+		}
+
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+	
+}
+
+
 
 int main()
 {
@@ -164,46 +249,58 @@ int main()
 	int nPaperWide, nPaperLong, nColorNum;
 	fin >> nPaperWide >> nPaperLong >> nColorNum;
 
-	CRectangle arRect[ MAX_COLOR_NUM ];
-	arRect[0] = CRectangle( 0, 0, nPaperWide, nPaperLong );
+	CRectangle::TRectList tPaintList;
+	tPaintList.push_back( CRectangle( 0, 0, nPaperWide, nPaperLong, 1 ) );	// 白色底色。
 
+	// 其它颜色。
 	for ( int i=0; i<nColorNum; ++i )
 	{
 		int nLeft, nBottom, nRight, nTop, nCol;
 		fin>>nLeft>>nBottom>>nRight>>nTop>>nCol;
-		arRect[nCol-1] = CRectangle( nLeft, nBottom, nRight, nTop );
+		tPaintList.push_back( CRectangle( nLeft, nBottom, nRight, nTop, nCol ) );
 	}
 
-	// 加上白色。
-	nColorNum ++;
-
-	// 求取面积。
-	int arArea[MAX_COLOR_NUM] = {0};
-	for ( int i=0; i<nColorNum; ++i )
+	CRectangle::TRectList tResultRectangleList;
+	
+	// 一层层向上加层。
+	for ( int i=0; i<tPaintList.size(); ++i )
 	{
-		arArea[i] = arRect[i].Area();
-	}
-
-
-
-	// 求取所有颜色两两之间的交集面积。
-	int arAreaIntersection[ MAX_COLOR_NUM ][MAX_COLOR_NUM];
-	for ( int i=0; i<nColorNum; ++i )
-	{
-		for ( int k=0; k<nColorNum; ++k )
+		CRectangle& curColorRect = tPaintList[i];
+		CRectangle::TRectList tNewRectList;
+		for ( int k=0; k<tResultRectangleList.size(); ++k )
 		{
-			CRectangle rcIntersection = arRect[i].IntersectionRect( arRect[k] );
-			arAreaIntersection[i][k] = rcIntersection.Area();
+			// 用当前颜色切割前面的所有颜色区域。
+			// 同时把当前颜色覆盖的部分从中挖去。			
+			CRectangle::TRectList tList;
+			if ( curColorRect.CutRect( tResultRectangleList[k], tList ) )
+			{
+				tNewRectList.insert( tNewRectList.end(), tList.begin(), tList.end() );	// 之前的区域被分割成几个小的区域。
+			}
+			else
+			{
+				tNewRectList.push_back( tResultRectangleList[k] );	// 之前的区域没有被分割，保持原样。
+			}
+			
 		}
+		// 更新当前所有方块列表。
+		tResultRectangleList = tNewRectList;
+		// 当前颜色区域在最上面，完整的。		
+		tResultRectangleList.push_back( curColorRect );	// 加入所有颜色列表中。
 	}
 
-	// 求取所有颜色的面积。
-	// 颜色面积 = 原始面积 - 所有在它之上
-	int arColorArea[MAX_COLOR_NUM] = {0};
-	memcpy( arColorArea, arArea, sizeof( arColorArea ) );
-	for ( int i=0; i<nColorNum; ++i )
+	vector<int> tArea( MAX_COLOR_NUM+1, 0 );
+	for ( int i=0; i<tResultRectangleList.size(); ++i )
 	{
+		int nColor = tResultRectangleList[i].GetColor();
+		tArea[ nColor ] += tResultRectangleList[i].Area();
+	}
 
+	for ( int i=0; i<tArea.size(); ++i )
+	{
+		if ( tArea[i] > 0 )
+		{
+			fout << i << " " << tArea[i] << endl;
+		}
 	}
 
 	fin.close();
