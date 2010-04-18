@@ -146,8 +146,7 @@ int main()
 				if ( iterEnd != iter )
 				{
 					tNumSet.erase( iterEnd );
-				}
-				
+				}				
 			}
 			
 		}
