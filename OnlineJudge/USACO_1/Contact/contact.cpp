@@ -94,8 +94,39 @@ typedef unsigned long u32;
 #define THINKINGL 1
 #endif
 
+class CMyString 
+{
+public:
+	CMyString( )
+	{
+
+	}
+
+	CMyString( const char * sz ) 
+	{
+		m_str = sz;
+	}
 
 
+	bool operator < ( const CMyString& another ) const
+	{
+		if ( this->m_str.size() == another.m_str.size() )
+		{
+			return this->m_str < another.m_str;
+		}
+		else
+		{
+			return this->m_str.size() < another.m_str.size();
+		}
+	}
+
+	const string& GetStr() const
+	{
+		return m_str;
+	}
+
+	string m_str;
+};
 int main()
 {
 	string strProblemName = "contact";
@@ -110,7 +141,123 @@ int main()
 		return 0;
 	}
 
+	int nMinLen, nMaxLen, nNeededNum;
+	fin >> nMinLen >> nMaxLen >> nNeededNum;
 
+	const int MAX_CHARACTERS_NUM = 200000;
+	char arCharacterSeq[ MAX_CHARACTERS_NUM+1 ] = { 0 };
+
+	int nSeqLen = 0;
+	while( !fin.eof() )
+	{
+		fin >> arCharacterSeq[ nSeqLen ];
+		++nSeqLen;
+	}
+
+	const int MAX_PATTERN_LEN = 12;
+	const int MAX_SEQUENCE_NUM = 1 << MAX_PATTERN_LEN;
+	int nFrequence[ MAX_SEQUENCE_NUM+1 ][ MAX_PATTERN_LEN+1 ];	
+	memset( nFrequence, 0, sizeof( nFrequence ) );
+
+	for ( int nParternLen = nMinLen; nParternLen <= nMaxLen; ++nParternLen )
+	{
+		if ( arCharacterSeq[ nParternLen - 1 ] == 0 )
+		{
+			break;
+		}
+
+		int nNum = 0;
+		for ( int i=0; i<nParternLen; ++i )
+		{
+			if ( arCharacterSeq[i] == '1' )
+			{
+				nNum += ( 1 << ( nParternLen - i - 1 ) );
+			}
+		}
+
+
+		int nCursor = nParternLen;
+		
+		int nMask = 0;
+		for ( int i=0; i<nParternLen; ++i )
+		{
+			nMask += 1 << i;
+		}
+		// 一直处理到队列末尾。
+		while( 1 )
+		{
+			// 为对应数字计数。
+			nFrequence[ nNum ][nParternLen] ++;
+
+			if ( arCharacterSeq[ nCursor ] == 0 )
+			{
+				break;	// 到了末尾。
+			}
+
+			// 求nCursor对应数字为结尾的字串表示的数字。
+			nNum <<= 1;
+			nNum += ( arCharacterSeq[ nCursor ] - '0' );
+			nNum &= nMask;
+
+			// 下一个数字。
+			++ nCursor;
+		}
+	}
+
+	// 整理结果，排序。
+	typedef std::set< CMyString > TStringSet;
+	typedef std::map< int, TStringSet > TNumCountTable;
+
+	TNumCountTable tNumTable;
+
+	for ( int i=0; i<=nMaxLen; ++i )
+	{
+		for ( int k=0; k<MAX_SEQUENCE_NUM; ++k )
+		{
+			int nNum = nFrequence[k][i];
+			if ( nNum > 0 )
+			{
+				char szNum[ MAX_PATTERN_LEN + 1 ] = { 0 };
+				for ( int j=0; j<i; ++j )
+				{
+					szNum[j] = '0' + ( 1 & ( k >> ( i - j - 1 ) ) );
+				}
+				tNumTable[ nNum ].insert( szNum );
+			}
+		}
+	}
+
+	// 输出结果。
+
+	int nCount = 0;
+	TNumCountTable::iterator iter = tNumTable.end();
+	while( nCount < nNeededNum && iter != tNumTable.begin() )
+	{
+		--iter;
+
+		fout << iter->first << endl;
+		
+		int nTmpCount = iter->second.size();
+		int nToSix = 0;
+		for ( TStringSet::iterator iterStr = iter->second.begin(); 
+			iterStr != iter->second.end(); ++iterStr, --nTmpCount )
+		{
+			++ nToSix;
+
+			fout << iterStr->GetStr() ;
+			if ( nTmpCount > 1 && nToSix < 6 ) // 每行最多6个。
+			{
+				fout << " ";
+			}
+			else
+			{
+				fout << endl;
+				nToSix = 0;
+			}
+		}
+
+		nCount ++;
+	}
 
 	fin.close();
 	fout.close();
