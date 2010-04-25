@@ -78,6 +78,25 @@ typedef unsigned long u32;
 #define THINKINGL 1
 #endif
 
+/** 最大邮票数。 */
+const int MAX_STAMPS_NUM = 200;
+/** 最多面值数目。 */
+const int MAX_STAMP_VALUE_NUM = 50;
+/** 最大面值金额。 */
+const int MAX_STAMP_VALUE = 10000;
+
+/** 邮票面值表。 */
+static u32 arStampValue[MAX_STAMP_VALUE_NUM] = { -1 };
+
+static 
+/** 获取可能的组合数目。 
+*	用不多于 nMaxStampNum 张面值是上面面值表中1到nStampValueNum面值的邮票，凑出nSumValue的面值和来，一共可能有多少中组合。
+*	Dynamic Program。用递归的方式来实现，虽然效率不如循环高，但（我觉得）理解起来更容易。
+*/
+int GetCount( int nMaxStampNum, int nStampValueNum, int nSumValue )
+{
+	return 0;
+}
 
 int main()
 {
