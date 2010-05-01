@@ -1,0 +1,249 @@
+
+<!-- saved from url=(0052)http://ace.delos.com/usacotext2?a=EbDD8MbixJI&S=knap -->
+<HTML><HEAD><META http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"><TITLE>Knapsack Problems
+</TITLE>
+</HEAD><BODY bgcolor="#f0f0f0">
+<FONT face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">
+<DIV style="width:45em;background-color:white;border-style:solid;border-width:1px;padding:1em;">
+<TABLE cellspacing="8">
+   <TBODY><TR><TD><IMG src="./3.2.0 Knapsack Problems_files/cowhead2.gif"></TD>
+       <TD>&nbsp;&nbsp;&nbsp;</TD>
+       <TD><B><FONT size="5">
+	<FONT face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">
+	Knapsack Problems
+</FONT></FONT></B><FONT size="5"></FONT></TD>
+   </TR>
+</TBODY></TABLE>
+
+<H4>Prerequisite modules 
+
+<UL>
+<LI>Greedy</LI>
+<LI>Dynamic Programming</LI>
+<LI>Recursive Descent</LI>
+</UL>
+
+</H4><H4>Sample Problem: Tape Recording
+
+<P> Farmer John's favorite hobby is creating a tape containing some of
+Bessie's favorite music to listen to while she's being milked.  The
+amount of milk that Bessie produces is dependent on the songs that
+Bessie listens to while being milked.
+
+</P><P> Given a collection of songs, each represented by a pair of integers,
+the length of the song (in seconds), the amount of milk Bessie produces
+while she's listening to that song, and the total amount of time that
+it takes to milk Bessie, find the set of songs such that their total
+length is no more than the time it takes to milk Bessie and they
+maximize Bessie's milk production.
+
+</P></H4><H4>The Abstraction
+
+<P>Given, A collection of objects, each which a size, a value (i.e.,
+weight), and the total `space' available, find the set of objects which
+maximizes the sum of the value of the set, but whose sum of size is
+constrained by some limit.  The total number/size of any particular item
+used in the set cannot exceed its availability.
+
+</P></H4><H4>Problem Viewpoint 
+
+<P> The general way to view a knapsack problem is that of a bag of
+limited capacity, which is to be filled while maximizing the value of
+the objects in it.
+
+</P><P>For the problem above, the tape which Bessie will listen to while
+being milked is the ``knapsack,'' while the songs are the ``objects to
+be placed within the knapsack.''
+
+</P></H4><H4>Three Knapsack Problems
+
+<P>The knapsack problem style has three forms:
+
+</P><UL>
+
+<LI>Fractional knapsack problem<BR> A fractional knapsack problem is
+one in which you are allowed to place fractional objects in the
+knapsack.  For example, if the objects were crude oil, airplane fuel,
+and kerosene and your knapsack a bucket, it might make sense to take
+0.473 liter of the crude oil, 0.263 liter of the airplane fuel, and
+0.264 liter of the kerosene.  This is the easiest form of the knapsack
+problem to solve.</LI>
+
+<LI>Integer Knapsack problem<BR>
+ In integer knapsack problems, only complete objects can be inserted
+into the knapsack.  The example problem is of this form: partial songs
+aren't allowed. </LI>
+
+<LI>Multiple knapsack problem<BR>
+ In the multiple knapsack problem, more than one knapsack is to be
+filled.  If fractional objects are allowed, this is the same as having
+one large knapsack with capacity equal to the sum of all the available
+knapsacks, so this term will only be used to  refer to the case of
+multiple integer knapsacks.  </LI>
+ 
+</UL>
+
+</H4><H4>Fractional knapsack problem
+
+<P> The fractional knapsack problem is the easiest of the three to
+solve, as the greedy solution works:
+
+</P><UL>
+
+<LI> Find the object which has the highest ``value density'' (value
+of object / size).</LI>
+
+<LI> If the total amount of capacity remaining exceeds the availability of
+that object, put all of it in the knapsack and iterate. </LI>
+
+<LI> If the amount of capacity is less than the availability of the
+object, use as much as possible and terminate. </LI>
+
+<LI> This algorithm runs in <I>N log N</I> since it must sort the objects
+first based on value density and then put them into the knapsack in
+decreasing order until the capacity is used.  It's normally easier to
+not sort them but rather just keep finding the highest value density
+not used each time, which gives a O(<I>N <SUP>2</SUP></I>) algorithm.
+</LI>
+</UL>
+
+<P>Side note:  For problems of this class, it's rare to have both size
+and availability, as you can do a trivial transformation to have
+all the objects of size 1, and the availability be the product of
+the original size and availability (dividing the value by the
+original size, of course).
+
+</P><P>Extensions:  The value and availability of the objects can be
+real numbers without a problem in this case.  The fractional size
+issue is also trivial to handle by this algorithm.
+
+</P></H4><H4>Integer knapsack problem
+
+<P>This is slightly more difficult, but is solvable using dynamic
+programming if the knapsack is small enough.
+
+</P><UL>
+
+<LI>
+Do dynamic programming on the maximum value that a knapsack of each
+size can have in it.</LI>
+
+<LI>
+Update this array for an object of size S by traversing the array
+in reverse order (of capacity), and seeing if placing the current
+object into the knapsack of size K yields a better set than the
+current best knapsack of size K+S.</LI>
+
+<LI>
+This algorithm runs in <I>K  x  N</I> time, where <I>K</I> is the size of
+the knapsack, and <I>N</I> is the sum of availability of objects.</LI>
+
+<LI>
+If the knapsack is too large to allocate this array, recursive
+descent is the method of choice, as this problem is NP-complete.
+Of course, recursive descent can run for a very long time in a
+large knapsack being filled with small objects.</LI>
+
+</UL>
+
+Extensions:
+
+<UL>
+
+<LI>
+Fractional values are not a problem; the array just becomes an
+array of real numbers instead of integers.  Fractional availability
+doesn't affect things, as you can, without loss of generality,
+truncate the number (if you have 3.5 objects, you can only use 3).</LI>
+
+<LI> Fractional size is a pain, as it makes the problem recursive descent.</LI>
+
+<LI> If the sizes are all the same, the problem can be solved greedily,
+picking the objects in decreasing value order until the knapsack
+is full.</LI>
+
+<LI> If the values are all 1.0, then again greedy works, selecting the
+objects in increasing size order until the knapsack is full.</LI>
+
+</UL>
+
+</H4><H4>Multiple knapsack problem
+
+<P> With multiple knapsacks of any size, the state space is too
+large to use the DP solution from the integer knapsack algorithm.
+Thus, recursive descent is the method to solve this problem.
+
+Extensions:
+
+</P><UL>
+
+<LI> With recursive descent, extensions are generally easy.
+Fractional sizes and values are no problem, nor is another evaluation
+function.  </LI>
+
+<LI> If the values are all one, then if the maximum number of
+objects that can be placed in all the knapsacks is n, then there
+is such a solution which uses the n smallest objects.  This can
+greatly reduce the search time.</LI>
+
+</UL>
+
+</H4><H4>Sample Problems
+
+</H4><H5>Score Inflation [1998 USACO National Championship]</H5>
+
+<P>
+You are trying to design a contest which has the maximum number of
+points (&lt;10,000).  Given the length of the contest, a group of
+problems, the problem lengths, and the point value of each problem,
+find the contest which has the maximum number of points (which
+satisfies the length constraint).
+
+</P><P>
+Analysis: This is an integer knapsack problem, where the knapsack
+is the contest, the sizes are the length of problems, and the values
+are the point values.  The limit on knapsack (contest) size is
+small enough that the DP solution will work in memory.
+
+</P><H5>Fence Rails [1999 USACO Spring Open]</H5>
+
+<P>
+Farmer John is trying to construct a fence around his field.  He
+has installed the posts already, so he knows the length requirement
+of the rails.  The local lumber store has dropped off some boards
+(up to 50) of varying length.  Given the length of the boards from
+the lumber store, and the lengths of rails that Farmer John needs,
+calculate the maximum numbers of rails that Farmer John can create.
+
+</P><P>
+Analysis: This is a multiple knapsack problem, where the knapsacks
+are the boards from the store, and the objects are the rails that
+Farmer John needs.  The size of the objects are just the length,
+and the value is just one.
+
+</P><P>
+Since the values are all one, you know that if there is a solution
+using any K rails, there is a solution using the K smallest rails,
+which helps the recursive descent solver quite a bit.
+
+</P><H5>Filling your Tank</H5>
+
+<P>
+You're in the middle of Beaver County, at the only city within 100
+miles with a gas station, trying to fill up your tank so you can
+get to Rita Blanca.  Fortunately, this town has a couple of gas
+stations, but they all seem to be almost out of gas.  Given the
+price of gasoline at each station, and the amount of gas each one
+has, calculate how much gasoline to buy from each station in order
+to minimize the total cost.
+
+</P><P>
+Analysis: This is an fractional knapsack problem, where your knapsack
+is your gas tank, and the objects are gasoline.
+
+</P></DIV><BR>
+<CENTER>
+<A href="http://ace.delos.com/usacogate?a=EbDD8MbixJI">USACO Gateway</A> | <A href="mailto:kolstad@ace.delos.com">Comment or Question</A>
+</CENTER>
+
+</FONT></BODY></HTML>

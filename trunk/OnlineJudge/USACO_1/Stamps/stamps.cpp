@@ -85,18 +85,11 @@ const int MAX_STAMP_VALUE_NUM = 50;
 /** 最大面值金额。 */
 const int MAX_STAMP_VALUE = 10000;
 
+/** 邮票可能的最大金额和. */
+const int MAX_VALUE_SUM = MAX_STAMPS_NUM * MAX_STAMP_VALUE;
+
 /** 邮票面值表。 */
 static u32 arStampValue[MAX_STAMP_VALUE_NUM] = { -1 };
-
-static 
-/** 获取可能的组合数目。 
-*	用不多于 nMaxStampNum 张面值是上面面值表中1到nStampValueNum面值的邮票，凑出nSumValue的面值和来，一共可能有多少中组合。
-*	Dynamic Program。用递归的方式来实现，虽然效率不如循环高，但（我觉得）理解起来更容易。
-*/
-int GetCount( int nMaxStampNum, int nStampValueNum, int nSumValue )
-{
-	return 0;
-}
 
 int main()
 {
@@ -112,7 +105,80 @@ int main()
 		return 0;
 	}
 
+	int nMaxStampNum, nStampValueNum;
+	fin >> nMaxStampNum >> nStampValueNum;
+	for ( int i=0; i<nStampValueNum; ++i )
+	{
+		fin >> arStampValue[ i ];
+	}
 
+	int *arValueSumFlag = new int[MAX_VALUE_SUM+1];
+	memset( arValueSumFlag, 0, sizeof( arValueSumFlag[0] ) * MAX_VALUE_SUM+1 );
+
+	typedef std::vector<int> TIntVector;
+	TIntVector tCurSumValue;
+	tCurSumValue.push_back( 0 );
+
+	for ( int i=0; i<nMaxStampNum; ++i )
+	{
+		TIntVector tNewSumValue;
+		for ( int k=0; k<tCurSumValue.size(); ++k )
+		{
+			for ( int j = 0; j<nStampValueNum; ++j )
+			{
+				int nSum = tCurSumValue[k] + arStampValue[ j ];
+				if ( !arValueSumFlag[nSum] )
+				{
+					tNewSumValue.push_back( nSum );
+					arValueSumFlag[nSum] = true;
+//					tAllSumValue.insert( nSum );
+				}
+			}
+
+		}
+		tCurSumValue = tNewSumValue;
+	}
+
+	// 找出连续最多的.
+	int nMaxContinueNum = 0;
+	int nMaxContinueTail = 0;
+	int nLastNum = -1;
+	int nCurContinueNum = 1;
+	//	int nCurContinueHead = 0;
+
+	for ( int i=0; i<MAX_VALUE_SUM; ++i  )
+	{
+		if ( !arValueSumFlag[i] )
+		{
+			continue;
+		}
+		int nCurNum = i;
+
+		if ( nLastNum+1 == nCurNum )
+		{
+			// 连续.
+			nCurContinueNum ++;
+		}
+		else
+		{
+			// 不连续了.	
+			nCurContinueNum = 1;
+		}
+
+		nLastNum = nCurNum;
+
+		if ( nCurContinueNum > nMaxContinueNum )
+		{
+			nMaxContinueNum = nCurContinueNum;
+			nMaxContinueTail = nLastNum;
+		}
+
+
+	}
+	
+	delete[] arValueSumFlag;
+
+	fout << nMaxContinueTail << endl;
 
 	fin.close();
 	fout.close();
