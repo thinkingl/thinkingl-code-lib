@@ -26,7 +26,7 @@ SAMPLE OUTPUT (file fact4.out)
 
 /** 
 思路：
-*	
+*	实现大数乘法.
 */
 #include <stdio.h>
 #include <stdlib.h>
@@ -42,6 +42,7 @@ SAMPLE OUTPUT (file fact4.out)
 #include <algorithm>
 #include <memory.h>
 #include <complex>
+#include <queue>
 
 #ifdef _WIN32
 #include <time.h>
@@ -62,6 +63,119 @@ typedef unsigned long u32;
 #define THINKINGL 1
 #endif
 
+class CHugeInt
+{
+public:
+	// CHugeInt();
+
+	CHugeInt( int nNum );
+
+	/** 赋值. */
+	CHugeInt& operator = ( int nNum );
+
+	/** 获取10进制形式的字符串表示. */
+	string ToDecString() const;
+
+	/** 乘法. */
+	CHugeInt& operator *=( const CHugeInt& another  );
+private:
+	
+	typedef std::vector<char> TCharVector;
+	TCharVector m_tAllNum;
+};
+
+CHugeInt::CHugeInt( int nNum )
+{
+	*this = nNum;
+}
+CHugeInt& CHugeInt::operator = ( int nNum )
+{
+	while ( nNum > 0 )
+	{
+		m_tAllNum.push_back( nNum % 10 );
+		nNum /= 10;
+	}
+	return *this;
+}
+
+string CHugeInt::ToDecString() const
+{
+	int nLen = m_tAllNum.size();
+	string strNum;
+	for ( int i=0; i<nLen; ++i )
+	{
+		strNum.push_back( m_tAllNum[nLen - i - 1] + '0' );
+	}
+	return strNum;
+}
+
+CHugeInt& CHugeInt::operator *=( const CHugeInt& another )
+{
+	typedef std::vector< TCharVector > TCharVecVec;
+	TCharVecVec tAllPruduct;
+	for ( int k= 0; k<another.m_tAllNum.size(); ++k )
+	{
+		int nNum = another.m_tAllNum[k];
+
+		int nAdd = 0; // 进位.
+		TCharVector tcv( m_tAllNum.size(), 0 );
+		for ( int i=0; i<m_tAllNum.size(); ++i )
+		{
+
+			int nProduct = m_tAllNum[i] * nNum;
+			nProduct += nAdd;
+
+			nAdd = nProduct / 10;
+
+			tcv[i] = ( nProduct % 10 ); // 进位后的余数.
+		}
+
+		if ( nAdd )
+		{
+			tcv.push_back( nAdd ); // 最高位进位.
+		}
+
+		tAllPruduct.push_back( tcv );
+	}
+
+	// 把它们加起来.
+	m_tAllNum = tAllPruduct[0];
+	for ( int i=1; i<tAllPruduct.size(); ++i )
+	{
+		int nAdd = 0; // 进位.
+		for ( int k=0; k<tAllPruduct[i].size(); ++k )
+		{
+			int nIndex = k + i;
+			while ( m_tAllNum.size() <= nIndex )
+			{
+				m_tAllNum.push_back( 0 ); // 不够长了.
+			}
+			int nSum = m_tAllNum[ nIndex ] + tAllPruduct[i][k];
+			nSum += nAdd;
+
+			m_tAllNum[ nIndex ] = nSum % 10;
+			nAdd = nSum / 10;
+			
+		}
+	}
+
+	// 优化,去掉末尾在题目中没用的0.
+	// 数字右边,是数列的地位端.
+	// 数字高位的那些数字用处也不大,只保留100位.
+	for ( int i=0; i<m_tAllNum.size(); ++i )
+	{
+		if ( m_tAllNum[i] != 0 )
+		{
+			TCharVector tTemp;
+			tTemp.assign( m_tAllNum.begin() + i, m_tAllNum.begin() + min( (int)m_tAllNum.size(), i + 100 ) );
+			m_tAllNum = tTemp;
+			break;
+		}
+	}
+
+	
+	return *this;
+}
 
 int main()
 {
@@ -77,7 +191,28 @@ int main()
 		return 0;
 	}
 
-	
+	int nNum;
+	fin >> nNum;
+
+	CHugeInt hi = 1;
+
+	for ( int i=1; i<=nNum; ++i )
+	{
+		hi *= i;
+	}
+
+	string strNum = hi.ToDecString();
+	cout << strNum << endl;
+
+	int nLen = strNum.size();
+	for ( int i=0; i<strNum.size(); ++i )
+	{
+		if ( strNum[ nLen - i-1 ] != '0' )
+		{
+			fout << strNum[ nLen - i-1 ] << endl;
+			break;
+		}
+	}
 
 	fin.close();
 	fout.close();
