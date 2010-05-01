@@ -72,6 +72,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Contact", "Contact\Contact.
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Stamps", "Stamps\Stamps.vcproj", "{5E9ADDBA-3082-4FAA-8FE1-8B7A5EFE4009}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Factorials", "Factorials\Factorials.vcproj", "{A347A637-FEA5-4C9E-B60F-62C75883D0EC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -321,6 +323,16 @@ Global
 		{5E9ADDBA-3082-4FAA-8FE1-8B7A5EFE4009}.Release|Mixed Platforms.Build.0 = Release|Win32
 		{5E9ADDBA-3082-4FAA-8FE1-8B7A5EFE4009}.Release|Win32.ActiveCfg = Release|Win32
 		{5E9ADDBA-3082-4FAA-8FE1-8B7A5EFE4009}.Release|Win32.Build.0 = Release|Win32
+		{A347A637-FEA5-4C9E-B60F-62C75883D0EC}.Debug|Any CPU.ActiveCfg = Debug|Win32
+		{A347A637-FEA5-4C9E-B60F-62C75883D0EC}.Debug|Mixed Platforms.ActiveCfg = Debug|Win32
+		{A347A637-FEA5-4C9E-B60F-62C75883D0EC}.Debug|Mixed Platforms.Build.0 = Debug|Win32
+		{A347A637-FEA5-4C9E-B60F-62C75883D0EC}.Debug|Win32.ActiveCfg = Debug|Win32
+		{A347A637-FEA5-4C9E-B60F-62C75883D0EC}.Debug|Win32.Build.0 = Debug|Win32
+		{A347A637-FEA5-4C9E-B60F-62C75883D0EC}.Release|Any CPU.ActiveCfg = Release|Win32
+		{A347A637-FEA5-4C9E-B60F-62C75883D0EC}.Release|Mixed Platforms.ActiveCfg = Release|Win32
+		{A347A637-FEA5-4C9E-B60F-62C75883D0EC}.Release|Mixed Platforms.Build.0 = Release|Win32
+		{A347A637-FEA5-4C9E-B60F-62C75883D0EC}.Release|Win32.ActiveCfg = Release|Win32
+		{A347A637-FEA5-4C9E-B60F-62C75883D0EC}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
