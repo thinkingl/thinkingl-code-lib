@@ -1,0 +1,88 @@
+
+<!-- saved from url=(0052)http://ace.delos.com/usacoprob2?a=pLWD98K404d&S=spin -->
+<HTML><HEAD><META http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"> <TITLE>Problem 21: Spinning Wheels</TITLE> </HEAD><BODY background="./3.2.3 Problem 21  Spinning Wheels_files/bg3.jpg">
+<IMG src="./3.2.3 Problem 21  Spinning Wheels_files/cow1.jpg" width="742" height="118">
+<CENTER>
+<B><FONT size="7">Spinning Wheels</FONT></B><BR>
+1998 ACM NE Regionals
+</CENTER>
+
+<P> Each of five opaque spinning wheels has one or more wedges cut
+out of its edges.  These wedges must be aligned quickly and correctly.
+Each wheel also has an alignment mark (at 0 degrees) so that the
+wheels can all be started in a known position.  Wheels rotate in
+the `plus degrees' direction, so that shortly after they start,
+they pass through 1 degree, 2 degrees, etc. (though probably not
+at the same time).
+
+</P><P> This is an integer problem.  Wheels are never actually at 1.5
+degrees or 23.51234123 degrees.  For example, the wheels are
+considered to move instantaneously from 20 to 25 degrees during a
+single second or even from 30 to 40 degrees if the wheel is spinning
+quickly.
+
+</P><P> All angles in this problem are presumed to be integers in the
+range 0 &lt;= angle &lt;= 359.  The angle of 0 degrees follows the
+angle of 359 degrees.  Each wheel rotates at a certain integer
+number of degrees per second, 1 &lt;= speed &lt;= 180.
+
+</P><P>Wedges for each wheel are specified by an integer start angle
+and integer angle size (or `extent'), both specified in degrees.
+Wedges in the test data will be separated by at least one degree.
+The 'extent' also includes the original "degree" of the wedge, so
+'0 180' means degrees 0..180 inclusive -- one more than most would
+imagine.
+
+</P><P> At the start, which is time 0, all the wheels' alignment marks
+line up.  Your program must determine the earliest time (integer
+seconds) at or after the start that some wedge on each wheel will
+align with the wedges on the other wheel so that a light beam can
+pass through openings on all five wedges.  The wedges can align at
+any part of the rotation.
+
+
+</P><H3>PROGRAM NAME: spin</H3>
+
+<H3>INPUT FORMAT</H3>
+
+<P>Each of five input lines describes a wheel.
+
+</P><P>The first integer on an input line is the wheel's rotation speed.
+The next integer is the number of wedges, 1 &lt;= W &lt;= 5.  The next
+W pairs of integers tell each wedge's start angle and extent.
+
+</P><H3>SAMPLE INPUT (file spin.in) </H3>
+
+<PRE>30 1 0 120
+50 1 150 90
+60 1 60 90
+70 1 180 180
+90 1 180 60
+</PRE>
+
+<H3>OUTPUT FORMAT</H3>
+
+<P> A single line with a single integer that is the first time the
+wedges align so a light beam can pass through them.  Print `none' (lower
+case, no quotes) if the wedges will never align properly.
+
+</P><H3>SAMPLE OUTPUT (file spin.out)</H3>
+
+<PRE>9
+</PRE>
+<BR>
+<HR>
+<FORM action="http://ace.delos.com/upload3" enctype="multipart/form-data" method="POST">
+<B>Submission file Name:</B> <INPUT type="file" name="filename">
+<INPUT type="submit" value="Send it in!">
+<INPUT type="hidden" name="a" value="pLWD98K404d">
+<INPUT type="hidden" name="S" value="spin">
+</FORM>
+
+<CENTER>
+<A href="http://ace.delos.com/usacogate?a=pLWD98K404d"> USACO Gateway </A> &nbsp;| &nbsp;
+<A href="mailto:kolstad@ace.delos.com">Comment or Question </A>
+</CENTER>
+
+
+</BODY></HTML>
