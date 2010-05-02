@@ -76,6 +76,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Factorials", "Factorials\Fa
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Stringsobits", "stringsobits\stringsobits.vcproj", "{401C2EB7-D0AE-48FF-B9C7-BFDCDD1E219F}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Spanning Wheels", "Spanning Wheels\Spanning Wheels.vcproj", "{56EFEDD3-8C12-44F9-96E4-1C6AA972C01D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -345,6 +347,16 @@ Global
 		{401C2EB7-D0AE-48FF-B9C7-BFDCDD1E219F}.Release|Mixed Platforms.Build.0 = Release|Win32
 		{401C2EB7-D0AE-48FF-B9C7-BFDCDD1E219F}.Release|Win32.ActiveCfg = Release|Win32
 		{401C2EB7-D0AE-48FF-B9C7-BFDCDD1E219F}.Release|Win32.Build.0 = Release|Win32
+		{56EFEDD3-8C12-44F9-96E4-1C6AA972C01D}.Debug|Any CPU.ActiveCfg = Debug|Win32
+		{56EFEDD3-8C12-44F9-96E4-1C6AA972C01D}.Debug|Mixed Platforms.ActiveCfg = Debug|Win32
+		{56EFEDD3-8C12-44F9-96E4-1C6AA972C01D}.Debug|Mixed Platforms.Build.0 = Debug|Win32
+		{56EFEDD3-8C12-44F9-96E4-1C6AA972C01D}.Debug|Win32.ActiveCfg = Debug|Win32
+		{56EFEDD3-8C12-44F9-96E4-1C6AA972C01D}.Debug|Win32.Build.0 = Debug|Win32
+		{56EFEDD3-8C12-44F9-96E4-1C6AA972C01D}.Release|Any CPU.ActiveCfg = Release|Win32
+		{56EFEDD3-8C12-44F9-96E4-1C6AA972C01D}.Release|Mixed Platforms.ActiveCfg = Release|Win32
+		{56EFEDD3-8C12-44F9-96E4-1C6AA972C01D}.Release|Mixed Platforms.Build.0 = Release|Win32
+		{56EFEDD3-8C12-44F9-96E4-1C6AA972C01D}.Release|Win32.ActiveCfg = Release|Win32
+		{56EFEDD3-8C12-44F9-96E4-1C6AA972C01D}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
