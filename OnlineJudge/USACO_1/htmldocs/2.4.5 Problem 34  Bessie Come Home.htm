@@ -1,0 +1,78 @@
+
+<!-- saved from url=(0056)http://ace.delos.com/usacoprob2?a=wTx5h9qaQ5J&S=comehome -->
+<HTML><HEAD><META http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"> <TITLE>Problem 34: Bessie Come Home</TITLE> </HEAD><BODY background="./2.4.5 Problem 34  Bessie Come Home_files/bg3.jpg">
+<IMG src="./2.4.5 Problem 34  Bessie Come Home_files/cow1.jpg" width="742" height="118">
+<CENTER>
+<B><FONT size="7">Bessie Come Home</FONT></B><BR>
+Kolstad &amp; Burch
+</CENTER>
+
+<P>It's dinner time, and the cows are out in their separate pastures.
+Farmer John rings the bell so they will start walking to the barn. Your
+job is to figure out which one cow gets to the barn first (the supplied
+test data will always have exactly one fastest cow).
+
+</P><P>Between milkings, each cow is located in her own pasture, though some
+pastures have no cows in them. Each pasture is connected by a path to
+one or more other pastures (potentially including itself). Sometimes,
+two (potentially self-same) pastures are connected by more than one
+path.  One or more of the pastures has a path to the barn.  Thus, all
+cows have a path to the barn and they always know the shortest path. Of
+course, cows can go either direction on a path and they all walk at the
+same speed.
+
+</P><P>The pastures are labeled `a'..`z' and `A'..`Y'. One cow is in each
+pasture labeled with a capital letter. No cow is in a pasture labeled
+with a lower case letter. The barn's label is `Z'; no cows are in the
+barn, though.
+
+</P><H3>PROGRAM NAME: comehome</H3>
+
+<H3>INPUT FORMAT</H3>
+
+<TABLE border="1">
+<TBODY><TR> <TD> Line 1: </TD> <TD>
+Integer P (1 &lt;= P &lt;= 10000) the number of paths that interconnect the pastures (and the barn)
+</TD> </TR>
+<TR> <TD> Line 2..P+1: </TD> <TD>Space separated, two letters and an
+integer: the names of the interconnected pastures/barn and the distance
+between them (1 &lt;= distance &lt;= 1000)
+</TD> </TR>
+</TBODY></TABLE>
+
+<H3>SAMPLE INPUT (file comehome.in) </H3>
+
+<PRE>5
+A d 6
+B d 3
+C e 9
+d Z 8
+e Z 3
+</PRE>
+
+<H3>OUTPUT FORMAT</H3>
+
+A single line containing two items:  the capital letter name of the
+pasture of the cow that arrives first back at the barn, the length of
+the path followed by that cow.
+
+<H3>SAMPLE OUTPUT (file comehome.out)</H3>
+
+<PRE>B 11
+</PRE>
+<BR>
+<HR>
+<FORM action="http://ace.delos.com/upload3" enctype="multipart/form-data" method="POST">
+<B>Submission file Name:</B> <INPUT type="file" name="filename">
+<INPUT type="submit" value="Send it in!">
+<INPUT type="hidden" name="a" value="wTx5h9qaQ5J">
+<INPUT type="hidden" name="S" value="comehome">
+</FORM>
+
+<CENTER>
+<A href="http://ace.delos.com/usacogate?a=wTx5h9qaQ5J"> USACO Gateway </A> &nbsp;| &nbsp;
+<A href="mailto:kolstad@ace.delos.com">Comment or Question </A>
+</CENTER>
+
+
+</BODY></HTML>

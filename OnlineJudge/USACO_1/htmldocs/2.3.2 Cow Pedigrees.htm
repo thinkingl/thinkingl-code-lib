@@ -1,0 +1,78 @@
+
+<!-- saved from url=(0054)http://ace.delos.com/usacoprob2?a=zJVBjQtO85h&S=nocows -->
+<HTML><HEAD><META http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<TITLE>Cow Pedigrees</TITLE>
+</HEAD><BODY background="./2.3.2 Cow Pedigrees_files/bg3.jpg">
+<IMG src="./2.3.2 Cow Pedigrees_files/cow1.jpg" width="742" height="118">
+
+<CENTER> <H1>Cow Pedigrees</H1> </CENTER>
+<CENTER>Silviu Ganceanu -- 2003</CENTER>
+
+<P></P><P>Farmer John is considering purchasing a new herd of cows. In
+this new herd, each mother cow gives birth to two children. The
+relationships among the cows can easily be represented by one or
+more binary trees with a total of N (3 &lt;= N &lt; 200) nodes.  The trees
+have these properties:
+
+</P><UL>
+<LI>The degree of each node is 0 or 2. The degree is the count of
+the node's immediate children.</LI>
+
+<LI>The height of the tree is equal to K (1 &lt; K &lt;100). The height
+is the number of nodes on the longest path from the root to any
+leaf; a leaf is a node with no children.</LI> </UL>
+
+<P>How many different possible pedigree structures are there?  A
+pedigree is different if its tree structure differs from that of
+another pedigree. Output the remainder when the total number of
+different possible pedigrees is divided by 9901.
+
+</P><H3>PROGRAM NAME: nocows</H3>
+
+<H3>INPUT FORMAT</H3>
+
+<UL><LI> Line 1: Two space-separated integers, N and K.
+</LI></UL>
+
+<H3>SAMPLE INPUT (file nocows.in)</H3>
+
+<PRE>5 3
+</PRE>
+
+
+<H3>OUTPUT FORMAT</H3>
+
+<UL><LI> Line 1: One single integer number representing the number of possible
+pedigrees MODULO 9901.
+</LI></UL>
+
+<H3>SAMPLE OUTPUT (file nocows.out) </H3>
+
+<PRE>2
+</PRE>
+
+<H3>OUTPUT DETAILS</H3>
+
+Two possible pedigrees have 5 nodes and height equal to 3:
+<PRE>           @                   @      
+          / \                 / \
+         @   @      and      @   @
+        / \                     / \
+       @   @                   @   @
+</PRE>
+<BR>
+<HR>
+<FORM action="http://ace.delos.com/upload3" enctype="multipart/form-data" method="POST">
+<B>Submission file Name:</B> <INPUT type="file" name="filename">
+<INPUT type="submit" value="Send it in!">
+<INPUT type="hidden" name="a" value="zJVBjQtO85h">
+<INPUT type="hidden" name="S" value="nocows">
+</FORM>
+
+<CENTER>
+<A href="http://ace.delos.com/usacogate?a=zJVBjQtO85h"> USACO Gateway </A> &nbsp;| &nbsp;
+<A href="mailto:kolstad@ace.delos.com">Comment or Question </A>
+</CENTER>
+
+
+</BODY></HTML>
