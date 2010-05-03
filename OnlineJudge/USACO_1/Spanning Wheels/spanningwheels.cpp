@@ -43,7 +43,8 @@ SAMPLE OUTPUT (file spin.out)
 
 /** 
 思路：
-*	
+*	模拟.
+*	所有的纺车在转360秒后都会回到起点,所以如果360秒内没有符合题意,就再也没有了.
 */
 #include <stdio.h>
 #include <stdlib.h>
@@ -80,6 +81,104 @@ typedef unsigned long u32;
 #define THINKINGL 1
 #endif
 
+const char* NERVER_PASS = "none";
+const int MAX_WEDGE_NUM = 5;
+const int SPANNING_WHEEL_NUM = 5;
+
+class CAngleRange
+{
+public:
+	CAngleRange( int nStart, int nExtent );
+
+	/** 是否在区域里. */
+	bool IsIn( int nAngle )const;
+	/** 旋转. */
+	void Turn( int nAngle );
+private:
+	int m_nStart;
+	int m_nExtent;
+};
+
+CAngleRange::CAngleRange( int nStart, int nExtent )
+{
+	m_nStart = nStart;
+	m_nExtent = nExtent;
+}
+
+void CAngleRange::Turn( int nAngle )
+{
+	m_nStart += nAngle;
+	if ( m_nStart > 359 )
+	{
+		m_nStart -= 360;
+	}
+}
+
+bool CAngleRange::IsIn( int nAngle )const
+{
+	if ( nAngle >= m_nStart && nAngle <= m_nStart+m_nExtent )
+	{
+		return true;
+	}
+	if ( nAngle <= m_nStart + m_nExtent - 360 )
+	{
+		return true;
+	}
+	return false;
+}
+
+class CSpanningWheel
+{
+public:
+	CSpanningWheel();
+	void SetSpeed( int nSpeed );
+	void AddWedge( int nStart, int nExtent );
+	void TurnOneSecond();
+
+	bool IsLightCanPass( int nAngle ) const;
+private:
+	int m_nSpeed;
+
+	typedef std::vector< CAngleRange > TWedgesList;
+	TWedgesList m_tWedges;
+
+};
+
+CSpanningWheel::CSpanningWheel()
+{
+	m_nSpeed = 0;
+}
+
+void CSpanningWheel::SetSpeed( int nSpeed )
+{
+	m_nSpeed = nSpeed;
+}
+
+void CSpanningWheel::AddWedge( int nStart, int nExtent )
+{
+	m_tWedges.push_back( CAngleRange( nStart, nExtent ) );
+}
+
+void CSpanningWheel::TurnOneSecond()
+{
+	for ( int i=0; i<m_tWedges.size(); ++i )
+	{
+		m_tWedges[i].Turn( this->m_nSpeed );
+	}
+}
+
+bool CSpanningWheel::IsLightCanPass( int nAngle )const
+{
+	for ( int i=0; i<m_tWedges.size(); ++i )
+	{
+		if ( m_tWedges[i].IsIn( nAngle ) )
+		{
+			return true;
+		}
+	}
+	return false;
+}
+
 
 
 int main()
@@ -96,7 +195,70 @@ int main()
 		return 0;
 	}
 
+	CSpanningWheel arSpanningWheels[ SPANNING_WHEEL_NUM ];
+	for ( int i=0; i<SPANNING_WHEEL_NUM; ++i )
+	{
+		int nSpeed, nWedgeNum;
+		fin >> nSpeed >> nWedgeNum;
+		arSpanningWheels[i].SetSpeed( nSpeed );
+		for ( int k=0; k<nWedgeNum; ++k )
+		{
+			int nStart, nExtent;
+			fin >> nStart >> nExtent;
+			arSpanningWheels[i].AddWedge( nStart, nExtent );
+		}
+	}
 
+	// 最大只考察360秒,因为不管速度是多少,360秒后都将回到起点.
+	int nPassTime = -1;
+	for ( int nTime=0; nTime<360; ++nTime )
+	{
+		// 判断是否能穿过光线.
+		bool bPass = false;
+		for ( int nAngle=0; nAngle<360; ++nAngle )
+		{
+			if ( nAngle == 270 )
+			{
+				int wdfw = 2;
+			}
+			bool bCanPass = true;
+			for ( int nWheel=0; nWheel<SPANNING_WHEEL_NUM; ++nWheel )
+			{
+				if ( !arSpanningWheels[nWheel].IsLightCanPass( nAngle ) )
+				{
+					bCanPass = false;
+					break;
+				}
+			}
+			if ( bCanPass )
+			{
+				// 穿过了!
+				bPass = true;
+				break;
+			}
+		}
+
+		if ( bPass )
+		{
+			nPassTime = nTime;
+			break;
+		}
+		
+		// 旋转.
+		for ( int i=0; i< SPANNING_WHEEL_NUM; ++i )
+		{
+			arSpanningWheels[i].TurnOneSecond();
+		}
+	}
+
+	if ( nPassTime != -1 )
+	{
+		fout << nPassTime << endl;
+	}
+	else
+	{
+		fout << NERVER_PASS << endl;
+	}
 
 	fin.close();
 	fout.close();
