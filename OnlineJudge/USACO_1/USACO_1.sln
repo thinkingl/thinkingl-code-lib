@@ -80,6 +80,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Spanning Wheels", "Spanning
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "FeedRatios", "FeedRatios\FeedRatios.vcproj", "{096F80B5-B604-45DB-B72A-92ADB28E7A47}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MagicSquares", "MagicSquares\MagicSquares.vcproj", "{D72A3F7E-15DA-4836-AF43-8F562823998B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -369,6 +371,16 @@ Global
 		{096F80B5-B604-45DB-B72A-92ADB28E7A47}.Release|Mixed Platforms.Build.0 = Release|Win32
 		{096F80B5-B604-45DB-B72A-92ADB28E7A47}.Release|Win32.ActiveCfg = Release|Win32
 		{096F80B5-B604-45DB-B72A-92ADB28E7A47}.Release|Win32.Build.0 = Release|Win32
+		{D72A3F7E-15DA-4836-AF43-8F562823998B}.Debug|Any CPU.ActiveCfg = Debug|Win32
+		{D72A3F7E-15DA-4836-AF43-8F562823998B}.Debug|Mixed Platforms.ActiveCfg = Debug|Win32
+		{D72A3F7E-15DA-4836-AF43-8F562823998B}.Debug|Mixed Platforms.Build.0 = Debug|Win32
+		{D72A3F7E-15DA-4836-AF43-8F562823998B}.Debug|Win32.ActiveCfg = Debug|Win32
+		{D72A3F7E-15DA-4836-AF43-8F562823998B}.Debug|Win32.Build.0 = Debug|Win32
+		{D72A3F7E-15DA-4836-AF43-8F562823998B}.Release|Any CPU.ActiveCfg = Release|Win32
+		{D72A3F7E-15DA-4836-AF43-8F562823998B}.Release|Mixed Platforms.ActiveCfg = Release|Win32
+		{D72A3F7E-15DA-4836-AF43-8F562823998B}.Release|Mixed Platforms.Build.0 = Release|Win32
+		{D72A3F7E-15DA-4836-AF43-8F562823998B}.Release|Win32.ActiveCfg = Release|Win32
+		{D72A3F7E-15DA-4836-AF43-8F562823998B}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
