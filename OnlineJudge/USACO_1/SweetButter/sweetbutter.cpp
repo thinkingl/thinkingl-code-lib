@@ -61,7 +61,9 @@ units; cow 3 walks 0 units -- a total of 8.
 
 /** 
 思路：
-*	
+*	1. 图论问题.用Floyd-Warshall算法求出所有节点之间的距离,然后寻找到所有牛的距离的和最小的那个节点.
+*	最多有800个节点,int数组会超出1M,用堆内存.
+*	1. 会超时...改用Dijkstra算法,求有奶牛的pature到其它点的距离..
 */
 #include <stdio.h>
 #include <stdlib.h>
@@ -98,7 +100,114 @@ typedef unsigned long u32;
 #define THINKINGL 1
 #endif
 
+class CMatrix
+{
+public:
+	/** 构造. */
+	CMatrix( int nMatrixSize );
+	~CMatrix();
+	CMatrix( const CMatrix& another );
+	CMatrix& operator = ( const CMatrix& another );
 
+	/** 取行的地址. */
+	int * operator[]( int nIndex );
+
+	/** 矩阵大小. */
+	int size() const;
+private:
+	void Release();
+private:
+	int *m_arMatrix;
+	int m_nMatrixSize;
+};
+
+CMatrix::CMatrix( int nMatrixSize )
+{
+	this->m_nMatrixSize = nMatrixSize;
+	this->m_arMatrix = new int[nMatrixSize*nMatrixSize];
+	memset( m_arMatrix, 0, sizeof( m_arMatrix[0] * nMatrixSize * nMatrixSize ) );
+}
+
+CMatrix::~CMatrix()
+{
+	this->Release();
+}
+
+void CMatrix::Release()
+{
+	if ( m_arMatrix )
+	{
+		delete[] m_arMatrix;
+		m_arMatrix = 0;
+	}	
+	m_nMatrixSize = 0;
+}
+
+CMatrix::CMatrix( const CMatrix& another )
+{
+	m_arMatrix = 0;
+	m_nMatrixSize = 0;
+	*this = another;
+}
+
+CMatrix& CMatrix::operator =( const CMatrix& another )
+{
+	if ( this == &another )
+	{
+		return *this;
+	}
+	else
+	{
+		this->Release();
+		this->m_nMatrixSize = another.m_nMatrixSize;
+		this->m_arMatrix = new int[this->m_nMatrixSize * this->m_nMatrixSize ];
+		memcpy( m_arMatrix, another.m_arMatrix, sizeof( m_arMatrix ) * this->m_nMatrixSize * this->m_nMatrixSize );
+		return *this;
+	}
+}
+
+int *CMatrix::operator [](int nIndex)
+{
+	return ( this->m_arMatrix + nIndex * m_nMatrixSize );
+}
+
+int CMatrix::size()const
+{
+	return this->m_nMatrixSize;
+}
+
+
+/** 表示不连通的距离. */
+const u32 DISTANCE_NOT_CONNECT = 10000000;
+
+/** 求出所有节点之间的距离. 
+*	Floyd-Warshall算法.时间复杂度O(n的3次幂).
+*	
+*	const CMatrix& weightMatrix (IN) 节点之间的weight.
+*	CMatrix& distanceMatrix		(OUT) 节点之间的Distance.
+*/
+void FloydWarshall( const CMatrix& weightMatrix, CMatrix& distanceMatrix )
+{
+	// 距离矩阵初始化.
+	distanceMatrix = weightMatrix;
+
+	for ( int i=0; i<weightMatrix.size(); ++i ) // i作为中间节点.
+	{
+		for ( int j=0; j<weightMatrix.size();++j )
+		{
+			for ( int k=0; k<weightMatrix.size(); ++k )
+			{
+				// 通过中间节点连接更短.
+				u32 nNewDistance = distanceMatrix[j][i] + distanceMatrix[i][k];
+				if ( nNewDistance < distanceMatrix[j][k] )
+				{
+					distanceMatrix[j][k] = nNewDistance;
+					distanceMatrix[k][j] = nNewDistance;
+				}
+			}
+		}
+	}
+}
 
 int main()
 {
@@ -114,9 +223,71 @@ int main()
 		return 0;
 	}
 
-	
+	int nCowNum, nPastureNum, nPathNum;
+	fin >> nCowNum >> nPastureNum >> nPathNum;
 
-	fout << endl;
+	// 哪几个Pasture有牛.
+	const int MAX_COW_NUM = 500;
+	int arCowPasture[ MAX_COW_NUM ];
+	for ( int i=0; i<nCowNum; ++i )
+	{
+		fin >> arCowPasture[i];
+		arCowPasture[i] --;
+	}
+
+	// Pasture之间的Path.
+	CMatrix tPastureDistance( nPastureNum );
+	for ( int i=0; i<nPastureNum; ++i )
+	{
+		for ( int k=0; k<nPastureNum; ++k )
+		{
+			int nWeight = DISTANCE_NOT_CONNECT;
+			if( i==k )
+			{
+				nWeight = 0;
+			}
+			tPastureDistance[i][k] = nWeight;
+			tPastureDistance[k][i] = nWeight;
+		}
+	}
+
+	for ( int i=0; i<nPathNum; ++i )
+	{
+		int nPasture1, nPasture2, nWeight;
+		fin >> nPasture1 >> nPasture2 >> nWeight;
+		tPastureDistance[ nPasture1-1 ][ nPasture2-1 ] = nWeight;
+		tPastureDistance[ nPasture2-1 ][ nPasture1-1 ] = nWeight;
+	}
+
+	// 获取最短距离.
+	FloydWarshall( tPastureDistance, tPastureDistance );
+
+	// 遍历,看哪个点最短.
+	int nShortestSum = DISTANCE_NOT_CONNECT;
+	for ( int i=0; i<nPastureNum; ++i )
+	{
+		int nSum = 0;
+		for ( int k=0; k<nCowNum; ++k )
+		{
+			int nCowPos = arCowPasture[k];
+			if ( tPastureDistance[i][nCowPos] < DISTANCE_NOT_CONNECT )
+			{
+				nSum += tPastureDistance[i][nCowPos];
+			}
+			else
+			{
+				nSum = DISTANCE_NOT_CONNECT;	// 不连通.这个题目里不应该有这种情况.
+				break;
+			}
+		}
+
+		if ( nSum < nShortestSum )
+		{
+			nShortestSum = nSum;
+		}
+	}
+	
+	fout << nShortestSum << endl;
 
 	fin.close();
 	fout.close();
