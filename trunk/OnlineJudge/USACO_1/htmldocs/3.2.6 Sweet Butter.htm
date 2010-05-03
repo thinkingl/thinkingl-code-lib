@@ -1,0 +1,107 @@
+
+<!-- saved from url=(0054)http://ace.delos.com/usacoprob2?a=S6RqgDcBDvt&S=butter -->
+<HTML><HEAD><META http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<TITLE>Sweet Butter</TITLE>
+</HEAD><BODY background="./3.2.6 Sweet Butter_files/bg3.jpg">
+<IMG src="./3.2.6 Sweet Butter_files/cow1.jpg" width="742" height="118">
+
+<CENTER> <H1>Sweet Butter</H1> </CENTER>
+<CENTER>Greg Galperin -- 2001</CENTER>
+
+
+<P>Farmer John has discovered the secret to making the sweetest butter
+in all of Wisconsin: sugar.  By placing a sugar cube out in the
+pastures, he knows the N (1 &lt;= N &lt;= 500) cows will lick it and thus
+will produce super-sweet butter which can be marketed at better
+prices.  Of course, he spends the extra money on luxuries for the
+cows.
+
+</P><P>FJ is a sly farmer.  Like Pavlov of old, he knows he can train the
+cows to go to a certain pasture when they hear a bell.  He intends to
+put the sugar there and then ring the bell in the middle of the
+afternoon so that the evening's milking produces perfect milk.
+
+</P><P>FJ knows each cow spends her time in a given pasture (not necessarily
+alone).  Given the pasture location of the cows and a description of
+the paths the connect the pastures, find the pasture in which to place
+the sugar cube so that the total distance walked by the cows when FJ
+rings the bell is minimized. FJ knows the fields are connected well enough
+that some solution is always possible.
+
+</P><H3>PROGRAM NAME: butter</H3>
+
+<H3>INPUT FORMAT</H3>
+
+<UL><LI> Line 1: Three space-separated integers: N, the number of pastures: P (2 &lt;= P &lt;=
+800), and the number of connecting paths: C (1 &lt;= C &lt;= 1,450).  Cows
+are uniquely numbered 1..N. Pastures are uniquely numbered 1..P.
+</LI><LI> Lines 2..N+1: Each line contains a single integer that is the pasture number in which
+a cow is grazing.  Cow i's pasture is listed on line i+1.
+</LI><LI> Lines N+2..N+C+1: Each line contains three space-separated integers that describe a single
+path that connects a pair of pastures and its length.  Paths may be
+traversed in either direction.  No pair of pastures is directly connected
+by more than one path.  The first two integers are in the range 1..P; the
+third integer is in the range (1..225).
+</LI></UL>
+
+<H3>SAMPLE INPUT (file butter.in)</H3>
+
+<PRE>3 4 5
+2
+3
+4
+1 2 1
+1 3 5
+2 3 7
+2 4 3
+3 4 5
+
+</PRE>
+
+
+<H3>INPUT DETAILS</H3>
+This diagram shows the connections geometrically:
+<PRE>          P2  
+ P1 @--1--@ C1
+     \    |\
+      \   | \
+       5  7  3
+        \ |   \
+         \|    \ C3
+       C2 @--5--@
+          P3    P4
+</PRE>
+
+<H3>OUTPUT FORMAT</H3>
+
+<UL><LI> Line 1: A single integer that is the minimum distance the cows must walk to
+a pasture with a sugar cube.
+</LI></UL>
+
+<H3>SAMPLE OUTPUT (file butter.out) </H3>
+
+<PRE>8
+
+OUTPUT DETAILS:
+
+Putting the cube in pasture 4 means: cow 1 walks 3 units; cow 2 walks 5
+units; cow 3 walks 0 units -- a total of 8.
+
+</PRE>
+
+<BR>
+<HR>
+<FORM action="http://ace.delos.com/upload3" enctype="multipart/form-data" method="POST">
+<B>Submission file Name:</B> <INPUT type="file" name="filename">
+<INPUT type="submit" value="Send it in!">
+<INPUT type="hidden" name="a" value="S6RqgDcBDvt">
+<INPUT type="hidden" name="S" value="butter">
+</FORM>
+
+<CENTER>
+<A href="http://ace.delos.com/usacogate?a=S6RqgDcBDvt"> USACO Gateway </A> &nbsp;| &nbsp;
+<A href="mailto:kolstad@ace.delos.com">Comment or Question </A>
+</CENTER>
+
+
+</BODY></HTML>
