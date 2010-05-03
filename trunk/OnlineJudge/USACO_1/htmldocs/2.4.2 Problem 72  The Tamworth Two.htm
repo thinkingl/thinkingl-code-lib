@@ -1,0 +1,127 @@
+
+<!-- saved from url=(0052)http://ace.delos.com/usacoprob2?a=wTx5h9qaQ5J&S=ttwo -->
+<HTML><HEAD><META http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"> <TITLE>Problem 72: The Tamworth Two</TITLE> </HEAD><BODY background="./2.4.2 Problem 72  The Tamworth Two_files/bg3.jpg">
+<IMG src="./2.4.2 Problem 72  The Tamworth Two_files/cow1.jpg" width="742" height="118">
+<CENTER>
+<B><FONT size="7">The Tamworth Two</FONT></B><BR>
+<B>BIO '98 - Richard Forster</B>
+</CENTER>
+
+<P> A pair of cows is loose somewhere in the forest.  Farmer John is
+lending his expertise to their capture.  Your task is to model their
+behavior.
+
+</P><P> The chase takes place on a 10 by 10 planar grid.  Squares can be
+empty or they can contain:
+</P><UL>
+<LI> an obstacle,
+</LI><LI>the cows (who always travel together), or
+</LI><LI> Farmer John.
+</LI></UL>
+<P>
+The cows and Farmer John can occupy the same square (when they `meet')
+but neither the cows nor Farmer John can share a square with an obstacle.
+
+<TABLE>
+<TBODY><TR>
+<TD>
+<P>
+Each square is<BR>
+represented<BR>
+as follows:
+</P><UL>
+     <LI>.  Empty square
+     </LI><LI>*  Obstacle
+     </LI><LI>C  Cows
+     </LI><LI>F  Farmer
+</LI></UL>
+</TD><TD>
+Here is a sample grid:
+<PRE>*...*.....
+......*...
+...*...*..
+..........
+...*.F....
+*.....*...
+...*......
+..C......*
+...*.*....
+.*.*......
+</PRE>
+</TD></TR>
+</TBODY></TABLE>
+
+</P><P> The cows wander around the grid in a fixed way.  Each minute,
+they either move forward or rotate.  Normally, they move one square
+in the direction they are facing. If there is an obstacle in the
+way or they would leave the board by walking `forward', then they
+spend the entire minute rotating 90 degrees clockwise.
+
+</P><P> Farmer John, wise in the ways of cows, moves in exactly the
+same way.
+
+</P><P> The farmer and the cows can be considered to move simultaneously
+during each minute.  If the farmer and the cows pass each other
+while moving, they are not considered to have met.  The chase ends
+when Farmer John and the cows occupy the same square at the end of
+a minute.
+
+</P><P> Read a ten-line grid that represents the initial state of the cows,
+Farmer John, and obstacles.  Each of the ten lines contains exactly ten
+characters using the coding above.  There is guaranteed to be only one
+farmer and one pair of cows.  The cows and Farmer John will not initially
+be on the same square.
+
+</P><P> Calculate the number of minutes until the cows and Farmer John meet.
+Assume both the cows and farmer begin the simulation facing in the
+`north' direction.  Print 0 if they will never meet.
+
+
+</P><H3>PROGRAM NAME: ttwo</H3>
+
+<H3>INPUT FORMAT</H3>
+
+<TABLE border="1">
+<TBODY><TR> <TD> Lines 1-10: </TD> <TD>Ten lines of ten characters each, as
+explained above</TD>
+</TR></TBODY></TABLE>
+
+<H3>SAMPLE INPUT (file ttwo.in) </H3>
+
+<PRE>*...*.....
+......*...
+...*...*..
+..........
+...*.F....
+*.....*...
+...*......
+..C......*
+...*.*....
+.*.*......
+</PRE>
+
+<H3>OUTPUT FORMAT</H3>
+
+A single line with the integer number of minutes until 
+Farmer John and the cows meet.  Print 0 if they will never meet.
+
+<H3>SAMPLE OUTPUT (file ttwo.out)</H3>
+
+<PRE>49
+</PRE>
+<BR>
+<HR>
+<FORM action="http://ace.delos.com/upload3" enctype="multipart/form-data" method="POST">
+<B>Submission file Name:</B> <INPUT type="file" name="filename">
+<INPUT type="submit" value="Send it in!">
+<INPUT type="hidden" name="a" value="wTx5h9qaQ5J">
+<INPUT type="hidden" name="S" value="ttwo">
+</FORM>
+
+<CENTER>
+<A href="http://ace.delos.com/usacogate?a=wTx5h9qaQ5J"> USACO Gateway </A> &nbsp;| &nbsp;
+<A href="mailto:kolstad@ace.delos.com">Comment or Question </A>
+</CENTER>
+
+
+</BODY></HTML>

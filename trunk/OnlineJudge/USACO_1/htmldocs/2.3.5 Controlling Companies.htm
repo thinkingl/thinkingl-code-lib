@@ -1,0 +1,80 @@
+
+<!-- saved from url=(0054)http://ace.delos.com/usacoprob2?a=zJVBjQtO85h&S=concom -->
+<HTML><HEAD><META http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"> <TITLE>Controlling Companies</TITLE> </HEAD><BODY background="./2.3.5 Controlling Companies_files/bg3.jpg">
+<IMG src="./2.3.5 Controlling Companies_files/cow1.jpg" width="742" height="118">
+<CENTER>
+<B><FONT size="7">Controlling Companies</FONT></B><BR>
+</CENTER>
+
+<P> Some companies are partial owners of other companies because
+they have acquired part of their total shares of stock.  For example,
+Ford owns 12% of Mazda.  It is said that a company A controls company
+B if at least one of the following conditions is satisfied:
+
+</P><UL>
+<LI>Company A = Company B</LI>
+<LI>Company A owns more than 50% of Company B</LI>
+<LI>Company A controls K (K &gt;= 1) companies denoted C<SUB>1</SUB>,
+    ..., C<SUB>K</SUB> with each company C<SUB>i</SUB> owning x<SUB>i</SUB>%
+    of company B and x<SUB>1</SUB> + .... + x<SUB>K</SUB> &gt; 50%.</LI>
+</UL>
+
+<P> Given a list of triples (i,j,p) which denote company i owning p% of
+company j, calculate all the pairs (h,s) in which company h controls
+company s. There are at most 100 companies.
+
+</P><P> Write a program to read the list of triples (i,j,p) where i, j and
+p are positive integers all in the range (1..100) and find all the pairs
+(h,s) so that company h controls company s.
+
+</P><H3>PROGRAM NAME: concom</H3>
+
+<H3>INPUT FORMAT</H3>
+
+<TABLE border="1">
+<TBODY><TR> <TD> Line 1: </TD> <TD> n, the number of input triples to follow</TD> </TR>
+<TR> <TD> Line 2..n+1: </TD> <TD> Three integers per line as a triple
+(i,j,p) described above.  </TD>
+</TR>
+
+</TBODY></TABLE>
+
+<H3>SAMPLE INPUT (file concom.in) </H3>
+
+<PRE>3
+1 2 80
+2 3 80
+3 1 20
+</PRE>
+
+<H3>OUTPUT FORMAT</H3>
+
+List 0 or more companies that control other companies.  Each line
+contains two integers that denote that the company whose number is the
+first integer controls the company whose number is the second integer.
+Order the lines in ascending order of the first integer (and ascending
+order of the second integer to break ties).  Do not print that a
+company controls itself.
+
+<H3>SAMPLE OUTPUT (file concom.out)</H3>
+
+<PRE>1 2
+1 3
+2 3
+</PRE>
+<BR>
+<HR>
+<FORM action="http://ace.delos.com/upload3" enctype="multipart/form-data" method="POST">
+<B>Submission file Name:</B> <INPUT type="file" name="filename">
+<INPUT type="submit" value="Send it in!">
+<INPUT type="hidden" name="a" value="zJVBjQtO85h">
+<INPUT type="hidden" name="S" value="concom">
+</FORM>
+
+<CENTER>
+<A href="http://ace.delos.com/usacogate?a=zJVBjQtO85h"> USACO Gateway </A> &nbsp;| &nbsp;
+<A href="mailto:kolstad@ace.delos.com">Comment or Question </A>
+</CENTER>
+
+
+</BODY></HTML>

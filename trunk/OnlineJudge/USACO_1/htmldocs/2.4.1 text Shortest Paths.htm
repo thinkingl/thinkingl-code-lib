@@ -1,0 +1,679 @@
+
+<!-- saved from url=(0050)http://ace.delos.com/usacotext2?a=wTx5h9qaQ5J&S=sp -->
+<HTML><HEAD><META http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"><TITLE>Shortest Paths
+</TITLE>
+</HEAD><BODY bgcolor="#f0f0f0">
+<FONT face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">
+<DIV style="width:45em;background-color:white;border-style:solid;border-width:1px;padding:1em;">
+<TABLE cellspacing="8">
+   <TBODY><TR><TD><IMG src="./2.4.1 text Shortest Paths_files/cowhead2.gif"></TD>
+       <TD>&nbsp;&nbsp;&nbsp;</TD>
+       <TD><B><FONT size="5">
+	<FONT face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">
+	Shortest Paths
+</FONT></FONT></B><FONT size="5"></FONT></TD>
+   </TR>
+</TBODY></TABLE>
+
+<H4>Sample Problem: Overfencing [Kolstad &amp; Schrijvers, Spring 1999 USACO Open]
+
+<P>
+Farmer John created a huge maze of fences in a field.  He omitted two
+fence segments on the edges, thus creating two ``exits'' for the maze.
+The maze is a `perfect' maze; you can find a way out of the maze from
+any point inside it.
+
+</P><P>
+Given the layout of the maze, calculate the number of steps required to
+exit the maze from the `worst' point in the maze (the point that is
+`farther' from either exit when walking optimally to the closest exit).
+
+</P><P>
+Here's what one particular W=5, H=3 maze looks like: 
+<BR>
+<TT><FONT size="2"> <BR>
++-+-+-+-+-+<BR>
+|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|<BR>
++-+&nbsp;+-+&nbsp;+&nbsp;+<BR>
+|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;|&nbsp;|<BR>
++&nbsp;+-+-+&nbsp;+&nbsp;+<BR>
+|&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;<BR>
++-+&nbsp;+-+-+-+<BR>
+</FONT></TT>
+
+</P></H4><H4>The Abstraction
+
+<P>
+Given:
+
+</P><UL>
+
+<LI>A directed graph with nonnegative weighted edges</LI>
+
+<LI> A path between two vertices of a graph is any sequence of adjacent
+edges joining them </LI>
+
+<LI> The shortest path between two vertices in a graph is the path
+which has minimal cost, where cost is the sum of the weights of
+edges in the path.</LI>
+
+</UL>
+
+<P>
+Problems often require only the cost of a shortest path not necessarily
+the path itself.  This sample problem requires calculating only the
+costs of shortest paths between exits and interior points of the maze.
+Specifically, it requires the maximum of all of those various costs.
+
+</P></H4><H4>Dijkstra's algorithm to find shortest paths in a weighted graph
+
+<P>
+Given: lists of vertices, edges, and edge costs,
+this algorithm `visits' vertices in order of their distance from the
+source vertex.
+
+</P><UL>
+
+<LI> Start by setting the distance of all notes to infinity and
+the source's distance to 0.</LI>
+
+<LI> At each step, find the vertex u of minimum distance that hasn't been
+processed already.  This vertex's distance is now frozen as the
+minimal cost of the shortest path to it from the source.</LI>
+
+<LI> Look at appending each neighbor v of vertex u to the shortest
+path to u.  Check vertex v to see if this is a better path
+than the current known path to v.  If so, update the best path information.
+</LI>
+
+</UL>
+
+<P>
+In determining the shortest path to a particular vertex, this
+algorithm determines all shorter paths from the source vertex as
+well since no more work is required to calculate <I>all</I> shortest
+paths from a single source to vertices in a graph.
+
+</P><P>
+Reference: Chapter 25 of [Cormen, Leiserson, Rivest]
+
+</P><P>
+Pseudocode:
+<BR>
+<TT><FONT size="2"> <BR>
+#&nbsp;distance(j)&nbsp;is&nbsp;distance&nbsp;from&nbsp;source&nbsp;vertex&nbsp;to&nbsp;vertex&nbsp;j<BR>
+#&nbsp;parent(j)&nbsp;is&nbsp;the&nbsp;vertex&nbsp;that&nbsp;precedes&nbsp;vertex&nbsp;j&nbsp;in&nbsp;any&nbsp;shortest&nbsp;path<BR>
+#&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(to&nbsp;reconstruct&nbsp;the&nbsp;path&nbsp;subsequently)&nbsp;<BR><BR>
+&nbsp;1&nbsp;For&nbsp;all&nbsp;nodes&nbsp;i<BR>
+&nbsp;2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;distance(i)&nbsp;=&nbsp;infinity&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	#&nbsp;not&nbsp;reachable&nbsp;yet<BR>
+&nbsp;3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;visited(i)&nbsp;=&nbsp;False<BR>
+&nbsp;4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;parent(i)&nbsp;=&nbsp;nil		#&nbsp;no&nbsp;path&nbsp;to&nbsp;vertex&nbsp;yet&nbsp;<BR><BR>
+&nbsp;5&nbsp;distance(source)&nbsp;=&nbsp;0		#&nbsp;source&nbsp;-&gt;&nbsp;source&nbsp;is&nbsp;start&nbsp;of&nbsp;all&nbsp;paths<BR>
+&nbsp;6&nbsp;parent(source)&nbsp;=&nbsp;nil<BR>
+&nbsp;7&nbsp;
+&nbsp;8&nbsp;while&nbsp;(nodesvisited&nbsp;&lt;&nbsp;graphsize)<BR>
+&nbsp;9&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;find&nbsp;unvisited&nbsp;vertex&nbsp;with&nbsp;min&nbsp;distance&nbsp;to&nbsp;source;&nbsp;call&nbsp;it&nbsp;vertex&nbsp;i<BR>
+10&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert&nbsp;(distance(i)&nbsp;!=&nbsp;infinity,&nbsp;"Graph&nbsp;is&nbsp;not&nbsp;connected")&nbsp;<BR><BR>
+11&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;visited(i)&nbsp;=&nbsp;True		#&nbsp;mark&nbsp;vertex&nbsp;i&nbsp;as&nbsp;visited&nbsp;<BR><BR>
+&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;update&nbsp;distances&nbsp;of&nbsp;neighbors&nbsp;of&nbsp;i<BR>
+12&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;For&nbsp;all&nbsp;neighbors&nbsp;j&nbsp;of&nbsp;vertex&nbsp;i<BR>
+13&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;distance(i)&nbsp;+&nbsp;weight(i,j)&nbsp;&lt;&nbsp;distance(j)&nbsp;then<BR>
+14&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;distance(j)&nbsp;=&nbsp;distance(i)&nbsp;+&nbsp;weight(i,j)<BR>
+15&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;parent(j)&nbsp;=&nbsp;i<BR>
+</FONT></TT>
+
+</P><P>
+Running time of this formulation is O(<I>V</I><SUP>2</SUP>).  You can
+obtain O(<I>E</I> log <I>V</I>) (where <I>E</I> is the number of edges
+and <I>V</I> is the number of vertices) by using a heap to determine the next
+vertex to visit, but this is considerably more complex to code and only
+appreciably faster on large, sparse graphs.
+
+</P></H4><H4>Sample Algorithm Execution
+
+<P>
+Consider the graph below, whose edge weights can be expressed two
+different ways:
+<TABLE>
+<TBODY><TR> <TD>
+
+<BR><IMG src="./2.4.1 text Shortest Paths_files/sp.exec1.gif"><BR>
+
+</TD><TD> &nbsp; &nbsp; &nbsp; &nbsp;
+</TD><TD>
+
+<CENTER>
+<TABLE>
+<TBODY><TR><TD>Edge</TD>  <TD>Weight</TD></TR>
+<TR><TD align="center">(1, 3)</TD>  <TD align="center">5</TD></TR>
+<TR><TD align="center">(1, 4)</TD>  <TD align="center">8</TD></TR>
+<TR><TD align="center">(3, 4)</TD>  <TD align="center">2</TD></TR>
+<TR><TD align="center">(3, 5)</TD>  <TD align="center">3</TD></TR>
+<TR><TD align="center">(4, 2)</TD>  <TD align="center">3</TD></TR>
+<TR><TD align="center">(4, 6)</TD>  <TD align="center">7</TD></TR>
+<TR><TD align="center">(5, 2)</TD>  <TD align="center">6</TD></TR>
+<TR><TD align="center">(2, 6)</TD>  <TD align="center">2</TD></TR>
+</TBODY></TABLE>
+</CENTER>
+
+</TD><TD>
+
+<CENTER>
+<TABLE>
+<TBODY><TR><TD align="center">&nbsp;</TD> <TD align="center">1</TD> <TD align="center">2</TD> <TD align="center">3</TD> <TD align="center">4</TD> <TD align="center">5</TD> <TD align="center">6</TD></TR>
+<TR><TD align="center">1</TD> <TD align="center">0</TD> <TD align="center">0</TD> <TD align="center">5</TD> <TD align="center">8</TD> <TD align="center">0</TD> <TD align="center">0</TD></TR>
+<TR><TD align="center">2</TD> <TD align="center">0</TD> <TD align="center">0</TD> <TD align="center">0</TD> <TD align="center">3</TD> <TD align="center">6</TD> <TD align="center">2</TD></TR>
+<TR><TD align="center">3</TD> <TD align="center">5</TD> <TD align="center">0</TD> <TD align="center">0</TD> <TD align="center">2</TD> <TD align="center">3</TD> <TD align="center">0</TD></TR>
+<TR><TD align="center">4</TD> <TD align="center">8</TD> <TD align="center">3</TD> <TD align="center">2</TD> <TD align="center">0</TD> <TD align="center">0</TD> <TD align="center">7</TD></TR>
+<TR><TD align="center">5</TD> <TD align="center">0</TD> <TD align="center">6</TD> <TD align="center">3</TD> <TD align="center">0</TD> <TD align="center">0</TD> <TD align="center">0</TD></TR>
+<TR><TD align="center">6</TD> <TD align="center">0</TD> <TD align="center">2</TD> <TD align="center">0</TD> <TD align="center">7</TD> <TD align="center">0</TD> <TD align="center">0</TD></TR>
+</TBODY></TABLE>
+</CENTER>
+
+</TD></TR></TBODY></TABLE>
+
+</P><P> Here is the initial state of the program, both graphically and in a table:
+
+<TABLE>
+<TBODY><TR><TD>
+<IMG src="./2.4.1 text Shortest Paths_files/sp.exec2.gif" valign="top">
+
+</TD><TD>
+
+<CENTER>
+<TABLE border="1">
+<TBODY><TR>
+<TD align="center">  <TD align="center"> 
+<TD align="center">Distance to</TD>  <TD align="center"> </TR>
+<TR>
+<TD align="center">Node</TD>  <TD align="center">Visited</TD> 
+<TD align="center">Source</TD>  <TD align="center">Parent</TD> </TR>
+<TR>
+<TD align="center">1</TD>  <TD align="center">T</TD> 
+<TD align="center">0</TD>  <TD align="center">nil</TD> </TR>
+<TR>
+<TD align="center">2</TD>  <TD align="center">F</TD> 
+<TD align="center">infinity</TD>  <TD align="center">nil</TD> </TR>
+<TR>
+<TD align="center">3</TD>  <TD align="center">F</TD> 
+<TD align="center">infinity</TD>  <TD align="center">nil</TD> </TR>
+<TR>
+<TD align="center">4</TD>  <TD align="center">F</TD> 
+<TD align="center">infinity</TD>  <TD align="center">nil</TD> </TR>
+<TR>
+<TD align="center">5</TD>  <TD align="center">F</TD> 
+<TD align="center">infinity</TD>  <TD align="center">nil</TD> </TR>
+<TR>
+<TD align="center">6</TD>  <TD align="center">F</TD> 
+<TD align="center">infinity</TD>  <TD align="center">nil</TD> </TR>
+</TBODY></TABLE>
+</CENTER>
+
+</TD></TR></TBODY></TABLE>
+
+<TABLE>
+<TBODY><TR><TD width="200">
+Updating the table, node 1's neighbors include nodes 3 and 4.
+
+</TD><TD>
+
+<CENTER>
+<TABLE border="1">
+<TBODY><TR>
+<TD align="center">  <TD align="center"> 
+<TD align="center">Distance to</TD>  <TD align="center"> </TR>
+<TR>
+<TD align="center">Node</TD>  <TD align="center">Visited</TD> 
+<TD align="center">Source</TD>  <TD align="center">Parent</TD> </TR>
+<TR>
+<TD align="center">1</TD>  <TD align="center">T</TD> 
+<TD align="center">0</TD>  <TD align="center">nil</TD> </TR>
+<TR>
+<TD align="center">2</TD>  <TD align="center">F</TD> 
+<TD align="center">infinity</TD>  <TD align="center">nil</TD> </TR>
+<TR>
+<TD align="center">3</TD>  <TD align="center">F</TD> 
+<TD align="center"><B>5</B></TD>  <TD align="center"><B>1</B></TD> </TR>
+<TR>
+<TD align="center">4</TD>  <TD align="center">F</TD> 
+<TD align="center"><B>8</B></TD>  <TD align="center"><B>1</B></TD> </TR>
+<TR>
+<TD align="center">5</TD>  <TD align="center">F</TD> 
+<TD align="center">infinity</TD>  <TD align="center">nil</TD> </TR>
+<TR>
+<TD align="center">6</TD>  <TD align="center">F</TD> 
+<TD align="center">infinity</TD>  <TD align="center">nil</TD> </TR>
+</TBODY></TABLE>
+</CENTER>
+</TD></TR></TBODY></TABLE>
+
+</P><P> Node 3 is the closest unvisited node to the source node (smallest
+distance shown in column 3), so it is the next visited:
+
+<TABLE>
+<TBODY><TR><TD>
+<IMG src="./2.4.1 text Shortest Paths_files/sp.exec3.gif">
+
+</TD><TD>
+
+<CENTER>
+<TABLE border="1">
+<TBODY><TR>
+<TD align="center">  <TD align="center"> 
+<TD align="center">Distance to</TD>  <TD align="center"> </TR>
+<TR>
+<TD align="center">Node</TD>  <TD align="center">Visited</TD> 
+<TD align="center">Source</TD>  <TD align="center">Parent</TD> </TR>
+<TR>
+<TD align="center">1</TD>  <TD align="center">T</TD> 
+<TD align="center">0</TD>  <TD align="center">nil</TD> </TR>
+<TR>
+<TD align="center">2</TD>  <TD align="center">F</TD> 
+<TD align="center">infinity</TD>  <TD align="center">nil</TD> </TR>
+<TR>
+<TD align="center">3</TD>  <TD align="center"><B>T</B></TD> 
+<TD align="center">5</TD>  <TD align="center">1</TD> </TR>
+<TR>
+<TD align="center">4</TD>  <TD align="center">F</TD> 
+<TD align="center">8</TD>  <TD align="center">1</TD> </TR>
+<TR>
+<TD align="center">5</TD>  <TD align="center">F</TD> 
+<TD align="center">infinity</TD>  <TD align="center">nil</TD> </TR>
+<TR>
+<TD align="center">6</TD>  <TD align="center">F</TD> 
+<TD align="center">infinity</TD>  <TD align="center">nil</TD> </TR>
+</TBODY></TABLE>
+</CENTER>
+
+</TD></TR></TBODY></TABLE>
+
+<TABLE>
+<TBODY><TR><TD width="200">
+Node 3's neighbors are nodes 1, 4, and 5.  Updating the unvisited
+neighbors yields:
+
+</TD><TD>
+<CENTER>
+<TABLE border="1">
+<TBODY><TR>
+<TD align="center">  <TD align="center"> 
+<TD align="center">Distance to</TD>  <TD align="center"> </TR>
+<TR>
+<TD align="center">Node</TD>  <TD align="center">Visited</TD> 
+<TD align="center">Source</TD>  <TD align="center">Parent</TD> </TR>
+<TR>
+<TD align="center">1</TD>  <TD align="center">T</TD> 
+<TD align="center">0</TD>  <TD align="center">nil</TD> </TR>
+<TR>
+<TD align="center">2</TD>  <TD align="center">F</TD> 
+<TD align="center">infinity</TD>  <TD align="center">nil</TD> </TR>
+<TR>
+<TD align="center">3</TD>  <TD align="center">T</TD> 
+<TD align="center">5</TD>  <TD align="center">1</TD> </TR>
+<TR>
+<TD align="center">4</TD>  <TD align="center">F</TD> 
+<TD align="center"><B>7</B></TD>  <TD align="center"><B>3</B></TD> </TR>
+<TR>
+<TD align="center">5</TD>  <TD align="center">F</TD> 
+<TD align="center"><B>8</B></TD>  <TD align="center"><B>3</B></TD> </TR>
+<TR>
+<TD align="center">6</TD>  <TD align="center">F</TD> 
+<TD align="center">infinity</TD>  <TD align="center">nil</TD> </TR>
+</TBODY></TABLE>
+</CENTER>
+</TD></TR></TBODY></TABLE>
+
+</P><P>Node 4 is the closest unvisited node to the source.  Its neighbors
+are 1, 2, 3, and 6, of which only nodes 2 and 6 need be updated,
+since the others have already been visited:
+
+<TABLE> <TBODY><TR> <TD>
+<IMG src="./2.4.1 text Shortest Paths_files/sp.exec4.gif">
+
+</TD><TD>
+
+<CENTER>
+<TABLE border="1">
+<TBODY><TR>
+<TD align="center">  <TD align="center"> 
+<TD align="center">Distance to</TD>  <TD align="center"> </TR>
+<TR>
+<TD align="center">Node</TD>  <TD align="center">Visited</TD> 
+<TD align="center">Source</TD>  <TD align="center">Parent</TD> </TR>
+<TR>
+<TD align="center">1</TD>  <TD align="center">T</TD> 
+<TD align="center">0</TD>  <TD align="center">nil</TD> </TR>
+<TR>
+<TD align="center">2</TD>  <TD align="center">F</TD> 
+<TD align="center"><B>10</B></TD>  <TD align="center"><B>4</B></TD> </TR>
+<TR>
+<TD align="center">3</TD>  <TD align="center">T</TD> 
+<TD align="center">5</TD>  <TD align="center">1</TD> </TR>
+<TR>
+<TD align="center">4</TD>  <TD align="center"><B>T</B></TD> 
+<TD align="center">7</TD>  <TD align="center">3</TD> </TR>
+<TR>
+<TD align="center">5</TD>  <TD align="center">F</TD> 
+<TD align="center">8</TD>  <TD align="center">3</TD> </TR>
+<TR>
+<TD align="center">6</TD>  <TD align="center">F</TD> 
+<TD align="center"><B>14</B></TD>  <TD align="center"><B>4</B></TD> </TR>
+</TBODY></TABLE>
+</CENTER>
+
+</TD></TR></TBODY></TABLE>
+
+</P><P>Of the three remaining nodes (2, 5, and 6), node 5 is closest
+to the source and should be visited next.  Its neighbors include
+nodes 3 and 2, of which only node 2 is unvisited.  The distance
+to node 2 via node 5 is 14, which is longer than the already
+listed distance of 10 via node 4, so node 2 is not updated.
+
+<TABLE><TBODY><TR><TD>
+<IMG src="./2.4.1 text Shortest Paths_files/sp.exec5.gif">
+
+</TD><TD>
+
+<CENTER>
+<TABLE border="1">
+<TBODY><TR>
+<TD align="center">  <TD align="center"> 
+<TD align="center">Distance to</TD>  <TD align="center"> </TR>
+<TR>
+<TD align="center">Node</TD>  <TD align="center">Visited</TD> 
+<TD align="center">Source</TD>  <TD align="center">Parent</TD> </TR>
+<TR>
+<TD align="center">1</TD>  <TD align="center">T</TD> 
+<TD align="center">0</TD>  <TD align="center">nil</TD> </TR>
+<TR>
+<TD align="center">2</TD>  <TD align="center">F</TD> 
+<TD align="center">10</TD>  <TD align="center">4</TD> </TR>
+<TR>
+<TD align="center">3</TD>  <TD align="center">T</TD> 
+<TD align="center">5</TD>  <TD align="center">1</TD> </TR>
+<TR>
+<TD align="center">4</TD>  <TD align="center">T</TD> 
+<TD align="center">7</TD>  <TD align="center">3</TD> </TR>
+<TR>
+<TD align="center">5</TD>  <TD align="center"><B>T</B></TD> 
+<TD align="center">8</TD>  <TD align="center">3</TD> </TR>
+<TR>
+<TD align="center">6</TD>  <TD align="center">F</TD> 
+<TD align="center">14</TD>  <TD align="center">4</TD> </TR>
+</TBODY></TABLE>
+</CENTER>
+</TD></TR></TBODY></TABLE>
+
+</P><P>The closest of the two remaining nodes is node 2, whose neighbors
+are nodes 4, 5, and 6, of which only node 6 is unvisited.
+Furthermore, node 6 is now closer, so its entry must be updated:
+
+<TABLE><TBODY><TR><TD>
+<IMG src="./2.4.1 text Shortest Paths_files/sp.exec6.gif">
+
+</TD><TD>
+
+<CENTER>
+<TABLE border="1">
+<TBODY><TR>
+<TD align="center">  <TD align="center"> 
+<TD align="center">Distance to</TD>  <TD align="center"> </TR>
+<TR>
+<TD align="center">Node</TD>  <TD align="center">Visited</TD> 
+<TD align="center">Source</TD>  <TD align="center">Parent</TD> </TR>
+<TR>
+<TD align="center">1</TD>  <TD align="center">T</TD> 
+<TD align="center">0</TD>  <TD align="center">nil</TD> </TR>
+<TR>
+<TD align="center">2</TD>  <TD align="center"><B>T</B></TD> 
+<TD align="center">10</TD>  <TD align="center">4</TD> </TR>
+<TR>
+<TD align="center">3</TD>  <TD align="center">T</TD> 
+<TD align="center">5</TD>  <TD align="center">1</TD> </TR>
+<TR>
+<TD align="center">4</TD>  <TD align="center">T</TD> 
+<TD align="center">7</TD>  <TD align="center">3</TD> </TR>
+<TR>
+<TD align="center">5</TD>  <TD align="center">T</TD> 
+<TD align="center">8</TD>  <TD align="center">3</TD> </TR>
+<TR>
+<TD align="center">6</TD>  <TD align="center">F</TD> 
+<TD align="center"><B>12</B></TD>  <TD align="center"><B>2</B></TD> </TR>
+</TBODY></TABLE>
+</CENTER>
+
+</TD></TR></TBODY></TABLE>
+
+</P><P>Finally, only node 6 remains to be visited.  All of its neighbors
+(indeed the entire graph) have now been visited:
+
+<TABLE><TBODY><TR><TD>
+<IMG src="./2.4.1 text Shortest Paths_files/sp.exec7.gif">
+
+</TD><TD>
+
+<CENTER>
+<TABLE border="1">
+<TBODY><TR>
+<TD align="center">  <TD align="center"> 
+<TD align="center">Distance to</TD>  <TD align="center"> </TR>
+<TR>
+<TD align="center">Node</TD>  <TD align="center">Visited</TD> 
+<TD align="center">Source</TD>  <TD align="center">Parent</TD> </TR>
+<TR>
+<TD align="center">1</TD>  <TD align="center">T</TD> 
+<TD align="center">0</TD>  <TD align="center">nil</TD> </TR>
+<TR>
+<TD align="center">2</TD>  <TD align="center">T</TD> 
+<TD align="center">10</TD>  <TD align="center">4</TD> </TR>
+<TR>
+<TD align="center">3</TD>  <TD align="center">T</TD> 
+<TD align="center">5</TD>  <TD align="center">1</TD> </TR>
+<TR>
+<TD align="center">4</TD>  <TD align="center">T</TD> 
+<TD align="center">7</TD>  <TD align="center">3</TD> </TR>
+<TR>
+<TD align="center">5</TD>  <TD align="center">T</TD> 
+<TD align="center">8</TD>  <TD align="center">3</TD> </TR>
+<TR>
+<TD align="center">6</TD>  <TD align="center"><B>T</B></TD> 
+<TD align="center">12</TD>  <TD align="center">2</TD> </TR>
+</TBODY></TABLE>
+</CENTER>
+
+</TD></TR></TBODY></TABLE>
+
+</P></H4><H5> Sample Problem: Package Delivery </H5>
+
+<P> Given a set of locations, lengths of roads connecting them,
+and an ordered list of package dropoff locations.  Find the length
+of the shortest route that visits each of the package dropoff
+locations in order.
+
+</P><P> Analysis: For each leg of the required path, run Dijkstra's
+algorithm to determine the shortest path connecting the two endpoints.
+If the number of legs in the journey exceeds N, instead of calculating
+each path, calculate the shortest path between all pairs of vertices,
+and then simply paste the shortest path for each leg of the journey
+together to get the entire journey.
+
+</P><H5> Extended Problem: All Pairs, Shortest Paths </H5>
+
+<P> The extended problem is to determine a table <I>a</I>, where:<BR>
+
+<I>a<SUB>i,j</SUB></I> = length of shortest path between <I>i</I> and <I>j</I>,
+or infinity if <I>i</I> and <I>j</I> aren't connected.
+
+</P><P> This problem is usually solved as a subproblem of a larger
+problem, such as the package delivery problem.
+
+</P><P> Dijkstra's algorithm determines shortest paths for one source
+and all destinations in O(<I>N</I><SUP>2</SUP>) time.  We can
+run it for all <I>N</I> sources in O(<I>N</I><SUP>3</SUP>) time.
+
+</P><P> If the paths do not need to be recreated, there's an even
+simpler solution that also runs in O(<I>N</I><SUP>3</SUP>) time.
+
+</P><H5>The Floyd-Warshall Algorithm</H5>
+
+<P> The Floyd-Warshall algorithm finds the length of the shortest
+paths between all pairs of vertices.  It requires an adjacency
+matrix containing edge weights, the algorithm constructs optimal
+paths by piecing together optimal subpaths.
+
+</P><UL>
+
+<LI> Note that the single edge paths might not be optimal and this
+is okay.</LI>
+
+<LI> Start with all single edge paths.  The distance between two vertices
+is the cost of the edge between them or infinity if there is no such
+edge.</LI>
+
+<LI> For each pair of vertices <I>u</I> and <I>v</I>, see if there
+is a vertex <I>w</I> such that the path from <I>u</I> to <I>v</I>
+through <I>w</I> is shorter than the current known path from to
+<I>u</I> to <I>v</I>.  If so, update it.</LI>
+
+<LI> Miraculously, if ordered properly, the process requires only
+one iteration.  </LI>
+
+<LI> For more information on why this works, consult Chapter 26 of
+[Cormen, Leiserson, Rivest].</LI>
+
+</UL>
+
+<P>
+Pseudocode:
+<BR>
+<TT><FONT size="2"> <BR>
+#&nbsp;dist(i,j)&nbsp;is&nbsp;"best"&nbsp;distance&nbsp;so&nbsp;far&nbsp;from&nbsp;vertex&nbsp;i&nbsp;to&nbsp;vertex&nbsp;j&nbsp;<BR><BR>
+#&nbsp;Start&nbsp;with&nbsp;all&nbsp;single&nbsp;edge&nbsp;paths.<BR>
+For&nbsp;i&nbsp;=&nbsp;1&nbsp;to&nbsp;n&nbsp;do<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;For&nbsp;j&nbsp;=&nbsp;1&nbsp;to&nbsp;n&nbsp;do<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dist(i,j)&nbsp;=&nbsp;weight(i,j)&nbsp;<BR><BR>
+For&nbsp;k&nbsp;=&nbsp;1&nbsp;to&nbsp;n&nbsp;do		#&nbsp;k&nbsp;is&nbsp;the&nbsp;`intermediate'&nbsp;vertex<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;For&nbsp;i&nbsp;=&nbsp;1&nbsp;to&nbsp;n&nbsp;do<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;For&nbsp;j&nbsp;=&nbsp;1&nbsp;to&nbsp;n&nbsp;do<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;(dist(i,k)&nbsp;+&nbsp;dist(k,j)&nbsp;&lt;&nbsp;dist(i,j))&nbsp;then	#&nbsp;shorter&nbsp;path?<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dist(i,j)&nbsp;=&nbsp;dist(i,k)&nbsp;+&nbsp;dist(k,j)<BR>
+</FONT></TT>
+
+</P><P> This algorithm runs in O(<I>V</I><SUP>3</SUP>) time.  It requires
+the adjacency matrix form of the graph.
+
+</P><P> It's very easy to code and get right (only a few lines).
+
+</P><P> Even if the solution requires only the single source shortest
+path, this algorithm is recommended, provided the time and memory
+and are available (chances are, if the adjacency matrix fits in
+available memory, there is enough time).
+
+</P><H4>Problem Cues
+
+<P> If the problem wants an optimal path or the cost of a minimal
+route or journey, it is likely a shortest path problem.  Even if
+a graph isn't obvious in a problem, if the problem wants the minimum
+cost of some process and there aren't many states, then it is
+usually easy to superimpose a graph on it.  The big point here:
+shortest path = search for the minimal cost way of doing something.
+
+</P></H4><H4> Extensions 
+
+<P> If the graph is unweighted, the shortest path contains a minimal
+number of edges.  A breadth first search (BFS) will solve the
+problem in this case, using a queue to visit nodes in order of
+their distance from the source.  If there are many vertices but
+few edges, this runs much faster than Dijkstra's algorithm (see
+Amazing Barn in Sample Problems).
+
+</P><P> If negative weight edges are allowed, Dijkstra's algorithm
+breaks down.  Fortunately, the Floyd-Warshall algorithm isn't
+affected so long as there are no negative cycles in the graph (if
+there is a negative cycle, it can be traversed arbitrarily many
+times to get ever `shorter' paths).  So, graphs must be checked
+for them before executing a shortest path algorithm.
+
+</P><P> It is possible to add additional conditions to the definition
+of shortest path (for example, in the event of a tie, the path with
+fewer edges is shorter).  So long as the distance function can be
+augmented along with the comparison function, the problem remains
+the same.  In the example above, the distance function contains
+two values: weight and edge count.  Both values would be compared
+if necessary.
+
+</P></H4><H4> Sample Problems 
+
+</H4><H5> Graph diameter </H5>
+
+<P> Given: an undirected, unweighted, connected graph.  Find two
+vertices which are the farthest apart.
+
+</P><P> Analysis: Find the length of shortest paths for all pairs and
+vertices, and calculate the maximum of these.
+
+</P><H5> Knight moves </H5>
+
+<P> Given: Two squares on an NxN chessboard.  Determine the shortest
+sequence of knight moves from one square to the other.
+
+</P><P> Analysis: Let the chessboard be a graph with 64 vertices.  Each
+vertex has at most 8 edges, representing squares 1 knight move
+away.
+
+</P><H5> Amazing Barn (abridged) [USACO Competition Round 1996] </H5>
+
+<P> Consider a very strange barn that consists of N stalls (N &lt;
+2500).  Each stall has an ID number.  From each stall you can reach
+4 other stalls, but you can't necessarily come back the way you
+came.
+
+</P><P> Given the number of stalls and a formula for adjacent stalls,
+find any of the `most central' stalls.  A stall is `most central'
+if it is among the stalls that yields the lowest average distance
+to other stalls using best paths.
+
+</P><P> Analysis: Compute all shortest paths from each vertex to
+determine its average distance.  Any O(<I>N</I><SUP>3</SUP>)
+algorithm for computing all-pairs shortest paths would be prohibitively
+expensive here since N=2500.  However, there are very few edges (4
+per vertex), making a BFS with queue ideal.  A BFS runs in O(E)
+time, so to compute shortest paths for all sources takes O(VE) time
+- about: <BR>
+ 2500  x  10,000 = 2.5  x  10<SUP>6</SUP>
+things, much more reasonable than 2500<SUP>3</SUP> = 1.56  x 
+10<SUP>10</SUP>
+
+</P><H5> Railroad Routing (abridged) [USACO Training Camp 1997, Contest 1] </H5>
+
+<P> Farmer John has decided to connect his dairy cows directly to
+the town pasteurizing plant by constructing his own personal
+railroad.  Farmer John's land is laid out as a grid of one kilometer
+squares specified as row and column.
+
+</P><P> The normal cost for laying a kilometer of track is $100.  Track
+that must gain or lose elevation between squares is charged a
+per-kilometer cost of $100 + $3  x  meters_of_change_in_elevation.
+If the track's direction changes 45 degrees within a square, costs
+rise an extra $25; a 90 degree turn costs $40.  All other turns
+are not allowed.
+
+</P><P> Given the topographic map, and the location of both John's farm
+and the plan, calculate the cost of the cheapest track layout.
+
+</P><P> Analysis: This is almost a standard shortest path problem, with
+grid squares as vertices and rails as edges, except that the
+direction a square is entered limits the ways you can exit that
+square.  The problem:  it is not possible to specify which edges
+exist in advance (since the path matters).
+
+</P><P> The solution: create eight vertices for each square, one for
+each direction you can enter that square.  Now you can determine
+all of the edges in advance and solve the problem as a shortest
+path problem.
+</P></DIV><BR>
+<CENTER>
+<A href="http://ace.delos.com/usacogate?a=wTx5h9qaQ5J">USACO Gateway</A> | <A href="mailto:kolstad@ace.delos.com">Comment or Question</A>
+</CENTER>
+
+</FONT></BODY></HTML>

@@ -1,0 +1,72 @@
+
+<!-- saved from url=(0054)http://ace.delos.com/usacoprob2?a=zJVBjQtO85h&S=prefix -->
+<HTML><HEAD><META http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"> <TITLE>Problem 44: Longest Prefix</TITLE> </HEAD><BODY background="./2.3.1 Problem 44  Longest Prefix_files/bg3.jpg">
+<IMG src="./2.3.1 Problem 44  Longest Prefix_files/cow1.jpg" width="742" height="118">
+<CENTER>
+<B><FONT size="7">Longest Prefix</FONT></B><BR>
+<B>IOI'96</B>
+</CENTER>
+
+<P>The structure of some biological objects is represented by the sequence
+of their constituents denoted by uppercase letters. Biologists are
+interested in decomposing a long sequence into shorter ones called
+<I>primitives</I>.
+
+</P><P>We say that a sequence S can be composed from a given set of primitives
+P if there is a some sequence of (possibly repeated) primitives from
+the set whose concatenation equals S.  Not necessarily all primitives
+need be present.  For instance the sequence <TT>ABABACABAAB</TT>can be
+composed from the set of primitives </P><PRE>	   {A, AB, BA, CA, BBC}
+</PRE>
+
+<P>The first K characters of S are the <I>prefix of </I>S with length
+K.  Write a program which accepts as input a set of primitives and
+a sequence of constituents and then computes the length of the longest
+prefix that can be composed from primitives.
+
+</P><H3>PROGRAM NAME: prefix</H3>
+
+<H3>INPUT FORMAT</H3>
+
+First, the input file contains the list (length 1..200) of primitives
+(length 1..10) expressed as a series of space-separated strings of
+upper-case characters on one or more lines.  The list of primitives is
+terminated by a line that contains nothing more than a period (`.').
+No primitive appears twice in the list.
+
+Then, the input file contains a sequence S (length 1..200,000) expressed
+as one or more lines, none of which exceed 76 letters in length.  The
+"newlines" are not part of the string S.
+
+<H3>SAMPLE INPUT (file prefix.in) </H3>
+
+<PRE>A AB BA CA BBC
+.
+ABABACABAABC
+</PRE>
+
+<H3>OUTPUT FORMAT</H3>
+
+A single line containing an integer that is the length of the longest
+prefix that can be composed from the set P.
+
+<H3>SAMPLE OUTPUT (file prefix.out)</H3>
+
+<PRE>11
+</PRE>
+<BR>
+<HR>
+<FORM action="http://ace.delos.com/upload3" enctype="multipart/form-data" method="POST">
+<B>Submission file Name:</B> <INPUT type="file" name="filename">
+<INPUT type="submit" value="Send it in!">
+<INPUT type="hidden" name="a" value="zJVBjQtO85h">
+<INPUT type="hidden" name="S" value="prefix">
+</FORM>
+
+<CENTER>
+<A href="http://ace.delos.com/usacogate?a=zJVBjQtO85h"> USACO Gateway </A> &nbsp;| &nbsp;
+<A href="mailto:kolstad@ace.delos.com">Comment or Question </A>
+</CENTER>
+
+
+</BODY></HTML>

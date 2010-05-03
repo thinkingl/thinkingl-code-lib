@@ -1,0 +1,89 @@
+
+<!-- saved from url=(0053)http://ace.delos.com/usacoprob2?a=wTx5h9qaQ5J&S=maze1 -->
+<HTML><HEAD><META http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"> <TITLE>Problem 82: Overfencing</TITLE> </HEAD><BODY background="./2.4.3 Problem 82  Overfencing_files/bg3.jpg">
+<IMG src="./2.4.3 Problem 82  Overfencing_files/cow1.jpg" width="742" height="118">
+<CENTER>
+<B><FONT size="7">Overfencing</FONT></B><BR>
+Kolstad and Schrijvers
+</CENTER>
+
+<P> Farmer John went crazy and created a huge maze of fences out in a
+field.  Happily, he left out two fence segments on the edges, and thus
+created two "exits" for the maze.  Even more happily, the maze
+he created by this overfencing experience is a `perfect' maze: you can
+find a way out of the maze from any point inside it.
+
+</P><P> Given W (1 &lt;= W &lt;= 38), the width of the maze; H (1 &lt;= H
+&lt;= 100), the height of the maze; 2*H+1 lines with width 2*W+1
+characters that represent the maze in a format like that shown later -
+then calculate the number of steps required to exit the maze from the
+`worst' point in the maze (the point that is `farther' from either exit
+even when walking optimally to the closest exit).  Of course, cows walk
+only parallel or perpendicular to the x-y axes; they do not walk on a
+diagonal.  Each move to a new square counts as a single unit of distance
+(including the move "out" of the maze.
+
+</P><P> Here's what one particular W=5, H=3 maze looks like:
+</P><PRE>+-+-+-+-+-+
+|         |
++-+ +-+ + +
+|     | | |
++ +-+-+ + +
+| |     |  
++-+ +-+-+-+
+</PRE>
+
+<P> Fenceposts appear only in odd numbered rows and and odd numbered
+columns (as in the example).  The format should be obvious and self
+explanatory.  Each maze has exactly two blank walls on the outside for
+exiting.
+
+
+</P><H3>PROGRAM NAME: maze1</H3>
+
+<H3>INPUT FORMAT</H3>
+
+<TABLE border="1">
+<TBODY><TR> <TD> Line 1: </TD> <TD>W and H, space separated </TD>
+</TR><TR> <TD> Lines 2 through 2*H+2: </TD> <TD>2*W+1 characters that represent the maze </TD>
+</TR></TBODY></TABLE>
+
+<H3>SAMPLE INPUT (file maze1.in) </H3>
+<PRE>5 3
++-+-+-+-+-+
+|         |
++-+ +-+ + +
+|     | | |
++ +-+-+ + +
+| |     |  
++-+ +-+-+-+
+</PRE>
+
+
+<H3>OUTPUT FORMAT</H3>
+
+A single integer on a single output line.  The integer specifies the
+minimal number of steps that guarantee a cow can exit the maze from any
+possible point inside the maze.
+
+<H3>SAMPLE OUTPUT (file maze1.out)</H3>
+
+<PRE>9
+</PRE>
+The lower left-hand corner is *nine* steps from the closest exit.
+<BR>
+<HR>
+<FORM action="http://ace.delos.com/upload3" enctype="multipart/form-data" method="POST">
+<B>Submission file Name:</B> <INPUT type="file" name="filename">
+<INPUT type="submit" value="Send it in!">
+<INPUT type="hidden" name="a" value="wTx5h9qaQ5J">
+<INPUT type="hidden" name="S" value="maze1">
+</FORM>
+
+<CENTER>
+<A href="http://ace.delos.com/usacogate?a=wTx5h9qaQ5J"> USACO Gateway </A> &nbsp;| &nbsp;
+<A href="mailto:kolstad@ace.delos.com">Comment or Question </A>
+</CENTER>
+
+
+</BODY></HTML>
