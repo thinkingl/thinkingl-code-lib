@@ -1,0 +1,164 @@
+
+<!-- saved from url=(0055)http://ace.delos.com/usacoprob2?a=EzesuTYxaJs&S=msquare -->
+<HTML><HEAD><META http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"> <TITLE>Problem 89: Magic Squares</TITLE> </HEAD><BODY background="./3.2.5 Problem 89  Magic Squares_files/bg3.jpg">
+<IMG src="./3.2.5 Problem 89  Magic Squares_files/cow1.jpg" width="742" height="118">
+<CENTER>
+<B><FONT size="7">Magic Squares</FONT></B><BR>
+<B>IOI'96</B>
+</CENTER>
+
+<P>Following the success of the magic cube, Mr. Rubik invented its planar
+version, called magic squares. This is a sheet composed of 8 equal-sized
+squares:
+
+</P><CENTER>
+<TABLE border="all">
+<TBODY><TR>
+<TD>1</TD>
+<TD>2</TD>
+<TD>3</TD>
+<TD>4</TD>
+</TR>
+<TR>
+<TD>8</TD>
+<TD>7</TD>
+<TD>6</TD>
+<TD>5</TD>
+</TR>
+</TBODY></TABLE>
+</CENTER>
+
+
+<P> In this task we consider the version where each square has a different
+color. Colors are denoted by the first 8 positive integers.  A sheet
+configuration is given by the sequence of colors obtained by reading
+the colors of the squares starting at the upper left corner and going
+in clockwise direction. For instance, the configuration of <EM>Figure
+3</EM> is given by the sequence (1,2,3,4,5,6,7,8).  This configuration
+is the initial configuration.
+
+</P><P> Three basic transformations, identified by the letters `A', `B' and
+`C', can be applied to a sheet:
+</P><UL>
+<LI>'A': exchange the top and bottom row,</LI>
+<LI>'B': single right circular shifting of the rectangle,</LI>
+<LI>'C': single clockwise rotation of  the middle four squares.</LI>
+</UL>
+
+<P>Below is a demonstration of applying the transformations to
+the initial squares given above:
+</P><CENTER>
+<TABLE>
+<TBODY><TR>
+<TD>
+<B>A:</B>
+</TD>
+<TD>
+<TABLE border="all">
+<TBODY><TR><TD>8</TD>
+<TD>7</TD>
+<TD>6</TD>
+<TD>5</TD>
+</TR>
+<TR>
+<TD>1</TD>
+<TD>2</TD>
+<TD>3</TD>
+<TD>4</TD>
+</TR>
+</TBODY></TABLE>
+</TD>
+
+<TD>
+<B>B:</B>
+</TD>
+<TD>
+<TABLE border="all">
+<TBODY><TR>
+<TD>4</TD>
+<TD>1</TD>
+<TD>2</TD>
+<TD>3</TD>
+</TR>
+<TR>
+<TD>5</TD>
+<TD>8</TD>
+<TD>7</TD>
+<TD>6</TD>
+</TR>
+</TBODY></TABLE>
+</TD>
+
+<TD>
+<B>C:</B>
+</TD><TD>
+<TABLE border="all">
+<TBODY><TR>
+<TD>1</TD>
+<TD>7</TD>
+<TD>2</TD>
+<TD>4</TD>
+</TR>
+<TR>
+<TD>8</TD>
+<TD>6</TD>
+<TD>3</TD>
+<TD>5</TD>
+</TR>
+</TBODY></TABLE>
+</TD>
+</TR>
+</TBODY></TABLE>
+</CENTER>
+
+<P> All possible configurations are available using the three basic
+transformations.
+
+</P><P> You are to write a program that computes a minimal sequence of basic
+transformations that transforms the initial configuration above to a
+specific target configuration.
+
+</P><H3>PROGRAM NAME: msquare</H3>
+
+<H3>INPUT FORMAT</H3>
+
+<P>A single line with eight space-separated integers (a permutation of
+(1..8)) that are the target configuration.
+
+</P><H3>SAMPLE INPUT (file msquare.in) </H3>
+
+<PRE>2 6 8 4 5 7 3 1 
+</PRE>
+
+<H3>OUTPUT FORMAT</H3>
+
+<TABLE border="1">
+<TBODY><TR> <TD> Line 1: </TD> <TD>A single integer that is the length
+of the shortest transformation sequence.</TD> </TR>
+<TR> <TD> Line 2: </TD> <TD>
+The lexically earliest string of transformations expressed
+as a string of characters, 60 per line except possibly the last line.
+</TD> </TR>
+</TBODY></TABLE>
+
+<H3>SAMPLE OUTPUT (file msquare.out)</H3>
+
+<PRE>7
+BCABCCB
+</PRE>
+<BR>
+<HR>
+<FORM action="http://ace.delos.com/upload3" enctype="multipart/form-data" method="POST">
+<B>Submission file Name:</B> <INPUT type="file" name="filename">
+<INPUT type="submit" value="Send it in!">
+<INPUT type="hidden" name="a" value="EzesuTYxaJs">
+<INPUT type="hidden" name="S" value="msquare">
+</FORM>
+
+<CENTER>
+<A href="http://ace.delos.com/usacogate?a=EzesuTYxaJs"> USACO Gateway </A> &nbsp;| &nbsp;
+<A href="mailto:kolstad@ace.delos.com">Comment or Question </A>
+</CENTER>
+
+
+</BODY></HTML>

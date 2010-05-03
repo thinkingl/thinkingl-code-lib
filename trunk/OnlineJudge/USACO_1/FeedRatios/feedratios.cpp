@@ -82,7 +82,15 @@ typedef unsigned long u32;
 #define THINKINGL 1
 #endif
 
+/** 饲料成分数目. */
+const int COMPONENT_NUM = 3;
+/** 饲料种类. */
+const int FEED_NUM = 3;
 
+/** 最大的成分比率. */
+const int MAX_FEED_RATIO = 100;
+
+const char* NO_RATIO = "NONE";
 
 int main()
 {
@@ -98,7 +106,114 @@ int main()
 		return 0;
 	}
 
+	// 读取目标成分.
+	int arGoalComponent[ COMPONENT_NUM ] = {0};
+	for ( int i=0; i<COMPONENT_NUM; ++i )
+	{
+		fin >> arGoalComponent[i];
+	}
 
+	// 读取现有成分.
+	int arFeedComponent[ FEED_NUM ][ COMPONENT_NUM ];
+	memset( arFeedComponent, 0, sizeof( arFeedComponent ) );
+
+	for ( int i=0; i<FEED_NUM; ++i )
+	{
+		for ( int k=0; k<COMPONENT_NUM;++k )
+		{
+			fin >> arFeedComponent[ i ][k];
+		}
+	}
+
+	// 穷举搭配.
+	int arFeedRatio[FEED_NUM] = { 0 };
+	// 题目要求输出搭配出的成分与目标成分之间的比率.
+	int nRatioMyToGoal = 0;
+	while ( arFeedRatio[ FEED_NUM-1 ] < 100 )
+	{
+		// 获取当前混合饲料中各种成分的比率.
+		int arComponentRatio[ COMPONENT_NUM ] = {0};
+		for ( int i=0; i<FEED_NUM; ++i )
+		{
+			for ( int k=0; k<COMPONENT_NUM; ++k )
+			{
+				// 第i种饲料的第k种成分.饲料比率 * 饲料中的成分比率.
+				arComponentRatio[k] += arFeedRatio[i] * arFeedComponent[i][k];
+			}
+		}
+		// 当前搭配是否符合要求.
+		// 先假设目标成分组合没有公约数.
+		bool bOk = true;
+		int nRatio = -1;
+		for ( int i=0; i<COMPONENT_NUM; ++i )
+		{
+			// 避免除0.
+			if ( 0 == arGoalComponent[i]  )
+			{
+				if ( arComponentRatio[i] != 0 )
+				{
+					bOk = false;
+					break;
+				}
+				else
+				{
+					continue; // 都为0,符合要求但不能确定比率.
+				}		
+			}
+
+			if ( arComponentRatio[i] % arGoalComponent[i] != 0 ) // 目标成分必须能整除当前成分.
+			{
+				bOk = false;
+				break;
+			}
+			if ( nRatio == -1 )
+			{
+				nRatio = arComponentRatio[i] / arGoalComponent[i];
+//				bOk = false
+			}
+			else if( nRatio == 0 || ( nRatio != arComponentRatio[i] / arGoalComponent[i] ) ) // 各种成分的当前比例要和目标成分的比例比值一样.
+			{
+				bOk = false;
+				break;
+			}
+
+		}
+		if( bOk )
+		{
+			// 这种组合ok了.
+			nRatioMyToGoal = nRatio;
+			break;
+		}
+
+		// 下一种搭配.
+		++arFeedRatio[0];
+		for ( int i=0; i<FEED_NUM-1; ++i )
+		{
+			if ( arFeedRatio[i] >= 100 )
+			{
+				arFeedRatio[i] = 0;
+				arFeedRatio[i+1] ++;
+			}
+		}
+	}
+
+	// 是否找到了符合条件的组合.
+	if ( arFeedRatio[ FEED_NUM-1 ] < 100 )
+	{
+		// ok
+		for( int i=0; i<FEED_NUM; ++i )
+		{
+			fout << arFeedRatio[i] << " ";
+		}
+
+		// 我的比例同目标比例的比例.
+		fout << nRatioMyToGoal << endl;
+
+	}
+	else
+	{
+		fout << NO_RATIO << endl;
+	}
 
 	fin.close();
 	fout.close();
