@@ -82,6 +82,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "FeedRatios", "FeedRatios\Fe
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MagicSquares", "MagicSquares\MagicSquares.vcproj", "{D72A3F7E-15DA-4836-AF43-8F562823998B}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SweetButter", "SweetButter\SweetButter.vcproj", "{15A0E03A-990F-4D8A-A129-DB9FE84A04D9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -381,6 +383,16 @@ Global
 		{D72A3F7E-15DA-4836-AF43-8F562823998B}.Release|Mixed Platforms.Build.0 = Release|Win32
 		{D72A3F7E-15DA-4836-AF43-8F562823998B}.Release|Win32.ActiveCfg = Release|Win32
 		{D72A3F7E-15DA-4836-AF43-8F562823998B}.Release|Win32.Build.0 = Release|Win32
+		{15A0E03A-990F-4D8A-A129-DB9FE84A04D9}.Debug|Any CPU.ActiveCfg = Debug|Win32
+		{15A0E03A-990F-4D8A-A129-DB9FE84A04D9}.Debug|Mixed Platforms.ActiveCfg = Debug|Win32
+		{15A0E03A-990F-4D8A-A129-DB9FE84A04D9}.Debug|Mixed Platforms.Build.0 = Debug|Win32
+		{15A0E03A-990F-4D8A-A129-DB9FE84A04D9}.Debug|Win32.ActiveCfg = Debug|Win32
+		{15A0E03A-990F-4D8A-A129-DB9FE84A04D9}.Debug|Win32.Build.0 = Debug|Win32
+		{15A0E03A-990F-4D8A-A129-DB9FE84A04D9}.Release|Any CPU.ActiveCfg = Release|Win32
+		{15A0E03A-990F-4D8A-A129-DB9FE84A04D9}.Release|Mixed Platforms.ActiveCfg = Release|Win32
+		{15A0E03A-990F-4D8A-A129-DB9FE84A04D9}.Release|Mixed Platforms.Build.0 = Release|Win32
+		{15A0E03A-990F-4D8A-A129-DB9FE84A04D9}.Release|Win32.ActiveCfg = Release|Win32
+		{15A0E03A-990F-4D8A-A129-DB9FE84A04D9}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
