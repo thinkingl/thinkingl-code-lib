@@ -110,7 +110,7 @@ public:
 	CMatrix& operator = ( const CMatrix& another );
 
 	/** 取行的地址. */
-	int * operator[]( int nIndex );
+	int * operator[]( int nIndex ) const;
 
 	/** 矩阵大小. */
 	int size() const;
@@ -166,7 +166,7 @@ CMatrix& CMatrix::operator =( const CMatrix& another )
 	}
 }
 
-int *CMatrix::operator [](int nIndex)
+int *CMatrix::operator [](int nIndex) const
 {
 	return ( this->m_arMatrix + nIndex * m_nMatrixSize );
 }
@@ -206,6 +206,183 @@ void FloydWarshall( const CMatrix& weightMatrix, CMatrix& distanceMatrix )
 				}
 			}
 		}
+	}
+}
+
+/** SPFA算法,算是对Bellman-ford算法的优化.
+*	全名: Shortest Path Faster Algorithm.
+*/
+void SPFAAll( const CMatrix& weightMatrix, CMatrix& distanceMatrix )
+{
+	// 转换为相邻点的表示法.
+	const int MAX_NODE_NUM = 800;
+	typedef std::vector<int> TIntVector;
+	TIntVector arConnectedNode[ MAX_NODE_NUM ];
+	for ( int i=0; i<weightMatrix.size(); ++i )
+	{
+		for ( int k=0; k<weightMatrix.size(); ++k )
+		{
+			if ( weightMatrix[i][k] < DISTANCE_NOT_CONNECT && i != k )
+			{
+				arConnectedNode[i].push_back( k );
+			}
+		}
+	}
+
+	
+
+	// 初始化距离.
+	distanceMatrix = weightMatrix;
+	for ( int i=0; i<distanceMatrix.size(); ++i )
+	{
+		for ( int k=0; k<distanceMatrix.size(); ++k )
+		{
+//			if ( i != k )
+			{
+				distanceMatrix[i][k] = DISTANCE_NOT_CONNECT;
+				distanceMatrix[k][i] = DISTANCE_NOT_CONNECT;
+			}
+		}
+	}
+
+
+	for ( int i=0; i<weightMatrix.size(); ++i )
+	{
+		// 保存需要 relax 的节点.
+		typedef std::queue<int> TIntQueue;
+		TIntQueue tVetexNeedRelax;
+		// 节点是否在队列中.
+		bool arInQueue[ MAX_NODE_NUM ] = { false };
+
+		distanceMatrix[i][i] = 0;
+		tVetexNeedRelax.push( i );
+
+		while ( !tVetexNeedRelax.empty() )
+		{
+			int nNode = tVetexNeedRelax.front();
+			tVetexNeedRelax.pop();
+			arInQueue[ nNode ] = false;
+
+			for ( int k=0; k<arConnectedNode[ nNode ].size(); ++k )
+			{
+				int nRelaxNode = arConnectedNode[nNode][k];
+				int nTmpDistance = distanceMatrix[i][nRelaxNode];
+
+				int nWeight = weightMatrix[ nRelaxNode ][ nNode ];
+				int nDis = distanceMatrix[ i ][ nNode ] ;
+				int nDis2 = distanceMatrix[ i ][ nRelaxNode ];
+
+				if ( weightMatrix[ nRelaxNode ][ nNode ] + distanceMatrix[ i ][ nNode ] < distanceMatrix[ i ][ nRelaxNode ] )
+				{
+					distanceMatrix[ nRelaxNode ][ i ] = weightMatrix[ nRelaxNode ][ nNode ] + distanceMatrix[ i ][ nNode ];
+					distanceMatrix[ i ][ nRelaxNode ] = weightMatrix[ nRelaxNode ][ nNode ] + distanceMatrix[ i ][ nNode ];
+					if ( !arInQueue[ nRelaxNode ] )
+					{
+						tVetexNeedRelax.push( nRelaxNode );
+						arInQueue[ nRelaxNode ] = true;
+					}
+				}
+			}
+			
+
+		}
+	}
+
+}
+
+/** 优化的Djkstra算法. 
+*	分别求各点到其余各点的距离.
+*	const CMatrix& weightMatrix (IN) weight.
+*	CMatrix& distanceMatrix (OUT) distance.
+*	失败,效率很低.
+*/
+void DjkstraAllFast( const CMatrix& weightMatrix, CMatrix& distanceMatrix )
+{
+	// 转换为相邻点的表示法.
+	const int MAX_NODE_NUM = 800;
+	typedef std::vector<int> TIntVector;
+	TIntVector arConnectedNode[ MAX_NODE_NUM ];
+	for ( int i=0; i<weightMatrix.size(); ++i )
+	{
+		for ( int k=0; k<weightMatrix.size(); ++k )
+		{
+			if ( weightMatrix[i][k] < DISTANCE_NOT_CONNECT )
+			{
+				arConnectedNode[i].push_back( k );
+			}
+		}
+	}
+
+	// 初始化距离.
+	distanceMatrix = weightMatrix;
+
+	// 对每一个点做Djkstra算法.
+	for ( int i=0; i<weightMatrix.size(); ++i )
+	{
+		// 图外的点的距离树.
+		typedef std::set<u32> TNodeSet;
+		typedef std::map<u32, TNodeSet> TDistanceNodeMap;
+		TDistanceNodeMap tDistanceNode;
+		// 目标节点放入树中.
+		tDistanceNode[0].insert( i );
+
+		// 是否已经访问过的标志.
+		bool arVisited[ MAX_NODE_NUM ] = { false };
+
+		// 不断的寻找离i点最近的点.
+		while( !tDistanceNode.empty() )
+		{
+			// 不在图上而距离图最近的点.
+			int nNode = *( tDistanceNode.begin()->second.begin() );
+			
+			// 删除这个点.
+			tDistanceNode.begin()->second.erase( tDistanceNode.begin()->second.begin() );
+			if ( tDistanceNode.begin()->second.empty() )
+			{
+				tDistanceNode.erase( tDistanceNode.begin() );
+			}
+			
+			// 已经访问.
+			arVisited[ nNode ] = true;
+
+			// 更新这个点的邻居的距离.
+			for ( int w=0; w<arConnectedNode[nNode].size(); ++w )
+			{
+				u32 neighbour = arConnectedNode[nNode][w];
+				u32 newDistance = distanceMatrix[nNode][i] + weightMatrix[nNode][neighbour];
+				u32 oldDistance = distanceMatrix[i][neighbour];
+				if ( newDistance < distanceMatrix[i][neighbour] )
+				{
+					distanceMatrix[i][neighbour] = newDistance;
+					distanceMatrix[neighbour][i] = newDistance;
+				}
+
+				// 更新表中的距离.
+				if ( !arVisited[ neighbour ] )
+				{
+					tDistanceNode[ newDistance ].insert( neighbour );
+
+					if ( newDistance != oldDistance )
+					{
+						if ( tDistanceNode.find( oldDistance ) != tDistanceNode.end() )
+						{
+							tDistanceNode[ oldDistance ].erase( neighbour );
+							if ( tDistanceNode[oldDistance].empty() )
+							{
+								tDistanceNode.erase( oldDistance );
+							}
+						}
+					}
+				}
+			}
+
+		}
+
+		// 标记已经访问.
+
+		// 更新这一点连接的点的距离.
+
+
 	}
 }
 
@@ -260,7 +437,30 @@ int main()
 	}
 
 	// 获取最短距离.
+#if 0
 	FloydWarshall( tPastureDistance, tPastureDistance );
+#elif 0
+	CMatrix weightMatrix = tPastureDistance;
+	DjkstraAllFast( weightMatrix, tPastureDistance );
+#else
+	CMatrix weightMatrix = tPastureDistance;
+	SPFAAll( weightMatrix, tPastureDistance );
+#endif
+
+#ifdef THINKINGL
+	CMatrix distanceCheck = weightMatrix;
+	FloydWarshall( weightMatrix, distanceCheck );
+	for ( int i=0; i<distanceCheck.size(); ++i )
+	{
+		for ( int k=0; k<distanceCheck.size(); ++k )
+		{
+			if( distanceCheck[i][k] != tPastureDistance[i][k] )
+			{
+				cout << "Error!!" << endl;
+			}
+		}
+	}
+#endif
 
 	// 遍历,看哪个点最短.
 	int nShortestSum = DISTANCE_NOT_CONNECT;
