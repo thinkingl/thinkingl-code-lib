@@ -1,0 +1,74 @@
+
+<!-- saved from url=(0053)http://ace.delos.com/usacoprob2?a=qZnfAPw4Dgf&S=range -->
+<HTML><HEAD><META http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"> <TITLE>Problem 2: Home on the Range</TITLE> </HEAD><BODY background="./3.3.5 Problem 2  Home on the Range_files/bg3.jpg">
+<IMG src="./3.3.5 Problem 2  Home on the Range_files/cow1.jpg" width="742" height="118">
+<CENTER>
+<B><FONT size="7">Home on the Range</FONT></B><BR>
+</CENTER>
+
+<P> Farmer John grazes his cows on a large, square field N (2 &lt;= N
+&lt;= 250) miles on a side (because, for some reason, his cows will only
+graze on precisely square land segments).  Regrettably, the cows have
+ravaged some of the land (always in 1 mile square increments). FJ needs
+to map the remaining squares (at least 2x2 on a side) on which his cows
+can graze (in these larger squares, no 1x1 mile segments are ravaged).
+
+</P><P> Your task is to count up all the various square grazing areas within
+the supplied dataset and report the number of square grazing areas (of
+sizes &gt;= 2x2) remaining. Of course, grazing areas may overlap for
+purposes of this report.
+
+
+</P><H3>PROGRAM NAME: range</H3>
+
+<H3>INPUT FORMAT</H3>
+
+<TABLE border="1">
+<TBODY><TR> <TD> Line 1: </TD> <TD> N, the number of miles on each side of
+the field.</TD> </TR>
+<TR> <TD> Line 2..N+1: </TD> <TD> N characters with no spaces.  0
+	  represents "ravaged for that block; 1 represents "ready to
+	  eat".  </TD>
+</TR>
+</TBODY></TABLE>
+
+<H3>SAMPLE INPUT (file range.in) </H3>
+
+<PRE>6
+101111
+001111
+111111
+001111
+101101
+111001
+</PRE>
+
+<H3>OUTPUT FORMAT</H3>
+
+<P>Potentially several lines with the size of the square and the
+number of such squares that exist.  Order them in ascending order from
+smallest to largest size.
+
+
+</P><H3>SAMPLE OUTPUT (file range.out)</H3>
+
+<PRE>2 10
+3 4
+4 1  
+</PRE>
+<BR>
+<HR>
+<FORM action="http://ace.delos.com/upload3" enctype="multipart/form-data" method="POST">
+<B>Submission file Name:</B> <INPUT type="file" name="filename">
+<INPUT type="submit" value="Send it in!">
+<INPUT type="hidden" name="a" value="qZnfAPw4Dgf">
+<INPUT type="hidden" name="S" value="range">
+</FORM>
+
+<CENTER>
+<A href="http://ace.delos.com/usacogate?a=qZnfAPw4Dgf"> USACO Gateway </A> &nbsp;| &nbsp;
+<A href="mailto:kolstad@ace.delos.com">Comment or Question </A>
+</CENTER>
+
+
+</BODY></HTML>

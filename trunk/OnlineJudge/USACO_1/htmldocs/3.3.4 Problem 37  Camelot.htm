@@ -1,0 +1,115 @@
+
+<!-- saved from url=(0055)http://ace.delos.com/usacoprob2?a=qZnfAPw4Dgf&S=camelot -->
+<HTML><HEAD><META http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"> <TITLE>Problem 37: Camelot</TITLE> </HEAD><BODY background="./3.3.4 Problem 37  Camelot_files/bg3.jpg">
+<IMG src="./3.3.4 Problem 37  Camelot_files/cow1.jpg" width="742" height="118">
+<CENTER>
+<B><FONT size="7">Camelot</FONT></B><BR>
+<B>IOI 98</B>
+</CENTER>
+
+<P>Centuries ago, King Arthur and the Knights of the Round Table
+used to meet every year on New Year's Day to celebrate their
+fellowship. In remembrance of these events, we consider a board
+game for one player, on which one chesspiece king and several knight
+pieces are placed on squares, no two knights on the same square.
+
+</P><P>This example board is the standard 8x8 array of squares:<BR>
+
+</P><CENTER>
+<IMG src="./3.3.4 Problem 37  Camelot_files/camelot-1.gif">
+</CENTER>
+
+<P>The King can move to any adjacent square from <IMG src="./3.3.4 Problem 37  Camelot_files/camelot-b.gif"> to <IMG src="./3.3.4 Problem 37  Camelot_files/camelot-w.gif"> as long as it does not fall off
+the board:<BR>
+
+</P><CENTER>
+<IMG src="./3.3.4 Problem 37  Camelot_files/camelot-2.gif">
+</CENTER>
+
+<P>A Knight can jump from <IMG src="./3.3.4 Problem 37  Camelot_files/camelot-b(1).gif">
+to <IMG src="./3.3.4 Problem 37  Camelot_files/camelot-w.gif">, as long as it does not
+fall off the board:
+
+</P><CENTER>
+<IMG src="./3.3.4 Problem 37  Camelot_files/camelot-3.gif">
+</CENTER>
+
+<P>During the play, the player can place more than one piece in the
+same square. The board squares are assumed big enough so that a
+piece is never an obstacle for any other piece to move freely.
+
+</P><P> The player's goal is to move the pieces so as to gather them
+all in the same square - in the minimal number of moves.  To achieve
+this, he must move the pieces as prescribed above. Additionally,
+whenever the king and one or more knights are placed in the same
+square, the player may choose to move the king and one of the knights
+together from that point on, as a single knight, up to the final gathering
+point. Moving the knight together with the king counts as a single
+move.
+
+</P><P>Write a program to compute the minimum number of moves the player
+must perform to produce the gathering.  The pieces can gather on any
+square, of course.
+
+</P><H3>PROGRAM NAME: camelot</H3>
+
+<H3>INPUT FORMAT</H3>
+
+<TABLE border="1">
+<TBODY><TR> <TD> Line 1: </TD> <TD> Two space-separated integers: R,C, the
+number of rows and columns on the board.  There will be no more
+than 26 columns and no more than 30 rows.</TD> </TR>
+<TR> <TD> Line 2..end: </TD> <TD>
+The input file contains a sequence of space-separated letter/digit pairs,
+1 or more per line.  The first pair represents the board position of
+the king; subsequent pairs represent positions of knights.  There might
+be 0 knights or the knights might fill the board. Rows are numbered
+starting at 1; columns are specified as upper case characters
+starting with `A'.
+</TD> </TR>
+</TBODY></TABLE>
+
+<H3>SAMPLE INPUT (file camelot.in) </H3>
+
+<PRE>8 8
+D 4
+A 3 A 8
+H 1 H 8
+</PRE>
+
+<P>The king is positioned at D4. There are four knights, positioned at A3,
+A8, H1, and H8.
+
+</P><H3>OUTPUT FORMAT</H3>
+
+A single line with the number of moves to aggregate the pieces.
+
+<H3>SAMPLE OUTPUT (file camelot.out)</H3>
+
+<PRE>10
+</PRE>
+
+<H3> SAMPLE OUTPUT ELABORATION </H3>
+<P> They gather at B5.
+<BR> Knight 1: A3 - B5 (1 move)
+<BR> Knight 2: A8 - C7 - B5 (2 moves)
+<BR> Knight 3: H1 - G3 - F5 - D4 (picking up king) - B5 (4 moves)
+<BR> Knight 4: H8 - F7 - D6 - B5 (3 moves)
+<BR>1 + 2 + 4 + 3 = 10 moves.
+
+<BR>
+</P><HR>
+<FORM action="http://ace.delos.com/upload3" enctype="multipart/form-data" method="POST">
+<B>Submission file Name:</B> <INPUT type="file" name="filename">
+<INPUT type="submit" value="Send it in!">
+<INPUT type="hidden" name="a" value="qZnfAPw4Dgf">
+<INPUT type="hidden" name="S" value="camelot">
+</FORM>
+
+<CENTER>
+<A href="http://ace.delos.com/usacogate?a=qZnfAPw4Dgf"> USACO Gateway </A> &nbsp;| &nbsp;
+<A href="mailto:kolstad@ace.delos.com">Comment or Question </A>
+</CENTER>
+
+
+</BODY></HTML>

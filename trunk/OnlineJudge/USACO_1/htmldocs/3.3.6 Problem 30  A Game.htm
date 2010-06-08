@@ -1,0 +1,64 @@
+
+<!-- saved from url=(0053)http://ace.delos.com/usacoprob2?a=qZnfAPw4Dgf&S=game1 -->
+<HTML><HEAD><META http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"> <TITLE>Problem 30: A Game</TITLE> </HEAD><BODY background="./3.3.6 Problem 30  A Game_files/bg3.jpg">
+<IMG src="./3.3.6 Problem 30  A Game_files/cow1.jpg" width="742" height="118">
+<CENTER>
+<B><FONT size="7">A Game</FONT></B><BR>
+<B>IOI'96 - Day 1</B>
+</CENTER>
+
+<P>Consider the following two-player game played with a sequence
+of N positive integers (2 &lt;= N &lt;= 100) laid onto a game board.
+Player 1 starts the game.  The players move alternately by selecting
+a number from either the left or the right end of the sequence.
+That number is then deleted from the board, and its value is added
+to the score of the player who selected it.  A player wins if his
+sum is greater than his opponents.
+
+</P><P> Write a program that implements the optimal strategy.  The
+optimal strategy yields maximum points when playing against the "best
+possible" opponent.  Your program must further implement an optimal
+strategy for player 2.
+
+</P><H3>PROGRAM NAME: game1</H3>
+
+<H3>INPUT FORMAT</H3>
+
+<TABLE border="1">
+<TBODY><TR> <TD> Line 1: </TD> <TD>N, the size of the board </TD> </TR>
+<TR> <TD> Line 2-etc: </TD> <TD> N integers in the range (1..200) that
+are the contents of the game board, from left to right</TD> </TR>
+</TBODY></TABLE>
+
+<H3>SAMPLE INPUT (file game1.in) </H3>
+
+<PRE>6
+4 7 2 9
+5 2
+</PRE>
+
+<H3>OUTPUT FORMAT</H3>
+
+Two space-separated integers on a line: the score of Player 1 followed
+by the score of Player 2.
+
+<H3>SAMPLE OUTPUT (file game1.out)</H3>
+
+<PRE>18 11
+</PRE>
+<BR>
+<HR>
+<FORM action="http://ace.delos.com/upload3" enctype="multipart/form-data" method="POST">
+<B>Submission file Name:</B> <INPUT type="file" name="filename">
+<INPUT type="submit" value="Send it in!">
+<INPUT type="hidden" name="a" value="qZnfAPw4Dgf">
+<INPUT type="hidden" name="S" value="game1">
+</FORM>
+
+<CENTER>
+<A href="http://ace.delos.com/usacogate?a=qZnfAPw4Dgf"> USACO Gateway </A> &nbsp;| &nbsp;
+<A href="mailto:kolstad@ace.delos.com">Comment or Question </A>
+</CENTER>
+
+
+</BODY></HTML>
