@@ -100,6 +100,9 @@ typedef unsigned long u32;
 #define THINKINGL 1
 #endif
 
+typedef std::vector<int> TIntVec;
+typedef std::vector< TIntVec > TIntVecVec;
+
 class CMatrix
 {
 public:
@@ -110,22 +113,23 @@ public:
 	CMatrix& operator = ( const CMatrix& another );
 
 	/** 取行的地址. */
-	int * operator[]( int nIndex ) const;
+	TIntVec& operator[]( int nIndex );
 
 	/** 矩阵大小. */
 	int size() const;
 private:
 	void Release();
 private:
-	int *m_arMatrix;
-	int m_nMatrixSize;
+	// 难以调试.
+	//int *m_arMatrix;
+	//int m_nMatrixSize;
+	
+	TIntVecVec m_tMatrix;
 };
 
 CMatrix::CMatrix( int nMatrixSize )
 {
-	this->m_nMatrixSize = nMatrixSize;
-	this->m_arMatrix = new int[nMatrixSize*nMatrixSize];
-	memset( m_arMatrix, 0, sizeof( m_arMatrix[0] * nMatrixSize * nMatrixSize ) );
+	this->m_tMatrix = TIntVecVec( nMatrixSize, TIntVec( nMatrixSize,0 ) );
 }
 
 CMatrix::~CMatrix()
@@ -135,18 +139,11 @@ CMatrix::~CMatrix()
 
 void CMatrix::Release()
 {
-	if ( m_arMatrix )
-	{
-		delete[] m_arMatrix;
-		m_arMatrix = 0;
-	}	
-	m_nMatrixSize = 0;
+	
 }
 
 CMatrix::CMatrix( const CMatrix& another )
-{
-	m_arMatrix = 0;
-	m_nMatrixSize = 0;
+{	
 	*this = another;
 }
 
@@ -159,21 +156,19 @@ CMatrix& CMatrix::operator =( const CMatrix& another )
 	else
 	{
 		this->Release();
-		this->m_nMatrixSize = another.m_nMatrixSize;
-		this->m_arMatrix = new int[this->m_nMatrixSize * this->m_nMatrixSize ];
-		memcpy( m_arMatrix, another.m_arMatrix, sizeof( m_arMatrix ) * this->m_nMatrixSize * this->m_nMatrixSize );
+		this->m_tMatrix = another.m_tMatrix;
 		return *this;
 	}
 }
 
-int *CMatrix::operator [](int nIndex) const
+TIntVec& CMatrix::operator [](int nIndex)
 {
-	return ( this->m_arMatrix + nIndex * m_nMatrixSize );
+	return m_tMatrix[nIndex];
 }
 
 int CMatrix::size()const
 {
-	return this->m_nMatrixSize;
+	return this->m_tMatrix.size();
 }
 
 
@@ -186,10 +181,15 @@ const u32 DISTANCE_NOT_CONNECT = 10000000;
 *	const CMatrix& weightMatrix (IN) 节点之间的weight.
 *	CMatrix& distanceMatrix		(OUT) 节点之间的Distance.
 */
-void FloydWarshall( const CMatrix& weightMatrix, CMatrix& distanceMatrix )
+void FloydWarshall( const CMatrix& weightMatrix, CMatrix& distanceMatrix, CMatrix& parentMatrix )
 {
 	// 距离矩阵初始化.
 	distanceMatrix = weightMatrix;
+
+	for ( int i=0; i<parentMatrix.size(); ++i )
+	{
+		parentMatrix[i] = TIntVec( parentMatrix.size(), -1 );
+	}
 
 	for ( int i=0; i<weightMatrix.size(); ++i ) // i作为中间节点.
 	{
@@ -203,6 +203,9 @@ void FloydWarshall( const CMatrix& weightMatrix, CMatrix& distanceMatrix )
 				{
 					distanceMatrix[j][k] = nNewDistance;
 					distanceMatrix[k][j] = nNewDistance;
+
+					parentMatrix[j][k] = i;
+					parentMatrix[k][j] = i;
 				}
 			}
 		}
@@ -212,12 +215,10 @@ void FloydWarshall( const CMatrix& weightMatrix, CMatrix& distanceMatrix )
 /** SPFA算法,算是对Bellman-ford算法的优化.
 *	全名: Shortest Path Faster Algorithm.
 */
-void SPFAAll( const CMatrix& weightMatrix, CMatrix& distanceMatrix )
+void SPFAAll( CMatrix& weightMatrix, CMatrix& distanceMatrix, CMatrix& parentMatrix )
 {
 	// 转换为相邻点的表示法.
-	const int MAX_NODE_NUM = 800;
-	typedef std::vector<int> TIntVector;
-	TIntVector arConnectedNode[ MAX_NODE_NUM ];
+	TIntVecVec arConnectedNode( weightMatrix.size() );
 	for ( int i=0; i<weightMatrix.size(); ++i )
 	{
 		for ( int k=0; k<weightMatrix.size(); ++k )
@@ -245,6 +246,8 @@ void SPFAAll( const CMatrix& weightMatrix, CMatrix& distanceMatrix )
 		}
 	}
 
+	parentMatrix = distanceMatrix;
+
 
 	for ( int i=0; i<weightMatrix.size(); ++i )
 	{
@@ -252,6 +255,7 @@ void SPFAAll( const CMatrix& weightMatrix, CMatrix& distanceMatrix )
 		typedef std::queue<int> TIntQueue;
 		TIntQueue tVetexNeedRelax;
 		// 节点是否在队列中.
+		const int MAX_NODE_NUM = 2000;
 		bool arInQueue[ MAX_NODE_NUM ] = { false };
 
 		distanceMatrix[i][i] = 0;
@@ -272,15 +276,21 @@ void SPFAAll( const CMatrix& weightMatrix, CMatrix& distanceMatrix )
 				int nDis = distanceMatrix[ i ][ nNode ] ;
 				int nDis2 = distanceMatrix[ i ][ nRelaxNode ];
 
-				if ( weightMatrix[ nRelaxNode ][ nNode ] + distanceMatrix[ i ][ nNode ] < distanceMatrix[ i ][ nRelaxNode ] )
+				int nNewDistance = weightMatrix[ nRelaxNode ][ nNode ] + distanceMatrix[ i ][ nNode ];
+
+				if ( nNewDistance < distanceMatrix[ i ][ nRelaxNode ] )
 				{
-					distanceMatrix[ nRelaxNode ][ i ] = weightMatrix[ nRelaxNode ][ nNode ] + distanceMatrix[ i ][ nNode ];
-					distanceMatrix[ i ][ nRelaxNode ] = weightMatrix[ nRelaxNode ][ nNode ] + distanceMatrix[ i ][ nNode ];
+//					distanceMatrix[ nRelaxNode ][ i ] = nNewDistance;
+					distanceMatrix[ i ][ nRelaxNode ] = nNewDistance;
 					if ( !arInQueue[ nRelaxNode ] )
 					{
 						tVetexNeedRelax.push( nRelaxNode );
 						arInQueue[ nRelaxNode ] = true;
 					}
+
+					// 父亲.
+					parentMatrix[i][nRelaxNode] = nNode;
+//					parentMatrix[nRelaxNode][i] = nNode;
 				}
 			}
 			
@@ -296,7 +306,7 @@ void SPFAAll( const CMatrix& weightMatrix, CMatrix& distanceMatrix )
 *	CMatrix& distanceMatrix (OUT) distance.
 *	失败,效率很低.
 */
-void DjkstraAllFast( const CMatrix& weightMatrix, CMatrix& distanceMatrix )
+void DjkstraAllFast( CMatrix& weightMatrix, CMatrix& distanceMatrix )
 {
 	// 转换为相邻点的表示法.
 	const int MAX_NODE_NUM = 800;
@@ -444,12 +454,14 @@ int main()
 	DjkstraAllFast( weightMatrix, tPastureDistance );
 #else
 	CMatrix weightMatrix = tPastureDistance;
-	SPFAAll( weightMatrix, tPastureDistance );
+	CMatrix parentMatrix( weightMatrix.size() );
+	SPFAAll( weightMatrix, tPastureDistance, parentMatrix );
 #endif
 
-#ifdef THINKINGL
+#ifdef THINKINGLddd
 	CMatrix distanceCheck = weightMatrix;
-	FloydWarshall( weightMatrix, distanceCheck );
+	CMatrix parentFloydMatrix( distanceCheck.size() );
+	FloydWarshall( weightMatrix, distanceCheck, parentFloydMatrix );
 	for ( int i=0; i<distanceCheck.size(); ++i )
 	{
 		for ( int k=0; k<distanceCheck.size(); ++k )
