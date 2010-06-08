@@ -278,6 +278,7 @@ void SPFAAll( CMatrix& weightMatrix, CMatrix& distanceMatrix, CMatrix& parentMat
 
 				int nNewDistance = weightMatrix[ nRelaxNode ][ nNode ] + distanceMatrix[ i ][ nNode ];
 
+				// !注意,下面不能随意的双向赋值,否则后面该放入队列的节点就不能放入队列了.
 				if ( nNewDistance < distanceMatrix[ i ][ nRelaxNode ] )
 				{
 //					distanceMatrix[ nRelaxNode ][ i ] = nNewDistance;
