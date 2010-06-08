@@ -1,0 +1,95 @@
+
+<!-- saved from url=(0053)http://ace.delos.com/usacoprob2?a=qZnfAPw4Dgf&S=fence -->
+<HTML><HEAD><META http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"> <TITLE>Problem 5: Riding the Fences</TITLE> </HEAD><BODY background="./3.3.2 Problem 5  Riding the Fences_files/bg3.jpg">
+<IMG src="./3.3.2 Problem 5  Riding the Fences_files/cow1.jpg" width="742" height="118">
+<CENTER>
+<B><FONT size="7">Riding the Fences</FONT></B><BR>
+</CENTER>
+
+<P> Farmer John owns a large number of fences that must be repaired
+annually.  He traverses the fences by riding a horse along each and
+every one of them (and nowhere else) and fixing the broken parts.
+
+</P><P> Farmer John is as lazy as the next farmer and hates to ride the same
+fence twice.  Your program must read in a description of a network of
+fences and tell Farmer John a path to traverse each fence length exactly
+once, if possible.  Farmer J can, if he wishes, start and finish at any
+fence intersection.
+
+</P><P> Every fence connects two fence intersections, which are numbered
+inclusively from 1 through 500 (though some farms have far fewer than
+500 intersections).  Any number of fences (&gt;=1) can meet at a fence
+intersection.  It is always possible to ride from any fence to any other
+fence (i.e., all fences are "connected").
+
+</P><P>Your program must output the path of intersections that, if interpreted
+as a base 500 number, would have the smallest magnitude.
+
+</P><P> There will always be at least one solution for each set of input
+data supplied to your program for testing.
+
+</P><H3>PROGRAM NAME: fence</H3>
+
+<H3>INPUT FORMAT</H3>
+
+<TABLE border="1">
+<TBODY><TR> <TD> Line 1: </TD> <TD> The number of fences, F (1 &lt;= F &lt;= 1024) </TD> </TR>
+<TR> <TD> Line 2..F+1: </TD> <TD> A pair of integers (1 &lt;= i,j &lt;=
+500) that tell which pair of intersections this fence connects.  </TD>
+</TR>
+
+</TBODY></TABLE>
+
+<H3>SAMPLE INPUT (file fence.in) </H3>
+
+
+<PRE>9
+1 2
+2 3
+3 4
+4 2
+4 5
+2 5
+5 6
+5 7
+4 6
+</PRE>
+
+<H3>OUTPUT FORMAT</H3>
+
+<P>The output consists of F+1 lines, each containing a single integer.
+Print the number of the starting intersection on the first line, the
+next intersection's number on the next line, and so on, until the final
+intersection on the last line.  There might be many possible answers to
+any given input set, but only one is ordered correctly.
+
+
+</P><H3>SAMPLE OUTPUT (file fence.out)</H3>
+
+<PRE>1
+2
+3
+4
+2
+5
+4
+6
+5
+7
+</PRE>
+<BR>
+<HR>
+<FORM action="http://ace.delos.com/upload3" enctype="multipart/form-data" method="POST">
+<B>Submission file Name:</B> <INPUT type="file" name="filename">
+<INPUT type="submit" value="Send it in!">
+<INPUT type="hidden" name="a" value="qZnfAPw4Dgf">
+<INPUT type="hidden" name="S" value="fence">
+</FORM>
+
+<CENTER>
+<A href="http://ace.delos.com/usacogate?a=qZnfAPw4Dgf"> USACO Gateway </A> &nbsp;| &nbsp;
+<A href="mailto:kolstad@ace.delos.com">Comment or Question </A>
+</CENTER>
+
+
+</BODY></HTML>

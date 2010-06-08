@@ -1,0 +1,92 @@
+
+<!-- saved from url=(0056)http://ace.delos.com/usacoprob2?a=qZnfAPw4Dgf&S=shopping -->
+<HTML><HEAD><META http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"> <TITLE>Problem 32: Shopping Offers</TITLE> </HEAD><BODY background="./3.3.3 Problem 32  Shopping Offers_files/bg3.jpg">
+<IMG src="./3.3.3 Problem 32  Shopping Offers_files/cow1.jpg" width="742" height="118">
+<CENTER>
+<B><FONT size="7">Shopping Offers</FONT></B><BR>
+<B>IOI'95</B>
+</CENTER>
+
+<P> In a certain shop, each kind of product has an integer price.  For
+example, the price of a flower is 2 zorkmids (z) and the price of a vase
+is 5z.  In order to attract more customers, the shop introduces some
+special offers.
+
+</P><P> A special offer consists of one or more product items together for
+a reduced price, also an integer.  Examples:
+</P><UL>
+<LI>three flowers for 5z instead of 6z, or
+</LI><LI>two vases together with one flower for 10z instead of 12z.
+</LI></UL>
+
+<P> Write a program that calculates the price a customer has to pay for
+a purchase, making optimal use of the special offers to make the price
+as low as possible.  You are not allowed to add items, even if that
+would lower the price.
+
+</P><P> For the prices and offers given above, the (lowest) price for three
+flowers and two vases is 14z:  two vases and one flower for the reduced
+price of 10z and two flowers for the regular price of 4z.
+
+</P><H3>PROGRAM NAME: shopping</H3>
+
+<H3>INPUT FORMAT</H3>
+
+<P>The input file has a set of offers followed by a purchase.
+<TABLE border="1">
+<TBODY><TR> <TD> Line 1: </TD> <TD>s, the number of special offers, (0 &lt;=
+          s &lt;= 99).  </TD> </TR>
+<TR> <TD> Line 2..s+1: </TD> <TD> Each line describes an offer using
+several integers.  The first integer is n (1 &lt;= n &lt;= 5), the number
+of products that are offered.  The subsequent n pairs of integers c and
+k indicate that k items (1 &lt;= k &lt;= 5) with product code c (1 &lt;=
+c &lt;= 999) are part of the offer.  The last number p on the line stands
+for the reduced price (1 &lt;= p &lt;= 9999).  The reduced price of an
+offer is less than the sum of the regular prices.  </TD> </TR>
+<TR> <TD> Line s+2: </TD> <TD>
+The first line contains the number b (0 &lt;= b &lt;= 5) of different
+kinds of products to be purchased. </TD></TR>
+<TR> <TD> Line s+3..s+b+2: </TD> <TD> Each of the subsequent b lines
+contains three values: c, k, and p.  The value c is the (unique) product
+code (1 &lt;= c &lt;= 999).  The value k indicates how many items of
+this product are to be purchased (1 &lt;= k &lt;= 5).  The value p is
+the regular price per item (1 &lt;= p &lt;= 999).  At most 5*5=25 items
+can be in the basket.  </TD> </TR>
+
+</TBODY></TABLE>
+
+</P><H3>SAMPLE INPUT (file shopping.in) </H3>
+
+<PRE>2
+1 7 3 5
+2 7 1 8 2 10
+2
+7 3 2
+8 2 5
+</PRE>
+
+<H3>OUTPUT FORMAT</H3>
+
+A single line with one integer: the lowest possible price to be paid
+for the purchases.
+
+<H3>SAMPLE OUTPUT (file shopping.out)</H3>
+
+<PRE>14
+</PRE>
+<BR>
+<HR>
+<FORM action="http://ace.delos.com/upload3" enctype="multipart/form-data" method="POST">
+<B>Submission file Name:</B> <INPUT type="file" name="filename">
+<INPUT type="submit" value="Send it in!">
+<INPUT type="hidden" name="a" value="qZnfAPw4Dgf">
+<INPUT type="hidden" name="S" value="shopping">
+</FORM>
+
+<CENTER>
+<A href="http://ace.delos.com/usacogate?a=qZnfAPw4Dgf"> USACO Gateway </A> &nbsp;| &nbsp;
+<A href="mailto:kolstad@ace.delos.com">Comment or Question </A>
+</CENTER>
+
+
+</BODY></HTML>
