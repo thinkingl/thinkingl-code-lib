@@ -111,6 +111,7 @@ int main()
 		return 0;
 	}
 
+	typedef std::vector< int > TNeibour;
 
 
 	fin.close();
