@@ -75,6 +75,7 @@ SAMPLE OUTPUT (file fence.out)
 #include <memory.h>
 #include <complex>
 #include <queue>
+#include <stack>
 
 #ifdef _WIN32
 #include <time.h>
@@ -111,7 +112,112 @@ int main()
 		return 0;
 	}
 
-	typedef std::vector< int > TNeibour;
+	typedef std::map< int, int > TNeighborFenceIntersection;
+	typedef std::map< int, TNeighborFenceIntersection > TFarmMap;
+
+	TFarmMap tMap;
+	int nFenceNum;
+	fin >> nFenceNum;
+
+	// 对节点邻居计数.
+	typedef std::map<int,int> TCountMap;
+	TCountMap tCountMap;
+
+	for ( int i=0; i<nFenceNum; ++i )
+	{
+		int nStart, nEnd;
+		fin >> nStart >> nEnd;
+
+		tMap[nStart][nEnd]++;
+		tMap[nEnd][nStart]++;
+
+		tCountMap[nStart]++;
+		tCountMap[nEnd] ++;
+	}
+
+	// 节点栈.
+	typedef std::stack< int > TIntStack;
+	TIntStack tFenceIntersectionStack;
+
+	// 寻找一个奇数点做起点.如果没有的话,就以第一个做起点.
+	TCountMap::iterator iterCount = tCountMap.begin();
+
+	while ( iterCount != tCountMap.end() )
+	{
+		// 求和.		
+		if ( iterCount->second % 2 == 1 )
+		{
+			break;
+		}
+		++iterCount;
+	}
+	if ( iterCount == tCountMap.end() )
+	{
+		iterCount = tCountMap.begin();
+	}
+
+	int nCurNode2 = iterCount->first;
+	tFenceIntersectionStack.push( nCurNode2 );
+
+	typedef std::vector< int > TFenceList;
+	TFenceList tTravel;
+	// 直到全部遍历完.
+	while( !tFenceIntersectionStack.empty() )
+	{
+		// 当前节点.
+		int nCurNode = tFenceIntersectionStack.top();
+
+		// 找下个节点.
+		TFarmMap::iterator iterMap = tMap.find( nCurNode );
+		if ( iterMap != tMap.end() )
+		{
+			// 确切的找到下个节点.
+			TNeighborFenceIntersection::iterator iterNeighbor = iterMap->second.begin();
+			int nAnotherNode = iterNeighbor->first;
+
+			// 骑马经过这个篱笆,将它从没遍历过的篱笆中删除.是双向的删除.
+			iterNeighbor->second --;
+			tMap[ nAnotherNode ][nCurNode] --;
+
+			// 如果没有邻居了,进行清理.
+			if ( iterNeighbor->second <= 0 )
+			{
+				iterMap->second.erase( iterNeighbor );
+			}
+			if( iterMap->second.empty() )
+			{
+				tMap.erase( iterMap );
+			}
+
+			if ( tMap[nAnotherNode][nCurNode] <= 0 )
+			{
+				tMap[nAnotherNode].erase( nCurNode );
+			}
+			if( tMap[nAnotherNode].empty() )
+			{
+				tMap.erase( nAnotherNode );
+			}
+
+			// 将下个节点加入栈中.
+			tFenceIntersectionStack.push( nAnotherNode );
+
+		}
+		else
+		{
+			// 没找到下个节点,这个节点连接的篱笆已经全部遍历过了.
+			// 加入遍历过程.
+			tTravel.push_back( nCurNode );
+			// 在栈中清除.
+			tFenceIntersectionStack.pop();
+		}
+
+	}
+
+	// 反向输出.
+	for ( int i=tTravel.size()-1; i>=0; --i )
+	{
+		fout << tTravel[i] << endl;
+	}
 
 
 	fin.close();
