@@ -29,4 +29,25 @@ protected:
 	afx_msg void OnPaint();
 	afx_msg HCURSOR OnQueryDragIcon();
 	DECLARE_MESSAGE_MAP()
+
+private:
+	/** 显示连接状态信息。*/
+	void ShowConnectMsg( LPCTSTR strMsg );
+	
+	/** 释放资源。 */
+	void Release();
+
+private:
+	/** 连接SOCKES5代理服务器的socket句柄。 */
+	SOCKET m_hProxyControl;
+public:
+	afx_msg void OnBnClickedButton1();
+	// 代理服务器ip。
+	CString m_strProxyIp;
+	// 代理服务器端口。
+	int m_nProxyPort;
+	// 连接信息输出。
+	CString m_strConnectMsg;
+	afx_msg void OnBnClickedButtonUdpAssociate();
+	CString m_strAssociateStat;
 };

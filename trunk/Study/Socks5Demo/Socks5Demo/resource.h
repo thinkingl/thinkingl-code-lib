@@ -15,11 +15,12 @@
 #define IDC_BUTTON1                     1004
 #define IDC_EDIT5                       1005
 #define IDC_BUTTON3                     1006
-#define IDC_BUTTON2                     1008
+#define IDC_BUTTON_UDP_ASSOCIATE        1008
 #define IDC_EDIT6                       1009
 #define IDC_EDIT7                       1010
-#define IDC_EDIT_USER2                  1011
 #define IDC_EDIT_STATE                  1011
+#define IDC_EDIT_STATE2                 1012
+#define IDC_EDIT_ASSOCIATE_STAT         1012
 
 // Next default values for new objects
 // 
