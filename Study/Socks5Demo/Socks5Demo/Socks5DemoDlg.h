@@ -33,7 +33,10 @@ protected:
 private:
 	/** 显示连接状态信息。*/
 	void ShowConnectMsg( LPCTSTR strMsg );
-	
+
+	/** 显示UDP穿透信息。 */
+void ShowAssociateMsg( LPCTSTR strMsg );
+
 	/** 释放资源。 */
 	void Release();
 
@@ -50,4 +53,5 @@ public:
 	CString m_strConnectMsg;
 	afx_msg void OnBnClickedButtonUdpAssociate();
 	CString m_strAssociateStat;
+	afx_msg void OnBnClickedButtonSendUdp();
 };

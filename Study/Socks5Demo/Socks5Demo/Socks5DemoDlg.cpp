@@ -78,6 +78,7 @@ BEGIN_MESSAGE_MAP(CSocks5DemoDlg, CDialog)
 	//}}AFX_MSG_MAP
 	ON_BN_CLICKED(IDC_BUTTON1, &CSocks5DemoDlg::OnBnClickedButton1)
 	ON_BN_CLICKED(IDC_BUTTON_UDP_ASSOCIATE, &CSocks5DemoDlg::OnBnClickedButtonUdpAssociate)
+	ON_BN_CLICKED(IDC_BUTTON_SEND_UDP, &CSocks5DemoDlg::OnBnClickedButtonSendUdp)
 END_MESSAGE_MAP()
 
 
@@ -312,6 +313,111 @@ void CSocks5DemoDlg::OnBnClickedButtonUdpAssociate()
 {
 	// TODO: 在此添加控件通知处理程序代码
 
+	if ( INVALID_SOCKET == this->m_hProxyControl )
+	{
+		this->ShowAssociateMsg( "Not connect to proxy!" );
+		this->Release();
+		return;
+	}
+
+	// 发送UDP 穿透信令。
+	/**   
+	+----+-----+-------+------+----------+----------+
+	|VER | CMD |  RSV  | ATYP | DST.ADDR | DST.PORT |
+	+----+-----+-------+------+----------+----------+
+	| 1  |  1  | X'00' |  1   | Variable |    2     |
+	+----+-----+-------+------+----------+----------+
+	Where:
+
+	o  VER    protocol version: X'05'
+	o  CMD
+	o  CONNECT X'01'
+	o  BIND X'02'
+	o  UDP ASSOCIATE X'03'
+	o  RSV    RESERVED
+	o  ATYP   address type of following address
+	o  IP V4 address: X'01'
+	o  DOMAINNAME: X'03'
+	o  IP V6 address: X'04'
+	o  DST.ADDR       desired destination address
+	o  DST.PORT desired destination port in network octet
+	order
+
+*/
+	char abyUdpAssociateBuf[1024] = { 0 };
+
+	//sock5代理版本号,当然是5了。
+	const int SOCK5_PROXY_VERSION =	0x05;
+	const int CMD_UDP_ASSOCIATE = 0x03;
+	const int RESERVED = 0;
+	const int IP_TYPE = 0x01;	// ipv4
+
+	int nAddr = 0;
+	short nPort = 60128;
+	abyUdpAssociateBuf[0] = SOCK5_PROXY_VERSION;
+	abyUdpAssociateBuf[1] = CMD_UDP_ASSOCIATE;
+	abyUdpAssociateBuf[2] = RESERVED;
+	abyUdpAssociateBuf[3] = IP_TYPE;
+	memcpy( &abyUdpAssociateBuf[4], &nAddr, 4 );
+	memcpy( &abyUdpAssociateBuf[8], &nPort, 2 );
+
+	if( SOCKET_ERROR == send( this->m_hProxyControl, abyUdpAssociateBuf, 10 , 0 ) )
+	{
+		this->ShowAssociateMsg( "Send associate msg fail!" );
+		this->Release();
+		return ;
+	}
+
+	// 接收回应。
+	/** 
+	+----+-----+-------+------+----------+----------+
+	|VER | REP |  RSV  | ATYP | BND.ADDR | BND.PORT |
+	+----+-----+-------+------+----------+----------+
+	| 1  |  1  | X'00' |  1   | Variable |    2     |
+	+----+-----+-------+------+----------+----------+
+
+	Where:
+
+	o  VER    protocol version: X'05'
+	o  REP    Reply field:
+	o  X'00' succeeded
+	o  X'01' general SOCKS server failure
+	o  X'02' connection not allowed by ruleset
+	o  X'03' Network unreachable
+	o  X'04' Host unreachable
+	o  X'05' Connection refused
+	o  X'06' TTL expired
+	o  X'07' Command not supported
+	o  X'08' Address type not supported
+	o  X'09' to X'FF' unassigned
+	o  RSV    RESERVED
+	o  ATYP   address type of following address
+
+	*/
+
+	if( 10 != recv( this->m_hProxyControl, abyUdpAssociateBuf, sizeof(abyUdpAssociateBuf), 0 ) )
+	{
+		this->ShowAssociateMsg( "Receive reply of UDP Associate req fail!" );
+		this->Release();
+		return;
+	}
+
+	// 校验返回值。
+	const int SOCK5_PROXY_SUCCESS = 0;
+	if ( SOCK5_PROXY_VERSION != abyUdpAssociateBuf[0] 
+		|| SOCK5_PROXY_SUCCESS != abyUdpAssociateBuf[1]
+		|| IP_TYPE != abyUdpAssociateBuf[3] )
+	{
+		this->ShowAssociateMsg( "proxy error！" );
+		this->Release();
+		return;
+	}
+
+	// 看服务器返回的地址。
+	CString strAddrRet = inet_ntoa( *(IN_ADDR*)(&abyUdpAssociateBuf[4]) );
+	int nPortRet = ntohs( *(short*)( &abyUdpAssociateBuf[8] ) );
+	
+	int dfwe  = 0;
 #if 0 
 
 	API BOOL32 OspUdpAssociateThroughSock5Proxy( SOCKHANDLE hSocket , u32 dwLocalIP, u16 wLocalPort ,
@@ -426,4 +532,14 @@ void CSocks5DemoDlg::OnBnClickedButtonUdpAssociate()
 	}
 
 #endif
+}
+
+void CSocks5DemoDlg::ShowAssociateMsg( LPCTSTR strMsg )
+{
+	this->m_strAssociateStat = strMsg;
+	this->UpdateData( FALSE );
+}
+void CSocks5DemoDlg::OnBnClickedButtonSendUdp()
+{
+	// TODO: 在此添加控件通知处理程序代码
 }
