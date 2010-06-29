@@ -66,6 +66,8 @@ CSocks5DemoDlg::CSocks5DemoDlg(CWnd* pParent /*=NULL*/)
 	, m_nRemoteBindPort(0)
 	, m_strRemoteSentMsg(_T(""))
 	, m_strRemoteServerRcvMsg(_T(""))
+	, m_strRemoteProxyIp(_T(""))
+	, m_nRemoteProxyPort(0)
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 
@@ -96,6 +98,8 @@ void CSocks5DemoDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Text(pDX, IDC_EDIT_PORT_BIND_REMOTE, m_nRemoteBindPort);
 	DDX_Text(pDX, IDC_EDIT_MSG_SENT_TO_CLIENT, m_strRemoteSentMsg);
 	DDX_Text(pDX, IDC_EDIT_REMOTE_SERVER_RCV_MSG, m_strRemoteServerRcvMsg);
+	DDX_Text(pDX, IDC_EDIT_PROXY_IP, m_strRemoteProxyIp);
+	DDX_Text(pDX, IDC_EDIT_PROXY_PORT, m_nRemoteProxyPort);
 }
 
 BEGIN_MESSAGE_MAP(CSocks5DemoDlg, CDialog)
@@ -645,11 +649,19 @@ void CSocks5DemoDlg::OnTimer(UINT_PTR nIDEvent)
 			if ( 1==nHasData )
 			{
 				// 读取接收。
+				sockaddr_in sin;
+				int sinlen = sizeof (sin);
+				memset( &sin, 0, sinlen );
+
 				char abyRcvBuf[ 1024 ] = { 0 };
-				recv( m_hUDPRemoteServer, abyRcvBuf, sizeof( abyRcvBuf ), 0 );
+				recvfrom( m_hUDPRemoteServer, abyRcvBuf, sizeof( abyRcvBuf ), 0, (sockaddr *)&sin, &sinlen );
 
 				this->m_strRemoteServerRcvMsg += abyRcvBuf;
 				m_strRemoteServerRcvMsg += "\n";
+
+				// 更新代理服务器地址和端口。
+				this->m_strRemoteProxyIp = inet_ntoa( sin.sin_addr );
+				this->m_nRemoteProxyPort = ntohs( sin.sin_port );
 
 				UpdateData( FALSE );
 
@@ -664,6 +676,12 @@ void CSocks5DemoDlg::OnBnClickedButtonSendBindRemoteServer()
 {
 	// TODO: 在此添加控件通知处理程序代码
 	this->UpdateData();
+
+	if ( INVALID_SOCKET != m_hUDPRemoteServer )
+	{
+		closesocket( m_hUDPRemoteServer );
+		m_hUDPRemoteServer = INVALID_SOCKET;
+	}
 
 	if ( INVALID_SOCKET == m_hUDPRemoteServer )
 	{

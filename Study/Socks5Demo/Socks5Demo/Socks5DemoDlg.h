@@ -82,4 +82,6 @@ public:
 	CString m_strRemoteSentMsg;
 	afx_msg void OnBnClickedButtonSendBindRemoteServer();
 	CString m_strRemoteServerRcvMsg;
+	CString m_strRemoteProxyIp;
+	int m_nRemoteProxyPort;
 };
