@@ -43,6 +43,10 @@ void ShowAssociateMsg( LPCTSTR strMsg );
 private:
 	/** 连接SOCKES5代理服务器的socket句柄。 */
 	SOCKET m_hProxyControl;
+
+	/** UDP代理服务器客户，发送到代理服务器和接收代理服务器发来UDP的socket句柄。 */
+	SOCKET m_hUDPProxyClient;
+
 public:
 	afx_msg void OnBnClickedButton1();
 	// 代理服务器ip。
@@ -53,5 +57,13 @@ public:
 	CString m_strConnectMsg;
 	afx_msg void OnBnClickedButtonUdpAssociate();
 	CString m_strAssociateStat;
-	afx_msg void OnBnClickedButtonSendUdp();
+	CString m_strIPProxyReply;
+	int m_sPortProxyReply;
+	CString m_strLocalIp;
+	int m_nPortReq;
+	afx_msg void OnBnClickedButtonSendUdpOut();
+	CString m_strMsgSentToRemote;
+	CString m_strRemoteIp;
+	int m_nRemotePort;
+	int m_nLocalInnerBindPort;
 };

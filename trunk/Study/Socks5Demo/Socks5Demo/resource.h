@@ -14,18 +14,36 @@
 #define IDC_EDIT_PASSWORD               1003
 #define IDC_BUTTON1                     1004
 #define IDC_EDIT5                       1005
+#define IDC_EDIT_PORT_WANT              1005
 #define IDC_BUTTON3                     1006
 #define IDC_BUTTON_SEND_UDP             1006
+#define IDC_BUTTON_SEND_UDP_OUT         1006
 #define IDC_EDIT_IP2                    1007
+#define IDC_EDIT_IP_LOCAL               1007
 #define IDC_BUTTON_UDP_ASSOCIATE        1008
 #define IDC_EDIT6                       1009
+#define IDC_EDIT_IP_REMOTE              1009
 #define IDC_EDIT7                       1010
 #define IDC_EDIT_STATE                  1011
 #define IDC_EDIT_STATE2                 1012
 #define IDC_EDIT_ASSOCIATE_STAT         1012
 #define IDC_EDIT8                       1013
+#define IDC_EDIT_PORT_REPLY             1013
 #define IDC_EDIT_IP3                    1014
+#define IDC_EDIT_IP_PROXY_REPLY         1014
 #define IDC_EDIT9                       1015
+#define IDC_EDIT_MSG_SENT_TO_REMOTE     1015
+#define IDC_EDIT_PORT_REMOTE            1016
+#define IDC_BUTTON_SEND_UDP_OUT2        1017
+#define IDC_EDIT10                      1018
+#define IDC_EDIT11                      1019
+#define IDC_EDIT_IP5                    1020
+#define IDC_EDIT_PORT3                  1021
+#define IDC_EDIT_PORT4                  1022
+#define IDC_BUTTON_SEND_UDP_OUT3        1023
+#define IDC_EDIT_PORT5                  1024
+#define IDC_EDIT_PORT_LOCAL_IN_BIND     1024
+#define IDC_BUTTON_BIND_INNER_RCV       1025
 
 // Next default values for new objects
 // 
