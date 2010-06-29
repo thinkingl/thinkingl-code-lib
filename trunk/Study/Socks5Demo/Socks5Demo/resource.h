@@ -42,7 +42,9 @@
 #define IDC_EDIT11                      1019
 #define IDC_EDIT_MSG_SENT_TO_CLIENT     1019
 #define IDC_EDIT_IP5                    1020
+#define IDC_EDIT_PROXY_IP               1020
 #define IDC_EDIT_PORT3                  1021
+#define IDC_EDIT_PROXY_PORT             1021
 #define IDC_EDIT_PORT4                  1022
 #define IDC_EDIT_PORT_BIND_REMOTE       1022
 #define IDC_BUTTON_SEND_UDP_OUT3        1023
