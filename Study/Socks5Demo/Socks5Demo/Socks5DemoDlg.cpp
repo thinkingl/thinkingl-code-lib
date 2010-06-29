@@ -50,15 +50,24 @@ END_MESSAGE_MAP()
 
 CSocks5DemoDlg::CSocks5DemoDlg(CWnd* pParent /*=NULL*/)
 	: CDialog(CSocks5DemoDlg::IDD, pParent)
-	, m_strProxyIp(_T("127.0.0.1"))
+	, m_strProxyIp(_T("172.16.65.94"))
 	, m_nProxyPort( 2001 )
 	, m_strConnectMsg(_T(""))
 	, m_strAssociateStat(_T(""))
+	, m_strIPProxyReply(_T(""))
+	, m_sPortProxyReply(0)
+	, m_strLocalIp(_T("127.0.0.1"))
+	, m_nPortReq(60128)
+	, m_strMsgSentToRemote(_T("Hello!"))
+	, m_strRemoteIp(_T("172.16.64.77"))
+	, m_nRemotePort(12345)
+	, m_nLocalInnerBindPort(0)
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 
 
 	this->m_hProxyControl = INVALID_SOCKET;
+	m_hUDPProxyClient = INVALID_SOCKET;
 
 }
 
@@ -69,6 +78,14 @@ void CSocks5DemoDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Text(pDX, IDC_EDIT_PORT, m_nProxyPort);
 	DDX_Text(pDX, IDC_EDIT_STATE, m_strConnectMsg);
 	DDX_Text(pDX, IDC_EDIT_ASSOCIATE_STAT, m_strAssociateStat);
+	DDX_Text(pDX, IDC_EDIT_IP_PROXY_REPLY, m_strIPProxyReply);
+	DDX_Text(pDX, IDC_EDIT_PORT_REPLY, m_sPortProxyReply);
+	DDX_Text(pDX, IDC_EDIT_IP_LOCAL, m_strLocalIp);
+	DDX_Text(pDX, IDC_EDIT_PORT_WANT, m_nPortReq);
+	DDX_Text(pDX, IDC_EDIT_MSG_SENT_TO_REMOTE, m_strMsgSentToRemote);
+	DDX_Text(pDX, IDC_EDIT_IP_REMOTE, m_strRemoteIp);
+	DDX_Text(pDX, IDC_EDIT_PORT_REMOTE, m_nRemotePort);
+	DDX_Text(pDX, IDC_EDIT_PORT_LOCAL_IN_BIND, m_nLocalInnerBindPort);
 }
 
 BEGIN_MESSAGE_MAP(CSocks5DemoDlg, CDialog)
@@ -78,7 +95,7 @@ BEGIN_MESSAGE_MAP(CSocks5DemoDlg, CDialog)
 	//}}AFX_MSG_MAP
 	ON_BN_CLICKED(IDC_BUTTON1, &CSocks5DemoDlg::OnBnClickedButton1)
 	ON_BN_CLICKED(IDC_BUTTON_UDP_ASSOCIATE, &CSocks5DemoDlg::OnBnClickedButtonUdpAssociate)
-	ON_BN_CLICKED(IDC_BUTTON_SEND_UDP, &CSocks5DemoDlg::OnBnClickedButtonSendUdp)
+	ON_BN_CLICKED(IDC_BUTTON_SEND_UDP_OUT, &CSocks5DemoDlg::OnBnClickedButtonSendUdpOut)
 END_MESSAGE_MAP()
 
 
@@ -200,6 +217,7 @@ void CSocks5DemoDlg::OnBnClickedButton1()
 
 		if( connect( m_hProxyControl, (SOCKADDR*)&tSvrINAddr, sizeof(tSvrINAddr) ) == SOCKET_ERROR )
 		{
+			int dfwef = GetLastError();
 			ShowConnectMsg( _T( "connect proxy fail!" ) );
 			this->Release();
 			return;
@@ -222,10 +240,10 @@ void CSocks5DemoDlg::OnBnClickedButton1()
 		// 几种身份认证校验方式。	
 		#define METHOD_AUTH_NO		0x00	// 不用校验。
 		#define METHOD_AUTH_NAMEPWD	0x02	// 用户名/密码。
-		#define METHOD_GSSAPI		0x01	// 不懂，有空再google吧。
+//		#define METHOD_GSSAPI		0x01	// 不懂，有空再google吧。
 		#define METHOD_NO_ACCEPT	0xff	// 啥都不接受，意思大概就是没门。
 
-		const int METHOD_NUM = 4;
+		const int METHOD_NUM = 4-1;
 
 		char abyMsgVersionMethodCheck[ BUF_SIZE ] = { 0 };
 		abyMsgVersionMethodCheck[0] = SOCK5_PROXY_VERSION;
@@ -233,8 +251,8 @@ void CSocks5DemoDlg::OnBnClickedButton1()
 		
 		abyMsgVersionMethodCheck[2] = METHOD_AUTH_NO;
 		abyMsgVersionMethodCheck[3] = METHOD_AUTH_NAMEPWD;
-		abyMsgVersionMethodCheck[4] = METHOD_GSSAPI;
-		abyMsgVersionMethodCheck[5] = METHOD_NO_ACCEPT;
+//		abyMsgVersionMethodCheck[4] = METHOD_GSSAPI;
+		abyMsgVersionMethodCheck[4] = METHOD_NO_ACCEPT;
 
 
 		if( SOCKET_ERROR == send( m_hProxyControl , abyMsgVersionMethodCheck,  2+METHOD_NUM, 0 ) )
@@ -278,7 +296,7 @@ void CSocks5DemoDlg::OnBnClickedButton1()
 			this->Release();
 			return;
 			break;
-		case METHOD_GSSAPI:
+//		case METHOD_GSSAPI:
 		case METHOD_NO_ACCEPT:		    
 		default:
 			this->ShowConnectMsg( "Not surport method!" );
@@ -320,6 +338,8 @@ void CSocks5DemoDlg::OnBnClickedButtonUdpAssociate()
 		return;
 	}
 
+	UpdateData();
+
 	// 发送UDP 穿透信令。
 	/**   
 	+----+-----+-------+------+----------+----------+
@@ -352,8 +372,9 @@ void CSocks5DemoDlg::OnBnClickedButtonUdpAssociate()
 	const int RESERVED = 0;
 	const int IP_TYPE = 0x01;	// ipv4
 
-	int nAddr = 0;
-	short nPort = 60128;
+	int nAddr = inet_addr( m_strLocalIp );
+	short nPort = htons( (short)m_nPortReq );
+
 	abyUdpAssociateBuf[0] = SOCK5_PROXY_VERSION;
 	abyUdpAssociateBuf[1] = CMD_UDP_ASSOCIATE;
 	abyUdpAssociateBuf[2] = RESERVED;
@@ -398,7 +419,6 @@ void CSocks5DemoDlg::OnBnClickedButtonUdpAssociate()
 	if( 10 != recv( this->m_hProxyControl, abyUdpAssociateBuf, sizeof(abyUdpAssociateBuf), 0 ) )
 	{
 		this->ShowAssociateMsg( "Receive reply of UDP Associate req fail!" );
-		this->Release();
 		return;
 	}
 
@@ -409,129 +429,16 @@ void CSocks5DemoDlg::OnBnClickedButtonUdpAssociate()
 		|| IP_TYPE != abyUdpAssociateBuf[3] )
 	{
 		this->ShowAssociateMsg( "proxy error！" );
-		this->Release();
 		return;
 	}
 
 	// 看服务器返回的地址。
-	CString strAddrRet = inet_ntoa( *(IN_ADDR*)(&abyUdpAssociateBuf[4]) );
-	int nPortRet = ntohs( *(short*)( &abyUdpAssociateBuf[8] ) );
+	m_strIPProxyReply = inet_ntoa( *(IN_ADDR*)(&abyUdpAssociateBuf[4]) );
+	m_sPortProxyReply = ntohs( *(short*)( &abyUdpAssociateBuf[8] ) );
 	
+	this->UpdateData( FALSE );
 	int dfwe  = 0;
-#if 0 
 
-	API BOOL32 OspUdpAssociateThroughSock5Proxy( SOCKHANDLE hSocket , u32 dwLocalIP, u16 wLocalPort ,
-		u32* pdwProxyMapIP, u16* pwProxyMapPort , u32 dwTimeoutMs )
-	{
-		SOCKADDR_IN tSvrINAddr;
-		struct timeval tTimeVal;
-		struct timeval *ptTimeVal = NULL;
-		u8 abyMsgBuffer[0xff] = {0};
-		fd_set tWaitFd;
-		u32 dwProxyMapIP = 0;
-		u16 wProxyMapPort = 0;
-		s32 nRet = 0;
-#ifdef _VXWORKS_
-		char StringIPAddr[INET_ADDR_LEN];
-#endif
-
-		memset( &tSvrINAddr, 0, sizeof(tSvrINAddr) );
-		tSvrINAddr.sin_family = AF_INET;
-		tSvrINAddr.sin_port = htons(wLocalPort);
-		tSvrINAddr.sin_addr.s_addr = dwLocalIP;
-
-#ifdef _VXWORKS_
-		inet_ntoa_b( tSvrINAddr.sin_addr, StringIPAddr);
-		OspLog( 1, "Osp: OspUdpAssociateThroughSock5Proxy from local %s@%d, please wait...!\n",
-			StringIPAddr, wLocalPort );
-#else
-		OspLog( 1, "Osp: OspUdpAssociateThroughSock5Proxy from local %s@%d, please wait...\n",
-			inet_ntoa( tSvrINAddr.sin_addr ), wLocalPort );
-#endif
-
-		//发送UDP Associate请求
-		abyMsgBuffer[0] = SOCK5_PROXY_VERSION;
-		abyMsgBuffer[1] = SOCK5_PROXY_CMD_UDP_ASSOCIATE;
-		abyMsgBuffer[2] = SOCK5_PROXY_RESERVED_DATA;
-		abyMsgBuffer[3] = SOCK5_PROXY_IPV4_ADDR;
-		memcpy( abyMsgBuffer+4 , &dwLocalIP , 4 );
-		wLocalPort = htons(wLocalPort);
-		memcpy( abyMsgBuffer+8 , &wLocalPort , 2 );
-		if( SOCKET_ERROR == send( hSocket , (char*)abyMsgBuffer , 10 , 0 ) )
-		{
-			OspLog(1, "Osp: OspUdpAssociateThroughSock5Proxy() send udp associate request failed!\n");
-			return FALSE;
-		}
-
-		//等待连接请求回复
-		if( dwTimeoutMs > 0 )
-		{
-			memset(&tTimeVal, 0, sizeof(tTimeVal));
-			tTimeVal.tv_sec = dwTimeoutMs/1000;
-			tTimeVal.tv_usec = (dwTimeoutMs%1000)*1000;
-
-			ptTimeVal = &tTimeVal;
-		}
-		FD_ZERO(&tWaitFd);
-		FD_SET( hSocket , &tWaitFd );
-		nRet = select(FD_SETSIZE, &tWaitFd, NULL, NULL, ptTimeVal);
-		if( 0 >= nRet )
-		{
-			OspLog(1, "Osp: OspUdpAssociateThroughSock5Proxy() recv udp associate reply failed! nRet =%d\n",nRet);
-#ifdef _MSC_VER
-			if(nRet < 0)
-			{
-				OspLog(1,"Osp: OspUdpAssociateThroughSock5Proxy select failed! WSAGetLastError = %d\n", WSAGetLastError);
-			}
-#else
-			if(nRet < 0)
-			{
-				OspLog(1,"Osp: OspUdpAssociateThroughSock5Proxy select failed! errno = %d\n", errno);
-			}
-
-#endif   
-			return FALSE;
-		}
-		if( ( 10 != recv( hSocket, (char *)abyMsgBuffer, 0xff, 0 ) ) ||
-			( SOCK5_PROXY_VERSION != abyMsgBuffer[0] ) ||
-			( SOCK5_PROXY_SUCCESS != abyMsgBuffer[1] ) ||
-			( SOCK5_PROXY_RESERVED_DATA != abyMsgBuffer[2] ) ||
-			( SOCK5_PROXY_IPV4_ADDR != abyMsgBuffer[3] ) )
-		{
-			OspLog(1, "Osp: OspUdpAssociateThroughSock5Proxy() udp associate failed!\n");
-			return FALSE;
-		}
-
-		memcpy( &dwProxyMapIP , abyMsgBuffer+4 , 4 );
-		memcpy( &wProxyMapPort , abyMsgBuffer+8 , 2 );
-		wProxyMapPort = ntohs(wProxyMapPort);
-
-		memset( &tSvrINAddr, 0, sizeof(tSvrINAddr) );
-		tSvrINAddr.sin_family = AF_INET;
-		tSvrINAddr.sin_port = wProxyMapPort;
-		tSvrINAddr.sin_addr.s_addr = dwProxyMapIP;
-#ifdef _VXWORKS_
-		inet_ntoa_b( tSvrINAddr.sin_addr, StringIPAddr );
-		OspLog(1, "Osp: OspUdpAssociateThroughSock5Proxy to %s@%d OK!\n\n",
-			StringIPAddr, wProxyMapPort );
-#else
-		OspLog(1, "Osp: OspUdpAssociateThroughSock5Proxy to %s@%d OK!\n\n",
-			inet_ntoa( tSvrINAddr.sin_addr ), wProxyMapPort );
-#endif
-
-		if( NULL != pdwProxyMapIP )
-		{
-			*pdwProxyMapIP = dwProxyMapIP;
-		}
-		if( NULL != pwProxyMapPort )
-		{
-			*pwProxyMapPort = wProxyMapPort;
-		}
-
-		return TRUE;
-	}
-
-#endif
 }
 
 void CSocks5DemoDlg::ShowAssociateMsg( LPCTSTR strMsg )
@@ -539,7 +446,111 @@ void CSocks5DemoDlg::ShowAssociateMsg( LPCTSTR strMsg )
 	this->m_strAssociateStat = strMsg;
 	this->UpdateData( FALSE );
 }
-void CSocks5DemoDlg::OnBnClickedButtonSendUdp()
+
+
+void CSocks5DemoDlg::OnBnClickedButtonSendUdpOut()
 {
 	// TODO: 在此添加控件通知处理程序代码
+
+	// 发送UDP数据要附加头。
+	/**
+	+----+------+------+----------+----------+----------+
+	|RSV | FRAG | ATYP | DST.ADDR | DST.PORT |   DATA   |
+	+----+------+------+----------+----------+----------+
+	| 2  |  1   |  1   | Variable |    2     | Variable |
+	+----+------+------+----------+----------+----------+
+
+	The fields in the UDP request header are:
+
+	o  RSV  Reserved X'0000'
+	o  FRAG    Current fragment number
+	o  ATYP    address type of following addresses:
+	o  IP V4 address: X'01'
+	o  DOMAINNAME: X'03'
+	o  IP V6 address: X'04'
+	o  DST.ADDR       desired destination address
+	o  DST.PORT       desired destination port
+	o  DATA     user data
+	*/
+
+	if ( INVALID_SOCKET == this->m_hProxyControl )
+	{
+		this->MessageBox( "Not connect to proxy!" );
+		return;
+	}
+
+	UpdateData();
+
+	const int BUF_SIZE = 1024;
+	char abySentBuf[ BUF_SIZE ];
+	char *pCursor = abySentBuf;
+
+	*(short*)pCursor = 0;	// RSV  Reserved X'0000'
+	pCursor += 2;
+	
+	*pCursor = 0;	// Current fragment number
+	pCursor++;
+
+	*pCursor = 0x01;	// IP V4 address: X'01'
+	pCursor ++;
+
+	int nIp = inet_addr( m_strRemoteIp );
+	*(int*)pCursor = nIp;	// desired destination address
+	pCursor += 4;
+
+	*(short*)pCursor = htons( m_nRemotePort );
+	pCursor += 2;
+
+	// 最后是我们的消息。
+	strcpy( pCursor, this->m_strMsgSentToRemote );
+	pCursor += this->m_strMsgSentToRemote.GetLength() + 1;
+
+	int nDataLen = pCursor - abySentBuf;
+
+	// 把数据发出去。
+	if ( INVALID_SOCKET == m_hUDPProxyClient )
+	{
+		this->m_hUDPProxyClient = socket( AF_INET, SOCK_DGRAM, IPPROTO_UDP );
+	}
+
+	if ( INVALID_SOCKET == m_hUDPProxyClient )
+	{
+		MessageBox( "创建UDP socket都失败了，还混个P呀。" );
+		int nLastError = WSAGetLastError();
+		return;
+	}
+
+	// 绑定端口。
+	sockaddr_in localAddr;
+	memset( &localAddr, 0, sizeof( localAddr ) );
+	localAddr.sin_family = AF_INET;
+	localAddr.sin_addr.s_addr = htonl(INADDR_ANY);
+	localAddr.sin_port = htons( m_nPortReq );
+	::bind( m_hUDPProxyClient, (sockaddr*)&localAddr, sizeof( localAddr ) );
+
+	// 获取绑定的端口。
+	int nSize = sizeof( localAddr );
+	::getsockname( m_hUDPProxyClient, (sockaddr*)&localAddr, &nSize );
+	this->m_nLocalInnerBindPort = ntohs( localAddr.sin_port );
+
+	// 发送
+	sockaddr_in serverAddr;
+	memset( &serverAddr, 0, sizeof( serverAddr ) );
+
+	int nProxyIp = inet_addr( this->m_strIPProxyReply );
+	serverAddr.sin_family = AF_INET;
+	serverAddr.sin_addr.s_addr = nProxyIp;
+	serverAddr.sin_port = htons( this->m_sPortProxyReply );
+
+	int nSentLen = ::sendto( m_hUDPProxyClient, abySentBuf, nDataLen, 0, (sockaddr*)&serverAddr, sizeof( serverAddr ) );
+
+	if( SOCKET_ERROR == nSentLen )
+	{
+		MessageBox( "Send UDP msg fail!" );
+		this->Release();
+		return ;
+	}
+
+	UpdateData( FALSE );
+	
 }
