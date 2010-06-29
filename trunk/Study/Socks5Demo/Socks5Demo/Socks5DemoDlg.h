@@ -47,6 +47,16 @@ private:
 	/** UDP代理服务器客户，发送到代理服务器和接收代理服务器发来UDP的socket句柄。 */
 	SOCKET m_hUDPProxyClient;
 
+	/** 检测接收发到客户端的UDP数据的定时器。 */
+	enum ETimer
+	{
+		TimerCheckRcvUDP = 12345,
+	};
+	UINT m_dwTimerCheckSendInUDP;
+
+	/** UDP远端服务器，发送数据到代理服务器转给客户端。 */
+	SOCKET m_hUDPRemoteServer;
+
 public:
 	afx_msg void OnBnClickedButton1();
 	// 代理服务器ip。
@@ -66,4 +76,10 @@ public:
 	CString m_strRemoteIp;
 	int m_nRemotePort;
 	int m_nLocalInnerBindPort;
+	afx_msg void OnTimer(UINT_PTR nIDEvent);
+	CString m_strClientRcvMsg;
+	int m_nRemoteBindPort;
+	CString m_strRemoteSentMsg;
+	afx_msg void OnBnClickedButtonSendBindRemoteServer();
+	CString m_strRemoteServerRcvMsg;
 };

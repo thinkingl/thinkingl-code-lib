@@ -62,12 +62,18 @@ CSocks5DemoDlg::CSocks5DemoDlg(CWnd* pParent /*=NULL*/)
 	, m_strRemoteIp(_T("172.16.64.77"))
 	, m_nRemotePort(12345)
 	, m_nLocalInnerBindPort(0)
+	, m_strClientRcvMsg(_T(""))
+	, m_nRemoteBindPort(0)
+	, m_strRemoteSentMsg(_T(""))
+	, m_strRemoteServerRcvMsg(_T(""))
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 
 
 	this->m_hProxyControl = INVALID_SOCKET;
 	m_hUDPProxyClient = INVALID_SOCKET;
+	m_dwTimerCheckSendInUDP = NULL;
+	m_hUDPRemoteServer = INVALID_SOCKET;
 
 }
 
@@ -86,6 +92,10 @@ void CSocks5DemoDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Text(pDX, IDC_EDIT_IP_REMOTE, m_strRemoteIp);
 	DDX_Text(pDX, IDC_EDIT_PORT_REMOTE, m_nRemotePort);
 	DDX_Text(pDX, IDC_EDIT_PORT_LOCAL_IN_BIND, m_nLocalInnerBindPort);
+	DDX_Text(pDX, IDC_EDIT_UDP_CLIENT_RCV_MSG, m_strClientRcvMsg);
+	DDX_Text(pDX, IDC_EDIT_PORT_BIND_REMOTE, m_nRemoteBindPort);
+	DDX_Text(pDX, IDC_EDIT_MSG_SENT_TO_CLIENT, m_strRemoteSentMsg);
+	DDX_Text(pDX, IDC_EDIT_REMOTE_SERVER_RCV_MSG, m_strRemoteServerRcvMsg);
 }
 
 BEGIN_MESSAGE_MAP(CSocks5DemoDlg, CDialog)
@@ -96,6 +106,8 @@ BEGIN_MESSAGE_MAP(CSocks5DemoDlg, CDialog)
 	ON_BN_CLICKED(IDC_BUTTON1, &CSocks5DemoDlg::OnBnClickedButton1)
 	ON_BN_CLICKED(IDC_BUTTON_UDP_ASSOCIATE, &CSocks5DemoDlg::OnBnClickedButtonUdpAssociate)
 	ON_BN_CLICKED(IDC_BUTTON_SEND_UDP_OUT, &CSocks5DemoDlg::OnBnClickedButtonSendUdpOut)
+	ON_WM_TIMER()
+	ON_BN_CLICKED(IDC_BUTTON_SEND_BIND_REMOTE_SERVER, &CSocks5DemoDlg::OnBnClickedButtonSendBindRemoteServer)
 END_MESSAGE_MAP()
 
 
@@ -131,6 +143,9 @@ BOOL CSocks5DemoDlg::OnInitDialog()
 	SetIcon(m_hIcon, FALSE);		// 设置小图标
 
 	// TODO: 在此添加额外的初始化代码
+	
+	// 开启检测接收UDP数据的定时器。
+	m_dwTimerCheckSendInUDP = this->SetTimer( TimerCheckRcvUDP, 1, NULL );
 
 	return TRUE;  // 除非将焦点设置到控件，否则返回 TRUE
 }
@@ -435,9 +450,42 @@ void CSocks5DemoDlg::OnBnClickedButtonUdpAssociate()
 	// 看服务器返回的地址。
 	m_strIPProxyReply = inet_ntoa( *(IN_ADDR*)(&abyUdpAssociateBuf[4]) );
 	m_sPortProxyReply = ntohs( *(short*)( &abyUdpAssociateBuf[8] ) );
+
+	this->ShowAssociateMsg( "UDP Associate success!" );
+
+
+	// 绑定客户端接收/发送端口。
+	if( INVALID_SOCKET != m_hUDPProxyClient )
+	{
+		closesocket( m_hUDPProxyClient );
+		m_hUDPProxyClient = INVALID_SOCKET;
+	}
+	if ( INVALID_SOCKET == m_hUDPProxyClient )
+	{
+		this->m_hUDPProxyClient = socket( AF_INET, SOCK_DGRAM, IPPROTO_UDP );
+	}
+
+	if ( INVALID_SOCKET == m_hUDPProxyClient )
+	{
+		MessageBox( "创建UDP socket都失败了，还混个P呀。" );
+		int nLastError = WSAGetLastError();
+		return;
+	}
+
+	// 绑定端口。
+	sockaddr_in localAddr;
+	memset( &localAddr, 0, sizeof( localAddr ) );
+	localAddr.sin_family = AF_INET;
+	localAddr.sin_addr.s_addr = htonl(INADDR_ANY);
+	localAddr.sin_port = htons( m_nPortReq );
+	::bind( m_hUDPProxyClient, (sockaddr*)&localAddr, sizeof( localAddr ) );
+
+	// 获取绑定的端口。
+	int nSize = sizeof( localAddr );
+	::getsockname( m_hUDPProxyClient, (sockaddr*)&localAddr, &nSize );
+	this->m_nLocalInnerBindPort = ntohs( localAddr.sin_port );
 	
 	this->UpdateData( FALSE );
-	int dfwe  = 0;
 
 }
 
@@ -553,4 +601,94 @@ void CSocks5DemoDlg::OnBnClickedButtonSendUdpOut()
 
 	UpdateData( FALSE );
 	
+}
+
+void CSocks5DemoDlg::OnTimer(UINT_PTR nIDEvent)
+{
+	// TODO: 在此添加消息处理程序代码和/或调用默认值
+	if( TimerCheckRcvUDP == nIDEvent )
+	{
+		// 检测发送到客户端的数据。
+		if ( INVALID_SOCKET != m_hUDPProxyClient )
+		{
+			fd_set fdSocket;        // 所有可用套节字集合
+			FD_ZERO(&fdSocket);
+			FD_SET( m_hUDPProxyClient, &fdSocket);
+			timeval tv;
+			tv.tv_sec   =   0; 
+			tv.tv_usec   =   0; 
+			int nHasData = select( 1,&fdSocket, NULL, NULL, &tv) ; 
+			if ( 1==nHasData )
+			{
+				// 读取接收。
+				char abyRcvBuf[ 1024 ] = { 0 };
+				recv( m_hUDPProxyClient, abyRcvBuf, sizeof( abyRcvBuf ), 0 );
+
+				m_strClientRcvMsg += abyRcvBuf;
+				m_strClientRcvMsg += "\n";
+
+				UpdateData( FALSE );
+
+			}
+		}
+
+		// 检测发送到服务器的数据。（也就是本程序做服务器的时候接收数据。）
+		if ( INVALID_SOCKET != m_hUDPRemoteServer )
+		{
+			fd_set fdSocket;        // 所有可用套节字集合
+			FD_ZERO(&fdSocket);
+			FD_SET( m_hUDPRemoteServer, &fdSocket);
+			timeval tv;
+			tv.tv_sec   =   0; 
+			tv.tv_usec   =   0; 
+			int nHasData = select( 1,&fdSocket, NULL, NULL, &tv) ; 
+			if ( 1==nHasData )
+			{
+				// 读取接收。
+				char abyRcvBuf[ 1024 ] = { 0 };
+				recv( m_hUDPRemoteServer, abyRcvBuf, sizeof( abyRcvBuf ), 0 );
+
+				this->m_strRemoteServerRcvMsg += abyRcvBuf;
+				m_strRemoteServerRcvMsg += "\n";
+
+				UpdateData( FALSE );
+
+			}
+		}
+	}
+
+	CDialog::OnTimer(nIDEvent);
+}
+
+void CSocks5DemoDlg::OnBnClickedButtonSendBindRemoteServer()
+{
+	// TODO: 在此添加控件通知处理程序代码
+	this->UpdateData();
+
+	if ( INVALID_SOCKET == m_hUDPRemoteServer )
+	{
+		this->m_hUDPRemoteServer = socket( AF_INET, SOCK_DGRAM, IPPROTO_UDP );
+	}
+
+	if ( INVALID_SOCKET == m_hUDPRemoteServer )
+	{
+		MessageBox( "创建UDP socket都失败了，还混个P呀。" );
+		int nLastError = WSAGetLastError();
+		return;
+	}
+
+	// 绑定端口。
+	sockaddr_in localAddr;
+	memset( &localAddr, 0, sizeof( localAddr ) );
+	localAddr.sin_family = AF_INET;
+	localAddr.sin_addr.s_addr = htonl(INADDR_ANY);
+	localAddr.sin_port = htons( this->m_nRemoteBindPort );
+	::bind( m_hUDPRemoteServer, (sockaddr*)&localAddr, sizeof( localAddr ) );
+
+	// 获取绑定的端口。
+	int nSize = sizeof( localAddr );
+	::getsockname( m_hUDPRemoteServer, (sockaddr*)&localAddr, &nSize );
+	this->m_nRemoteBindPort = ntohs( localAddr.sin_port );
+
+	this->UpdateData( FALSE );
 }

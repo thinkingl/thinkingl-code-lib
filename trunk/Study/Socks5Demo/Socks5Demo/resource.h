@@ -24,6 +24,7 @@
 #define IDC_EDIT6                       1009
 #define IDC_EDIT_IP_REMOTE              1009
 #define IDC_EDIT7                       1010
+#define IDC_EDIT_UDP_CLIENT_RCV_MSG     1010
 #define IDC_EDIT_STATE                  1011
 #define IDC_EDIT_STATE2                 1012
 #define IDC_EDIT_ASSOCIATE_STAT         1012
@@ -35,12 +36,17 @@
 #define IDC_EDIT_MSG_SENT_TO_REMOTE     1015
 #define IDC_EDIT_PORT_REMOTE            1016
 #define IDC_BUTTON_SEND_UDP_OUT2        1017
+#define IDC_BUTTON_SEND_UDP_IN          1017
 #define IDC_EDIT10                      1018
+#define IDC_EDIT_REMOTE_SERVER_RCV_MSG  1018
 #define IDC_EDIT11                      1019
+#define IDC_EDIT_MSG_SENT_TO_CLIENT     1019
 #define IDC_EDIT_IP5                    1020
 #define IDC_EDIT_PORT3                  1021
 #define IDC_EDIT_PORT4                  1022
+#define IDC_EDIT_PORT_BIND_REMOTE       1022
 #define IDC_BUTTON_SEND_UDP_OUT3        1023
+#define IDC_BUTTON_SEND_BIND_REMOTE_SERVER 1023
 #define IDC_EDIT_PORT5                  1024
 #define IDC_EDIT_PORT_LOCAL_IN_BIND     1024
 #define IDC_BUTTON_BIND_INNER_RCV       1025
