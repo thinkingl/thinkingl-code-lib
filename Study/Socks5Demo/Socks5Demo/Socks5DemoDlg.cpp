@@ -57,14 +57,14 @@ CSocks5DemoDlg::CSocks5DemoDlg(CWnd* pParent /*=NULL*/)
 	, m_strIPProxyReply(_T(""))
 	, m_sPortProxyReply(0)
 	, m_strLocalIp(_T("127.0.0.1"))
-	, m_nPortReq(60128)
-	, m_strMsgSentToRemote(_T("Hello!"))
-	, m_strRemoteIp(_T("172.16.64.77"))
-	, m_nRemotePort(12345)
+	, m_nPortReq( 50128 )
+	, m_strMsgSentToRemote(_T("Hello!How are you?"))
+	, m_strRemoteIp(_T("192.168.1.84"))
+	, m_nRemotePort( 12345 )
 	, m_nLocalInnerBindPort(0)
 	, m_strClientRcvMsg(_T(""))
-	, m_nRemoteBindPort(0)
-	, m_strRemoteSentMsg(_T(""))
+	, m_nRemoteBindPort( 12345 )
+	, m_strRemoteSentMsg(_T("Fine,3ku."))
 	, m_strRemoteServerRcvMsg(_T(""))
 	, m_strRemoteProxyIp(_T(""))
 	, m_nRemoteProxyPort(0)
@@ -112,6 +112,7 @@ BEGIN_MESSAGE_MAP(CSocks5DemoDlg, CDialog)
 	ON_BN_CLICKED(IDC_BUTTON_SEND_UDP_OUT, &CSocks5DemoDlg::OnBnClickedButtonSendUdpOut)
 	ON_WM_TIMER()
 	ON_BN_CLICKED(IDC_BUTTON_SEND_BIND_REMOTE_SERVER, &CSocks5DemoDlg::OnBnClickedButtonSendBindRemoteServer)
+	ON_BN_CLICKED(IDC_BUTTON_SEND_UDP_IN, &CSocks5DemoDlg::OnBnClickedButtonSendUdpIn)
 END_MESSAGE_MAP()
 
 
@@ -626,10 +627,32 @@ void CSocks5DemoDlg::OnTimer(UINT_PTR nIDEvent)
 			{
 				// 读取接收。
 				char abyRcvBuf[ 1024 ] = { 0 };
-				recv( m_hUDPProxyClient, abyRcvBuf, sizeof( abyRcvBuf ), 0 );
+				int nLen = recv( m_hUDPProxyClient, abyRcvBuf, sizeof( abyRcvBuf ), 0 );
 
-				m_strClientRcvMsg += abyRcvBuf;
-				m_strClientRcvMsg += "\n";
+				// 代理服务器发送过来的UDP数据包有数据头。
+				/**
+				+----+------+------+----------+----------+----------+
+				|RSV | FRAG | ATYP | DST.ADDR | DST.PORT |   DATA   |
+				+----+------+------+----------+----------+----------+
+				| 2  |  1   |  1   | Variable |    2     | Variable |
+				+----+------+------+----------+----------+----------+
+
+				The fields in the UDP request header are:
+
+				o  RSV  Reserved X'0000'
+				o  FRAG    Current fragment number
+				o  ATYP    address type of following addresses:
+				o  IP V4 address: X'01'
+				o  DOMAINNAME: X'03'
+				o  IP V6 address: X'04'
+				o  DST.ADDR       desired destination address
+				o  DST.PORT       desired destination port
+				o  DATA     user data
+				*/
+				const int OFFSET = 10;
+
+				m_strClientRcvMsg += abyRcvBuf + OFFSET;
+				m_strClientRcvMsg += "\r\n";
 
 				UpdateData( FALSE );
 
@@ -657,7 +680,7 @@ void CSocks5DemoDlg::OnTimer(UINT_PTR nIDEvent)
 				recvfrom( m_hUDPRemoteServer, abyRcvBuf, sizeof( abyRcvBuf ), 0, (sockaddr *)&sin, &sinlen );
 
 				this->m_strRemoteServerRcvMsg += abyRcvBuf;
-				m_strRemoteServerRcvMsg += "\n";
+				m_strRemoteServerRcvMsg += "\r\n";
 
 				// 更新代理服务器地址和端口。
 				this->m_strRemoteProxyIp = inet_ntoa( sin.sin_addr );
@@ -677,10 +700,21 @@ void CSocks5DemoDlg::OnBnClickedButtonSendBindRemoteServer()
 	// TODO: 在此添加控件通知处理程序代码
 	this->UpdateData();
 
+
 	if ( INVALID_SOCKET != m_hUDPRemoteServer )
 	{
-		closesocket( m_hUDPRemoteServer );
-		m_hUDPRemoteServer = INVALID_SOCKET;
+		// 如果端口有改变，重新建立socket。
+		sockaddr_in localAddr;
+		memset( &localAddr, 0, sizeof( localAddr ) );
+		int nSize = sizeof( localAddr );
+		::getsockname( m_hUDPRemoteServer, (sockaddr*)&localAddr, &nSize );
+		int nCurPort = ntohs( localAddr.sin_port );
+
+		if ( m_nRemoteBindPort != nCurPort )
+		{
+			closesocket( m_hUDPRemoteServer );
+			m_hUDPRemoteServer = INVALID_SOCKET;
+		}		
 	}
 
 	if ( INVALID_SOCKET == m_hUDPRemoteServer )
@@ -709,4 +743,29 @@ void CSocks5DemoDlg::OnBnClickedButtonSendBindRemoteServer()
 	this->m_nRemoteBindPort = ntohs( localAddr.sin_port );
 
 	this->UpdateData( FALSE );
+}
+
+void CSocks5DemoDlg::OnBnClickedButtonSendUdpIn()
+{
+	// TODO: 在此添加控件通知处理程序代码
+	if ( INVALID_SOCKET == m_hUDPRemoteServer )
+	{
+		MessageBox( "先监听端口！" );
+		return;
+	}
+
+	UpdateData();
+
+	char abySentBuf[1024] = {0};
+	strcpy( abySentBuf, m_strRemoteSentMsg );
+
+	sockaddr_in serverAddr;
+	memset( &serverAddr, 0, sizeof( serverAddr ) );
+
+	int nProxyIp = inet_addr( this->m_strRemoteProxyIp );
+	serverAddr.sin_family = AF_INET;
+	serverAddr.sin_addr.s_addr = nProxyIp;
+	serverAddr.sin_port = htons( this->m_nRemoteProxyPort );
+
+	int nSentLen = ::sendto( m_hUDPProxyClient, abySentBuf, strlen( abySentBuf ) + 1, 0, (sockaddr*)&serverAddr, sizeof( serverAddr ) );
 }
