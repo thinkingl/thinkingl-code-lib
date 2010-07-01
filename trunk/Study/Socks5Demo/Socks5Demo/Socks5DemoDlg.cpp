@@ -433,7 +433,11 @@ void CSocks5DemoDlg::OnBnClickedButtonUdpAssociate()
 	o  X'09' to X'FF' unassigned
 	o  RSV    RESERVED
 	o  ATYP   address type of following address
-
+	o  IP V4 address: X'01'
+	o  DOMAINNAME: X'03'
+	o  IP V6 address: X'04'
+	o  BND.ADDR       server bound address
+	o  BND.PORT       server bound port in network octet order
 	*/
 
 	if( 10 != recv( this->m_hProxyControl, abyUdpAssociateBuf, sizeof(abyUdpAssociateBuf), 0 ) )
