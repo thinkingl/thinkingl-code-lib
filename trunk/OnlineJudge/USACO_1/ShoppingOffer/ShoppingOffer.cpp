@@ -28,7 +28,7 @@ A single line with one integer: the lowest possible price to be paid for the pur
 
 /** 
 思路：
-*	
+*	动态规划.
 */
 #include <stdio.h>
 #include <stdlib.h>
@@ -66,7 +66,233 @@ typedef unsigned long u32;
 #define THINKINGL 1
 #endif
 
+std::map<int,int> a,b;
 
+const int MAX_PRODUCT_TYPE = 5;
+
+class CProductSet
+{
+public:
+	struct TProductInfo
+	{
+		int m_nId;
+		int m_nNum;
+		int m_nPrice;
+
+		TProductInfo(){ memset( this, 0 , sizeof( TProductInfo ) ); };
+
+		bool operator <( const TProductInfo& another ) const
+		{
+			if ( m_nId == another.m_nId )
+			{
+				return m_nNum < another.m_nNum;
+			}
+			else
+			{
+				return m_nId < another.m_nId;
+			}
+		}
+	};
+public:
+	CProductSet();
+	void AddProduct( int nProductId, int nProductNum, int nPrice = 0 );
+	/** 套餐价. */
+	int GetSpecialPrice() const;
+	/** 设置套餐价. */
+	void SetSpecialPrice( int nPrice );
+	/** 直接算价钱. */
+	int GetNormalPrice() const;
+	/** 是否是有效的. */
+	bool IsValid()const;
+	/** 是否没有商品了. */
+	bool IsNull()const;
+	bool operator <( const CProductSet& another ) const;
+	const CProductSet operator -( const CProductSet& another )const;
+	CProductSet& operator -=( const CProductSet& another )const;
+private:
+	/** 套餐价格. */
+	int m_nSpecialPrice;
+	/** 所有商品. */
+	typedef std::vector< TProductInfo > TProductTable;
+	TProductTable m_tProductTable;
+};
+
+int CProductSet::GetSpecialPrice()const
+{
+	return m_nSpecialPrice;
+}
+
+bool CProductSet::IsValid()const
+{
+//	int nTotal = 0;
+	for ( TProductTable::const_iterator citer = m_tProductTable.begin(); citer != m_tProductTable.end(); ++citer  )
+	{
+		if ( citer->m_nNum < 0 )
+		{
+			return false;
+		}
+//		nTotal += citer->second.m_nNum;
+	}
+	return true;
+}
+
+bool CProductSet::IsNull()const
+{
+	for ( TProductTable::const_iterator citer = m_tProductTable.begin(); citer != m_tProductTable.end(); ++citer )
+	{
+		if ( citer->m_nNum > 0 )
+		{
+			return false;
+		}
+	}
+	return true;
+}
+
+const CProductSet CProductSet::operator -( const CProductSet& another ) const
+{
+	CProductSet result = *this;
+	for ( TProductTable::const_iterator citer = another.m_tProductTable.begin(); citer != another.m_tProductTable.end(); ++citer )
+	{
+		result.m_tProductTable[ citer->m_nId ].m_nNum -= citer->m_nNum;
+	}
+
+	return result;
+}
+
+int CProductSet::GetNormalPrice() const
+{
+	int nPrice = 0;
+	for ( TProductTable::const_iterator citer = m_tProductTable.begin(); citer != m_tProductTable.end(); ++citer )
+	{
+		nPrice += citer->m_nNum * citer->m_nPrice;
+	}
+	return nPrice;
+}
+
+void CProductSet::SetSpecialPrice( int nPrice )
+{
+	m_nSpecialPrice = nPrice;
+}
+
+void CProductSet::AddProduct(int nProductId, int nProductNum, int nPrice /*= 0*/)
+{
+	TProductInfo tPro;
+	tPro.m_nId = nProductId;
+	tPro.m_nNum = nProductNum;
+	tPro.m_nPrice = nPrice;
+	this->m_tProductTable[ nProductId ] = tPro;
+}
+
+CProductSet::CProductSet()
+{
+	this->m_nSpecialPrice = 0;
+	m_tProductTable.resize( MAX_PRODUCT_TYPE );
+}
+
+bool CProductSet::operator <( const CProductSet& another )const
+{
+	return this->m_tProductTable < another.m_tProductTable;
+}
+
+
+typedef std::vector< CProductSet > TProductSetList;
+typedef std::pair<int,CProductSet> TSpecialOfferNum_ProductSetPair;
+
+/** 去重用的map. 套餐和商品情况<->钱数. */
+typedef std::map< TSpecialOfferNum_ProductSetPair, int > TMoneyMap;
+
+
+/** 获取用 nSpeOfferNum 个套餐,来买 tProductSet 这些东西,需要的最少的钱数. 
+*	采用递归的方式,使用自己的栈,不使用函数调用方式.
+*/
+int GetMinmumMoney( int nSpeOfferNum, CProductSet tProductSet, 
+				   TMoneyMap& tMoneyMap,  const TProductSetList& tSpecialOfferList )
+{
+	cout << "GetMinmumMoney1" << endl;
+
+	TMoneyMap tFlagMap;
+
+	TSpecialOfferNum_ProductSetPair tPairFinal( nSpeOfferNum, tProductSet );
+
+	typedef std::stack< TSpecialOfferNum_ProductSetPair > TWorkStack;
+
+	TWorkStack tWordStack;
+	tWordStack.push( tPairFinal );
+
+	cout << "GetMinmumMoney2" << endl;
+
+	while ( !tWordStack.empty() )
+	{
+		// 取出一个.
+		TSpecialOfferNum_ProductSetPair tPair = tWordStack.top();
+		
+
+		// 处理.
+		// 动态规划.
+		if( tFlagMap[ tPair ] )
+		{
+			// 已经有了不处理.
+		}
+		else
+		{
+			// 最终基本的特例.
+			if( tPair.first == 0 )
+			{
+				tMoneyMap[ tPair ] = tPair.second.GetNormalPrice();
+				tFlagMap[ tPair ] = 1;
+				tWordStack.pop();// 已经计算出价钱的出栈.
+				continue;	// 跳过下面的处理.
+			}
+
+
+			// 拆分,入栈.
+			// 最后一种套餐的使用有两种情况,一种是不用,即少最后一种套餐,其它不变. 另一种是使用最后一种套餐,则最少用一个,剩余的商品用这些套餐.
+			// 两种情况取小的.
+			TSpecialOfferNum_ProductSetPair tPairOne( tPair.first - 1, tPair.second );
+
+			int nMoneySecond = 0xFFFFFFF;	// 默认为无限大.
+			CProductSet productLeft = tPair.second - tSpecialOfferList[tPair.first-1];
+			if ( productLeft.IsValid()  )
+			{
+				TSpecialOfferNum_ProductSetPair tPairTwo( tPair.first, productLeft );
+
+				// 如果已经求出来了,或者商品是空的(这时用价格>0的判断去重会失效!).
+				if ( tFlagMap[ tPairTwo ] || productLeft.IsNull() )
+				{
+					nMoneySecond = tMoneyMap[ tPairTwo ] + tSpecialOfferList[ tPair.first-1 ].GetSpecialPrice();
+				}
+				else
+				{
+					// 入栈.
+					nMoneySecond = -1;
+					tWordStack.push( tPairTwo );
+				}
+
+				
+			}
+			
+
+			if ( tFlagMap[ tPairOne ] && nMoneySecond != -1 )
+			{
+				tMoneyMap[ tPair ] = min( tMoneyMap[ tPairOne ], nMoneySecond );
+
+				tFlagMap[ tPair ] = 1;
+	
+				tWordStack.pop(); // 把已经求出来的出栈.
+			}
+			else
+			{
+				if ( tMoneyMap[tPairOne] == 0 )
+				{
+					tWordStack.push( tPairOne );
+				}
+			}
+		}
+	}
+
+	return tMoneyMap[ tPairFinal ];
+
+}
 
 int main()
 {
@@ -82,8 +308,72 @@ int main()
 		return 0;
 	}
 
-	
+	// 取优惠套餐数目.
+	int nOffersNum;
+	fin >> nOffersNum;
 
+	typedef std::map< int, int > TProductIdMap;
+	TProductIdMap tIdMap;
+
+	cout << "before special offerlist" << endl;
+	/** 优惠套餐. */
+	TProductSetList tSpecialOfferList;
+
+	for( int i=0; i<nOffersNum; ++i )
+	{
+		CProductSet specialOffer;
+		int nProductsNum;
+		fin >> nProductsNum;
+		for ( int k=0;k<nProductsNum;++k )
+		{
+			int nProductId;
+			int nNum;
+			fin >> nProductId >> nNum;
+			if ( tIdMap.find( nProductId ) == tIdMap.end() )
+			{
+				int tmp = tIdMap.size();
+				tIdMap[nProductId] = tmp;
+			}
+				
+			nProductId = tIdMap[ nProductId ];
+			specialOffer.AddProduct( nProductId, nNum );
+		}
+		int nPrice;
+		fin >> nPrice;
+		specialOffer.SetSpecialPrice( nPrice );
+
+		tSpecialOfferList.push_back( specialOffer );
+	}
+
+	cout << "before all product" << endl;
+
+	// 读取所有的商品.
+	CProductSet tAllPruduct;
+
+	int nAllProductNum;
+	fin >> nAllProductNum;
+	for ( int i=0; i<nAllProductNum; ++i )
+	{
+		int nProductId;
+		int nProductNum;
+		int nProductPrice;
+		fin >> nProductId >> nProductNum >> nProductPrice;
+
+		if ( tIdMap.find( nProductId ) == tIdMap.end() )
+		{
+			int tmp = tIdMap.size();
+			tIdMap[nProductId] = tmp;
+		}
+
+		nProductId = tIdMap[ nProductId ];
+
+		tAllPruduct.AddProduct( nProductId, nProductNum, nProductPrice );
+	}
+
+	TMoneyMap tMoneyMap;
+	int nMinimumMoney = GetMinmumMoney( tSpecialOfferList.size(), tAllPruduct, tMoneyMap, tSpecialOfferList );
+
+	fout << nMinimumMoney << endl;
 
 	fin.close();
 	fout.close();
