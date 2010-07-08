@@ -204,6 +204,7 @@ typedef std::map< TSpecialOfferNum_ProductSetPair, int > TMoneyMap;
 
 /** 获取用 nSpeOfferNum 个套餐,来买 tProductSet 这些东西,需要的最少的钱数. 
 *	采用递归的方式,使用自己的栈,不使用函数调用方式.
+*	发现这种方式不行，内存使用太多，时间也太多。
 */
 int GetMinmumMoney( int nSpeOfferNum, CProductSet tProductSet, 
 				   TMoneyMap& tMoneyMap,  const TProductSetList& tSpecialOfferList )
