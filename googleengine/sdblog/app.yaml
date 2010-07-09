@@ -1,0 +1,35 @@
+application: woxiangblog
+version: 1
+runtime: python
+api_version: 1
+
+handlers:  
+- url: /favicon.ico
+  static_files: media/favicon.ico
+  upload: media/favicon.ico
+  mime_type: image/x-icon
+  
+- url: /remote_api
+  script: $PYTHON_LIB/google/appengine/ext/remote_api/handler.py
+  login: admin
+ 
+- url: /robots.txt
+  static_files: media/robots.txt
+  upload: media/robots.txt 
+  
+- url: /_admin/(.*)
+  script: $PYTHON_LIB/google/appengine/ext/admin
+  login: admin
+  
+- url: /gae/.*
+  script: supdo/blog/web/include/gae.py
+  
+#- url: /media/(.*)
+#  static_files: media/\1
+#  upload: media/(.*)
+  
+- url: /media/.*
+  script: lib/media.py
+  
+- url: .*
+  script: main.py
