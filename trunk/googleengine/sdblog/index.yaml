@@ -34,16 +34,6 @@ indexes:
   - name: orderby
     direction: desc
 
-- kind: Backup
-  properties:
-  - name: orderby
-    direction: desc
-
-- kind: Comments
-  properties:
-  - name: date
-    direction: desc
-
 - kind: Comments
   properties:
   - name: log
@@ -106,16 +96,6 @@ indexes:
 
 - kind: Logs
   properties:
-  - name: date
-    direction: desc
-
-- kind: Logs
-  properties:
-  - name: key
-    direction: desc
-
-- kind: Logs
-  properties:
   - name: type
   - name: date
     direction: desc
@@ -124,11 +104,6 @@ indexes:
   properties:
   - name: type
   - name: key
-    direction: desc
-
-- kind: Logs
-  properties:
-  - name: viewnum
     direction: desc
 
 - kind: Logs
