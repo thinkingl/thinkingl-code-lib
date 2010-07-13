@@ -1,9 +1,9 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 10.00
-# Visual Studio 2008
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Parent", "Parent\Parent.vcproj", "{B88EBF2F-C446-41CE-84F4-31492BD3C356}"
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Parent", "Parent\Parent.vcxproj", "{B88EBF2F-C446-41CE-84F4-31492BD3C356}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Son", "Son\Son.vcproj", "{F269F602-ECDB-49AC-BAE7-F125C6B9E9D2}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Son", "Son\Son.vcxproj", "{F269F602-ECDB-49AC-BAE7-F125C6B9E9D2}"
 EndProject
 Global
 	GlobalSection(SubversionScc) = preSolution
