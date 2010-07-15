@@ -1,4 +1,4 @@
-/*
+ï»¿/*
 ID: thinkin6
 PROG: shopping
 LANG: C++
@@ -27,8 +27,8 @@ A single line with one integer: the lowest possible price to be paid for the pur
 */
 
 /** 
-Ë¼Â·£º
-*	¶¯Ì¬¹æ»®.
+æ€è·¯ï¼š
+*	åŠ¨æ€è§„åˆ’.
 */
 #include <stdio.h>
 #include <stdlib.h>
@@ -99,23 +99,23 @@ public:
 public:
 	CProductSet();
 	void AddProduct( int nProductId, int nProductNum, int nPrice = 0 );
-	/** Ì×²Í¼Û. */
+	/** å¥—é¤ä»·. */
 	int GetSpecialPrice() const;
-	/** ÉèÖÃÌ×²Í¼Û. */
+	/** è®¾ç½®å¥—é¤ä»·. */
 	void SetSpecialPrice( int nPrice );
-	/** Ö±½ÓËã¼ÛÇ®. */
+	/** ç›´æ¥ç®—ä»·é’±. */
 	int GetNormalPrice() const;
-	/** ÊÇ·ñÊÇÓĞĞ§µÄ. */
+	/** æ˜¯å¦æ˜¯æœ‰æ•ˆçš„. */
 	bool IsValid()const;
-	/** ÊÇ·ñÃ»ÓĞÉÌÆ·ÁË. */
+	/** æ˜¯å¦æ²¡æœ‰å•†å“äº†. */
 	bool IsNull()const;
 	bool operator <( const CProductSet& another ) const;
 	const CProductSet operator -( const CProductSet& another )const;
 	CProductSet& operator -=( const CProductSet& another )const;
 private:
-	/** Ì×²Í¼Û¸ñ. */
+	/** å¥—é¤ä»·æ ¼. */
 	int m_nSpecialPrice;
-	/** ËùÓĞÉÌÆ·. */
+	/** æ‰€æœ‰å•†å“. */
 	typedef std::vector< TProductInfo > TProductTable;
 	TProductTable m_tProductTable;
 };
@@ -201,13 +201,13 @@ bool CProductSet::operator <( const CProductSet& another )const
 typedef std::vector< CProductSet > TProductSetList;
 typedef std::pair<int,CProductSet> TSpecialOfferNum_ProductSetPair;
 
-/** È¥ÖØÓÃµÄmap. Ì×²ÍºÍÉÌÆ·Çé¿ö<->Ç®Êı. */
+/** å»é‡ç”¨çš„map. å¥—é¤å’Œå•†å“æƒ…å†µ<->é’±æ•°. */
 typedef std::map< TSpecialOfferNum_ProductSetPair, int > TMoneyMap;
 
 
-/** »ñÈ¡ÓÃ nSpeOfferNum ¸öÌ×²Í,À´Âò tProductSet ÕâĞ©¶«Î÷,ĞèÒªµÄ×îÉÙµÄÇ®Êı. 
-*	²ÉÓÃµİ¹éµÄ·½Ê½,Ê¹ÓÃ×Ô¼ºµÄÕ»,²»Ê¹ÓÃº¯Êıµ÷ÓÃ·½Ê½.
-*	·¢ÏÖÕâÖÖ·½Ê½²»ĞĞ£¬ÄÚ´æÊ¹ÓÃÌ«¶à£¬Ê±¼äÒ²Ì«¶à¡£
+/** è·å–ç”¨ nSpeOfferNum ä¸ªå¥—é¤,æ¥ä¹° tProductSet è¿™äº›ä¸œè¥¿,éœ€è¦çš„æœ€å°‘çš„é’±æ•°. 
+*	é‡‡ç”¨é€’å½’çš„æ–¹å¼,ä½¿ç”¨è‡ªå·±çš„æ ˆ,ä¸ä½¿ç”¨å‡½æ•°è°ƒç”¨æ–¹å¼.
+*	å‘ç°è¿™ç§æ–¹å¼ä¸è¡Œï¼Œå†…å­˜ä½¿ç”¨å¤ªå¤šï¼Œæ—¶é—´ä¹Ÿå¤ªå¤šã€‚
 */
 int GetMinmumMoney( int nSpeOfferNum, CProductSet tProductSet, 
 				   TMoneyMap& tMoneyMap,  const TProductSetList& tSpecialOfferList )
@@ -227,47 +227,47 @@ int GetMinmumMoney( int nSpeOfferNum, CProductSet tProductSet,
 
 	while ( !tWordStack.empty() )
 	{
-		// È¡³öÒ»¸ö.
+		// å–å‡ºä¸€ä¸ª.
 		TSpecialOfferNum_ProductSetPair tPair = tWordStack.top();
 		
 
-		// ´¦Àí.
-		// ¶¯Ì¬¹æ»®.
+		// å¤„ç†.
+		// åŠ¨æ€è§„åˆ’.
 		if( tFlagMap[ tPair ] )
 		{
-			// ÒÑ¾­ÓĞÁË²»´¦Àí.
+			// å·²ç»æœ‰äº†ä¸å¤„ç†.
 		}
 		else
 		{
-			// ×îÖÕ»ù±¾µÄÌØÀı.
+			// æœ€ç»ˆåŸºæœ¬çš„ç‰¹ä¾‹.
 			if( tPair.first == 0 )
 			{
 				tMoneyMap[ tPair ] = tPair.second.GetNormalPrice();
 				tFlagMap[ tPair ] = 1;
-				tWordStack.pop();// ÒÑ¾­¼ÆËã³ö¼ÛÇ®µÄ³öÕ».
-				continue;	// Ìø¹ıÏÂÃæµÄ´¦Àí.
+				tWordStack.pop();// å·²ç»è®¡ç®—å‡ºä»·é’±çš„å‡ºæ ˆ.
+				continue;	// è·³è¿‡ä¸‹é¢çš„å¤„ç†.
 			}
 
 
-			// ²ğ·Ö,ÈëÕ».
-			// ×îºóÒ»ÖÖÌ×²ÍµÄÊ¹ÓÃÓĞÁ½ÖÖÇé¿ö,Ò»ÖÖÊÇ²»ÓÃ,¼´ÉÙ×îºóÒ»ÖÖÌ×²Í,ÆäËü²»±ä. ÁíÒ»ÖÖÊÇÊ¹ÓÃ×îºóÒ»ÖÖÌ×²Í,Ôò×îÉÙÓÃÒ»¸ö,Ê£ÓàµÄÉÌÆ·ÓÃÕâĞ©Ì×²Í.
-			// Á½ÖÖÇé¿öÈ¡Ğ¡µÄ.
+			// æ‹†åˆ†,å…¥æ ˆ.
+			// æœ€åä¸€ç§å¥—é¤çš„ä½¿ç”¨æœ‰ä¸¤ç§æƒ…å†µ,ä¸€ç§æ˜¯ä¸ç”¨,å³å°‘æœ€åä¸€ç§å¥—é¤,å…¶å®ƒä¸å˜. å¦ä¸€ç§æ˜¯ä½¿ç”¨æœ€åä¸€ç§å¥—é¤,åˆ™æœ€å°‘ç”¨ä¸€ä¸ª,å‰©ä½™çš„å•†å“ç”¨è¿™äº›å¥—é¤.
+			// ä¸¤ç§æƒ…å†µå–å°çš„.
 			TSpecialOfferNum_ProductSetPair tPairOne( tPair.first - 1, tPair.second );
 
-			int nMoneySecond = 0xFFFFFFF;	// Ä¬ÈÏÎªÎŞÏŞ´ó.
+			int nMoneySecond = 0xFFFFFFF;	// é»˜è®¤ä¸ºæ— é™å¤§.
 			CProductSet productLeft = tPair.second - tSpecialOfferList[tPair.first-1];
 			if ( productLeft.IsValid()  )
 			{
 				TSpecialOfferNum_ProductSetPair tPairTwo( tPair.first, productLeft );
 
-				// Èç¹ûÒÑ¾­Çó³öÀ´ÁË,»òÕßÉÌÆ·ÊÇ¿ÕµÄ(ÕâÊ±ÓÃ¼Û¸ñ>0µÄÅĞ¶ÏÈ¥ÖØ»áÊ§Ğ§!).
+				// å¦‚æœå·²ç»æ±‚å‡ºæ¥äº†,æˆ–è€…å•†å“æ˜¯ç©ºçš„(è¿™æ—¶ç”¨ä»·æ ¼>0çš„åˆ¤æ–­å»é‡ä¼šå¤±æ•ˆ!).
 				if ( tFlagMap[ tPairTwo ] || productLeft.IsNull() )
 				{
 					nMoneySecond = tMoneyMap[ tPairTwo ] + tSpecialOfferList[ tPair.first-1 ].GetSpecialPrice();
 				}
 				else
 				{
-					// ÈëÕ».
+					// å…¥æ ˆ.
 					nMoneySecond = -1;
 					tWordStack.push( tPairTwo );
 				}
@@ -282,7 +282,7 @@ int GetMinmumMoney( int nSpeOfferNum, CProductSet tProductSet,
 
 				tFlagMap[ tPair ] = 1;
 	
-				tWordStack.pop(); // °ÑÒÑ¾­Çó³öÀ´µÄ³öÕ».
+				tWordStack.pop(); // æŠŠå·²ç»æ±‚å‡ºæ¥çš„å‡ºæ ˆ.
 			}
 			else
 			{
@@ -314,7 +314,7 @@ int main()
 		return 0;
 	}
 
-	// È¡ÓÅ»İÌ×²ÍÊıÄ¿.
+	// å–ä¼˜æƒ å¥—é¤æ•°ç›®.
 	int nOffersNum;
 	fin >> nOffersNum;
 
@@ -322,7 +322,7 @@ int main()
 	TProductIdMap tIdMap;
 
 	cout << "before special offerlist" << endl;
-	/** ÓÅ»İÌ×²Í. */
+	/** ä¼˜æƒ å¥—é¤. */
 	TProductSetList tSpecialOfferList;
 
 	for( int i=0; i<nOffersNum; ++i )
@@ -353,7 +353,7 @@ int main()
 
 	cout << "before all product" << endl;
 
-	// ¶ÁÈ¡ËùÓĞµÄÉÌÆ·.
+	// è¯»å–æ‰€æœ‰çš„å•†å“.
 	CProductSet tAllPruduct;
 
 	int nAllProductNum;
