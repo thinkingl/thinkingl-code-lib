@@ -47,6 +47,9 @@ A single line with one integer: the lowest possible price to be paid for the pur
 #include <queue>
 #include <stack>
 
+
+
+
 #ifdef _WIN32
 #include <time.h>
 #endif
@@ -294,6 +297,8 @@ int GetMinmumMoney( int nSpeOfferNum, CProductSet tProductSet,
 	return tMoneyMap[ tPairFinal ];
 
 }
+
+
 
 int main()
 {
