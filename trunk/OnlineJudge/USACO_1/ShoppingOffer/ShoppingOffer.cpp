@@ -29,6 +29,9 @@ A single line with one integer: the lowest possible price to be paid for the pur
 /** 
 思路：
 *	动态规划.
+*	最初尝试使用 商品情况 + 套餐使用情况 两方面情况做key，结果不行。 因为它们的组合太多了。
+*	改为 只用商品情况做key，每次遍历尝试没有套餐以及使用所有的套餐。
+*	计算时间复杂度： 
 */
 #include <stdio.h>
 #include <stdlib.h>
@@ -209,7 +212,7 @@ typedef std::map< TSpecialOfferNum_ProductSetPair, int > TMoneyMap;
 *	采用递归的方式,使用自己的栈,不使用函数调用方式.
 *	发现这种方式不行，内存使用太多，时间也太多。
 */
-int GetMinmumMoney( int nSpeOfferNum, CProductSet tProductSet, 
+int GetMinmumMoneyByStack( int nSpeOfferNum, CProductSet tProductSet, 
 				   TMoneyMap& tMoneyMap,  const TProductSetList& tSpecialOfferList )
 {
 	cout << "GetMinmumMoney1" << endl;
@@ -377,7 +380,7 @@ int main()
 	}
 
 	TMoneyMap tMoneyMap;
-	int nMinimumMoney = GetMinmumMoney( tSpecialOfferList.size(), tAllPruduct, tMoneyMap, tSpecialOfferList );
+	int nMinimumMoney = GetMinmumMoneyByStack( tSpecialOfferList.size(), tAllPruduct, tMoneyMap, tSpecialOfferList );
 
 	fout << nMinimumMoney << endl;
 

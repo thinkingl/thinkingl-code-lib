@@ -1,4 +1,4 @@
-/*
+ï»¿/*
 ID: thinkin6
 PROG: rect1
 LANG: C++
@@ -60,9 +60,9 @@ SAMPLE OUTPUT (file rect1.out)
 */
 
 /** 
-Ë¼Â·£º
-*	Ä£Äâ¹ý³Ì¡£
-*	Ã¿´Î·ÅÒ»¸öÐÂµÄÑÕÉ«µÄÊ±ºò£¬½«ÏÂÃæµÄ·½¿é·Ö¸î³ÉÐ¡µÄ·½¿é¡£
+æ€è·¯ï¼š
+*	æ¨¡æ‹Ÿè¿‡ç¨‹ã€‚
+*	æ¯æ¬¡æ”¾ä¸€ä¸ªæ–°çš„é¢œè‰²çš„æ—¶å€™ï¼Œå°†ä¸‹é¢çš„æ–¹å—åˆ†å‰²æˆå°çš„æ–¹å—ã€‚
 +--------+      +-+--+--+
 |        |      | |2 |  |
 |        |      + +--+  |
@@ -106,7 +106,7 @@ typedef unsigned long u32;
 #define THINKINGL 1
 #endif
 
-/** ³¤·½ÐÎÇøÓòÀà¡£ */
+/** é•¿æ–¹å½¢åŒºåŸŸç±»ã€‚ */
 class CRectangle
 {
 //	CRect ;
@@ -115,15 +115,15 @@ public:
 
 	CRectangle();
 	CRectangle( int left, int bottom, int right, int top, int nColor );
-	/** ÇóÃæ»ý¡£ */
+	/** æ±‚é¢ç§¯ã€‚ */
 	int Area() const;
 
-	/** ·Ö¸îÒ»¸ö·½¿ò¡£
-	*	½«Á½¸ö·½¿éµÄ½»¼¯²¿·Ö´ÓÄ¿±ê·½¿éÖÐÍÚÈ¥£¬È»ºó½«Ê£Óà²¿·ÖÐý×ªÇÐ¸î³É¶à¸ö·½¿é¡£
+	/** åˆ†å‰²ä¸€ä¸ªæ–¹æ¡†ã€‚
+	*	å°†ä¸¤ä¸ªæ–¹å—çš„äº¤é›†éƒ¨åˆ†ä»Žç›®æ ‡æ–¹å—ä¸­æŒ–åŽ»ï¼Œç„¶åŽå°†å‰©ä½™éƒ¨åˆ†æ—‹è½¬åˆ‡å‰²æˆå¤šä¸ªæ–¹å—ã€‚
 	*/
 	bool CutRect( const CRectangle& another, TRectList& tRectList );
 
-	/** ÊÇ·ñÏà½»¡£ */
+	/** æ˜¯å¦ç›¸äº¤ã€‚ */
 	bool HasIntersection( const CRectangle& another );
 
 	int GetColor() const
@@ -131,7 +131,7 @@ public:
 		return m_nColor;
 	}
 
-	/** Çó½»¼¯£¬½»¼¯¿Ï¶¨Ò²ÊÇ¸ö¾ØÐÎ¡£ */
+	/** æ±‚äº¤é›†ï¼Œäº¤é›†è‚¯å®šä¹Ÿæ˜¯ä¸ªçŸ©å½¢ã€‚ */
 //	BOOL IntersectionRect( const CRectangle& another ,CRectangle& intersection );
 protected:
 private:
@@ -171,9 +171,9 @@ int CRectangle::Area() const
 
 bool CRectangle::HasIntersection( const CRectangle& another )
 {
-	// ×¢Òâ£¡ÔÚÕâÒ»ÌâÖÐ£¬ÏàµÈÊ±Ò²ÊÇ²»½»²æµÄ£¡
-	bool bx = ( this->m_nLeft >= another.m_nRight ) || ( this->m_nRight <= another.m_nLeft );	// Ë®Æ½Ã»ÓÐ½»²æ¡£
-	bool by = ( this->m_nBottom >= another.m_nTop ) || ( this->m_nTop <= another.m_nBottom );	// ´¹Ö±Ã»ÓÐ½»²æ¡£
+	// æ³¨æ„ï¼åœ¨è¿™ä¸€é¢˜ä¸­ï¼Œç›¸ç­‰æ—¶ä¹Ÿæ˜¯ä¸äº¤å‰çš„ï¼
+	bool bx = ( this->m_nLeft >= another.m_nRight ) || ( this->m_nRight <= another.m_nLeft );	// æ°´å¹³æ²¡æœ‰äº¤å‰ã€‚
+	bool by = ( this->m_nBottom >= another.m_nTop ) || ( this->m_nTop <= another.m_nBottom );	// åž‚ç›´æ²¡æœ‰äº¤å‰ã€‚
 
 	if ( bx || by )
 	{
@@ -189,29 +189,29 @@ bool CRectangle::CutRect(const CRectangle &another, CRectangle::TRectList &tRect
 {
 	if( this->HasIntersection( another ) )
 	{
-		// Ðý×ªÇÐ¸î¡£
+		// æ—‹è½¬åˆ‡å‰²ã€‚
 
-		// ×ó±ß£¬´ÓÉÏµ½ÏÂ¡£
+		// å·¦è¾¹ï¼Œä»Žä¸Šåˆ°ä¸‹ã€‚
 		if ( this->m_nLeft > another.m_nLeft && this->m_nLeft < another.m_nRight )
 		{
 			tRectList.push_back( CRectangle( another.m_nLeft, another.m_nBottom, this->m_nLeft, another.m_nTop, another.m_nColor ) );
 		}
 
-		// ÉÏ±ß£¬´Ó×ó±ßÉÏÃæÇÐ¹ýµÄµØ·½µ½ÓÒÍ·¡£
+		// ä¸Šè¾¹ï¼Œä»Žå·¦è¾¹ä¸Šé¢åˆ‡è¿‡çš„åœ°æ–¹åˆ°å³å¤´ã€‚
 		if ( this->m_nTop > another.m_nBottom && this->m_nTop < another.m_nTop )
 		{
 			int nLeft = max( this->m_nLeft, another.m_nLeft );
 			tRectList.push_back( CRectangle( nLeft, this->m_nTop, another.m_nRight, another.m_nTop, another.m_nColor ) );
 		}
 
-		// ÓÒ±ß£¬´ÓÉÏ±ßÇÐ¹ýµÄµØ·½µ½ÏÂÍ·¡£
+		// å³è¾¹ï¼Œä»Žä¸Šè¾¹åˆ‡è¿‡çš„åœ°æ–¹åˆ°ä¸‹å¤´ã€‚
 		if ( this->m_nRight > another.m_nLeft && this->m_nRight < another.m_nRight )
 		{
 			int nTop = min( this->m_nTop, another.m_nTop );
 			tRectList.push_back( CRectangle( this->m_nRight, another.m_nBottom, another.m_nRight, nTop, another.m_nColor) );
 		}
 
-		// ÏÂ±ß£¬´Ó×ó±ßÇÐ¹ýµÄµØ·½µ½ÓÒ±ßÇÐ¹ýµÄµØ·½¡£
+		// ä¸‹è¾¹ï¼Œä»Žå·¦è¾¹åˆ‡è¿‡çš„åœ°æ–¹åˆ°å³è¾¹åˆ‡è¿‡çš„åœ°æ–¹ã€‚
 		if ( this->m_nBottom > another.m_nBottom && this->m_nBottom < another.m_nTop )
 		{
 			int nLeft = max( this->m_nLeft, another.m_nLeft );
@@ -250,9 +250,9 @@ int main()
 	fin >> nPaperWide >> nPaperLong >> nColorNum;
 
 	CRectangle::TRectList tPaintList;
-	tPaintList.push_back( CRectangle( 0, 0, nPaperWide, nPaperLong, 1 ) );	// °×É«µ×É«¡£
+	tPaintList.push_back( CRectangle( 0, 0, nPaperWide, nPaperLong, 1 ) );	// ç™½è‰²åº•è‰²ã€‚
 
-	// ÆäËüÑÕÉ«¡£
+	// å…¶å®ƒé¢œè‰²ã€‚
 	for ( int i=0; i<nColorNum; ++i )
 	{
 		int nLeft, nBottom, nRight, nTop, nCol;
@@ -262,30 +262,30 @@ int main()
 
 	CRectangle::TRectList tResultRectangleList;
 	
-	// Ò»²ã²ãÏòÉÏ¼Ó²ã¡£
+	// ä¸€å±‚å±‚å‘ä¸ŠåŠ å±‚ã€‚
 	for ( int i=0; i<tPaintList.size(); ++i )
 	{
 		CRectangle& curColorRect = tPaintList[i];
 		CRectangle::TRectList tNewRectList;
 		for ( int k=0; k<tResultRectangleList.size(); ++k )
 		{
-			// ÓÃµ±Ç°ÑÕÉ«ÇÐ¸îÇ°ÃæµÄËùÓÐÑÕÉ«ÇøÓò¡£
-			// Í¬Ê±°Ñµ±Ç°ÑÕÉ«¸²¸ÇµÄ²¿·Ö´ÓÖÐÍÚÈ¥¡£			
+			// ç”¨å½“å‰é¢œè‰²åˆ‡å‰²å‰é¢çš„æ‰€æœ‰é¢œè‰²åŒºåŸŸã€‚
+			// åŒæ—¶æŠŠå½“å‰é¢œè‰²è¦†ç›–çš„éƒ¨åˆ†ä»Žä¸­æŒ–åŽ»ã€‚			
 			CRectangle::TRectList tList;
 			if ( curColorRect.CutRect( tResultRectangleList[k], tList ) )
 			{
-				tNewRectList.insert( tNewRectList.end(), tList.begin(), tList.end() );	// Ö®Ç°µÄÇøÓò±»·Ö¸î³É¼¸¸öÐ¡µÄÇøÓò¡£
+				tNewRectList.insert( tNewRectList.end(), tList.begin(), tList.end() );	// ä¹‹å‰çš„åŒºåŸŸè¢«åˆ†å‰²æˆå‡ ä¸ªå°çš„åŒºåŸŸã€‚
 			}
 			else
 			{
-				tNewRectList.push_back( tResultRectangleList[k] );	// Ö®Ç°µÄÇøÓòÃ»ÓÐ±»·Ö¸î£¬±£³ÖÔ­Ñù¡£
+				tNewRectList.push_back( tResultRectangleList[k] );	// ä¹‹å‰çš„åŒºåŸŸæ²¡æœ‰è¢«åˆ†å‰²ï¼Œä¿æŒåŽŸæ ·ã€‚
 			}
 			
 		}
-		// ¸üÐÂµ±Ç°ËùÓÐ·½¿éÁÐ±í¡£
+		// æ›´æ–°å½“å‰æ‰€æœ‰æ–¹å—åˆ—è¡¨ã€‚
 		tResultRectangleList = tNewRectList;
-		// µ±Ç°ÑÕÉ«ÇøÓòÔÚ×îÉÏÃæ£¬ÍêÕûµÄ¡£		
-		tResultRectangleList.push_back( curColorRect );	// ¼ÓÈëËùÓÐÑÕÉ«ÁÐ±íÖÐ¡£
+		// å½“å‰é¢œè‰²åŒºåŸŸåœ¨æœ€ä¸Šé¢ï¼Œå®Œæ•´çš„ã€‚		
+		tResultRectangleList.push_back( curColorRect );	// åŠ å…¥æ‰€æœ‰é¢œè‰²åˆ—è¡¨ä¸­ã€‚
 	}
 
 	vector<int> tArea( MAX_COLOR_NUM+1, 0 );
