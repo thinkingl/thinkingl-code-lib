@@ -102,6 +102,7 @@ typedef std::complex<int> TIntComplex;
 typedef std::vector< TIntComplex > TPosVector;
 
 const TIntComplex END_DIRECTION = TIntComplex( 0, 0 );
+const int INFINITE = 0xFFFFFF;
 
 /** 骑士可能走的步骤。 最终以0，0作为结束的标志。 */
 static TIntComplex s_arKnightDirection[] = 
@@ -162,15 +163,15 @@ void FloodFillStep( TIntComplex nPos, TIntComplex* directionStep, int nRowNum, i
 
 			// 找从这个点可以到达的没去过的其它点。
 			int nDirectionIndex = 0;
-			while( s_arKnightDirection[ nDirectionIndex ] != END_DIRECTION )
+			while( directionStep[ nDirectionIndex ] != END_DIRECTION )
 			{
-				TIntComplex tNextPos = tNewPos + s_arKnightDirection[ nDirectionIndex ];
+				TIntComplex tNextPos = tNewPos + directionStep[ nDirectionIndex ];
 				if( tNextPos.real() >= 0 && tNextPos.imag() >= 0 
 					&& tNextPos.real() < nColNum && tNextPos.imag() < nRowNum ) 
 				{
 					// 没有越界。检查是否访问过。
 					int nNextPosIndex = tNextPos.real() + tNextPos.imag() * nColNum;
-					if( -1 == parDistance[ nNextPosIndex ] )
+					if( INFINITE == parDistance[ nNextPosIndex ] )
 					{
 						// 更新距离步数
 						parDistance[ nNextPosIndex ] = nCurStep; 
@@ -226,6 +227,7 @@ int main()
 		tKnightPosList.push_back( TIntComplex( tmpx, tmpy ) );
 	}
 
+
 	// 求以骑士的走法，棋盘上两点间的距离/需要的最小步数。
 
 	// 初始化棋盘上两点间对于骑士的距离。
@@ -234,15 +236,16 @@ int main()
 	// 因为指向数组的指针不好调试，所以改为vector。
 	// stl标准中规定，vector中元素是连续的，所以不改变vector大小的情况下可以直接用指针访问其中的数据。
 	typedef std::vector< u32 > TUIntVector;
-	TUIntVector arKnightDistance( nMatrixSize * nMatrixSize, -1 );
+	TUIntVector arKnightDistance( nMatrixSize * nMatrixSize, INFINITE );
 
 
 	int nFirstIndex = 0;
 	// 存放当前点到其他点距离的数组。
 	u32 *parCurDistance = &arKnightDistance[0];
-	for( int nFirstCol=0; nFirstCol<nCol; ++nFirstCol )
+
+	for( int nFirstRow=0; nFirstRow<nRow; ++ nFirstRow )	
 	{
-		for( int nFirstRow=0; nFirstRow<nRow; ++ nFirstRow )
+		for( int nFirstCol=0; nFirstCol<nCol; ++nFirstCol )
 		{
 			FloodFillStep( TIntComplex( nFirstCol, nFirstRow ), s_arKnightDirection, nRow, nCol, parCurDistance );
 			
@@ -254,25 +257,38 @@ int main()
 	}
 
 	// 求国王自己走的时候，到所有点需要的步骤/距离。
-	TUIntVector arKingDistance(  nMatrixSize, -1 );
+	TUIntVector arKingDistance(  nMatrixSize, INFINITE );
 	FloodFillStep( tKingPos, s_arKingDirection, nRow, nCol, &arKingDistance[0] );
 
 	// 尝试所有的点作为集合地。
-	u32 nMinAllStep = -1;	// 最终的最少步数。
+	u32 nMinAllStep = INFINITE;	// 最终的最少步数。
+
+	u32 nMinKnightStep = INFINITE;
 	for( int nCamelot = 0; nCamelot<nMatrixSize; ++nCamelot )
 	{
+		// 骑士们走的步数。
+		u32 nAllKnightStep = 0;
+		for( int nKnight=0; nKnight<tKnightPosList.size(); ++nKnight )
+		{
+			int nKnightPosIndex = tKnightPosList[ nKnight ].real() + tKnightPosList[ nKnight ].imag() * nCol;
+			nAllKnightStep += arKnightDistance[ nKnightPosIndex * nMatrixSize + nCamelot ];
+		}
+		if( nAllKnightStep >= nMinAllStep )
+		{
+			// 不用试了，加上国王的就更多了。
+			continue;
+		}
+
+		nMinKnightStep = min( nMinKnightStep, nAllKnightStep );
+
 		// 尝试所有的点作为国王搭便车的点。
 		// 让国王先走到此点，然后搭乘骑士的便车，求 国王的步数+骑士多走的步数 最小的。
 		int nKnightWithKing = -1;
-
 		// 国王可以不依靠骑士，靠自己,所以国王自己和搭骑士便车多走的步数 最大也就是国王自己走的步数。
 		u32 nMinKingStepAndKnightStepPlus = arKingDistance[ nCamelot ];
 		for( int i=0; i<nMatrixSize; ++i )
 		{
 			int nKingStep = arKingDistance[ i ];
-
-			
-
 			// 要所有骑士都试一下。
 			for( int nKnight=0; nKnight<tKnightPosList.size(); ++nKnight )
 			{
@@ -293,12 +309,8 @@ int main()
 
 		// 以这个点做集合地的距离就出来了。
 		// 国王和国王让骑士多跑的这段加上所有骑士本来要跑的距离。
-		int nCurCamelotAllStep = nMinKingStepAndKnightStepPlus;
-		for( int nKnight=0; nKnight<tKnightPosList.size(); ++nKnight )
-		{
-			int nKnightPosIndex = tKnightPosList[ nKnight ].real() + tKnightPosList[ nKnight ].imag() * nCol;
-			nCurCamelotAllStep += arKnightDistance[ nKnightPosIndex * nMatrixSize + nCamelot ];
-		}
+		int nCurCamelotAllStep = nMinKingStepAndKnightStepPlus + nAllKnightStep;
+		
 
 		if( nMinAllStep > nCurCamelotAllStep )// 看这个点做集合地是不是比其它的强
 		{
