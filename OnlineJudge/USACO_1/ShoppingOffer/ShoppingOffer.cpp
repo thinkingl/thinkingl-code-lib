@@ -29,9 +29,16 @@ A single line with one integer: the lowest possible price to be paid for the pur
 /** 
 思路：
 *	动态规划.
-*	最初尝试使用 商品情况 + 套餐使用情况 两方面情况做key，结果不行。 因为它们的组合太多了。
+*	最初尝试使用 商品情况 + 套餐使用情况 两方面情况做key，结果不行。 因为它们的组合太多了，内存不够。
 *	改为 只用商品情况做key，每次遍历尝试没有套餐以及使用所有的套餐。
-*	计算时间复杂度： 
+*	
+*	求买 一些商品 能用的最少金钱，需要
+*	求不用任何套餐，需要的钱数 P0 。
+*	尝试使用第一种套餐，需要的钱数是 套餐的优惠价格 + 剩余商品能用的最少金钱 = P1。 这里出现递归。
+*	尝试使用第二种，第三种等所有套餐，处理同上，得到 P2， P3 ...Pn
+*	这些商品花费的最少金钱就是 min（ P0，P1...Pn )。
+*
+*	如果直接使用函数调用递归会栈溢出，所以程序中使用了自己的栈。
 */
 #include <stdio.h>
 #include <stdlib.h>
@@ -197,9 +204,6 @@ typedef std::vector< CProductSet > TProductSetList;
 
 /** 去重用的map. 商品情况<->钱数. */
 typedef std::map< CProductSet, int > TMoneyMap;
-
-unsigned int g_arMoneyMap[MAX_PRODUCT_TYPE];
-
 
 /** 获取用 nSpeOfferNum 个套餐,来买 tProductSet 这些东西,需要的最少的钱数. 
 *	采用递归的方式,使用自己的栈,不使用函数调用方式.
