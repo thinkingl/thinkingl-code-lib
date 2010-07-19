@@ -102,11 +102,9 @@ int main()
 	typedef std::vector< TIntVector > TFieldStat;
 
 	const int MAX_FIELD_SIZE = 250;
-	int tFieldStat[ MAX_FIELD_SIZE ][MAX_FIELD_SIZE];
-
 	// 牧场的状态。
-//	TFieldStat tFieldStat( nFieldSize, TIntVector( nFieldSize ) );
-
+	int tFieldStat[ MAX_FIELD_SIZE ][MAX_FIELD_SIZE];
+	
 	for( int i=0; i<nFieldSize; ++i )
 	{
 		for( int k=0; k<nFieldSize; ++k )
@@ -128,13 +126,68 @@ int main()
 	TIntVector tRemainingSquaresNum( nFieldSize+1, 0 );
 
 	// 存放是否可以放牧。
-	TIntVector tMapCanGraze( MAX_FIELD_SIZE * MAX_FIELD_SIZE * MAX_FIELD_SIZE, 0 );
-	int (abc)[10][10][10] ;
-
-	// 新的方法。
-	// 先求出
+	TIntVector tMapCanGraze( MAX_FIELD_SIZE * MAX_FIELD_SIZE , 0 );
+	int (*parMapCanGraze)[MAX_FIELD_SIZE] = ( int(*)[MAX_FIELD_SIZE] )&tMapCanGraze[0];
 
 
+	int nCurSize = 1;
+	// 大小是1的可放牧的方块的情况就是牧场状况表。
+	for( int nY=0; nY<nFieldSize; ++nY )
+	{
+		for( int nX=0; nX<nFieldSize; ++nX )
+		{
+			parMapCanGraze[nY][nX] = tFieldStat[nY][nX];
+			tRemainingSquaresNum[nCurSize] += ( parMapCanGraze[nY][nX] ? 1 : 0 );
+		}
+	}
+
+	
+	while( nCurSize < nFieldSize )
+	{
+		for( int nY=0; nY<nFieldSize; ++nY )
+		{
+			for( int nX=0; nX<nFieldSize; ++nX )
+			{
+				if( parMapCanGraze[nY][nX] )
+				{
+					// 是否越界。
+					if( nY >= nFieldSize - nCurSize || nX >= nFieldSize - nCurSize )
+					{
+						parMapCanGraze[nY][nX] = 0; 
+						continue;
+					}
+					// 右边是否可以？
+					if( !parMapCanGraze[nY][nX+1] )
+					{
+						parMapCanGraze[nY][nX] = 0; 
+						continue;
+					}
+
+					// 下边是否可以？
+					if( !parMapCanGraze[nY+1][nX] )
+					{
+						parMapCanGraze[nY][nX] = 0; 
+						continue;
+					}
+
+					// 右下角那个是否可以？
+					if( !tFieldStat[nY+nCurSize][nX+nCurSize] )
+					{
+						parMapCanGraze[nY][nX] = 0; 
+						continue;
+					}
+
+					// 能执行到这里，说明这个格子可以。
+					tRemainingSquaresNum[ nCurSize + 1 ] ++;
+
+				}
+			}
+		}
+
+		nCurSize ++;
+	}
+
+#if 0
 	for( int nY=0; nY<nFieldSize; ++nY )
 	{
 		for( int nX=0; nX<nFieldSize; ++nX )
@@ -191,7 +244,7 @@ int main()
 			}
 		}
 	}
-
+#endif
 	// 输出结果。
 	for( int nSize = 2; nSize<=nFieldSize; ++nSize )
 	{
