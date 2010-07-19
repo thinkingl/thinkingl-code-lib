@@ -37,7 +37,7 @@ SAMPLE OUTPUT (file range.out)
 */
 
 /** 
-Ë¼Â·£º
+æ€è·¯ï¼š
 
 */
 #include <stdio.h>
@@ -102,7 +102,7 @@ int main()
 	typedef std::vector< TIntVector > TFieldStat;
 
 	const int MAX_FIELD_SIZE = 250;
-	// ÄÁ³¡µÄ×´Ì¬¡£
+	// ç‰§åœºçš„çŠ¶æ€ã€‚
 	int tFieldStat[ MAX_FIELD_SIZE ][MAX_FIELD_SIZE];
 	
 	for( int i=0; i<nFieldSize; ++i )
@@ -117,21 +117,21 @@ int main()
 			}
 			else
 			{
-				--k;	// Ìø¹ı»»ĞĞ·û¡£
+				--k;	// è·³è¿‡æ¢è¡Œç¬¦ã€‚
 			}
 		}
 	}
 
-	// ¿ÉÒÔ·ÅÄÁµÄ·½¿éµÄÊıÄ¿¡£ÏÂ±êÊÇ·½¿é´óĞ¡¡£
+	// å¯ä»¥æ”¾ç‰§çš„æ–¹å—çš„æ•°ç›®ã€‚ä¸‹æ ‡æ˜¯æ–¹å—å¤§å°ã€‚
 	TIntVector tRemainingSquaresNum( nFieldSize+1, 0 );
 
-	// ´æ·ÅÊÇ·ñ¿ÉÒÔ·ÅÄÁ¡£
+	// å­˜æ”¾æ˜¯å¦å¯ä»¥æ”¾ç‰§ã€‚
 	TIntVector tMapCanGraze( MAX_FIELD_SIZE * MAX_FIELD_SIZE , 0 );
 	int (*parMapCanGraze)[MAX_FIELD_SIZE] = ( int(*)[MAX_FIELD_SIZE] )&tMapCanGraze[0];
 
 
 	int nCurSize = 1;
-	// ´óĞ¡ÊÇ1µÄ¿É·ÅÄÁµÄ·½¿éµÄÇé¿ö¾ÍÊÇÄÁ³¡×´¿ö±í¡£
+	// å¤§å°æ˜¯1çš„å¯æ”¾ç‰§çš„æ–¹å—çš„æƒ…å†µå°±æ˜¯ç‰§åœºçŠ¶å†µè¡¨ã€‚
 	for( int nY=0; nY<nFieldSize; ++nY )
 	{
 		for( int nX=0; nX<nFieldSize; ++nX )
@@ -150,34 +150,34 @@ int main()
 			{
 				if( parMapCanGraze[nY][nX] )
 				{
-					// ÊÇ·ñÔ½½ç¡£
+					// æ˜¯å¦è¶Šç•Œã€‚
 					if( nY >= nFieldSize - nCurSize || nX >= nFieldSize - nCurSize )
 					{
 						parMapCanGraze[nY][nX] = 0; 
 						continue;
 					}
-					// ÓÒ±ßÊÇ·ñ¿ÉÒÔ£¿
+					// å³è¾¹æ˜¯å¦å¯ä»¥ï¼Ÿ
 					if( !parMapCanGraze[nY][nX+1] )
 					{
 						parMapCanGraze[nY][nX] = 0; 
 						continue;
 					}
 
-					// ÏÂ±ßÊÇ·ñ¿ÉÒÔ£¿
+					// ä¸‹è¾¹æ˜¯å¦å¯ä»¥ï¼Ÿ
 					if( !parMapCanGraze[nY+1][nX] )
 					{
 						parMapCanGraze[nY][nX] = 0; 
 						continue;
 					}
 
-					// ÓÒÏÂ½ÇÄÇ¸öÊÇ·ñ¿ÉÒÔ£¿
+					// å³ä¸‹è§’é‚£ä¸ªæ˜¯å¦å¯ä»¥ï¼Ÿ
 					if( !tFieldStat[nY+nCurSize][nX+nCurSize] )
 					{
 						parMapCanGraze[nY][nX] = 0; 
 						continue;
 					}
 
-					// ÄÜÖ´ĞĞµ½ÕâÀï£¬ËµÃ÷Õâ¸ö¸ñ×Ó¿ÉÒÔ¡£
+					// èƒ½æ‰§è¡Œåˆ°è¿™é‡Œï¼Œè¯´æ˜è¿™ä¸ªæ ¼å­å¯ä»¥ã€‚
 					tRemainingSquaresNum[ nCurSize + 1 ] ++;
 
 				}
@@ -196,7 +196,7 @@ int main()
 			while( 1 )
 			{
 				bool bCanGraze = true;
-				// ¼ì²éÓÒ±ß¡£
+				// æ£€æŸ¥å³è¾¹ã€‚
 				int nXR = nX + nSize-1;
 				for( int nYR = nY; nYR < nY + nSize; ++nYR )
 				{
@@ -212,7 +212,7 @@ int main()
 					}
 				}
 
-				// ¼ì²éÏÂ±ß¡£
+				// æ£€æŸ¥ä¸‹è¾¹ã€‚
 				if( bCanGraze )
 				{
 					int nYB = nY + nSize-1;
@@ -245,7 +245,7 @@ int main()
 		}
 	}
 #endif
-	// Êä³ö½á¹û¡£
+	// è¾“å‡ºç»“æœã€‚
 	for( int nSize = 2; nSize<=nFieldSize; ++nSize )
 	{
 		if( tRemainingSquaresNum[ nSize ] )
