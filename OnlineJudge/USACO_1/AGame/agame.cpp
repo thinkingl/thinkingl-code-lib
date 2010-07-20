@@ -31,7 +31,8 @@ SAMPLE OUTPUT (file game1.out)
 */
 
 /** 
-思路：
+思路：好有趣的一道题目。
+
 
 */
 #include <stdio.h>
@@ -89,7 +90,50 @@ int main()
 		return 0;
 	}
 
+	typedef std::vector<int> TIntVec;
+	
+	// 题目中最大是100，我怕数组越界，就多搞了点，下面数组操作的时候就不用判断了。
+	const int MAX_SEQUENCE_LEN = 100+100;
 
+	int nSequenceLen;
+	fin >> nSequenceLen;
+
+	TIntVec tNumberSequence;
+	for( int i=0; i<nSequenceLen; ++i )
+	{
+		int nNum;
+		fin >> nNum;
+		tNumberSequence.push_back( nNum );
+	}
+
+	// 用vector申请内存。
+	TIntVec tBestOffensive( MAX_SEQUENCE_LEN * MAX_SEQUENCE_LEN, 0 );
+	TIntVec tBestDefensive( MAX_SEQUENCE_LEN * MAX_SEQUENCE_LEN, 0 );
+
+	// 二维数组指针。Array[begin][length]含义是以begin开始的length长度的数字串能得到的最优化的先手成绩。
+	int (*parBestOffensive)[MAX_SEQUENCE_LEN] = ( int (*)[MAX_SEQUENCE_LEN] ) &tBestOffensive[0];
+	// 最优后手成绩。
+	int (*parBestDefensive)[MAX_SEQUENCE_LEN] = ( int (*)[MAX_SEQUENCE_LEN] ) &tBestDefensive[0];
+
+	int nLen = 1;
+	while( nLen <= nSequenceLen )
+	{
+		for( int i=0; i<nSequenceLen-nLen+1; ++i )
+		{
+			// 选一边时最好的先手结果就是选择的这边的值加上剩下的队列中最好的后手结果。
+			int nBestPickLeft = tNumberSequence[i] + parBestDefensive[i+1][nLen-1];
+			int nBestPickRight = tNumberSequence[i+nLen-1] + parBestDefensive[i][nLen-1];
+			parBestOffensive[i][nLen] = max( nBestPickLeft, nBestPickRight );
+
+			// 因为先手的人很厉害，所以最好的后手结果就是让先手拿走一个后剩下的数列情况下最坏的先手结果。
+			parBestDefensive[i][nLen] = min( parBestOffensive[i][nLen-1], parBestOffensive[i+1][nLen-1]);
+		}
+
+		nLen++;
+	}
+
+	// 输出结果。
+	fout << parBestOffensive[0][nSequenceLen] << " " << parBestDefensive[0][nSequenceLen] << endl;
 
 	fin.close();
 	fout.close();

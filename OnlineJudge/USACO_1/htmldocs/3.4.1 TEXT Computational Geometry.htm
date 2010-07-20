@@ -1,0 +1,422 @@
+
+<!-- saved from url=(0052)http://ace.delos.com/usacotext2?a=oIbKMFHjD5E&S=geom -->
+<HTML><HEAD><META http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"><TITLE>Computational Geometry
+</TITLE>
+</HEAD><BODY bgcolor="#f0f0f0">
+<FONT face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">
+<DIV style="width:45em;background-color:white;border-style:solid;border-width:1px;padding:1em;">
+<TABLE cellspacing="8">
+   <TBODY><TR><TD><IMG src="./3.4.1 TEXT Computational Geometry_files/cowhead2.gif"></TD>
+       <TD>&nbsp;&nbsp;&nbsp;</TD>
+       <TD><B><FONT size="5">
+	<FONT face="Verdana,Tahoma,sans-serif,Arial,Lucida Sans,Gill Sans">
+	Computational Geometry
+</FONT></FONT></B><FONT size="5"></FONT></TD>
+   </TR>
+</TBODY></TABLE>
+
+<H4>Prerequisites
+
+<UL>
+<LI>Graph Theory</LI>
+<LI>Shortest Path</LI>
+</UL>
+
+</H4><H4>Tools
+
+<P>
+This module discusses several algorithms that calculate various
+geometric properties, mostly based on only two operations described
+below:  cross product and arctangent.
+
+</P></H4><H5>Cross Product</H5>
+
+<P>
+The cross product of <I>u</I> and <I>v</I> is written as <I>u  x  v</I>.
+Computationally, the <I>cross product</I> of two three-dimensional
+vectors <I>u</I> and <I>v</I> is the vector determinant of the following matrix (where
+<B>i</B>, <B>j</B>, and <B>k</B> are unit vectors in the <I>x</I>, <I>y</I>,
+and <I>z</I> directions respectively):
+
+<BR>
+<TT><FONT size="2"> <BR>
+|&nbsp;i&nbsp;&nbsp;j&nbsp;&nbsp;k&nbsp;&nbsp;|<BR>
+|&nbsp;ux&nbsp;uy&nbsp;uz&nbsp;|<BR>
+|&nbsp;vx&nbsp;vy&nbsp;vz&nbsp;|<BR>
+</FONT></TT>
+
+<BR>
+
+That equation works out to:
+
+</P><P>
+
+(<I>u</I><SUB>y</SUB><I>v</I><SUB>z</SUB>-<I>v</I><SUB>y</SUB><I>u</I><SUB>
+z</SUB>)<B>i</B> + (<I>u</I><SUB>z</SUB><I>v</I><SUB>x</SUB>-<I>u</I><SUB>
+x</SUB><I>v</I><SUB>z</SUB>)<B>j</B> + (<I>u</I><SUB>x</SUB><I>v</I><SUB>
+y</SUB>-<I>u</I><SUB>y</SUB><I>v</I><SUB>x</SUB>)<B>k</B>
+
+<BR><IMG src="./3.4.1 TEXT Computational Geometry_files/geom6.gif"><BR>
+
+</P><P> This definition can be used for vectors in two dimensions by
+using three-dimensional vectors with a z component of 0.  The
+resulting vector will only have a z value.
+
+</P><P>The cross product has three properties:
+
+</P><UL type="square">
+
+<LI>The <I>cross product</I> of two vectors is perpendicular to both vectors.</LI>
+
+<LI> The length of the cross product is equal to the product of: </LI>
+
+<UL type="square">
+
+<LI>the length of <I>u</I>,</LI>
+
+<LI>the length of <I>v</I>, and</LI>
+
+<LI>the sine of the angle between the vectors.</LI>
+
+</UL>
+
+</UL>
+
+<P> Of the two different directions that are perpendicular to both
+<I>u</I> and <I>v</I>, the direction the cross product points depends on
+whether <I>u</I> is ``to the right'' of <I>v</I> or ``to the left.''
+
+<BR><IMG src="./3.4.1 TEXT Computational Geometry_files/geom7.gif"><BR>
+
+</P><H5>Dot product</H5>
+
+<P>
+The <I>dot product</I> of two vectors <I>u</I> and <I>v</I> is a scalar
+written as <I>u · v</I>.  Computationally, it is defined in
+three dimensions as:
+
+<I>u</I><SUB><I>x</I></SUB><I>v</I><SUB><I>x</I></SUB> + <I>u</I>
+<SUB>y</SUB><I>v</I><SUB>y</SUB> + <I>u</I><SUB>z</SUB><I>v</I>
+<SUB>z</SUB>
+
+</P><P> The dot product is actually equal to the product of:
+
+</P><UL type="square">
+
+<LI>the length of <I>u</I> </LI>
+
+<LI>the length of <I>v</I></LI>
+
+<LI>the cosine of the angle between <I>u</I> and <I>v</I>.</LI>
+
+</UL>
+
+<P> Presuming <I>u</I> and <I>v</I> are non-zero, if the dot product if
+negative, <I>u</I> and <I>v</I> make an angle greater than 90
+degrees.  If it is zero, then <I>u</I> and <I>v</I> are perpendicular.
+If <I>u cdot v</I> is positive, then the two vectors form an acute
+angle.
+
+</P><H5>Arctangent</H5>
+
+The <I>arctangent</I>function calculates the (an) angle whose
+tangent is its argument and generally returns a real number between
+-pi/2 and pi/2.  An additional function in C, <I>atan2</I>, takes
+two arguments: a <I>DELTA y</I> value and a <I>DELTA x</I> value
+(in that order!). It determines the angle between the given vector
+and the positive <I>x</I> axis and returns a value between -pi and
+pi.  This has the advantage of removing concerns about dividing by
+zero or writing code to repair angles in order to handle the negative
+<I>x</I> cases. The <I>atan2</I> function is almost always easier
+to use than the simpler <I>atan</I> function that takes only one
+argument.
+
+<H4>Particular Debugging Problems
+
+<P> The main problem with geometric problems is that they spawn
+<B>a lot</B> of special cases.  Be on the lookout for these special
+cases and <B>make sure your program works for all of them</B>.
+
+</P><P> Floating point calculations also create a new set of problems.
+Floating point calculations are rarely precise, as the computer
+only maintains so many bits (digits) of accuracy: be aware of this.
+In particular, when checking if two values are equal, check to see
+if they are within some small tolerance of each other not precisely
+equal.
+
+</P></H4><H4>Geometric Algorithms
+
+<P>
+Here are some of snippets that can help you solve geometry problems.
+
+</P></H4><H5>Area of Triangle</H5>
+
+<P>
+To calculate the area of a triangle with vertices (a, b, c), pick
+a vertex (say a) and create a vector to the other two vertices (let
+<I>u</I> = b - a, and <I>v</I> = c - a).  The area of the triangle (a, b, c)
+is one half the length of cross product <I>u  x  v</I>.
+
+<BR><IMG src="./3.4.1 TEXT Computational Geometry_files/geom1.gif"><BR>
+
+An alternative method to find the area of triangle is to use Hero's
+formula.  If the lengths of the sides of a triangle are <I>a</I>, <I>b</I>,
+and <I>c</I>, let <I>s = (a+b+c)/2</I>.  The area of the triangle
+is then
+</P><CENTER>
+<I>sqrt(s* (s-a)*(s-b)*(s-c))</I> .
+</CENTER>
+
+<H5>Are Two Line Segments Parallel?</H5>
+
+<P> To check if two line segments are parallel, create vectors
+along each line segment and check to see if their cross product is
+(almost) zero.
+
+</P><H5>Area of polygon</H5>
+
+<P> The area of a polygon with vertices (<I>x</I> <SUB>1</SUB>,
+<I>y</I> <SUB> 1</SUB>), ..., (<I>x</I> <SUB> n</SUB>, <I>y</I>
+<SUB> n</SUB>) is equal to the determinant:
+
+<BR>
+<TT><FONT size="2"> <BR>
+&nbsp;1&nbsp;&nbsp;&nbsp;|&nbsp;x1&nbsp;x2&nbsp;...&nbsp;xn&nbsp;|<BR>
+---&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|<BR>
+&nbsp;2&nbsp;&nbsp;&nbsp;|&nbsp;y1&nbsp;y2&nbsp;...&nbsp;yn&nbsp;|<BR>
+</FONT></TT>
+
+</P><P> where the determinate is defined to be similar to the 2 by 2
+determinant:
+<I>x</I><SUB>1</SUB> <I>y</I><SUB>2 </SUB> +
+<I>x</I><SUB>2</SUB><I>y</I><SUB>3</SUB> + ... +
+<I>x</I><SUB><I>n</I></SUB> <I>y</I><SUB>1</SUB> - <I>y</I><SUB>1</SUB> <I>x</I><SUB>2</SUB> - <I>y</I><SUB>2</SUB><I>x</I><SUB>3</SUB> - ... - <I>y</I><SUB>n</SUB> <I>x</I><SUB>1</SUB>
+
+</P><H5>Distance from a point to a line</H5>
+
+<P>The distance from a point P to a line AB is given by the magnitude
+of the cross product.  In particular,
+<I>d</I>(P,AB) = |(P - A)  x  (B - A)| / | B - A| .
+
+</P><P>To determine the distance from a point P to the plane defined by A,
+B, and C, let <I>n</I> = (B - A)  x  (C - A).  The distance is then
+give by the following equation: <I>d</I>(P,ABC) = (P-A) · n / |n|.
+
+</P><H5>Points on a line</H5>
+
+<P> A point is on a line if the distance from the point to the line
+is 0.
+
+</P><H5>Points on the same side of line</H5>
+
+<P> This notion only makes sense for two dimensions.  To check if
+points C and D are on the same side of line AB, calculate the z
+component of <I>(B - A)  x  (C - A)</I> and <I>(B - A)  x  (D
+- A)</I>.  If the <I>z</I> components have the same sign (i.e., their
+product is positive), then C and D are on the same side of the line
+AB.
+
+</P><H5>Point on line segment</H5>
+
+<P>To calculate if a point C is on the line segment AB, check if
+C is on the line AB.  If it is, then check if the length of AB is
+equal to the sum of the lengths of AC and CB.
+
+</P><H5>Point in triangle</H5>
+
+<P>To check if a point A is in a triangle, find another point B
+which is within the triangle (the average of the three vertices
+works well).  Then, check if the point A is on the same side of
+the three lines defined by the edges of the triangle as B.
+
+<BR><IMG src="./3.4.1 TEXT Computational Geometry_files/geom3.gif"><BR>
+
+</P><H5>Point in convex polygon</H5>
+
+<P>The same trick works for a convex polygon:
+
+<BR><IMG src="./3.4.1 TEXT Computational Geometry_files/geom4.gif"><BR>
+
+</P><H5>Four (or more) points are coplanar</H5>
+
+<P>To determine if a collection of points is coplanar, select three
+points, A, B, and C. Now, if, for any other point D, (B - A)  x  (C
+- A)) · (D - A) = ~0, then the collection of points resides in
+some plane.
+
+</P><H5>Two lines intersect</H5>
+
+<P> Two lines intersect if and only if they are not parallel in two dimensions.
+
+</P><P> In three dimensions, two lines AB and CD intersect if they are
+not parallel and A, B, C, and D are coplanar.
+
+</P><H5>Two line segments intersect</H5>
+
+<P> In two dimensions, two line segments AB and CD intersect if
+and only if A and B are on opposite sides of the line CD and C and
+D are on opposite sides of line AB.
+
+<BR><IMG src="./3.4.1 TEXT Computational Geometry_files/geom5.gif"><BR>
+
+Note that both of the checks are necessary, as for the last case
+one of the checks returns true, while the other testifies to the
+fact that AB and CD do not intersect.
+
+In three dimensions, solve following system of equations, where <I>i</I>
+and <I>j</I> are the unknowns:
+
+</P><CENTER>
+A<SUB><I>x</I></SUB> + (B<SUB><I>x</I></SUB> - A<SUB><I>x</I></SUB>) i = C<SUB><I>x</I></SUB> + (D<SUB><I>x</I></SUB> - C<SUB><I>x</I></SUB>) j <BR>
+
+A<SUB><I>y</I></SUB> + (B<SUB><I>y</I></SUB> - A<SUB><I>y</I></SUB>) i = C<SUB><I>y</I></SUB> + (D<SUB><I>y</I></SUB> - C<SUB><I>y</I></SUB>) j <BR>
+
+A<SUB><I>z</I></SUB> + (B<SUB><I>z</I></SUB> - A<SUB><I>z</I></SUB>) i = C<SUB><I>z</I></SUB> + (D<SUB><I>z</I></SUB> - C<SUB><I>z</I></SUB>) j <BR>
+
+</CENTER>
+
+If this system has a solution (<I>i</I>, <I>j</I>), where 0 &lt;= <I>i</I>
+&lt;= 1 and 0 &lt;= <I>j</I> &lt;= 1, then the line segments intersect
+at:
+(A<SUB><I>x</I></SUB> + (B<SUB><I>x</I></SUB> - A<SUB><I>x</I></SUB>)i, A<SUB><I>y</I></SUB> + (B<SUB><I>y</I></SUB> - A<SUB><I>y</I></SUB>)i,
+A<SUB><I>z</I></SUB> + (B<SUB><I>z</I></SUB> - A<SUB><I>z</I></SUB>) i .
+
+<H5>Point of Intersection of Two Lines</H5>
+
+<P> For the lines AB and CD in two dimensions, the most straight-forward
+way to calculate the intersection of them is to solve the system
+of two equations and two unknowns:
+
+</P><CENTER>
+A<SUB><I>x</I></SUB> + (B<SUB><I>x</I></SUB> - A<SUB><I>x</I></SUB>)i = C<SUB><I>x</I></SUB> + (D<SUB><I>x</I></SUB> - C<SUB><I>x</I></SUB>) j<BR>
+
+A<SUB><I>y</I></SUB> + (B<SUB><I>y</I></SUB> - A<SUB><I>y</I></SUB>)i = C<SUB><I>y</I></SUB> + (D<SUB><I>y</I></SUB> - C<SUB><I>y</I></SUB>) j
+</CENTER>
+
+The point of intersection is:
+
+<CENTER>
+(A<SUB><I>x</I></SUB> + (B<SUB><I>x</I></SUB> - A<SUB><I>x</I></SUB>) i, A<SUB><I>y</I></SUB> + (B<SUB><I>y</I></SUB> - A<SUB><I>y</I></SUB>) i)
+</CENTER>
+
+<P> In three dimensions, solve the same system of equations as was used
+to check line intersection, and the point of intersection is:
+
+</P><CENTER>
+(A<SUB><I>x</I></SUB> + (B<SUB><I>x</I></SUB> - A<SUB><I>x</I></SUB>)i, A<SUB><I>y</I></SUB> + (B<SUB><I>y</I></SUB> - A<SUB><I>y</I></SUB>)i, A<SUB><I>z</I></SUB> + (B<SUB><I>z</I></SUB> - A<SUB><I>z</I></SUB>)i)
+</CENTER>
+
+<H5>Checking convexity of 2-dimensional polygon</H5>
+
+<P>To check the convexity of a 2-dimensional polygon, walk the polygon
+in clock-wise order. For each triplet of consecutive points (A, B, C),
+calculate the cross product (B - A)  x  (C - A).  If the <I>z</I>
+component of each of these vectors is positive, the polygon is convex.
+
+</P><H5>Point in non-convex polygon</H5>
+
+<P> To calculate if a point is within a nonconvex polygon, make a
+ray from that point in a random direction and count the number of
+times it intersects the polygon.  If the ray intersects the polygon
+at a vertex or along an edge, pick a new direction.  Otherwise,
+the point is within the polygon if and only if the ray intersects
+the polygon an odd number of times.
+
+<BR><IMG src="./3.4.1 TEXT Computational Geometry_files/geom8.gif"><BR>
+
+</P><P>This method also extends to three dimensions (and higher), but the
+restriction on intersection is that it only intersects at faces and not
+at either a vertex or an edge.
+
+</P><H4>Geometry Methodologies
+
+<P>
+Geometric problems introduce several different tricks that can be
+used to either reduce the run-time or approximate the solution.
+
+</P></H4><H5>Monte Carlo</H5>
+
+<P>The first geometric trick is based on randomness.  Instead of
+calculating the probability that something occurs, simulate a random
+event and calculate the fraction of times it occurs.  If enough
+events are simulated, the difference between these two values
+becomes very small.
+
+</P><P> This can be helpful to determine something like the area of a
+figure.  Instead of calculating the area directly, determine a
+bounding box, and throw ``darts'' at the box, and estimate what
+the probability of hitting the figure is.  If this is calculated
+accurately enough, this can give a good estimate of the actual
+area.
+
+</P><P> The problem with this method is to get a good relative error
+(error divided by the actual value) requires a large number of
+successful events.  If the probability of the event occurring is
+very small, the method does not yield good results.
+
+</P><H5>Partitioning</H5>
+
+<P>Partitioning is a method to improve the speed of a geometric
+algorithm.  This entails dividing the plane up into sections (usually
+by a grid but sometimes into radial sections or some other method),
+and bucketing the objects into appropriate section(s).  When looking
+for objects within some figure, only those sections which have a
+non-zero intersection with that figure need to be examined, thereby
+greatly reducing the cost of the algorithm.  This is helpful to
+determine the set of objects within some distance of a given point
+(the figure is a circle) or to check for intersections (the figure
+is a line).
+
+<BR><IMG src="./3.4.1 TEXT Computational Geometry_files/geom9.gif"><BR>
+
+</P><H5>Graph Problems</H5>
+
+<P>Sometimes what may look like a geometric problem is really a
+graph problem.  Just because the input is points in the plane does
+not mean it's a geometric algorithm.
+
+</P><H4>Example Problems
+
+</H4><H5>Point Moving</H5>
+
+<P> Given a set of line segments in the plane, and two points A
+and B, is it possible to move from A to B without crossing any of
+the segments?
+
+</P><P> The line segments partition the plane into regions.  Determine these
+regions, and see if A and B reside in the same region.
+
+</P><H5>Bicycle Routing</H5>
+
+<P> Given a collection of non-intersecting buildings along with start
+and end locations, find the shortest path from A to B that doesn't go
+through any buildings.
+
+</P><P> Analysis: This is really a graph problem.  The nodes are the start
+and end locations, along with the vertices of the buildings.  There are
+edges between any two nodes such that the line segment between them does
+not intersect any buildings, with weight equal to the length of the
+length of the line segments.  Once that graph has been calculated, the
+problem is shortest path.
+
+</P><H5>Maximizing Line Intersections</H5>
+
+<P> Given a collection of segments in the plane, find the greatest number
+of segments which can by intersected by drawing a single line.
+
+</P><P> Analysis: With a little bit of thought, it is clear that the line
+segment must pass through two of the vertices of the collection of line
+segments.  Thus, try all pairs of vertices, and calculate the crossing
+for each.  Combining this with partitioning gives an algorithm that runs
+fairly quickly.
+
+</P><H5> Polygon Classification</H5>
+
+<P> Given a collection of segments defining a polygon, determine if it
+is simple (no two non-consecutive line segments intersect) and convex.
+</P></DIV><BR>
+<CENTER>
+<A href="http://ace.delos.com/usacogate?a=oIbKMFHjD5E">USACO Gateway</A> | <A href="mailto:kolstad@ace.delos.com">Comment or Question</A>
+</CENTER>
+
+</FONT></BODY></HTML>

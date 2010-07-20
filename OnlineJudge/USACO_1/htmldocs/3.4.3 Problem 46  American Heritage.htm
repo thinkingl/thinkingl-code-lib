@@ -1,0 +1,84 @@
+
+<!-- saved from url=(0056)http://ace.delos.com/usacoprob2?a=oIbKMFHjD5E&S=heritage -->
+<HTML><HEAD><META http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"> <TITLE>Problem 46: American Heritage</TITLE> </HEAD><BODY background="./3.4.3 Problem 46  American Heritage_files/bg3.jpg">
+<IMG src="./3.4.3 Problem 46  American Heritage_files/cow1.jpg" width="742" height="118">
+<CENTER>
+<B><FONT size="7">American Heritage</FONT></B><BR>
+</CENTER>
+
+<P> Farmer John takes the heritage of his cows very seriously. He
+is not, however, a truly fine bookkeeper. He keeps his cow genealogies
+as binary trees and, instead of writing them in graphic form, he
+records them in the more linear `tree in-order' and `tree pre-order'
+notations.
+
+</P><P>Your job is to create the `tree post-order' notation of a cow's
+heritage after being given the in-order and pre-order notations.
+Each cow name is encoded as a unique letter. (You may already know
+that you can frequently reconstruct a tree from any two of the
+ordered traversals.) Obviously, the trees will have no more than
+26 nodes.
+
+</P><P> Here is a graphical representation of the tree used in the sample
+input and output:
+</P><PRE>                  C
+                /   \
+               /     \
+              B       G
+             / \     /
+            A   D   H
+               / \
+              E   F
+</PRE>
+
+<P>The in-order traversal of this tree prints the left sub-tree, the
+root, and the right sub-tree.
+
+</P><P> The pre-order traversal of this tree prints the root, the left
+sub-tree, and the right sub-tree.
+
+</P><P> The post-order traversal of this tree print the left sub-tree,
+the right sub-tree, and the root.
+
+</P><H3>PROGRAM NAME: heritage</H3>
+
+<H3>INPUT FORMAT</H3>
+
+<TABLE border="1">
+<TBODY><TR> <TD> Line 1: </TD> <TD>The in-order representation of a tree.
+</TD> </TR>
+<TR> <TD> Line 2: </TD> <TD> The pre-order representation of that same
+tree.</TD> </TR>
+</TBODY></TABLE>
+
+<H3>SAMPLE INPUT (file heritage.in) </H3>
+
+<PRE>ABEDFCHG
+CBADEFGH
+</PRE>
+
+<H3>OUTPUT FORMAT</H3>
+
+A single line with the post-order representation of the tree.
+
+
+<H3>SAMPLE OUTPUT (file heritage.out)</H3>
+
+<PRE>AEFDBHGC 
+</PRE>
+<BR>
+<HR>
+<FORM action="http://ace.delos.com/upload3" enctype="multipart/form-data" method="POST">
+<B>Submission file Name:</B> <INPUT type="file" name="filename">
+<INPUT type="submit" value="Send it in!">
+<INPUT type="hidden" name="a" value="oIbKMFHjD5E">
+<INPUT type="hidden" name="S" value="heritage">
+</FORM>
+
+<CENTER>
+<A href="http://ace.delos.com/usacogate?a=oIbKMFHjD5E"> USACO Gateway </A> &nbsp;| &nbsp;
+<A href="mailto:kolstad@ace.delos.com">Comment or Question </A>
+</CENTER>
+
+
+</BODY></HTML>
