@@ -32,7 +32,26 @@ SAMPLE OUTPUT (file game1.out)
 
 /** 
 思路：好有趣的一道题目。
+数列每次被取走一个数字后，都是一个新的数列。所有的新数列都是原有数列的一部分，可以用子数列的起始在原数列的位置和子数列的长度两个参数表示一个子数列。
 
+设 BestOffensive（ begin， len ）表示做先手的时候对于一个子数列的最优解。
+又 BestDefensive（ begin， len） 表示做后手的时候对于一个子数列的最优解。
+又 SequenceValue（ i ） 表示数列上第 i 项的值。
+
+则在这个子数列的基础上再次取一个数字的时候，有两种选择，左边或者右边。即第 begin 个 或 第 begin + len - 1 个。这两个选择中分值高的就是最优解。
+先手在选择一个数字之后，就变成了后手，所以当选择左边的时候，得分是：
+ScoreLeft = SequenceValue( begin ) + BestDefensive( begin+1, len-1 )
+类似的方法分析，当选择右边的时候，得分是：
+ScoreRight = SequenceValue( begin + len - 1 ) + BestDefensive( begin, len-1 )
+
+先手自然会选择两个选择中更大的那个，也就是：
+BestOffensive( begin, len ) = max( ScoreLeft, ScoreRight )
+
+而后手呢，因为被动，在先手做选择时就注定了后手的悲惨命运，它只能被迫接受接下来的先手中较差的情况，也就是
+BestDefensive( begin, len ) = min( BestOffensive（ begin, len-1 ), BestOffensive( begin+1, len-1 ) )
+
+通过上面的公式，就有了一个动态规划（DP）迭代的过程。
+迭代始于 len 为1的情况。这时先手得到唯一的数列中的数字，后手为0。
 
 */
 #include <stdio.h>
