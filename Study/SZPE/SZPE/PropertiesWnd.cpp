@@ -220,7 +220,10 @@ void CPropertiesWnd::InitPropList()
 
 	CMFCPropertyGridProperty* pGroup4 = new CMFCPropertyGridProperty(_T("层次结构"));
 
-	CMFCPropertyGridProperty* pGroup41 = new CMFCPropertyGridProperty(_T("第一个子级"));
+	CMFCPropertyGridProperty* pGroup41 = new CMFCPropertyGridProperty(_T("第一个子级") );
+
+	pGroup41->AddSubItem( new CMFCPropertyGridProperty( _T( "test" ), _T( "value" ), _T( "des" ) ) );
+
 	pGroup4->AddSubItem(pGroup41);
 
 	CMFCPropertyGridProperty* pGroup411 = new CMFCPropertyGridProperty(_T("第二个子级"));
