@@ -120,9 +120,18 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 
 	m_wndFileView.EnableDocking(CBRS_ALIGN_ANY);
 	m_wndClassView.EnableDocking(CBRS_ALIGN_ANY);
+
+	m_wndProcessView.EnableDocking(CBRS_ALIGN_ANY);
+	DockPane( &m_wndProcessView );
+
 	DockPane(&m_wndFileView);
 	CDockablePane* pTabbedBar = NULL;
+	
 	m_wndClassView.AttachToTabWnd(&m_wndFileView, DM_SHOW, TRUE, &pTabbedBar);
+	
+//	m_wndProcessView.AttachToTabWnd( &m_wndFileView, DM_SHOW, TRUE, &pTabbedBar );
+
+
 	m_wndOutput.EnableDocking(CBRS_ALIGN_ANY);
 	DockPane(&m_wndOutput);
 	m_wndProperties.EnableDocking(CBRS_ALIGN_ANY);
@@ -219,6 +228,18 @@ BOOL CMainFrame::CreateDockingWindows()
 		return FALSE; // 未能创建
 	}
 
+	// 创建进程窗口。
+	CString strProcessView;
+	bNameValid = strProcessView.LoadString( IDS_PROCESS_VIEW );
+	ASSERT( bNameValid );
+	if( !m_wndProcessView.Create( strProcessView, this, CRect( 0, 0, 200, 200 ),
+		TRUE, ID_VIEW_PROCESS,  WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN | CBRS_LEFT| CBRS_FLOAT_MULTI ) )
+	{
+		TRACE0("未能创建“进程”窗口\n");
+		return FALSE; // 未能创建
+	}
+
+
 	// 创建输出窗口
 	CString strOutputWnd;
 	bNameValid = strOutputWnd.LoadString(IDS_OUTPUT_WND);
@@ -257,6 +278,7 @@ void CMainFrame::SetDockingWindowIcons(BOOL bHiColorIcons)
 	HICON hPropertiesBarIcon = (HICON) ::LoadImage(::AfxGetResourceHandle(), MAKEINTRESOURCE(bHiColorIcons ? IDI_PROPERTIES_WND_HC : IDI_PROPERTIES_WND), IMAGE_ICON, ::GetSystemMetrics(SM_CXSMICON), ::GetSystemMetrics(SM_CYSMICON), 0);
 	m_wndProperties.SetIcon(hPropertiesBarIcon, FALSE);
 
+	this->m_wndProcessView.SetIcon( hFileViewIcon, FALSE );
 }
 
 // CMainFrame 诊断

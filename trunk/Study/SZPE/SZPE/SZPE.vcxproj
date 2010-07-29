@@ -127,11 +127,15 @@
   <ItemGroup>
     <ClInclude Include="ClassView.h" />
     <ClInclude Include="FileView.h" />
+    <ClInclude Include="listeditctrl.h" />
     <ClInclude Include="MainFrm.h" />
     <ClInclude Include="OutputWnd.h" />
+    <ClInclude Include="ProcessTreeList.h" />
+    <ClInclude Include="ProcessView.h" />
     <ClInclude Include="PropertiesWnd.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="stdafx.h" />
+    <ClInclude Include="supergridctrl.h" />
     <ClInclude Include="SZPE.h" />
     <ClInclude Include="SZPEDoc.h" />
     <ClInclude Include="SZPEView.h" />
@@ -141,13 +145,17 @@
   <ItemGroup>
     <ClCompile Include="ClassView.cpp" />
     <ClCompile Include="FileView.cpp" />
+    <ClCompile Include="listeditctrl.cpp" />
     <ClCompile Include="MainFrm.cpp" />
     <ClCompile Include="OutputWnd.cpp" />
+    <ClCompile Include="ProcessTreeList.cpp" />
+    <ClCompile Include="ProcessView.cpp" />
     <ClCompile Include="PropertiesWnd.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="supergridctrl.cpp" />
     <ClCompile Include="SZPE.cpp" />
     <ClCompile Include="SZPEDoc.cpp" />
     <ClCompile Include="SZPEView.cpp" />
@@ -159,4 +167,9 @@
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
+  <ProjectExtensions>
+    <VisualStudio>
+      <UserProperties RESOURCE_FILE="SZPE.rc" />
+    </VisualStudio>
+  </ProjectExtensions>
 </Project>
