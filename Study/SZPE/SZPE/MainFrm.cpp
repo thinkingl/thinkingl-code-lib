@@ -26,6 +26,7 @@ BEGIN_MESSAGE_MAP(CMainFrame, CFrameWndEx)
 	ON_COMMAND_RANGE(ID_VIEW_APPLOOK_WIN_2000, ID_VIEW_APPLOOK_WINDOWS_7, &CMainFrame::OnApplicationLook)
 	ON_UPDATE_COMMAND_UI_RANGE(ID_VIEW_APPLOOK_WIN_2000, ID_VIEW_APPLOOK_WINDOWS_7, &CMainFrame::OnUpdateApplicationLook)
 	ON_WM_SETTINGCHANGE()
+	ON_COMMAND(ID_MENU_FILE_RUN, &CMainFrame::OnMenuFileRun)
 END_MESSAGE_MAP()
 
 static UINT indicators[] =
@@ -157,8 +158,8 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	// TODO: 定义您自己的基本命令，确保每个下拉菜单至少有一个基本命令。
 	CList<UINT, UINT> lstBasicCommands;
 
-	lstBasicCommands.AddTail(ID_FILE_NEW);
-	lstBasicCommands.AddTail(ID_FILE_OPEN);
+	lstBasicCommands.AddTail( ID_MENU_FILE_RUN );
+	lstBasicCommands.AddTail( ID_MENU_FILE_RUN_AS );
 	lstBasicCommands.AddTail(ID_FILE_SAVE);
 	lstBasicCommands.AddTail(ID_FILE_PRINT);
 	lstBasicCommands.AddTail(ID_APP_EXIT);
@@ -433,4 +434,22 @@ void CMainFrame::OnSettingChange(UINT uFlags, LPCTSTR lpszSection)
 {
 	CFrameWndEx::OnSettingChange(uFlags, lpszSection);
 	m_wndOutput.UpdateFonts();
+}
+
+
+void CMainFrame::OnMenuFileRun()
+{
+	// TODO: 在此添加命令处理程序代码
+	IShellDispatch* pShellDisp = NULL;
+    
+    HRESULT hr =  ::CoCreateInstance( CLSID_Shell, NULL, 
+        CLSCTX_SERVER, IID_IShellDispatch, (LPVOID*)&pShellDisp );
+
+    if( hr == S_OK )
+    {
+        pShellDisp->FileRun();  
+        pShellDisp->Release();
+        pShellDisp = NULL;
+    }
+    
 }
