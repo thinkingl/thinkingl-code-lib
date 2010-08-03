@@ -37,7 +37,10 @@ CProcessTreeList::CTreeItem * CProcessTreeList::InsertItem( const CProcess& proc
 		}
 
 		CItemInfo *pRoot = new CItemInfo();
-		pRoot->SetItemText( _T( "Root" ) );
+		TCHAR szComputerName[MAX_PATH] = { 0 };
+		DWORD dwLen = MAX_PATH;
+		::GetComputerName( szComputerName, &dwLen );
+		pRoot->SetItemText( szComputerName );
 		this->CreateTreeCtrl( pRoot );
 	}
 
@@ -45,6 +48,9 @@ CProcessTreeList::CTreeItem * CProcessTreeList::InsertItem( const CProcess& proc
 	{
 		CItemInfo *pItemInfo = new CItemInfo();
 		pItemInfo->SetItemText( process.GetName().c_str() );
+		CString strPID;
+		strPID.Format( _T( "%d" ), process.GetPID() ); 
+		pItemInfo->AddSubItemText( strPID );
 		CTreeItem *pItem = __super::InsertItem( this->GetRootItem(),
 			pItemInfo, TRUE );
 		return pItem;

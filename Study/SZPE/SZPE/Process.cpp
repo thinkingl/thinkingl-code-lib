@@ -56,3 +56,8 @@ tstring CProcess::GetName() const
 {
 	return this->m_processName;
 }
+
+TProcessId CProcess::GetPID() const
+{
+	return this->m_processId;
+}
