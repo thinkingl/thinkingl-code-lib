@@ -140,13 +140,31 @@ int CProcessView::OnCreate(LPCREATESTRUCT lpCreateStruct)
 
 
 	// 创建视图:
-	const DWORD dwViewStyle = WS_CHILD | WS_VISIBLE | TVS_HASLINES | TVS_LINESATROOT | TVS_HASBUTTONS | WS_CLIPSIBLINGS | WS_CLIPCHILDREN;
+	const DWORD dwViewStyle = WS_CHILD | WS_VISIBLE | LVS_REPORT | LVS_SINGLESEL | LVS_SHAREIMAGELISTS | LVS_OWNERDRAWFIXED | LVS_SHOWSELALWAYS;
 
 	if (!m_wndProcessTreeList.Create(dwViewStyle, rectDummy, this, 2))
 	{
 		TRACE0("未能创建类视图\n");
 		return -1;      // 未能创建
 	}
+
+	// 刷新一下进程状态。
+	this->m_processManage.Update();
+
+	// 获取所有进程。
+	TProcessIdList allProcessIdList;
+	this->m_processManage.GetAllProcessId( allProcessIdList );
+	for( size_t i=0; i<allProcessIdList.size(); ++i )
+	{
+		CProcess process ;
+		m_processManage.GetProcess( allProcessIdList[i], process );
+
+		this->m_wndProcessTreeList.InsertItem( process );
+	}
+	
+	int nScroll;
+	this->m_wndProcessTreeList.ExpandAll( m_wndProcessTreeList.GetRootItem(), nScroll );
+	// Expand(GetRootItem(), 0 /*listview index 0*/); //
 
 	//// 加载图像:
 	//m_wndToolBar.Create(this, AFX_DEFAULT_TOOLBAR_STYLE, IDR_SORT);

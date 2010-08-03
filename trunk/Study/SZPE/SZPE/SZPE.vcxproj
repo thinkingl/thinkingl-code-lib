@@ -57,6 +57,7 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>psapi.lib</AdditionalDependencies>
     </Link>
     <Midl>
       <MkTypLibCompatible>false</MkTypLibCompatible>
@@ -83,6 +84,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalDependencies>psapi.lib</AdditionalDependencies>
     </Link>
     <Midl>
       <MkTypLibCompatible>false</MkTypLibCompatible>
@@ -130,6 +132,9 @@
     <ClInclude Include="listeditctrl.h" />
     <ClInclude Include="MainFrm.h" />
     <ClInclude Include="OutputWnd.h" />
+    <ClInclude Include="portabledef.h" />
+    <ClInclude Include="Process.h" />
+    <ClInclude Include="ProcessManage.h" />
     <ClInclude Include="ProcessTreeList.h" />
     <ClInclude Include="ProcessView.h" />
     <ClInclude Include="PropertiesWnd.h" />
@@ -148,6 +153,8 @@
     <ClCompile Include="listeditctrl.cpp" />
     <ClCompile Include="MainFrm.cpp" />
     <ClCompile Include="OutputWnd.cpp" />
+    <ClCompile Include="Process.cpp" />
+    <ClCompile Include="ProcessManage.cpp" />
     <ClCompile Include="ProcessTreeList.cpp" />
     <ClCompile Include="ProcessView.cpp" />
     <ClCompile Include="PropertiesWnd.cpp" />
