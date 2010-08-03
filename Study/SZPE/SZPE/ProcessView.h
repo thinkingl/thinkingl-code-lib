@@ -1,6 +1,7 @@
 #pragma once
 
 #include "ProcessTreeList.h"
+#include "ProcessManage.h"
 
 class CProcessToolBar : public CMFCToolBar
 {
@@ -28,6 +29,10 @@ public:
 private:
 	/** 树列表控件。 */
 	CProcessTreeList m_wndProcessTreeList;
+
+	/** 进程管理 */
+	CProcessManage m_processManage;
+
 	// 重写
 public:
 	virtual BOOL PreTranslateMessage(MSG* pMsg);

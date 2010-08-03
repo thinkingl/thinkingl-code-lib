@@ -144,6 +144,15 @@
     <ClInclude Include="ProcessTreeList.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="ProcessManage.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Process.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="portabledef.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="SZPE.cpp">
@@ -186,6 +195,12 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="ProcessTreeList.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="ProcessManage.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Process.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
