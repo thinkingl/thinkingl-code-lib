@@ -20,7 +20,7 @@ public:
 	/** 获取进程信息。 */
 
 	/** 进程ID。 */
-	TProcessId GetId() const;
+	TProcessId GetPID() const;
 
 	/** 进程名。 */
 	tstring GetName() const;
