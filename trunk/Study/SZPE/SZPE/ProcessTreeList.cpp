@@ -19,7 +19,7 @@ CProcessTreeList::CTreeItem * CProcessTreeList::InsertItem( const CProcess& proc
 		SetExtendedStyle(LVS_EX_GRIDLINES|LVS_EX_FLATSB);
 
 		LPTSTR lpszCols[] = {_T("Process"), _T( "PID" ), _T( "CPU" ), 
-			_T( "Private Bytes" ), _T( "Working Set" ), _T( "Description" ),
+			_T( "Private Bytes (K)" ), _T( "Working Set (K)" ), _T( "Description" ),
 			_T( "Company Name" ), 0};
 		LV_COLUMN   lvColumn;
 		//initialize the columns
@@ -48,9 +48,22 @@ CProcessTreeList::CTreeItem * CProcessTreeList::InsertItem( const CProcess& proc
 	{
 		CItemInfo *pItemInfo = new CItemInfo();
 		pItemInfo->SetItemText( process.GetName().c_str() );
+		
 		CString strPID;
 		strPID.Format( _T( "%d" ), process.GetPID() ); 
 		pItemInfo->AddSubItemText( strPID );
+
+		CString strCPU;
+		pItemInfo->AddSubItemText( strCPU );
+
+		CString strMemPrivate;
+		strMemPrivate.Format( _T( "%d" ), process.GetMemPrivate()/1024 );
+		pItemInfo->AddSubItemText( strMemPrivate );
+
+		CString strMemWorkingset;
+		strMemWorkingset.Format( _T( "%d" ), process.GetMemWorkingSet()/1024 );
+		pItemInfo->AddSubItemText( strMemWorkingset );
+
 		CTreeItem *pItem = __super::InsertItem( this->GetRootItem(),
 			pItemInfo, TRUE );
 		return pItem;

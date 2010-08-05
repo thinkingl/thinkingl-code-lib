@@ -25,6 +25,14 @@ public:
 	/** 进程名。 */
 	tstring GetName() const;
 
+	/** CPU */
+	int GetCPUPerfor() const;
+
+	/** 内存。 */
+	int GetMemPrivate() const;
+
+	int GetMemWorkingSet() const;
+
 	/** 更新进程信息。 */
 	void Update();
 
@@ -34,5 +42,12 @@ private:
 
 	/** 进程名。 */
 	tstring m_processName;
+
+	/** */
+	SIZE_T m_memoryPrivate;
+
+	SIZE_T m_memoryWorkingSet;
+
+
 };
 

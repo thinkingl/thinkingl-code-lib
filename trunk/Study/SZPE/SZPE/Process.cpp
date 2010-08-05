@@ -6,11 +6,15 @@
 CProcess::CProcess( TProcessId processId )
 {
 	this->m_processId = processId;
+	m_memoryPrivate = 0;
+	m_memoryWorkingSet = 0;
 }
 
 CProcess::CProcess()
 {
 	this->m_processId = 0;
+	m_memoryPrivate = 0;
+	m_memoryWorkingSet = 0;
 }
 
 CProcess::~CProcess(void)
@@ -40,6 +44,22 @@ void CProcess::Update()
             GetModuleBaseName( hProcess, hMod, szProcessName, 
                                sizeof(szProcessName)/sizeof(TCHAR) );
         }
+
+		// ÄÚ´æÇé¿ö
+		PROCESS_MEMORY_COUNTERS_EX pmc;
+		memset( &pmc, 0, sizeof( pmc ) );
+		pmc.cb = sizeof( pmc );
+		BOOL bGetMemInfo = GetProcessMemoryInfo( hProcess, (PROCESS_MEMORY_COUNTERS*)&pmc, sizeof( pmc ) );
+		if( bGetMemInfo )
+		{
+			this->m_memoryPrivate = pmc.PrivateUsage;
+			this->m_memoryWorkingSet = pmc.WorkingSetSize;
+		}
+		else
+		{
+			DWORD dwErrCode = ::GetLastError();
+
+		}
     }
 	else
 	{
@@ -60,4 +80,14 @@ tstring CProcess::GetName() const
 TProcessId CProcess::GetPID() const
 {
 	return this->m_processId;
+}
+
+int CProcess::GetMemPrivate() const
+{
+	return this->m_memoryPrivate;
+}
+
+int CProcess::GetMemWorkingSet() const
+{
+	return this->m_memoryWorkingSet;
 }
