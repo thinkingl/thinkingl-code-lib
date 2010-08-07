@@ -45,8 +45,8 @@ protected:  // 控件条嵌入成员
 	CMFCToolBarImages m_UserImages;
 //	CFileView         m_wndFileView;
 //	CClassView        m_wndClassView;
-	COutputWnd        m_wndOutput;
-	CPropertiesWnd    m_wndProperties;
+//	COutputWnd        m_wndOutput;
+//	CPropertiesWnd    m_wndProperties;
 
 	/** 进程树状列表。 */
 	CProcessView	m_wndProcessView;

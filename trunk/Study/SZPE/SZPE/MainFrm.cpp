@@ -122,7 +122,7 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 //	m_wndFileView.EnableDocking(CBRS_ALIGN_ANY);
 //	m_wndClassView.EnableDocking(CBRS_ALIGN_ANY);
 
-	m_wndProcessView.EnableDocking(CBRS_ALIGN_ANY);
+	m_wndProcessView.EnableDocking( CBRS_ALIGN_ANY );
 	DockPane( &m_wndProcessView );
 
 //	DockPane(&m_wndFileView);
@@ -133,10 +133,10 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 //	m_wndProcessView.AttachToTabWnd( &m_wndFileView, DM_SHOW, TRUE, &pTabbedBar );
 
 
-	m_wndOutput.EnableDocking(CBRS_ALIGN_ANY);
-	DockPane(&m_wndOutput);
-	m_wndProperties.EnableDocking(CBRS_ALIGN_ANY);
-	DockPane(&m_wndProperties);
+//	m_wndOutput.EnableDocking(CBRS_ALIGN_ANY);
+//	DockPane(&m_wndOutput);
+//	m_wndProperties.EnableDocking(CBRS_ALIGN_ANY);
+//	DockPane(&m_wndProperties);
 
 
 	// 启用工具栏和停靠窗口菜单替换
@@ -233,7 +233,7 @@ BOOL CMainFrame::CreateDockingWindows()
 	CString strProcessView;
 	bNameValid = strProcessView.LoadString( IDS_PROCESS_VIEW );
 	ASSERT( bNameValid );
-	if( !m_wndProcessView.Create( strProcessView, this, CRect( 0, 0, 200, 200 ),
+	if( !m_wndProcessView.Create( strProcessView, this, CRect( 0, 0, 800, 800 ),
 		TRUE, ID_VIEW_PROCESS,  WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN | CBRS_LEFT| CBRS_FLOAT_MULTI ) )
 	{
 		TRACE0("未能创建“进程”窗口\n");
@@ -242,24 +242,24 @@ BOOL CMainFrame::CreateDockingWindows()
 
 
 	// 创建输出窗口
-	CString strOutputWnd;
-	bNameValid = strOutputWnd.LoadString(IDS_OUTPUT_WND);
-	ASSERT(bNameValid);
-	if (!m_wndOutput.Create(strOutputWnd, this, CRect(0, 0, 100, 100), TRUE, ID_VIEW_OUTPUTWND, WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN | CBRS_BOTTOM | CBRS_FLOAT_MULTI))
-	{
-		TRACE0("未能创建输出窗口\n");
-		return FALSE; // 未能创建
-	}
+	//CString strOutputWnd;
+	//bNameValid = strOutputWnd.LoadString(IDS_OUTPUT_WND);
+	//ASSERT(bNameValid);
+	//if (!m_wndOutput.Create(strOutputWnd, this, CRect(0, 0, 100, 100), TRUE, ID_VIEW_OUTPUTWND, WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN | CBRS_BOTTOM | CBRS_FLOAT_MULTI))
+	//{
+	//	TRACE0("未能创建输出窗口\n");
+	//	return FALSE; // 未能创建
+	//}
 
 	// 创建属性窗口
-	CString strPropertiesWnd;
-	bNameValid = strPropertiesWnd.LoadString(IDS_PROPERTIES_WND);
-	ASSERT(bNameValid);
-	if (!m_wndProperties.Create(strPropertiesWnd, this, CRect(0, 0, 200, 200), TRUE, ID_VIEW_PROPERTIESWND, WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN | CBRS_RIGHT | CBRS_FLOAT_MULTI))
-	{
-		TRACE0("未能创建“属性”窗口\n");
-		return FALSE; // 未能创建
-	}
+	//CString strPropertiesWnd;
+	//bNameValid = strPropertiesWnd.LoadString(IDS_PROPERTIES_WND);
+	//ASSERT(bNameValid);
+	//if (!m_wndProperties.Create(strPropertiesWnd, this, CRect(0, 0, 200, 200), TRUE, ID_VIEW_PROPERTIESWND, WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN | CBRS_RIGHT | CBRS_FLOAT_MULTI))
+	//{
+	//	TRACE0("未能创建“属性”窗口\n");
+	//	return FALSE; // 未能创建
+	//}
 
 	SetDockingWindowIcons(theApp.m_bHiColorIcons);
 	return TRUE;
@@ -274,10 +274,10 @@ void CMainFrame::SetDockingWindowIcons(BOOL bHiColorIcons)
 //	m_wndClassView.SetIcon(hClassViewIcon, FALSE);
 
 	HICON hOutputBarIcon = (HICON) ::LoadImage(::AfxGetResourceHandle(), MAKEINTRESOURCE(bHiColorIcons ? IDI_OUTPUT_WND_HC : IDI_OUTPUT_WND), IMAGE_ICON, ::GetSystemMetrics(SM_CXSMICON), ::GetSystemMetrics(SM_CYSMICON), 0);
-	m_wndOutput.SetIcon(hOutputBarIcon, FALSE);
+//	m_wndOutput.SetIcon(hOutputBarIcon, FALSE);
 
 	HICON hPropertiesBarIcon = (HICON) ::LoadImage(::AfxGetResourceHandle(), MAKEINTRESOURCE(bHiColorIcons ? IDI_PROPERTIES_WND_HC : IDI_PROPERTIES_WND), IMAGE_ICON, ::GetSystemMetrics(SM_CXSMICON), ::GetSystemMetrics(SM_CYSMICON), 0);
-	m_wndProperties.SetIcon(hPropertiesBarIcon, FALSE);
+//	m_wndProperties.SetIcon(hPropertiesBarIcon, FALSE);
 
 	this->m_wndProcessView.SetIcon( hFileViewIcon, FALSE );
 }
@@ -433,7 +433,7 @@ BOOL CMainFrame::LoadFrame(UINT nIDResource, DWORD dwDefaultStyle, CWnd* pParent
 void CMainFrame::OnSettingChange(UINT uFlags, LPCTSTR lpszSection)
 {
 	CFrameWndEx::OnSettingChange(uFlags, lpszSection);
-	m_wndOutput.UpdateFonts();
+//	m_wndOutput.UpdateFonts();
 }
 
 
