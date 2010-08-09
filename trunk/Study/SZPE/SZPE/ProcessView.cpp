@@ -149,7 +149,9 @@ int CProcessView::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	}
 
 	// 刷新一下进程状态。
-	this->m_processManage.Update();
+	this->m_processManage.StartAutoUpdate();
+
+	Sleep( 200 );
 
 	// 获取所有进程。
 	TProcessIdList allProcessIdList;
