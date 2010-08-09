@@ -13,6 +13,12 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="UI">
+      <UniqueIdentifier>{cc375d94-c1f8-4876-acc6-2c161c6bb2f7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Control">
+      <UniqueIdentifier>{40005363-e596-413f-9595-988c8fa5bbb7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="ReadMe.txt" />
@@ -105,9 +111,6 @@
     <ClInclude Include="targetver.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="MainFrm.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="SZPEDoc.h">
       <Filter>头文件</Filter>
     </ClInclude>
@@ -115,33 +118,6 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="Resource.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="FileView.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="ClassView.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="ViewTree.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="OutputWnd.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="PropertiesWnd.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="ProcessView.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="supergridctrl.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="listeditctrl.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="ProcessTreeList.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="ProcessManage.h">
@@ -154,6 +130,45 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="Common.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="ClassView.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="FileView.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="listeditctrl.h">
+      <Filter>Control</Filter>
+    </ClInclude>
+    <ClInclude Include="OutputWnd.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="MainFrm.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="ProcessTreeList.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="ProcessView.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="PropertiesWnd.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="supergridctrl.h">
+      <Filter>Control</Filter>
+    </ClInclude>
+    <ClInclude Include="ViewTree.h">
+      <Filter>Control</Filter>
+    </ClInclude>
+    <ClInclude Include="ScopeLock.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="IMutex.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="INoCopy.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
@@ -173,33 +188,6 @@
     <ClCompile Include="SZPEView.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="FileView.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="ClassView.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="ViewTree.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="OutputWnd.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="PropertiesWnd.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="ProcessView.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="supergridctrl.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="listeditctrl.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="ProcessTreeList.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="ProcessManage.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
@@ -207,6 +195,36 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="Common.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="ClassView.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="FileView.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="OutputWnd.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="ProcessView.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="PropertiesWnd.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="ViewTree.cpp">
+      <Filter>Control</Filter>
+    </ClCompile>
+    <ClCompile Include="supergridctrl.cpp">
+      <Filter>Control</Filter>
+    </ClCompile>
+    <ClCompile Include="ProcessTreeList.cpp">
+      <Filter>Control</Filter>
+    </ClCompile>
+    <ClCompile Include="listeditctrl.cpp">
+      <Filter>Control</Filter>
+    </ClCompile>
+    <ClCompile Include="ScopeLock.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

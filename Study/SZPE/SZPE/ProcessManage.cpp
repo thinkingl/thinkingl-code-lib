@@ -5,6 +5,9 @@
 
 CProcessManage::CProcessManage(void)
 {
+	this->m_hUpdateThreadHandle = NULL;
+	this->m_bAutoUpdateProcessState = FALSE;
+	this->m_nAutoUpdateElapseMillisec = 0;
 }
 
 
@@ -67,4 +70,28 @@ BOOL CProcessManage::GetProcess( TProcessId proId, CProcess& process ) const
 	{
 		return FALSE;
 	}
+}
+
+void CProcessManage::StartAutoUpdate( int nMillisec )
+{
+	this->m_nAutoUpdateElapseMillisec = nMillisec;
+	if( NULL == this->m_hUpdateThreadHandle )
+	{
+		this->m_bAutoUpdateProcessState = TRUE;
+		this->m_hUpdateThreadHandle = ::CreateThread( NULL, NULL, UpdateThread, this, NULL, NULL );
+	}
+}
+
+DWORD WINAPI CProcessManage::UpdateThread( LPVOID pParam )
+{
+	CProcessManage *pThis = (CProcessManage*)pParam;
+
+	while( pThis && pThis->m_bAutoUpdateProcessState )
+	{
+		// Ë¢ÐÂ¡£
+		pThis->Update();
+
+		::Sleep( pThis->m_nAutoUpdateElapseMillisec );
+	}
+	return 0;
 }

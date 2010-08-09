@@ -1,26 +1,16 @@
+
 #pragma once
 
-//#include "configure.h"
+#ifdef _WIN32
 
-/** by lizhixing @2009.10.06 
-*	for multi-platform portable.
-*/
-
-#ifdef __GNUC__
-#include <sys/time.h>
-#include <sys/stat.h>
+#ifndef WINVER
+#define WINVER 0x0600
 #endif
 
-// This is a GCCE toolchain workaround needed when compiling with GCCE
-// and using main() entry point
-#ifdef __GCCE__
-// #include <staticlibinit_gcce.h>
-#endif
+#include <afx.h>
+#include <afxinet.h>
 
-#ifdef __SYMBIAN32__
-#include <e32cmn.h>
 #endif
-
 
 
 #ifdef __cplusplus
@@ -37,23 +27,8 @@
 
 using namespace std;
 
-#endif
-
-#ifndef _ASSERT
-#define _ASSERT(expr) ((void)0)
-#endif 
 
 
-#ifdef _WIN32_WCE
-#include <stdlib.h>
-#endif
-
-#ifdef __SYMBIAN32__
-#undef _WIN32
-#undef __WIN32__
-#endif
-
-#ifdef __cplusplus
 
 #ifdef UNICODE
 
@@ -82,7 +57,7 @@ typedef const tstring ctstring;
 
 typedef std::vector<std::tstring> tstringarray;
 
-#endif
+#endif //#ifdef __cplusplus
 
 
 /** 基本类型. */
@@ -101,27 +76,27 @@ typedef int BOOL;
 #define TRUE (!FALSE)
 #endif
 
-typedef signed char mu_int8; 
-typedef unsigned char mu_uint8;
+typedef signed char int8; 
+typedef unsigned char uint8;
 
-typedef signed short mu_int16; 
-typedef unsigned short mu_uint16; 
+typedef signed short int16; 
+typedef unsigned short uint16; 
 
-typedef signed long mu_int32;
-typedef unsigned long mu_uint32;  
+typedef signed long int32;
+typedef unsigned long uint32;  
 
 #ifdef __GNUC__
 
-typedef signed long long mu_int64;
-typedef unsigned long long mu_uint64;
+typedef signed long long int64;
+typedef unsigned long long uint64;
 
-typedef mu_int32 WPARAM;
-typedef mu_int32 LPARAM;
+typedef int32 WPARAM;
+typedef int32 LPARAM;
 
 #else
 
-typedef signed __int64 mu_int64;
-typedef unsigned __int64 mu_uint64;
+typedef signed __int64 int64;
+typedef unsigned __int64 uint64;
 
 #endif
 
@@ -132,20 +107,20 @@ typedef unsigned __int64 mu_uint64;
 #if defined( __GNUC__ ) || defined ( __SYMBIAN32__ )
 
 #ifndef _TIME32_T_DEFINED
-typedef mu_uint32 __time32_t;   /* 32-bit time value */
+typedef uint32 __time32_t;   /* 32-bit time value */
 #define _TIME32_T_DEFINED
 #endif
 
 #ifndef _TIME64_T_DEFINED
-typedef mu_uint64 __time64_t;     /* 64-bit time value */
+typedef uint64 __time64_t;     /* 64-bit time value */
 #define _TIME64_T_DEFINED
 #endif
 
 #if defined(UNICODE) || defined( _UNICODE )  
 /*
- * NOTE: This tests UNICODE, which is different from the _UNICODE define
- *       used to differentiate standard C runtime calls.
- */
+* NOTE: This tests UNICODE, which is different from the _UNICODE define
+*       used to differentiate standard C runtime calls.
+*/
 typedef wchar_t TCHAR;
 typedef wchar_t _TCHAR;
 
@@ -182,8 +157,12 @@ typedef const TCHAR *LPCTSTR;
 #endif
 
 /** 比较大小. */
-#define MU_MAX(a,b) ((a) > (b) ? (a) : (b))
-#define MU_MIN(a,b) ((a) > (b) ? (b) : (a))
+#ifndef MAX
+#define MAX(a,b) ((a) > (b) ? (a) : (b))
+#endif
+#ifndef MIN
+#define MIN(a,b) ((a) > (b) ? (b) : (a))
+#endif
 
 /**
 //////////////////////////////////////////////////////////////////////////
@@ -196,84 +175,8 @@ typedef const TCHAR *LPCTSTR;
 #endif
 #endif
 
-/** 
-// 导出.导入. */
-/* Some compilers use a special export keyword */
 
-/** 如果是静态库工程，不需要导出。 */
 
-#ifdef MCUCOMMON_STATIC_LIB
-#define MU_DECLSPEC  
-#endif
-
-#ifndef MU_DECLSPEC
-# if defined(__BEOS__)
-#  if defined(__GNUC__)
-#   define MU_DECLSPEC	__declspec(dllexport)
-#  else
-#   define MU_DECLSPEC	__declspec(export)
-#  endif
-# elif defined(__WIN32__) || defined( _WIN32_WCE )
-
-#  ifdef __BORLANDC__
-#   ifdef BUILD_MCUCOMMONLIB
-#    define MU_DECLSPEC 
-#   else
-#    define MU_DECLSPEC	__declspec(dllimport)
-#   endif
-#  else
-#	ifdef BUILD_MCUCOMMONLIB
-#		define MU_DECLSPEC	__declspec(dllexport)
-#   else
-#		define MU_DECLSPEC	__declspec(dllimport)
-#  endif
-# endif
-
-# elif defined(__OS2__)
-#  ifdef __WATCOMC__
-#   ifdef BUILD_MCUCOMMONLIB
-#    define MU_DECLSPEC	__declspec(dllexport)
-#   else
-#    define MU_DECLSPEC
-#   endif
-#  else
-#   define MU_DECLSPEC
-#  endif
-# else
-#  if defined(__GNUC__) && __GNUC__ >= 4
-#   define MU_DECLSPEC	__attribute__ ((visibility("default")))
-#  else
-#   define MU_DECLSPEC
-#  endif
-# endif
-
-#ifdef __SYMBIAN32__ 
-#ifndef EKA2 
-#undef MU_DECLSPEC
-#define MU_DECLSPEC
-#elif !defined(__WINS__)
-#undef MU_DECLSPEC
-#define MU_DECLSPEC __MU_DECLSPEC(dllexport)
-#endif /* !EKA2 */
-#endif /* __SYMBIAN32__ */
-
-#endif	// #ifndef MU_DECLSPEC
-
-/** 函数调用方式.*/
-/* By default SDL uses the C calling convention */
-#ifndef MU_CALL
-
-#if defined(__WIN32__) || defined( _WIN32_WCE ) && !defined(__GNUC__)
-#define MU_CALL __cdecl
-#elif defined( __OS2__ )
-/* But on OS/2, we use the _System calling convention */
-/* to be compatible with every compiler */
-#define MU_CALL _System
-#else
-#define MU_CALL   
-#endif	// #if defined(__WIN32__) || defined( _WIN32_WCE ) && !defined(__GNUC__)
-
-#endif /* MU_CALL */
 
 
 
@@ -282,17 +185,14 @@ typedef const TCHAR *LPCTSTR;
 
 #define INVALID_SOCKET (int)(~0)
 
-//#define _access access 
-//#define _waccess waccess
-//
-//#define _mkdir mkdir
-//#define _wmkdir wmkdir
+#define _access access 
+#define _mkdir mkdir
 
 #if defined(UNICODE) || defined( _UNICODE )  
 
-/** thinkingl: !!!!!有些需要修改！！！！！！！
- * 	Unicode functions
- */
+/*
+* Unicode functions
+*/
 #define	_tprintf	wprintf
 #define	_ftprintf	fwprintf
 #define	_stprintf	swprintf
@@ -322,8 +222,8 @@ typedef const TCHAR *LPCTSTR;
 #define	_itot		_itow
 #define	_ltot		_ltow
 #define	_ultot		_ultow
-#define	_ttoi		wtoi
-#define	_ttol		wtol
+#define	_ttoi		_wtoi
+#define	_ttol		_wtol
 #define	_tcscat		wcscat
 #define _tcschr		wcschr
 #define _tcscmp		wcscmp
@@ -379,33 +279,12 @@ typedef const TCHAR *LPCTSTR;
 #define _wcsncnt(_wcs, _cnt) ((wcslen(_wcs)>_cnt) ? _count : wcslen(_wcs))
 #define _wcsspnp(_wcs1, _wcs2) ((*((_wcs1)+wcsspn(_wcs1,_wcs2))) ? ((_wcs1)+wcsspn(_wcs1,_wcs2)) : NULL)
 
-
-#define _tchmod     wchmod
-#define _tcreat     wcreat
-#define _tfindfirst wfindfirst
-#define _tfindnext  wfindnext
-#define _tmktemp    wmktemp
-#define _topen      wopen
-#define _taccess    waccess
-#define _tremove    wremove
-#define _trename    wrename
-#define _tsopen     wsopen
-#define _tsetlocale wsetlocale
-#define _tunlink    wunlink
-#define _tfinddata_t    wfinddata_t
-#define _tchdir	    wchdir
-#define _tgetcwd    wgetcwd
-#define _tgetdcwd   wgetdcwd
-#define _tmkdir	    wmkdir
-#define _trmdir	    wrmdir
-#define _tstat      wstat
-
 #else
 
 
 /*
- * Non-unicode (standard) functions
- */
+* Non-unicode (standard) functions
+*/
 
 #define	_tprintf	printf
 #define _ftprintf	fprintf
@@ -515,22 +394,21 @@ typedef const TCHAR *LPCTSTR;
 #define _tfindnext  _findnext
 #define _tmktemp    _mktemp
 #define _topen      _open
-#define _taccess    access
+#define _taccess    _access
 #define _tremove    remove
 #define _trename    rename
 #define _tsopen     _sopen
 #define _tsetlocale setlocale
-#define _tunlink    unlink
+#define _tunlink    _unlink
 #define _tfinddata_t    _finddata_t
 #define _tchdir	    _chdir
 #define _tgetcwd    _getcwd
 #define _tgetdcwd   _getdcwd
-#define _tmkdir	    mkdir
+#define _tmkdir	    _mkdir
 #define _trmdir	    _rmdir
 #define _tstat      _stat
 
 #endif
 
 #endif
-
 
