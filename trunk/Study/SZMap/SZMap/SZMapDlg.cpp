@@ -63,6 +63,7 @@ BEGIN_MESSAGE_MAP(CSZMapDlg, CDialogEx)
 	ON_WM_SYSCOMMAND()
 	ON_WM_PAINT()
 	ON_WM_QUERYDRAGICON()
+	ON_WM_DESTROY()
 END_MESSAGE_MAP()
 
 
@@ -163,3 +164,12 @@ HCURSOR CSZMapDlg::OnQueryDragIcon()
 	return static_cast<HCURSOR>(m_hIcon);
 }
 
+
+
+void CSZMapDlg::OnDestroy()
+{
+	CDialogEx::OnDestroy();
+
+	// TODO: 在此处添加消息处理程序代码
+	this->m_mapCtrl.DestroyWindow();
+}
