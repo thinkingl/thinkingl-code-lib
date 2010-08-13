@@ -4,6 +4,7 @@
 
 #pragma once
 
+#include "MapCtrl.h"
 
 // CSZMapDlg 对话框
 class CSZMapDlg : public CDialogEx
@@ -18,6 +19,9 @@ public:
 	protected:
 	virtual void DoDataExchange(CDataExchange* pDX);	// DDX/DDV 支持
 
+private:
+	/** 地图控件。 */
+	CMapCtrl m_mapCtrl;
 
 // 实现
 protected:
