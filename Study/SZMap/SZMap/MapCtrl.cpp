@@ -22,6 +22,7 @@ CMapCtrl::~CMapCtrl()
 
 BEGIN_MESSAGE_MAP(CMapCtrl, CWnd)
 	ON_WM_PAINT()
+	ON_WM_MOUSEMOVE()
 END_MESSAGE_MAP()
 
 
@@ -45,7 +46,7 @@ void CMapCtrl::OnPaint()
 
 	if( !this->m_imgDraw.IsNull() )
 	{
-		this->m_imgDraw.BitBlt( dc, 0, 0, 256, 256, 0, 0 );
+		this->m_imgDraw.BitBlt( dc, this->m_imgPos.x, this->m_imgPos.y, 256, 256, 0, 0 );
 	}
 }
 
@@ -61,4 +62,23 @@ void CMapCtrl::PreSubclassWindow()
 
 
 	CWnd::PreSubclassWindow();
+}
+
+
+void CMapCtrl::OnMouseMove(UINT nFlags, CPoint point)
+{
+	// TODO: 在此添加消息处理程序代码和/或调用默认值
+	if( MK_LBUTTON & nFlags )
+	{
+		// 图片随着鼠标运动。
+		CSize move = point - this->m_lastMousePos;
+
+		this->m_imgPos += move;
+
+		this->Invalidate();
+	}
+
+	this->m_lastMousePos = point;
+
+	CWnd::OnMouseMove(nFlags, point);
 }
