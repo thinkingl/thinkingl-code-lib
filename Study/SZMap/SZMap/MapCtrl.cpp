@@ -41,4 +41,24 @@ void CMapCtrl::OnPaint()
 
 	CString strText = _T( "map control" );
 	dc.TextOutW( 10, 10, strText );
+
+
+	if( !this->m_imgDraw.IsNull() )
+	{
+		this->m_imgDraw.BitBlt( dc, 0, 0, 256, 256, 0, 0 );
+	}
+}
+
+
+void CMapCtrl::PreSubclassWindow()
+{
+	// TODO: 在此添加专用代码和/或调用基类
+
+	// 载入图片.
+	HRESULT hr = this->m_imgDraw.Load( _T( "J:\\GMapCatcher\\.googlemaps\\tiles\\17\\0\\0\\0\\0.png" ) );
+
+	
+
+
+	CWnd::PreSubclassWindow();
 }
