@@ -100,6 +100,16 @@ BOOL CSZMapDlg::OnInitDialog()
 	ShowWindow(SW_MAXIMIZE);
 
 	// TODO: 在此添加额外的初始化代码
+	CRect rcMapCtrl;
+	this->GetClientRect( rcMapCtrl );
+	rcMapCtrl.top += 50;
+
+	BOOL bMapCreate = this->m_mapCtrl.Create( NULL, _T( "map control" ), WS_CHILD, rcMapCtrl, this, 10022 );
+	_ASSERT( bMapCreate );
+	if( bMapCreate )
+	{
+		this->m_mapCtrl.ShowWindow( SW_SHOW );
+	}
 
 	return TRUE;  // 除非将焦点设置到控件，否则返回 TRUE
 }
