@@ -198,10 +198,77 @@ void CMapCtrl::UpdateImageBuffer()
 		this->m_imageIndexRect.InflateRect( 0, 0, 1, 0 );
 		rcImg.InflateRect( 0, 0, IMG_SIZE, 0 );
 	}
+	
+
+	// 是否需要销毁旧的图片？
+	while( rcImg.top < this->m_rectDead.top )
+	{
+		// 削去上面的。
+		for( int i=this->m_imageIndexRect.left; i<this->m_imageIndexRect.right; ++i )
+		{
+			CImageIndex imgIndex;
+			imgIndex.x = i;
+			imgIndex.y = m_imageIndexRect.top;
+
+			this->m_tableImageBuffer.erase( imgIndex );
+		}
+
+		this->m_imageIndexRect.DeflateRect( 0, 1, 0, 0 );
+		rcImg.DeflateRect( 0, IMG_SIZE, 0, 0 );
+
+	}
+	while( rcImg.left < this->m_rectDead.left )
+	{
+		// 削去左边的。
+		for( int i=this->m_imageIndexRect.top; i<this->m_imageIndexRect.bottom; ++i )
+		{
+			CImageIndex imgIndex;
+			imgIndex.x = m_imageIndexRect.left;
+			imgIndex.y = i;
+
+			this->m_tableImageBuffer.erase( imgIndex );
+		}
+
+		this->m_imageIndexRect.DeflateRect( 1, 0, 0, 0 );
+		rcImg.DeflateRect( IMG_SIZE, 0, 0, 0 );
+	}
+	while( rcImg.right > this->m_rectDead.right )
+	{
+		// 削去右边
+
+		this->m_imageIndexRect.DeflateRect( 0, 0, 1, 0 );
+		rcImg.DeflateRect( 0, 0, IMG_SIZE, 0 );
+
+		for( int i=this->m_imageIndexRect.top; i<this->m_imageIndexRect.bottom; ++i )
+		{
+			CImageIndex imgIndex;
+			imgIndex.x = m_imageIndexRect.right;
+			imgIndex.y = i;
+
+			this->m_tableImageBuffer.erase( imgIndex );
+		}
+
+		
+	}
+	while( rcImg.bottom > this->m_rectDead.bottom )
+	{
+		// 削去下边
+		this->m_imageIndexRect.DeflateRect( 0, 0, 0, 1 );
+		rcImg.DeflateRect( 0, 0, 0, IMG_SIZE );
+
+		for( int i=this->m_imageIndexRect.left; i<this->m_imageIndexRect.right; ++i )
+		{
+			CImageIndex imgIndex;
+			imgIndex.x = i;
+			imgIndex.y = m_imageIndexRect.bottom;
+
+			this->m_tableImageBuffer.erase( imgIndex );
+		}
+
+		
+	}
+
 
 	// 更新新的图片位置。
 	this->m_ptImage = rcImg.TopLeft();
-
-
-	// 是否需要销毁旧的图片？
 }
