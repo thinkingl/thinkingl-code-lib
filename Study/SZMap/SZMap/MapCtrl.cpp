@@ -12,8 +12,8 @@ IMPLEMENT_DYNAMIC(CMapCtrl, CWnd)
 
 CMapCtrl::CMapCtrl()
 {
-	int x = 1*1024+671;
-	int y = 0*1024+824;
+	int x = 1*1024+671+10;
+	int y = 0*1024+824+10;
 	this->m_imageIndexRect = CRect( x, y, x, y );
 
 	this->m_nZLevel = 6;
@@ -119,7 +119,16 @@ void CMapCtrl::OnSize(UINT nType, int cx, int cy)
 	// TODO: 在此处添加消息处理程序代码
 	if( this->GetSafeHwnd() )
 	{
+		// 备份旧的显示区域。
+		CRect rectOldShow = this->m_rectShow;
+
 		this->m_rectShow = CRect( 0,0,cx,cy );
+
+		// 计算显示区域的中心偏移了多少位置。
+		CSize offset = this->m_rectShow.CenterPoint() - rectOldShow.CenterPoint();
+
+		// 图片区域跟着偏移，这样保证中心对齐。
+		this->m_ptImage += offset;
 
 		this->UpdateImageBuffer();
 	}
@@ -292,4 +301,19 @@ CString CMapCtrl::ImageIndex2ImagePath( int zLevel, const CImageIndex& imgIndex 
 		( imgIndex.y >> 10 ) % 1024, imgIndex.y % 1024 );
 
 	return strPath;
+}
+
+CCoord CMapCtrl::ClientArea2Coord( const CPoint& point ) const
+{
+	CCoord coord;
+	coord.SetZLevel( this->m_nZLevel );
+
+	// 先映射到图片上，属于哪个图片，偏移多少。定位到像素。
+	// 相对图片左上角的位置。
+
+
+	// 根据图片像素所在位置，计算经纬度。
+
+
+	return coord;
 }

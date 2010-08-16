@@ -64,6 +64,7 @@ BEGIN_MESSAGE_MAP(CSZMapDlg, CDialogEx)
 	ON_WM_PAINT()
 	ON_WM_QUERYDRAGICON()
 	ON_WM_DESTROY()
+	ON_WM_SIZE()
 END_MESSAGE_MAP()
 
 
@@ -172,4 +173,20 @@ void CSZMapDlg::OnDestroy()
 
 	// TODO: 在此处添加消息处理程序代码
 	this->m_mapCtrl.DestroyWindow();
+}
+
+
+void CSZMapDlg::OnSize(UINT nType, int cx, int cy)
+{
+	CDialogEx::OnSize(nType, cx, cy);
+
+	if( this->m_mapCtrl.GetSafeHwnd() )
+	{
+		CRect rcMapCtrl;
+		this->GetClientRect( rcMapCtrl );
+		rcMapCtrl.top += 50;
+
+		this->m_mapCtrl.MoveWindow( rcMapCtrl );
+	}
+	// TODO: 在此处添加消息处理程序代码
 }
