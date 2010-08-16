@@ -5,6 +5,7 @@
 #pragma once
 
 #include "MapCtrl.h"
+#include "afxcmn.h"
 
 // CSZMapDlg 对话框
 class CSZMapDlg : public CDialogEx
@@ -19,6 +20,9 @@ public:
 	protected:
 	virtual void DoDataExchange(CDataExchange* pDX);	// DDX/DDV 支持
 
+private:
+	/** 排列控件。 */
+	void Updatelayer( CRect *prcClient = NULL );
 private:
 	/** 地图控件。 */
 	CMapCtrl m_mapCtrl;
@@ -36,6 +40,8 @@ protected:
 public:
 	afx_msg void OnDestroy();
 	afx_msg void OnSize(UINT nType, int cx, int cy);
-	double m_latitudeShow;
-	double m_longitudeShow;
+
+	CSliderCtrl m_sliderMapZlevel;
+	afx_msg void OnTRBNThumbPosChangingSliderZLevle(NMHDR *pNMHDR, LRESULT *pResult);
+	afx_msg void OnNMReleasedcaptureSliderZLevle(NMHDR *pNMHDR, LRESULT *pResult);
 };

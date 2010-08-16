@@ -50,8 +50,6 @@ END_MESSAGE_MAP()
 
 CSZMapDlg::CSZMapDlg(CWnd* pParent /*=NULL*/)
 	: CDialogEx(CSZMapDlg::IDD, pParent)
-	, m_latitudeShow(0)
-	, m_longitudeShow(0)
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 }
@@ -59,8 +57,8 @@ CSZMapDlg::CSZMapDlg(CWnd* pParent /*=NULL*/)
 void CSZMapDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogEx::DoDataExchange(pDX);
-	DDX_Text(pDX, IDC_STATIC_LATITUDE, m_latitudeShow);
-	DDX_Text(pDX, IDC_STATIC_LONGITUDE, m_longitudeShow);
+
+	DDX_Control(pDX, IDC_SLIDER_Z_LEVLE, m_sliderMapZlevel);
 }
 
 BEGIN_MESSAGE_MAP(CSZMapDlg, CDialogEx)
@@ -69,6 +67,8 @@ BEGIN_MESSAGE_MAP(CSZMapDlg, CDialogEx)
 	ON_WM_QUERYDRAGICON()
 	ON_WM_DESTROY()
 	ON_WM_SIZE()
+	ON_NOTIFY(TRBN_THUMBPOSCHANGING, IDC_SLIDER_Z_LEVLE, &CSZMapDlg::OnTRBNThumbPosChangingSliderZLevle)
+	ON_NOTIFY(NM_RELEASEDCAPTURE, IDC_SLIDER_Z_LEVLE, &CSZMapDlg::OnNMReleasedcaptureSliderZLevle)
 END_MESSAGE_MAP()
 
 
@@ -106,9 +106,8 @@ BOOL CSZMapDlg::OnInitDialog()
 	ShowWindow(SW_MAXIMIZE);
 
 	// TODO: 在此添加额外的初始化代码
-	CRect rcMapCtrl;
-	this->GetClientRect( rcMapCtrl );
-	rcMapCtrl.top += 50;
+	CRect rcMapCtrl( 0,0,10,10 );
+	
 
 	BOOL bMapCreate = this->m_mapCtrl.Create( NULL, _T( "map control" ), WS_CHILD, rcMapCtrl, this, 10022 );
 	_ASSERT( bMapCreate );
@@ -116,6 +115,11 @@ BOOL CSZMapDlg::OnInitDialog()
 	{
 		this->m_mapCtrl.ShowWindow( SW_SHOW );
 	}
+
+	this->m_sliderMapZlevel.SetRange( MIN_MAP_ZLEVEL, MAX_MAP_ZLEVEL );
+	this->m_sliderMapZlevel.SetPos( 6 );
+
+	this->Updatelayer();
 
 	return TRUE;  // 除非将焦点设置到控件，否则返回 TRUE
 }
@@ -184,13 +188,69 @@ void CSZMapDlg::OnSize(UINT nType, int cx, int cy)
 {
 	CDialogEx::OnSize(nType, cx, cy);
 
+
+	// TODO: 在此处添加消息处理程序代码
+	this->Updatelayer( &CRect( 0,0, cx, cy ) );
+}
+
+void CSZMapDlg::Updatelayer( CRect *prcClient/* = NULL*/ )
+{
+	if( !this->GetSafeHwnd() )
+	{
+		return;
+	}
+
+	CRect rcClientLeft;
+	if( prcClient )
+	{
+		rcClientLeft = *prcClient;
+	}
+	else
+	{
+		this->GetClientRect( rcClientLeft );
+	}
+
+	// 上边预留。
+	rcClientLeft.top = 30;
+
+	// 地图缩放控件。
+	if( this->m_sliderMapZlevel.GetSafeHwnd() )
+	{
+		CRect rcMapZLevelCtrl;
+		this->m_sliderMapZlevel.GetWindowRect( rcMapZLevelCtrl );
+
+		CRect rcNewMapZLevelCtrl = rcClientLeft;
+		rcNewMapZLevelCtrl.right = rcNewMapZLevelCtrl.left + rcMapZLevelCtrl.Width();
+
+		this->m_sliderMapZlevel.MoveWindow( rcNewMapZLevelCtrl );
+
+		rcClientLeft.left = rcNewMapZLevelCtrl.right + 20;
+	}
+
+	// 地图控件充满剩余区域。
 	if( this->m_mapCtrl.GetSafeHwnd() )
 	{
-		CRect rcMapCtrl;
-		this->GetClientRect( rcMapCtrl );
-		rcMapCtrl.top += 50;
+		CRect rcMapCtrl = rcClientLeft;
+		
+		rcMapCtrl.DeflateRect( 5,5,5,5 );
 
 		this->m_mapCtrl.MoveWindow( rcMapCtrl );
 	}
-	// TODO: 在此处添加消息处理程序代码
+}
+
+
+void CSZMapDlg::OnTRBNThumbPosChangingSliderZLevle(NMHDR *pNMHDR, LRESULT *pResult)
+{
+	// 此功能要求 Windows Vista 或更高版本。
+	// _WIN32_WINNT 符号必须 >= 0x0600。
+	NMTRBTHUMBPOSCHANGING *pNMTPC = reinterpret_cast<NMTRBTHUMBPOSCHANGING *>(pNMHDR);
+	// TODO: 在此添加控件通知处理程序代码
+	*pResult = 0;
+}
+
+
+void CSZMapDlg::OnNMReleasedcaptureSliderZLevle(NMHDR *pNMHDR, LRESULT *pResult)
+{
+	// TODO: 在此添加控件通知处理程序代码
+	*pResult = 0;
 }

@@ -4,6 +4,14 @@
 #include "Coord.h"
 // CMapCtrl
 
+enum
+{
+	IMG_SIZE = 256,
+	MAX_MAP_ZLEVEL = 17,
+	MIN_MAP_ZLEVEL = -2,
+};
+
+
 /** 当前显示的图片和位置表。 */
 class CImageIndex : public CPoint
 {
@@ -29,12 +37,9 @@ public:
 	CMapCtrl();
 	virtual ~CMapCtrl();
 
-	enum
-	{
-		IMG_SIZE = 256,
-		MAX_MAP_ZLEVEL = 17,
-	};
-
+public:
+	/** 设置缩放比例。 */
+	
 private:
 	/** 刷新图片。 */
 	void UpdateImageBuffer();
