@@ -4,7 +4,7 @@
 #include "stdafx.h"
 
 #include "MapCtrl.h"
-
+#include <math.h>
 
 // CMapCtrl
 
@@ -334,9 +334,37 @@ CCoord CMapCtrl::ClientArea2Coord( const CPoint& point ) const
 	// 经度是平均的，直接按比例求得。
 	double longitude = ( ( double(nPixelPosX) / nWorldPixelNum ) * 2 - 1 ) * 180;
 
-	// 纬度比较复杂，需要通过公式求得。
+	// 纬度比较复杂，需要通过公式求得。 
+	// Henry Bond 公式： F( lat ) = ln( tan( lat / 2 + pi / 4 ) )
+	// 当前点到赤道的像素距离。
+	unsigned int nPixel2Equator = nWorldPixelNum / 2 - nPixelPosY;
+
+	// 比例
+	double radioY = double( nPixel2Equator ) / ( nWorldPixelNum / 2 );
+
+	double dexp = exp( radioY );
+
+//	double latitude = ( atan( exp( radioY  ) ) - M_PI_4 ) * 2 * 180;
+
+	//y = ( tile[0][1] + 1.0*tile[1][1]/TILES_HEIGHT) / (world_tiles/2.) - 1 # -1...1
+ //   lon = x * 180.0
+ //   y = math.exp(-y*2*math.pi)
+ //   e = (y-1)/(y+1)
+ //   lat = 180.0/math.pi * math.asin(e)
+	double radioY2 = ( ( double(nPixelPosY) / nWorldPixelNum ) * 2 - 1 );
+	double yy = exp( -radioY2 * 2 * M_PI );
+	double ee = ( yy - 1 ) / ( yy + 1 );
+	double latitude = 180.0 / M_PI * asin( ee );
+
+//	latitude = lat;
+	
+	double checkAngle = ( latitude * M_PI / (180 * 2) + M_PI_4 );
+	double checktan = tan( checkAngle );
+	double latCheck = log( checktan );
+	int test = ( nWorldPixelNum / 2 ) * latCheck;
 
 	coord.SetLongitude( longitude );
+	coord.SetLatitude( latitude );
 	return coord;
 }
 
