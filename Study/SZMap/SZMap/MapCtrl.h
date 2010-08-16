@@ -39,6 +39,10 @@ public:
 
 public:
 	/** 设置缩放比例。 */
+	void SetZLevel( int nZLevel );
+
+	/** 中心定位。 */
+	void Move2Center( const CCoord& centerCoord );
 	
 private:
 	/** 刷新图片。 */
@@ -52,6 +56,9 @@ private:
 
 	/** 通过当前客户区域坐标计算经纬度。 */
 	CCoord ClientArea2Coord( const CPoint& point ) const;
+
+	/** 清理图片缓存。 */
+	void ClearImageBuffer();
 
 	/** 地图中心点的经纬度。 */
 //	CCoord m_mapCoord;
