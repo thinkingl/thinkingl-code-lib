@@ -12,7 +12,11 @@ IMPLEMENT_DYNAMIC(CMapCtrl, CWnd)
 
 CMapCtrl::CMapCtrl()
 {
+	int x = 1*1024+671;
+	int y = 0*1024+824;
+	this->m_imageIndexRect = CRect( x, y, x, y );
 
+	this->m_nZLevel = 6;
 }
 
 CMapCtrl::~CMapCtrl()
@@ -60,12 +64,18 @@ void CMapCtrl::OnPaint()
 			imgIndex.y = this->m_imageIndexRect.top + y;
 
 			CImage* pImg = this->m_tableImageBuffer[ imgIndex ].get();
+			int nDrawPosX = this->m_ptImage.x + x * IMG_SIZE;
+			int nDrawPosY = this->m_ptImage.y + y * IMG_SIZE;
 			if( pImg )
-			{
-				int nDrawPosX = this->m_ptImage.x + x * IMG_SIZE;
-				int nDrawPosY = this->m_ptImage.y + y * IMG_SIZE;
+			{				
 				pImg->BitBlt( dc, nDrawPosX, nDrawPosY, IMG_SIZE, IMG_SIZE, 0, 0 );
-			}						
+			}		
+			else
+			{
+				dc.FillSolidRect( nDrawPosX, nDrawPosY, IMG_SIZE, IMG_SIZE, RGB( 200,200,200 ) );
+				CString strText = _T( "囧 ，没这个图片！ " );
+				dc.TextOut( nDrawPosX + 10, nDrawPosY + 10, strText ); 
+			}
 		}
 	}
 }
@@ -140,11 +150,8 @@ void CMapCtrl::UpdateImageBuffer()
 			CImageIndex imgIndex;
 			imgIndex.x = i;
 			imgIndex.y = this->m_imageIndexRect.top;
-			
-			PTImage pimg( new CImage() );
-			pimg->Load( _T( "J:\\GMapCatcher\\.googlemaps\\tiles\\17\\0\\0\\0\\0.png" ) );
 
-			this->m_tableImageBuffer[ imgIndex ] = pimg;
+			this->LoadMapImage( imgIndex );				
 		}
 	}
 	while( rcImg.left > this->m_rectNewImage.left )
@@ -158,10 +165,7 @@ void CMapCtrl::UpdateImageBuffer()
 			imgIndex.x = this->m_imageIndexRect.left;
 			imgIndex.y = i;
 			
-			PTImage pimg( new CImage() );
-			pimg->Load( _T( "J:\\GMapCatcher\\.googlemaps\\tiles\\17\\0\\0\\0\\0.png" ) );
-
-			this->m_tableImageBuffer[ imgIndex ] = pimg;
+			this->LoadMapImage( imgIndex );		
 		}
 	}
 	while( rcImg.bottom < this->m_rectNewImage.bottom )
@@ -173,10 +177,7 @@ void CMapCtrl::UpdateImageBuffer()
 			imgIndex.x = i;
 			imgIndex.y = this->m_imageIndexRect.bottom;
 			
-			PTImage pimg( new CImage() );
-			pimg->Load( _T( "J:\\GMapCatcher\\.googlemaps\\tiles\\17\\0\\0\\0\\0.png" ) );
-
-			this->m_tableImageBuffer[ imgIndex ] = pimg;
+			this->LoadMapImage( imgIndex );		
 		}
 		this->m_imageIndexRect.InflateRect( 0, 0, 0, 1 );
 		rcImg.InflateRect( 0, 0, 0, IMG_SIZE );
@@ -190,10 +191,7 @@ void CMapCtrl::UpdateImageBuffer()
 			imgIndex.x = this->m_imageIndexRect.right;
 			imgIndex.y = i;
 			
-			PTImage pimg( new CImage() );
-			pimg->Load( _T( "J:\\GMapCatcher\\.googlemaps\\tiles\\17\\0\\0\\0\\0.png" ) );
-
-			this->m_tableImageBuffer[ imgIndex ] = pimg;
+			this->LoadMapImage( imgIndex );		
 		}
 		this->m_imageIndexRect.InflateRect( 0, 0, 1, 0 );
 		rcImg.InflateRect( 0, 0, IMG_SIZE, 0 );
@@ -271,4 +269,27 @@ void CMapCtrl::UpdateImageBuffer()
 
 	// 更新新的图片位置。
 	this->m_ptImage = rcImg.TopLeft();
+}
+
+BOOL CMapCtrl::LoadMapImage( const CImageIndex& imgIndex )
+{
+	CString strImgPath = this->ImageIndex2ImagePath( 6, imgIndex );
+
+	PTImage pimg( new CImage() );
+	HRESULT hr = pimg->Load( strImgPath );
+	if( S_OK == hr )
+	{
+		this->m_tableImageBuffer[ imgIndex ] = pimg;
+	}		
+
+	return ( S_OK == hr );
+}
+
+CString CMapCtrl::ImageIndex2ImagePath( int zLevel, const CImageIndex& imgIndex ) const
+{
+	CString strPath;
+	strPath.Format( _T( "J:\\GMapCatcher\\.googlemaps\\tiles\\%d\\%d\\%d\\%d\\%d.png" ), zLevel, ( imgIndex.x >> 10 ) % 1024, ( imgIndex.x % 1024 ), 
+		( imgIndex.y >> 10 ) % 1024, imgIndex.y % 1024 );
+
+	return strPath;
 }
