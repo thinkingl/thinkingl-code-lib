@@ -32,6 +32,7 @@ public:
 	enum
 	{
 		IMG_SIZE = 256,
+		MAX_MAP_ZLEVEL = 17,
 	};
 
 private:
@@ -87,6 +88,7 @@ public:
 	virtual void PreSubclassWindow();
 	afx_msg void OnMouseMove(UINT nFlags, CPoint point);
 	afx_msg void OnSize(UINT nType, int cx, int cy);
+	afx_msg void OnRButtonUp(UINT nFlags, CPoint point);
 };
 
 

@@ -50,6 +50,8 @@ END_MESSAGE_MAP()
 
 CSZMapDlg::CSZMapDlg(CWnd* pParent /*=NULL*/)
 	: CDialogEx(CSZMapDlg::IDD, pParent)
+	, m_latitudeShow(0)
+	, m_longitudeShow(0)
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 }
@@ -57,6 +59,8 @@ CSZMapDlg::CSZMapDlg(CWnd* pParent /*=NULL*/)
 void CSZMapDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogEx::DoDataExchange(pDX);
+	DDX_Text(pDX, IDC_STATIC_LATITUDE, m_latitudeShow);
+	DDX_Text(pDX, IDC_STATIC_LONGITUDE, m_longitudeShow);
 }
 
 BEGIN_MESSAGE_MAP(CSZMapDlg, CDialogEx)
