@@ -1,6 +1,7 @@
 #pragma once
 
 #include <map>
+#include "Coord.h"
 // CMapCtrl
 
 /** 当前显示的图片和位置表。 */
@@ -42,6 +43,13 @@ private:
 
 	/** 通过图片序号，定位图片文件。 */
 	CString ImageIndex2ImagePath( int zLevel, const CImageIndex& imgIndex ) const;
+
+	/** 通过当前客户区域坐标计算经纬度。 */
+	CCoord ClientArea2Coord( const CPoint& point ) const;
+
+	/** 地图中心点的经纬度。 */
+//	CCoord m_mapCoord;
+
 private:
 
 	/** 鼠标上次位置。 */
