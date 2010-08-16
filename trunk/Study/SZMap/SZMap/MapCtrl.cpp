@@ -380,3 +380,37 @@ void CMapCtrl::OnRButtonUp(UINT nFlags, CPoint point)
 
 	CWnd::OnRButtonUp(nFlags, point);
 }
+
+void CMapCtrl::SetZLevel( int nZLevel )
+{
+	if( this->m_nZLevel != nZLevel )
+	{
+		// 获取旧的中心点经纬度，这个保持不变。
+		CRect rcClient;
+		this->GetClientRect( rcClient );
+		CCoord oldCoord = this->ClientArea2Coord( rcClient.CenterPoint() );
+
+		this->ClearImageBuffer();
+		this->m_nZLevel = nZLevel;
+
+		// 重新按照经纬度中心定位。
+		this->Move2Center( oldCoord );
+	}
+}
+
+void CMapCtrl::ClearImageBuffer()
+{
+	this->m_tableImageBuffer.clear();
+	this->m_ptImage = CPoint( 0, 0 );
+	this->m_imageIndexRect = CRect( 0,0,0,0 );	
+}
+
+void CMapCtrl::Move2Center( const CCoord& center )
+{
+	// 根据经纬度得到比例。
+
+	// 根据比例得到图片的序号。
+
+	// 重新刷新图片缓存。
+
+}
