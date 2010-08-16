@@ -28,6 +28,7 @@ BEGIN_MESSAGE_MAP(CMapCtrl, CWnd)
 	ON_WM_PAINT()
 	ON_WM_MOUSEMOVE()
 	ON_WM_SIZE()
+	ON_WM_RBUTTONUP()
 END_MESSAGE_MAP()
 
 
@@ -310,10 +311,44 @@ CCoord CMapCtrl::ClientArea2Coord( const CPoint& point ) const
 
 	// 先映射到图片上，属于哪个图片，偏移多少。定位到像素。
 	// 相对图片左上角的位置。
+	CPoint ptPos2Img = point - this->m_ptImage;
+
+	// 相对世界地图左上角的像素距离。
+	unsigned int nPixelPosX = this->m_imageIndexRect.left * IMG_SIZE + ptPos2Img.x;
+	unsigned int nPixelPosY = this->m_imageIndexRect.top * IMG_SIZE + ptPos2Img.y;
+
+	// 得到这个位置对应的图片序号。
+//	int nImgIndexX = this->m_imageIndexRect.left + ptPos2Img.x / IMG_SIZE;
+//	int nImgIndexY = this->m_imageIndexRect.top + ptPos2Img.y / IMG_SIZE;
+
+	// 得到这个像素
 
 
 	// 根据图片像素所在位置，计算经纬度。
+//	coord.SetLatitude( nImgIndexX );
+//	coord.SetLongitude( nImgIndexY );
 
+	// 这个放大倍数下，整个世界一个方向上共有多少像素？
+	unsigned int nWorldPixelNum = ( 1 << ( MAX_MAP_ZLEVEL - this->m_nZLevel ) ) * IMG_SIZE;
 
+	// 经度是平均的，直接按比例求得。
+	double longitude = ( ( double(nPixelPosX) / nWorldPixelNum ) * 2 - 1 ) * 180;
+
+	// 纬度比较复杂，需要通过公式求得。
+
+	coord.SetLongitude( longitude );
 	return coord;
+}
+
+
+void CMapCtrl::OnRButtonUp(UINT nFlags, CPoint point)
+{
+	// TODO: 在此添加消息处理程序代码和/或调用默认值
+	CCoord coord = this->ClientArea2Coord( point );
+
+	CString strMsg;
+	strMsg.Format( _T( "latitude : %lf longitude : %lf " ), coord.GetLatitude(), coord.GetLongitude() );
+	this->MessageBox( strMsg );
+
+	CWnd::OnRButtonUp(nFlags, point);
 }
