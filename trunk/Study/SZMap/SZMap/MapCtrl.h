@@ -57,6 +57,9 @@ private:
 	/** 通过当前客户区域坐标计算经纬度。 */
 	CCoord ClientArea2Coord( const CPoint& point ) const;
 
+	/** 通过经纬度坐标获取对应的像素坐标。 */
+	CPoint Coord2ImagePixel( const CCoord& coord ) const;
+
 	/** 清理图片缓存。 */
 	void ClearImageBuffer();
 
