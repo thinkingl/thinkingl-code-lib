@@ -69,6 +69,7 @@ BEGIN_MESSAGE_MAP(CSZMapDlg, CDialogEx)
 	ON_WM_SIZE()
 	ON_NOTIFY(TRBN_THUMBPOSCHANGING, IDC_SLIDER_Z_LEVLE, &CSZMapDlg::OnTRBNThumbPosChangingSliderZLevle)
 	ON_NOTIFY(NM_RELEASEDCAPTURE, IDC_SLIDER_Z_LEVLE, &CSZMapDlg::OnNMReleasedcaptureSliderZLevle)
+	ON_BN_CLICKED(IDC_BUTTON_BACK_SHANGHAI, &CSZMapDlg::OnBnClickedButtonBackShanghai)
 END_MESSAGE_MAP()
 
 
@@ -119,7 +120,12 @@ BOOL CSZMapDlg::OnInitDialog()
 	this->m_sliderMapZlevel.SetRange( MIN_MAP_ZLEVEL, MAX_MAP_ZLEVEL );
 	this->m_sliderMapZlevel.SetPos( 6 );
 
+	// Latitude=31.233353, Longitude=121.502609
+	this->OnBnClickedButtonBackShanghai();
+
 	this->Updatelayer();
+
+	
 
 	return TRUE;  // 除非将焦点设置到控件，否则返回 TRUE
 }
@@ -256,4 +262,15 @@ void CSZMapDlg::OnNMReleasedcaptureSliderZLevle(NMHDR *pNMHDR, LRESULT *pResult)
 
 	int nZLevel = this->m_sliderMapZlevel.GetPos();
 	this->m_mapCtrl.SetZLevel( nZLevel );
+}
+
+
+void CSZMapDlg::OnBnClickedButtonBackShanghai()
+{
+	// TODO: 在此添加控件通知处理程序代码
+	CCoord shanghai;
+	shanghai.SetZLevel( 6 );
+	shanghai.SetLatitude( 31.233353 );
+	shanghai.SetLongitude( 121.502609 );
+	this->m_mapCtrl.Move2Center( shanghai );
 }

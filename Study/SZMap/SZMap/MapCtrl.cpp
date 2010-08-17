@@ -74,7 +74,9 @@ void CMapCtrl::OnPaint()
 			else
 			{
 				dc.FillSolidRect( nDrawPosX, nDrawPosY, IMG_SIZE, IMG_SIZE, RGB( 200,200,200 ) );
-				CString strText = _T( "囧 ，没这个图片！ " );
+
+				CString strText;
+				strText.Format( _T( "囧 ，没这个图片！x: %d y: %d  " ), imgIndex.x, imgIndex.y );
 				dc.TextOut( nDrawPosX + 10, nDrawPosY + 10, strText ); 
 			}
 		}
@@ -283,7 +285,7 @@ void CMapCtrl::UpdateImageBuffer()
 
 BOOL CMapCtrl::LoadMapImage( const CImageIndex& imgIndex )
 {
-	CString strImgPath = this->ImageIndex2ImagePath( 6, imgIndex );
+	CString strImgPath = this->ImageIndex2ImagePath( this->m_nZLevel, imgIndex );
 
 	PTImage pimg( new CImage() );
 	HRESULT hr = pimg->Load( strImgPath );
@@ -391,8 +393,9 @@ void CMapCtrl::SetZLevel( int nZLevel )
 		CCoord oldCoord = this->ClientArea2Coord( rcClient.CenterPoint() );
 
 		this->ClearImageBuffer();
-		this->m_nZLevel = nZLevel;
 
+		this->m_nZLevel = nZLevel;
+		oldCoord.SetZLevel( nZLevel );
 		// 重新按照经纬度中心定位。
 		this->Move2Center( oldCoord );
 	}
@@ -407,10 +410,78 @@ void CMapCtrl::ClearImageBuffer()
 
 void CMapCtrl::Move2Center( const CCoord& center )
 {
-	// 根据经纬度得到比例。
+	if( center.GetZLevel() != this->m_nZLevel )
+	{
+		this->SetZLevel( center.GetZLevel() );
+		return;
+	}
+	// 根据经纬度得到像素。
+	CPoint ptPixel = this->Coord2ImagePixel( center );
 
-	// 根据比例得到图片的序号。
+	// 根据目标中心像素位置计算图片需要平移到什么地方。
+	// 当前显示区域中心点对应的像素坐标
+	CPoint ptImgLeftTop( this->m_imageIndexRect.left * IMG_SIZE, this->m_imageIndexRect.top * IMG_SIZE );
+	CSize offset = this->m_rectShow.CenterPoint() - this->m_ptImage;
+	CPoint ptClientCenterPixel = ptImgLeftTop + offset;
+
+	// 如果图像移动不大，则直接移动。
+	// 否则重新加载图片。
+	CSize moveDistance = ptPixel - ptClientCenterPixel;
+
+	if( abs( moveDistance.cx ) > this->m_imageIndexRect.Width() * IMG_SIZE
+		|| abs( moveDistance.cy ) > this->m_imageIndexRect.Height() * IMG_SIZE )
+	{
+		// 重新加载图片。
+		this->ClearImageBuffer();
+
+		// 将图片序号调整到当前位置附近。
+		this->m_imageIndexRect = CRect( ptPixel.x / IMG_SIZE, ptPixel.y / IMG_SIZE, ptPixel.x / IMG_SIZE, ptPixel.y / IMG_SIZE );
+
+		ptImgLeftTop = CPoint( this->m_imageIndexRect.left * IMG_SIZE, this->m_imageIndexRect.top * IMG_SIZE );
+		offset = this->m_rectShow.CenterPoint() - this->m_ptImage;
+		ptClientCenterPixel = ptImgLeftTop + offset;
+
+		// 如果图像移动不大，则直接移动。
+		// 否则重新加载图片。
+		moveDistance = ptPixel - ptClientCenterPixel;
+
+		this->m_ptImage -= ( ptPixel - ptClientCenterPixel );		
+		
+	}
+	else
+	{
+		this->m_ptImage -= ( ptPixel - ptClientCenterPixel );
+	}	
 
 	// 重新刷新图片缓存。
+	this->UpdateImageBuffer();
 
+	this->Invalidate();
+
+}
+
+CPoint CMapCtrl::Coord2ImagePixel( const CCoord& center ) const
+{
+	//world_tiles = tiles_on_level(coord[2])
+ //   x = world_tiles / 360.0 * (coord[1] + 180.0)
+ //   tiles_pre_radian = world_tiles / (2 * math.pi)
+ //   e = math.sin(coord[0] * (1/180.*math.pi))
+ //   y = world_tiles/2 + 0.5*math.log((1+e)/(1-e)) * (-tiles_pre_radian)
+ //   offset = int((x - int(x)) * TILES_WIDTH), \
+ //            int((y - int(y)) * TILES_HEIGHT)
+ //   return (int(x) % world_tiles, int(y) % world_tiles), offset
+
+	// 这个放大倍数下，整个世界一个方向上共有多少像素？
+	unsigned int nWorldPixelNum = ( 1 << ( MAX_MAP_ZLEVEL - this->m_nZLevel ) ) * IMG_SIZE;
+
+	int nX = double(nWorldPixelNum) / 360.0 * ( center.GetLongitude() + 180.0 );
+	double pixelPerRadian = nWorldPixelNum / ( 2 * M_PI );
+	double e = sin( center.GetLatitude() / 180.0 * M_PI );
+
+	int nDistance2Equator = ( log( (1+e) / (1-e) ) ) / 2 * pixelPerRadian;
+	int nY = nWorldPixelNum / 2 - nDistance2Equator;
+
+	CPoint ptCenter( nX, nY );
+
+	return ptCenter;
 }

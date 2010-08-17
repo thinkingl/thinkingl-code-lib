@@ -44,4 +44,5 @@ public:
 	CSliderCtrl m_sliderMapZlevel;
 	afx_msg void OnTRBNThumbPosChangingSliderZLevle(NMHDR *pNMHDR, LRESULT *pResult);
 	afx_msg void OnNMReleasedcaptureSliderZLevle(NMHDR *pNMHDR, LRESULT *pResult);
+	afx_msg void OnBnClickedButtonBackShanghai();
 };
