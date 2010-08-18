@@ -107,6 +107,10 @@ void CMapCtrl::OnMouseMove(UINT nFlags, CPoint point)
 		this->UpdateImageBuffer();
 
 		this->Invalidate();
+
+		CRect rcClient;
+		this->GetClientRect( rcClient );
+		this->m_centerCoord = this->ClientArea2Coord( rcClient.CenterPoint() );
 	}
 
 	this->m_lastMousePos = point;
@@ -387,17 +391,13 @@ void CMapCtrl::SetZLevel( int nZLevel )
 {
 	if( this->m_nZLevel != nZLevel )
 	{
-		// 获取旧的中心点经纬度，这个保持不变。
-		CRect rcClient;
-		this->GetClientRect( rcClient );
-		CCoord oldCoord = this->ClientArea2Coord( rcClient.CenterPoint() );
 
 		this->ClearImageBuffer();
 
 		this->m_nZLevel = nZLevel;
-		oldCoord.SetZLevel( nZLevel );
+		this->m_centerCoord.SetZLevel( nZLevel );
 		// 重新按照经纬度中心定位。
-		this->Move2Center( oldCoord );
+		this->Move2Center( m_centerCoord );
 	}
 }
 
@@ -415,6 +415,10 @@ void CMapCtrl::Move2Center( const CCoord& center )
 		this->SetZLevel( center.GetZLevel() );
 		return;
 	}
+
+	// 保存经纬度。
+	this->m_centerCoord = center;
+
 	// 根据经纬度得到像素。
 	CPoint ptPixel = this->Coord2ImagePixel( center );
 
@@ -457,6 +461,7 @@ void CMapCtrl::Move2Center( const CCoord& center )
 	this->UpdateImageBuffer();
 
 	this->Invalidate();
+
 
 }
 

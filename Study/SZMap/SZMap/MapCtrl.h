@@ -85,7 +85,8 @@ private:
 	/** 删除图片区域，图片区域一旦超出此区域，则消减图片区域，直到小于此区域。 */
 	CRect m_rectDead;
 
-	/** */
+	/** 中心点的经纬度，用于缩放的时候消除误差。 */
+	CCoord m_centerCoord;
 
 
 	typedef std::auto_ptr< CImage > PTImage;
