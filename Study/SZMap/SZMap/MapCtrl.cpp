@@ -410,14 +410,14 @@ void CMapCtrl::ClearImageBuffer()
 
 void CMapCtrl::Move2Center( const CCoord& center )
 {
+	// 保存经纬度。
+	this->m_centerCoord = center;
+
 	if( center.GetZLevel() != this->m_nZLevel )
 	{
 		this->SetZLevel( center.GetZLevel() );
 		return;
 	}
-
-	// 保存经纬度。
-	this->m_centerCoord = center;
 
 	// 根据经纬度得到像素。
 	CPoint ptPixel = this->Coord2ImagePixel( center );
@@ -442,14 +442,15 @@ void CMapCtrl::Move2Center( const CCoord& center )
 		this->m_imageIndexRect = CRect( ptPixel.x / IMG_SIZE, ptPixel.y / IMG_SIZE, ptPixel.x / IMG_SIZE, ptPixel.y / IMG_SIZE );
 
 		ptImgLeftTop = CPoint( this->m_imageIndexRect.left * IMG_SIZE, this->m_imageIndexRect.top * IMG_SIZE );
-		offset = this->m_rectShow.CenterPoint() - this->m_ptImage;
-		ptClientCenterPixel = ptImgLeftTop + offset;
+		this->m_ptImage = ptImgLeftTop - ptPixel + this->m_rectShow.CenterPoint();
+		//offset = this->m_rectShow.CenterPoint() - this->m_ptImage;
+		//ptClientCenterPixel = ptImgLeftTop + offset;
 
-		// 如果图像移动不大，则直接移动。
-		// 否则重新加载图片。
-		moveDistance = ptPixel - ptClientCenterPixel;
+		//// 如果图像移动不大，则直接移动。
+		//// 否则重新加载图片。
+		//moveDistance = ptPixel - ptClientCenterPixel;
 
-		this->m_ptImage -= ( ptPixel - ptClientCenterPixel );		
+		//this->m_ptImage -= ( ptPixel - ptClientCenterPixel );		
 		
 	}
 	else
