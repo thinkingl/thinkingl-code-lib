@@ -85,7 +85,7 @@ private:
 	/** 删除图片区域，图片区域一旦超出此区域，则消减图片区域，直到小于此区域。 */
 	CRect m_rectDead;
 
-
+	/** */
 
 
 	typedef std::auto_ptr< CImage > PTImage;
