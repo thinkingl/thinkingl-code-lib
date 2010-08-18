@@ -70,6 +70,9 @@ BEGIN_MESSAGE_MAP(CSZMapDlg, CDialogEx)
 	ON_NOTIFY(TRBN_THUMBPOSCHANGING, IDC_SLIDER_Z_LEVLE, &CSZMapDlg::OnTRBNThumbPosChangingSliderZLevle)
 	ON_NOTIFY(NM_RELEASEDCAPTURE, IDC_SLIDER_Z_LEVLE, &CSZMapDlg::OnNMReleasedcaptureSliderZLevle)
 	ON_BN_CLICKED(IDC_BUTTON_BACK_SHANGHAI, &CSZMapDlg::OnBnClickedButtonBackShanghai)
+	ON_NOTIFY(NM_THEMECHANGED, IDC_SLIDER_Z_LEVLE, &CSZMapDlg::OnNMThemeChangedSliderZLevle)
+	ON_WM_MOUSEWHEEL()
+	ON_WM_VSCROLL()
 END_MESSAGE_MAP()
 
 
@@ -273,4 +276,33 @@ void CSZMapDlg::OnBnClickedButtonBackShanghai()
 	shanghai.SetLatitude( 31.233353 );
 	shanghai.SetLongitude( 121.502609 );
 	this->m_mapCtrl.Move2Center( shanghai );
+}
+
+
+void CSZMapDlg::OnNMThemeChangedSliderZLevle(NMHDR *pNMHDR, LRESULT *pResult)
+{
+	// 该功能要求使用 Windows XP 或更高版本。
+	// 符号 _WIN32_WINNT 必须 >= 0x0501。
+	// TODO: 在此添加控件通知处理程序代码
+	*pResult = 0;
+}
+
+
+BOOL CSZMapDlg::OnMouseWheel(UINT nFlags, short zDelta, CPoint pt)
+{
+	// TODO: 在此添加消息处理程序代码和/或调用默认值
+
+	return CDialogEx::OnMouseWheel(nFlags, zDelta, pt);
+}
+
+
+void CSZMapDlg::OnVScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar)
+{
+	// TODO: 在此添加消息处理程序代码和/或调用默认值
+
+	CDialogEx::OnVScroll(nSBCode, nPos, pScrollBar);
+
+	int nZLevel = this->m_sliderMapZlevel.GetPos();
+
+	this->m_mapCtrl.SetZLevel( nZLevel );
 }
