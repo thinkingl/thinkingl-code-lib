@@ -2,6 +2,7 @@
 
 #include <map>
 #include "Coord.h"
+#include "ImageFactory.h"
 // CMapCtrl
 
 enum
@@ -11,23 +12,12 @@ enum
 	MIN_MAP_ZLEVEL = -2,
 };
 
-
-/** 当前显示的图片和位置表。 */
-class CImageIndex : public CPoint
+enum EMapMessage
 {
-public:
-	bool operator<( const CImageIndex& another ) const
-	{
-		if( this->x == another.x )
-		{
-			return this->y  < another.y;
-		}
-		else
-		{
-			return this->x < another.x;
-		}
-	}
+	WM_MAP_ON_LOAD_IMAGE = WM_USER + 1000, // 图片载入通知。
 };
+
+
 
 class CMapCtrl : public CWnd
 {
@@ -43,6 +33,25 @@ public:
 
 	/** 中心定位。 */
 	void Move2Center( const CCoord& centerCoord );
+
+public:
+	class CMapCtrlImageCallback : public IImageCallback
+	{
+	public:
+		virtual void operator()()
+		{
+			if( this->m_hMapWnd )
+			{
+				// 发送消息通知地图控件，刷新某区域。
+				::SendMessage( this->m_hMapWnd, WM_MAP_ON_LOAD_IMAGE, WPARAM( this ), 0 ); 
+			}
+
+			// 自尽
+			delete this;
+		}
+	public: 
+		 HWND m_hMapWnd;
+	};
 	
 private:
 	/** 刷新图片。 */
@@ -67,6 +76,8 @@ private:
 //	CCoord m_mapCoord;
 
 private:
+	/** 图片工厂，提供图片。 */
+	CImageFactory m_imageFactory;
 
 	/** 鼠标上次位置。 */
 	CPoint m_lastMousePos;

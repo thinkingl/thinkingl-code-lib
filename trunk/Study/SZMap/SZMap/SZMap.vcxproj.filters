@@ -48,6 +48,9 @@
     <ClInclude Include="MapCtrl.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="ImageFactory.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="SZMap.cpp">
@@ -63,6 +66,9 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="MapCtrl.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="ImageFactory.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
