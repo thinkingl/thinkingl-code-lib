@@ -1,6 +1,5 @@
 #include "WinInetHttpFecher.h"
 #include "log.h"
-#include "IConfig.h"
 #include "Common.h"
 
 CWinInetHttpFecher::CWinInetHttpFecher(void)
@@ -203,12 +202,12 @@ BOOL CWinInetHttpFecher::DownloadFile( LPCTSTR strLocFilePath )
     return bResult;
 }
 
-BOOL CWinInetHttpFecher::TestNetwork()
+BOOL CWinInetHttpFecher::TestNetwork( LPCTSTR strUrl )
 {
  //   ASSERT( FALSE );
-    tstring strRootUrl = IConfig::Instance()->GetRootUrl();
+ //   tstring strRootUrl = IConfig::Instance()->GetRootUrl();
 
-    BOOL bResult = this->OpenUrl( strRootUrl.c_str() );
+    BOOL bResult = this->OpenUrl( strUrl );
 
     return bResult;
 }
