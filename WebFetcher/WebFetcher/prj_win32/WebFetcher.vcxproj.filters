@@ -1,0 +1,186 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="源文件">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="头文件">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="资源文件">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav</Extensions>
+    </Filter>
+    <Filter Include="interface">
+      <UniqueIdentifier>{d8e254b9-e513-4b93-b5b3-9b7bc19dfff3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="class factory">
+      <UniqueIdentifier>{f1c295c3-649f-4cdf-b9f8-91b4e214d881}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="win32 impl">
+      <UniqueIdentifier>{200301dc-ae2c-42ac-92dc-667b7ca48e3d}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\src\Common.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\HtmlPageParser.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\IniConfig.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Log.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\LogManager.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\MimeType.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\PageFecher.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\ScopeLock.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\SqliteDatabase.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\UrlParser.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="WebFetcherLog.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\WebpageManager.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Win32Mutex.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Win32PageFetchThread.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\IConfig.cpp">
+      <Filter>interface</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\IDatabase.cpp">
+      <Filter>interface</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\IWebpageManager.cpp">
+      <Filter>interface</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\ClassFactory.cpp">
+      <Filter>class factory</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Win32Application.cpp">
+      <Filter>win32 impl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Win32Thread.cpp">
+      <Filter>win32 impl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\WinInetHttpFecher.cpp">
+      <Filter>win32 impl</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\include\Common.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\HtmlPageParser.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\IniConfig.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\IPageFecher.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Log.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\LogManager.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\MimeType.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\PageFecher.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\portabledefine.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\ScopeLock.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\SqliteDatabase.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\UrlParser.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="WebFetcherLog.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\WebpageManager.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Win32Mutex.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Win32PageFetchThread.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\IApplication.h">
+      <Filter>interface</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\IConfig.h">
+      <Filter>interface</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\IDatabase.h">
+      <Filter>interface</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\IHtmlPageParser.h">
+      <Filter>interface</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\IHttpDownloader.h">
+      <Filter>interface</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\IMutex.h">
+      <Filter>interface</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\INoCopy.h">
+      <Filter>interface</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\IThread.h">
+      <Filter>interface</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\IWebpageManager.h">
+      <Filter>interface</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\ClassFactory.h">
+      <Filter>class factory</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Win32Application.h">
+      <Filter>win32 impl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Win32Thread.h">
+      <Filter>win32 impl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\WinInetHttpFecher.h">
+      <Filter>win32 impl</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\Debug\WEBFETCH.INI" />
+  </ItemGroup>
+</Project>

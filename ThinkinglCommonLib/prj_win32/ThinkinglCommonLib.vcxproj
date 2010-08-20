@@ -11,23 +11,22 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{0474C6F8-6FE6-4826-A5AF-0D62C7079F91}</ProjectGuid>
-    <RootNamespace>SZMap</RootNamespace>
-    <Keyword>MFCProj</Keyword>
+    <ProjectGuid>{3C80BBD3-ADCE-4154-BC63-01DA7CFA8ECE}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>ThinkinglCommonLib</RootNamespace>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <CharacterSet>Unicode</CharacterSet>
     <UseOfMfc>Dynamic</UseOfMfc>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
-    <UseOfMfc>Dynamic</UseOfMfc>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -40,43 +39,33 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(WindowsSdkDir)include;$(IncludePath)</IncludePath>
+    <IncludePath>$(WindowsSdkDir)include;..\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(WindowsSdkDir)include;$(IncludePath)</IncludePath>
+    <IncludePath>$(WindowsSdkDir)include;..\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
-      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>_USE_MATH_DEFINES;WIN32;_WINDOWS;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
-    <Midl>
-      <MkTypLibCompatible>false</MkTypLibCompatible>
-      <ValidateAllParameters>true</ValidateAllParameters>
-      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-    </Midl>
-    <ResourceCompile>
-      <Culture>0x0804</Culture>
-      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-    </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
-      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>_USE_MATH_DEFINES;WIN32;_WINDOWS;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -84,52 +73,48 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
-    <Midl>
-      <MkTypLibCompatible>false</MkTypLibCompatible>
-      <ValidateAllParameters>true</ValidateAllParameters>
-      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-    </Midl>
-    <ResourceCompile>
-      <Culture>0x0804</Culture>
-      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-    </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
     <None Include="ReadMe.txt" />
-    <None Include="res\SZMap.ico" />
-    <None Include="res\SZMap.rc2" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Coord.h" />
-    <ClInclude Include="ImageFactory.h" />
-    <ClInclude Include="MapCtrl.h" />
-    <ClInclude Include="Resource.h" />
-    <ClInclude Include="stdafx.h" />
-    <ClInclude Include="SZMap.h" />
-    <ClInclude Include="SZMapDlg.h" />
-    <ClInclude Include="targetver.h" />
+    <ClInclude Include="..\include\ClassFactory.h" />
+    <ClInclude Include="..\include\Common.h" />
+    <ClInclude Include="..\include\IHttpDownloader.h" />
+    <ClInclude Include="..\include\IMutex.h" />
+    <ClInclude Include="..\include\IniConfig.h" />
+    <ClInclude Include="..\include\INoCopy.h" />
+    <ClInclude Include="..\include\IThread.h" />
+    <ClInclude Include="..\include\Log.h" />
+    <ClInclude Include="..\include\LogManager.h" />
+    <ClInclude Include="..\include\MimeType.h" />
+    <ClInclude Include="..\include\portabledefine.h" />
+    <ClInclude Include="..\include\ScopeLock.h" />
+    <ClInclude Include="..\include\Win32Mutex.h" />
+    <ClInclude Include="..\include\Win32Thread.h" />
+    <ClInclude Include="..\include\WinInetHttpFecher.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Coord.cpp" />
-    <ClCompile Include="ImageFactory.cpp" />
-    <ClCompile Include="MapCtrl.cpp" />
-    <ClCompile Include="stdafx.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="SZMap.cpp" />
-    <ClCompile Include="SZMapDlg.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ResourceCompile Include="SZMap.rc" />
+    <ClCompile Include="..\src\ClassFactory.cpp" />
+    <ClCompile Include="..\src\Common.cpp" />
+    <ClCompile Include="..\src\IConfig.cpp" />
+    <ClCompile Include="..\src\IDatabase.cpp" />
+    <ClCompile Include="..\src\IHttpFecher.cpp" />
+    <ClCompile Include="..\src\IniConfig.cpp" />
+    <ClCompile Include="..\src\IUrlTable.cpp" />
+    <ClCompile Include="..\src\IWebpageManager.cpp" />
+    <ClCompile Include="..\src\Log.cpp" />
+    <ClCompile Include="..\src\LogManager.cpp" />
+    <ClCompile Include="..\src\MimeType.cpp" />
+    <ClCompile Include="..\src\ScopeLock.cpp" />
+    <ClCompile Include="..\src\SqliteDatabase.cpp" />
+    <ClCompile Include="..\src\Win32Application.cpp" />
+    <ClCompile Include="..\src\Win32Mutex.cpp" />
+    <ClCompile Include="..\src\Win32PageFetchThread.cpp" />
+    <ClCompile Include="..\src\Win32Thread.cpp" />
+    <ClCompile Include="..\src\WinInetHttpFecher.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
-  <ProjectExtensions>
-    <VisualStudio>
-      <UserProperties RESOURCE_FILE="SZMap.rc" />
-    </VisualStudio>
-  </ProjectExtensions>
 </Project>

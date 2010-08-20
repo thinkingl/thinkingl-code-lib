@@ -3,6 +3,10 @@ Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SZMap", "SZMap\SZMap.vcxproj", "{0474C6F8-6FE6-4826-A5AF-0D62C7079F91}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ThinkinglCommonLib", "..\..\ThinkinglCommonLib\prj_win32\ThinkinglCommonLib.vcxproj", "{3C80BBD3-ADCE-4154-BC63-01DA7CFA8ECE}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "WebFetcher", "..\..\WebFetcher\WebFetcher\prj_win32\WebFetcher.vcxproj", "{919D9F28-823D-422C-9C0B-AF1AC32F6528}"
+EndProject
 Global
 	GlobalSection(SubversionScc) = preSolution
 		Svn-Managed = True
@@ -17,6 +21,14 @@ Global
 		{0474C6F8-6FE6-4826-A5AF-0D62C7079F91}.Debug|Win32.Build.0 = Debug|Win32
 		{0474C6F8-6FE6-4826-A5AF-0D62C7079F91}.Release|Win32.ActiveCfg = Release|Win32
 		{0474C6F8-6FE6-4826-A5AF-0D62C7079F91}.Release|Win32.Build.0 = Release|Win32
+		{3C80BBD3-ADCE-4154-BC63-01DA7CFA8ECE}.Debug|Win32.ActiveCfg = Debug|Win32
+		{3C80BBD3-ADCE-4154-BC63-01DA7CFA8ECE}.Debug|Win32.Build.0 = Debug|Win32
+		{3C80BBD3-ADCE-4154-BC63-01DA7CFA8ECE}.Release|Win32.ActiveCfg = Release|Win32
+		{3C80BBD3-ADCE-4154-BC63-01DA7CFA8ECE}.Release|Win32.Build.0 = Release|Win32
+		{919D9F28-823D-422C-9C0B-AF1AC32F6528}.Debug|Win32.ActiveCfg = Debug|Win32
+		{919D9F28-823D-422C-9C0B-AF1AC32F6528}.Debug|Win32.Build.0 = Debug|Win32
+		{919D9F28-823D-422C-9C0B-AF1AC32F6528}.Release|Win32.ActiveCfg = Release|Win32
+		{919D9F28-823D-422C-9C0B-AF1AC32F6528}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

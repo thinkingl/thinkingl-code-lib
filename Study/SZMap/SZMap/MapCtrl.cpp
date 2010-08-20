@@ -17,10 +17,12 @@ CMapCtrl::CMapCtrl()
 	this->m_imageIndexRect = CRect( x, y, x, y );
 
 	this->m_nZLevel = 6;
+
 }
 
 CMapCtrl::~CMapCtrl()
 {
+
 }
 
 
@@ -87,7 +89,6 @@ void CMapCtrl::OnPaint()
 void CMapCtrl::PreSubclassWindow()
 {
 	// TODO: 在此添加专用代码和/或调用基类
-
 
 	CWnd::PreSubclassWindow();
 }
