@@ -1,7 +1,7 @@
 #include "Win32Thread.h"
 #include "Log.h"
 #include "scopelock.h"
-#include "IConfig.h"
+
 
 
 CWin32Thread::CWin32Thread(void)
