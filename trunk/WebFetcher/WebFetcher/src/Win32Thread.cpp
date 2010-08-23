@@ -21,7 +21,7 @@ CWin32Thread::~CWin32Thread(void)
 	}
 }
 
-BOOL CWin32Thread::Start()
+BOOL CWin32Thread::Start( LPCTSTR lpstrLogFolder /*= NULL*/ )
 {
 	SCOPE_LOCK( m_threadSafeLock );
 
@@ -31,6 +31,13 @@ BOOL CWin32Thread::Start()
 		ASSERT( FALSE );
 		return TRUE;
 	}
+
+	// 保存日志路径。
+	if( lpstrLogFolder )
+	{
+		this->m_strLogFolder = lpstrLogFolder;
+	}
+
 	this->m_bRun = TRUE;
 	DWORD dwThreadId;
 	this->m_hThread = ::CreateThread( NULL, NULL, CWin32Thread::FunThreadS, this, NULL, &dwThreadId );
@@ -89,7 +96,8 @@ DWORD CWin32Thread::FunThreadS( void * param )
 int CWin32Thread::FunThread()
 {
 	// 初始化日志。
-	tstring strDir = IConfig::Instance()->GetRootFolder();
+	tstring strDir = this->m_strLogFolder;
+
 	strDir += _T( "log\\" );
 	uint32 uThreadId = ::GetCurrentThreadId();
 	tstringstream ssThreadId;
@@ -150,5 +158,11 @@ BOOL CWin32Thread::GetStopFlag()
 	return !m_bRun;
 }
 
+tstring CWin32Thread::GetLogFolder() const
+{
+	SCOPE_LOCK( m_threadSafeLock );
+
+	return this->m_strLogFolder;
+}
 
 
