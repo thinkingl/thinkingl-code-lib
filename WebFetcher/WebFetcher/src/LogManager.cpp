@@ -4,11 +4,11 @@
 
 CLogManager *CLogManager::s_instance = NULL;
 
-static IMutex *s_mutexSingleton = CClassFactory::CreateMutex();
+static IMutex *s_mutexSingleton = CThinkinglClassFactory::CreateMutex();
 
 CLogManager::CLogManager(void)
 {
-	m_pThreadSafeLock = CClassFactory::CreateMutex();
+	m_pThreadSafeLock = CThinkinglClassFactory::CreateMutex();
 }
 
 CLogManager::~CLogManager(void)
