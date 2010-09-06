@@ -16,7 +16,7 @@ CLog& Log( ELogLevel eLogLev )
 
 CLog::CLog(void)
 {
-    this->m_pThreadSafeLock = CClassFactory::CreateMutex();
+    this->m_pThreadSafeLock = CThinkinglClassFactory::CreateMutex();
 
 	this->m_bConsoleLogout = TRUE;
 	this->m_eLogLev = LogLevHigh;

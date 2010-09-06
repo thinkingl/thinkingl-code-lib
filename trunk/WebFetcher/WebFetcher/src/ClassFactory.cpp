@@ -1,23 +1,27 @@
 #include "ClassFactory.h"
 #include "WinInetHttpFecher.h"
+#include "Win32Mutex.h"
+
+#if 0
 #include "Win32Application.h"
 #include "HtmlPageParser.h"
 #include "Win32PageFetchThread.h"
 #include "PageFecher.h"
-#include "Win32Mutex.h"
 #include "SqliteDatabase.h"
 #include "IConfig.h"
-//CClassFactory::CClassFactory(void)
+
+#endif
+//CThinkinglClassFactory::CThinkinglClassFactory(void)
 //{
 //}
 //
-//CClassFactory::~CClassFactory(void)
+//CThinkinglClassFactory::~CThinkinglClassFactory(void)
 //{
 //}
 
 
-
-IHttpDownloader *CClassFactory::CreateHttpDownloader()
+#if 0
+IHttpDownloader *CThinkinglClassFactory::CreateHttpDownloader()
 {
 	IHttpDownloader * pDownloader = new CWinInetHttpFecher();
     BOOL bUseProxy = IConfig::Instance()->IsUseProxy();
@@ -31,32 +35,35 @@ IHttpDownloader *CClassFactory::CreateHttpDownloader()
     return pDownloader;
 }
 
-IApplication *CClassFactory::CreateApp()
+IApplication *CThinkinglClassFactory::CreateApp()
 {
 	return new CWin32Application();
 }
 
-IHtmlPageParser *CClassFactory::CreateHtmlPageParser()
+IHtmlPageParser *CThinkinglClassFactory::CreateHtmlPageParser()
 {
 	return new CHtmlPageParser();
 }
 
-IThread *CClassFactory::CreatePageFetchThread()
+IThread *CThinkinglClassFactory::CreatePageFetchThread()
 {
 	return new CWin32PageFetchThread();
 }
 
-IPageFecher *CClassFactory::CreatePageFetcher()
+IPageFecher *CThinkinglClassFactory::CreatePageFetcher()
 {
 	return new CPageFecher();
 }
 
-IMutex *CClassFactory::CreateMutex()
-{
-	return new CWin32Mutex();
-}
 
-IDatabase *CClassFactory::CreateDatabase()
+IDatabase *CThinkinglClassFactory::CreateDatabase()
 {
 	return new CSqliteDatabase();
+}
+
+#endif
+
+IMutex *CThinkinglClassFactory::CreateMutex()
+{
+	return new CWin32Mutex();
 }
