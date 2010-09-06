@@ -1,31 +1,39 @@
 #pragma once
 
 #include "IHttpDownloader.h"
+#include "IThread.h"
+#include "IMutex.h"
+
+
+#if 0
 #include "IApplication.h"
 #include "IHtmlPageParser.h"
-#include "IThread.h"
 #include "IPageFecher.h"
-#include "IMutex.h"
 #include "IWebpageManager.h"
 #include "IDatabase.h"
+#endif
 
-class CClassFactory
+class CThinkinglClassFactory
 {
 public:
-	CClassFactory(void);
-	virtual ~CClassFactory(void);
+	CThinkinglClassFactory(void);
+	virtual ~CThinkinglClassFactory(void);
 
 	static IHttpDownloader *CreateHttpDownloader();
 	
+
+
+	static IThread *CreatePageFetchThread();
+	static IMutex *CreateMutex();
+
+	
+
+#if 0 
 	static IApplication *CreateApp();
 
 	static IHtmlPageParser *CreateHtmlPageParser();
-
-	static IThread *CreatePageFetchThread();
-
 	static IPageFecher *CreatePageFetcher();
-
-	static IMutex *CreateMutex();
-
+	
 	static IDatabase *CreateDatabase();
+#endif
 };
