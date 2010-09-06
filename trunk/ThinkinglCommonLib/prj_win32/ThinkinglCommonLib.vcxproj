@@ -82,7 +82,6 @@
     <ClInclude Include="..\include\Common.h" />
     <ClInclude Include="..\include\IHttpDownloader.h" />
     <ClInclude Include="..\include\IMutex.h" />
-    <ClInclude Include="..\include\IniConfig.h" />
     <ClInclude Include="..\include\INoCopy.h" />
     <ClInclude Include="..\include\IThread.h" />
     <ClInclude Include="..\include\Log.h" />
@@ -97,20 +96,11 @@
   <ItemGroup>
     <ClCompile Include="..\src\ClassFactory.cpp" />
     <ClCompile Include="..\src\Common.cpp" />
-    <ClCompile Include="..\src\IConfig.cpp" />
-    <ClCompile Include="..\src\IDatabase.cpp" />
-    <ClCompile Include="..\src\IHttpFecher.cpp" />
-    <ClCompile Include="..\src\IniConfig.cpp" />
-    <ClCompile Include="..\src\IUrlTable.cpp" />
-    <ClCompile Include="..\src\IWebpageManager.cpp" />
     <ClCompile Include="..\src\Log.cpp" />
     <ClCompile Include="..\src\LogManager.cpp" />
     <ClCompile Include="..\src\MimeType.cpp" />
     <ClCompile Include="..\src\ScopeLock.cpp" />
-    <ClCompile Include="..\src\SqliteDatabase.cpp" />
-    <ClCompile Include="..\src\Win32Application.cpp" />
     <ClCompile Include="..\src\Win32Mutex.cpp" />
-    <ClCompile Include="..\src\Win32PageFetchThread.cpp" />
     <ClCompile Include="..\src\Win32Thread.cpp" />
     <ClCompile Include="..\src\WinInetHttpFecher.cpp" />
   </ItemGroup>

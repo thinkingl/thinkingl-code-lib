@@ -24,9 +24,6 @@
     <ClInclude Include="..\include\IMutex.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\IniConfig.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="..\include\INoCopy.h">
       <Filter>头文件</Filter>
     </ClInclude>
@@ -68,16 +65,7 @@
     <ClCompile Include="..\src\ScopeLock.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\SqliteDatabase.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\Win32Application.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\Win32Mutex.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\Win32PageFetchThread.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="..\src\Win32Thread.cpp">
@@ -90,24 +78,6 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="..\src\Common.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\IConfig.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\IDatabase.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\IHttpFecher.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\IniConfig.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\IUrlTable.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\IWebpageManager.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="..\src\Log.cpp">
