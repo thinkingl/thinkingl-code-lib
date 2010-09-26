@@ -6,6 +6,7 @@
 #include "SZMap.h"
 #include "SZMapDlg.h"
 #include "afxdialogex.h"
+#include "DialogConfig.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -73,6 +74,7 @@ BEGIN_MESSAGE_MAP(CSZMapDlg, CDialogEx)
 	ON_NOTIFY(NM_THEMECHANGED, IDC_SLIDER_Z_LEVLE, &CSZMapDlg::OnNMThemeChangedSliderZLevle)
 	ON_WM_MOUSEWHEEL()
 	ON_WM_VSCROLL()
+	ON_BN_CLICKED(IDC_BUTTON_CONFIG, &CSZMapDlg::OnBnClickedButtonConfig)
 END_MESSAGE_MAP()
 
 
@@ -305,4 +307,12 @@ void CSZMapDlg::OnVScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar)
 	int nZLevel = this->m_sliderMapZlevel.GetPos();
 
 	this->m_mapCtrl.SetZLevel( nZLevel );
+}
+
+
+void CSZMapDlg::OnBnClickedButtonConfig()
+{
+	// TODO: 在此添加控件通知处理程序代码
+	CDialogConfig dlg;
+	dlg.DoModal();
 }
