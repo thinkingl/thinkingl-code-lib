@@ -1,0 +1,21 @@
+#pragma once
+
+
+// CDialogConfig 对话框
+
+class CDialogConfig : public CDialogEx
+{
+	DECLARE_DYNAMIC(CDialogConfig)
+
+public:
+	CDialogConfig(CWnd* pParent = NULL);   // 标准构造函数
+	virtual ~CDialogConfig();
+
+// 对话框数据
+	enum { IDD = IDD_DIALOG_CONFIG };
+
+protected:
+	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV 支持
+
+	DECLARE_MESSAGE_MAP()
+};

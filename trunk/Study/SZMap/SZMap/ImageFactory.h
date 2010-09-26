@@ -72,7 +72,6 @@ public:
 private:
 
 	/** 图片下载/加载线程。 */
-//	::CreateThread(
 	DWORD WINAPI ImageLoadThread( void * param );
 
 private:
