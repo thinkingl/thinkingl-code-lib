@@ -74,9 +74,6 @@
     <ClCompile Include="..\src\WinInetHttpFecher.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\ClassFactory.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\Common.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
@@ -87,6 +84,9 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="..\src\MimeType.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\ClassFactory.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
