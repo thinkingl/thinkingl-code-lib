@@ -51,6 +51,8 @@ END_MESSAGE_MAP()
 
 CSZMapDlg::CSZMapDlg(CWnd* pParent /*=NULL*/)
 	: CDialogEx(CSZMapDlg::IDD, pParent)
+	, m_dbGoLatitude( 31.171912 )
+	, m_dbGoLongitude( 121.394865 )
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 }
@@ -60,6 +62,8 @@ void CSZMapDlg::DoDataExchange(CDataExchange* pDX)
 	CDialogEx::DoDataExchange(pDX);
 
 	DDX_Control(pDX, IDC_SLIDER_Z_LEVLE, m_sliderMapZlevel);
+	DDX_Text(pDX, IDC_EDIT_LONGITUDE, m_dbGoLongitude );
+	DDX_Text(pDX, IDC_EDIT_LATITUDE, m_dbGoLatitude);
 }
 
 BEGIN_MESSAGE_MAP(CSZMapDlg, CDialogEx)
@@ -75,6 +79,8 @@ BEGIN_MESSAGE_MAP(CSZMapDlg, CDialogEx)
 	ON_WM_MOUSEWHEEL()
 	ON_WM_VSCROLL()
 	ON_BN_CLICKED(IDC_BUTTON_CONFIG, &CSZMapDlg::OnBnClickedButtonConfig)
+	ON_BN_CLICKED(IDC_BUTTON_GO_TO_KEDA, &CSZMapDlg::OnBnClickedButtonGoToKeda)
+	ON_BN_CLICKED(IDC_BUTTON_GO, &CSZMapDlg::OnBnClickedButtonGo)
 END_MESSAGE_MAP()
 
 
@@ -315,4 +321,33 @@ void CSZMapDlg::OnBnClickedButtonConfig()
 	// TODO: 在此添加控件通知处理程序代码
 	CDialogConfig dlg;
 	dlg.DoModal();
+}
+
+
+void CSZMapDlg::OnBnClickedButtonGoToKeda()
+{
+	// TODO: 在此添加控件通知处理程序代码
+	CCoord kedacom;
+	kedacom.SetZLevel( -2 );
+	kedacom.SetLatitude( 31.171912 );
+	kedacom.SetLongitude( 121.394865 );
+	this->m_mapCtrl.Move2Center( kedacom );
+	this->m_sliderMapZlevel.SetPos( kedacom.GetZLevel() );
+	this->m_sliderMapZlevel.SetFocus();
+}
+
+
+void CSZMapDlg::OnBnClickedButtonGo()
+{
+	// TODO: 在此添加控件通知处理程序代码
+	this->UpdateData();
+
+	int nCurLv = this->m_mapCtrl.GetZLevel();
+	CCoord goPos;
+	goPos.SetZLevel( nCurLv );
+	goPos.SetLatitude( this->m_dbGoLatitude );
+	goPos.SetLongitude( this->m_dbGoLongitude );
+	this->m_mapCtrl.Move2Center( goPos );
+
+	this->m_sliderMapZlevel.SetFocus();
 }

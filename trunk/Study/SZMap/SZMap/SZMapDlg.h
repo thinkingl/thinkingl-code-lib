@@ -49,4 +49,8 @@ public:
 	afx_msg BOOL OnMouseWheel(UINT nFlags, short zDelta, CPoint pt);
 	afx_msg void OnVScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar);
 	afx_msg void OnBnClickedButtonConfig();
+	afx_msg void OnBnClickedButtonGoToKeda();
+	double m_dbGoLatitude;
+	double m_dbGoLongitude;
+	afx_msg void OnBnClickedButtonGo();
 };
