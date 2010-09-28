@@ -304,8 +304,27 @@ BOOL CMapCtrl::LoadMapImage( const CImageIndex& imgIndex )
 
 CString CMapCtrl::ImageIndex2ImagePath( int zLevel, const CImageIndex& imgIndex ) const
 {
+	CString strDefImgDir;
+	::GetModuleFileName( NULL, strDefImgDir.GetBuffer( MAX_PATH ), MAX_PATH );
+	strDefImgDir.ReleaseBuffer();
+	int nPos = strDefImgDir.ReverseFind( '\\' );
+	if ( nPos != -1 )
+	{
+		strDefImgDir = strDefImgDir.Left( nPos );
+	}
+
+	CString strImgDir;
+	LPTSTR buffer = strImgDir.GetBuffer( MAX_PATH );
+	GetPrivateProfileString( _T( "szmapcfg" ), _T( "mapdir" ), strDefImgDir, buffer, MAX_PATH, _T( "szmap.ini" ) );
+	strImgDir.ReleaseBuffer();
+
+	if ( strImgDir.Right( 1 ) != _T( "\\" ) )
+	{
+		strImgDir += _T( "\\" );
+	}
+
 	CString strPath;
-	strPath.Format( _T( "J:\\GMapCatcher\\.googlemaps\\tiles\\%d\\%d\\%d\\%d\\%d.png" ), zLevel, ( imgIndex.x >> 10 ) % 1024, ( imgIndex.x % 1024 ), 
+	strPath.Format( _T( "%s.googlemaps\\tiles\\%d\\%d\\%d\\%d\\%d.png" ), strImgDir, zLevel, ( imgIndex.x >> 10 ) % 1024, ( imgIndex.x % 1024 ), 
 		( imgIndex.y >> 10 ) % 1024, imgIndex.y % 1024 );
 
 	return strPath;
@@ -400,6 +419,11 @@ void CMapCtrl::SetZLevel( int nZLevel )
 		// 重新按照经纬度中心定位。
 		this->Move2Center( m_centerCoord );
 	}
+}
+
+int CMapCtrl::GetZLevel() const
+{
+	return this->m_nZLevel;
 }
 
 void CMapCtrl::ClearImageBuffer()

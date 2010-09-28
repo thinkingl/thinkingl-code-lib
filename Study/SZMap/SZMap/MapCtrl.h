@@ -31,6 +31,9 @@ public:
 	/** 设置缩放比例。 */
 	void SetZLevel( int nZLevel );
 
+	/** 获取缩放比例。 */
+	int GetZLevel()const;
+
 	/** 中心定位。 */
 	void Move2Center( const CCoord& centerCoord );
 
