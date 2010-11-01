@@ -5,11 +5,6 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SZMap", "SZMap\SZMap.vcxpro
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ThinkinglCommonLib", "..\..\ThinkinglCommonLib\prj_win32\ThinkinglCommonLib.vcxproj", "{3C80BBD3-ADCE-4154-BC63-01DA7CFA8ECE}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "WebFetcher", "..\..\WebFetcher\WebFetcher\prj_win32\WebFetcher.vcxproj", "{919D9F28-823D-422C-9C0B-AF1AC32F6528}"
-	ProjectSection(ProjectDependencies) = postProject
-		{9D858D33-7695-4EB4-B7D7-087D6A67ABD4} = {9D858D33-7695-4EB4-B7D7-087D6A67ABD4}
-	EndProjectSection
-EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "sqlite", "..\..\sqlite\prj_win32\sqlite.vcxproj", "{9D858D33-7695-4EB4-B7D7-087D6A67ABD4}"
 EndProject
 Global
@@ -30,10 +25,6 @@ Global
 		{3C80BBD3-ADCE-4154-BC63-01DA7CFA8ECE}.Debug|Win32.Build.0 = Debug|Win32
 		{3C80BBD3-ADCE-4154-BC63-01DA7CFA8ECE}.Release|Win32.ActiveCfg = Release|Win32
 		{3C80BBD3-ADCE-4154-BC63-01DA7CFA8ECE}.Release|Win32.Build.0 = Release|Win32
-		{919D9F28-823D-422C-9C0B-AF1AC32F6528}.Debug|Win32.ActiveCfg = Debug|Win32
-		{919D9F28-823D-422C-9C0B-AF1AC32F6528}.Debug|Win32.Build.0 = Debug|Win32
-		{919D9F28-823D-422C-9C0B-AF1AC32F6528}.Release|Win32.ActiveCfg = Release|Win32
-		{919D9F28-823D-422C-9C0B-AF1AC32F6528}.Release|Win32.Build.0 = Release|Win32
 		{9D858D33-7695-4EB4-B7D7-087D6A67ABD4}.Debug|Win32.ActiveCfg = Debug|Win32
 		{9D858D33-7695-4EB4-B7D7-087D6A67ABD4}.Debug|Win32.Build.0 = Debug|Win32
 		{9D858D33-7695-4EB4-B7D7-087D6A67ABD4}.Release|Win32.ActiveCfg = Release|Win32
