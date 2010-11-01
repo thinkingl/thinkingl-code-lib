@@ -382,8 +382,6 @@ CCoord CMapCtrl::ClientArea2Coord( const CPoint& point ) const
 	double ee = ( yy - 1 ) / ( yy + 1 );
 	double latitude = 180.0 / M_PI * asin( ee );
 
-//	latitude = lat;
-	
 	double checkAngle = ( latitude * M_PI / (180 * 2) + M_PI_4 );
 	double checktan = tan( checkAngle );
 	double latCheck = log( checktan );
@@ -493,23 +491,14 @@ void CMapCtrl::Move2Center( const CCoord& center )
 
 CPoint CMapCtrl::Coord2ImagePixel( const CCoord& center ) const
 {
-	//world_tiles = tiles_on_level(coord[2])
- //   x = world_tiles / 360.0 * (coord[1] + 180.0)
- //   tiles_pre_radian = world_tiles / (2 * math.pi)
- //   e = math.sin(coord[0] * (1/180.*math.pi))
- //   y = world_tiles/2 + 0.5*math.log((1+e)/(1-e)) * (-tiles_pre_radian)
- //   offset = int((x - int(x)) * TILES_WIDTH), \
- //            int((y - int(y)) * TILES_HEIGHT)
- //   return (int(x) % world_tiles, int(y) % world_tiles), offset
-
 	// 这个放大倍数下，整个世界一个方向上共有多少像素？
 	unsigned int nWorldPixelNum = ( 1 << ( MAX_MAP_ZLEVEL - this->m_nZLevel ) ) * IMG_SIZE;
 
 	int nX = double(nWorldPixelNum) / 360.0 * ( center.GetLongitude() + 180.0 );
 	double pixelPerRadian = nWorldPixelNum / ( 2 * M_PI );
-	double e = sin( center.GetLatitude() / 180.0 * M_PI );
+	double sintmp = sin( center.GetLatitude() / 180.0 * M_PI );
 
-	int nDistance2Equator = ( log( (1+e) / (1-e) ) ) / 2 * pixelPerRadian;
+	int nDistance2Equator = ( log( (1+sintmp) / (1-sintmp) ) ) / 2 * pixelPerRadian;
 	int nY = nWorldPixelNum / 2 - nDistance2Equator;
 
 	CPoint ptCenter( nX, nY );
