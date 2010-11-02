@@ -56,8 +56,9 @@ SAMPLE OUTPUT (file fence4.out)
 */
 
 /** 
-
-
+思路：用角度范围解决这个问题。
+寻找完全没有被挡住的边，把这个边映射出的角度范围加到已遮挡角度范围内。
+然后去掉这条边，寻找下个完全没有被挡住的边。
 
 */
 #include <stdio.h>
@@ -99,7 +100,44 @@ typedef unsigned long u32;
 #define THINKINGL 1
 #endif
 
+/** 点。 */
+class CPoint
+{
+public:
+	int x;
+	int y;
+protected:
+private:
+};
 
+/** 直线。 */
+class CLine
+{
+public:
+	/** 两点确定一条直线。 */
+	CLine( const CPoint& point1, const CPoint& point2 );
+
+	/** 两个点是否在直线的同一侧。 */
+	bool IsSameSide( const CPoint& point1, const CPoint& point2 );
+
+
+};
+
+/** 线段。 */
+class CLineSegment
+{
+public:
+	/** 两个端点确定一条线段。*/
+	CLineSegment( const CPoint& point1, const CPoint& point2 );
+
+	/** 两线段是否有交点。 */
+	bool IsCrossed( const CLineSegment& another );
+
+	/** 与直线是否有交点。 */
+	bool IsCrossed( const CLine& anotherLine );
+};
+
+typedef std::vector< CPoint > TPosVector;
 
 int main()
 {
@@ -115,6 +153,20 @@ int main()
 		return 0;
 	}
 
+	
+
+	int nFenceNum;
+	fin >> nFenceNum;
+	CPoint observer;
+	fin >> observer.x >> observer.y;
+
+	TPosVector cornerList;
+	for ( int i=0; i<nFenceNum; ++i )
+	{
+		CPoint corner;
+		fin >> corner.x >> corner.y;
+		cornerList.push_back( corner );
+	}
 
 
 	fin.close();
