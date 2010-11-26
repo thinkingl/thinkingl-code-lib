@@ -100,44 +100,234 @@ typedef unsigned long u32;
 #define THINKINGL 1
 #endif
 
+/** 取符号。 +by thinkingl@2010/11/25 */
+template<class _Type>
+int sgn( _Type num )
+{
+	if ( num > 0.00000001 )
+	{
+		return 1;
+	}
+	if ( num < -0.00000001 )
+	{
+		return -1;
+	}
+	else
+	{
+		return 0;
+	}
+}
+
 /** 点。 */
+template<class _Type>
 class CPoint
 {
 public:
-	int x;
-	int y;
+	_Type x;
+	_Type y;
+
+	bool operator < ( const CPoint<_Type>& another ) const;
+
+	double GetDistance( const CPoint<_Type>& another ) const;
 protected:
 private:
 };
 
+template<class _Type>
+bool CPoint<_Type>::operator<( const CPoint<_Type>& another ) const
+{
+	if ( y != another.y )
+	{
+		return y < another.y;
+	}
+	else 
+	{
+		return x < another.x;
+	}
+}
+
+template<class _Type>
+double CPoint<_Type>::GetDistance( const CPoint<_Type>& another )const
+{
+	double yl = another.y - y;
+	double xl = another.x - x;
+	return sqrt( yl * yl + xl * xl );
+}
+
 /** 直线。 */
+template<class _Type>
 class CLine
 {
 public:
 	/** 两点确定一条直线。 */
-	CLine( const CPoint& point1, const CPoint& point2 );
+	CLine( const CPoint<_Type>& point1, const CPoint<_Type>& point2 );
 
 	/** 两个点是否在直线的同一侧。 */
-	bool IsSameSide( const CPoint& point1, const CPoint& point2 );
+	bool IsSameSide( const CPoint<_Type>& point1, const CPoint<_Type>& point2 ) const;
 
+	/** 点在直线的哪一侧或在直线上。 */
+	int GetSide( const CPoint<_Type>& point ) const;
 
+private:
+	/** 方程系数。 ax+by+c = 0*/
+	_Type m_a;
+	_Type m_b;
+	_Type m_c;
 };
 
+template<class _Type>
+CLine<_Type>::CLine( const CPoint<_Type>& point1, const CPoint<_Type>& point2 )
+{
+	// 过两点的方程可以表示为： (y0 - y1) x -(x0 - x1) y + x0y1-x1y0 = 0
+	m_a = point1.y - point2.y;
+	m_b = -( point1.x - point2.x );
+	m_c = point1.x * point2.y - point2.x * point1.y;
+}
+
+template<class _Type>
+bool CLine<_Type>::IsSameSide( const CPoint<_Type>& point1, const CPoint<_Type>& point2 )const
+{
+	// 直线把一个平面分成2部分。
+	// 一部分 ax+by+c>0 , 另一部分 ax+by+c<0. 直线上 = 0.
+	bool bSameSide = ( this->GetSide( point1 ) == this->GetSide( point2 ) );
+	return bSameSide;
+}
+
+template<class _Type>
+int CLine<_Type>::GetSide( const CPoint<_Type>& point )const
+{
+	_Type p1 = m_a * point.x + m_b * point.y + m_c;
+	return sgn( p1 );
+}
+
 /** 线段。 */
+template<class _Type>
 class CLineSegment
 {
 public:
-	/** 两个端点确定一条线段。*/
-	CLineSegment( const CPoint& point1, const CPoint& point2 );
+	/** 两个端点确定一条线段 */
+	CLineSegment( const CPoint<_Type>& point1, const CPoint<_Type>& point2 );
+
+
+	/** 两线段是否绝对交叉，一个端点在上面的不算。 */
+	bool IsIntersectAbsolutely( const CLineSegment<_Type>& another )const;
+
+	/** 与直线是否绝对交叉，一个端点在上面的不算。 */
+	bool IsIntersectAbsolutely( const CLine<_Type>& anotherLine )const;
 
 	/** 两线段是否有交点。 */
-	bool IsCrossed( const CLineSegment& another );
+	bool IsIntersect( const CLineSegment<_Type>& another )const;
 
 	/** 与直线是否有交点。 */
-	bool IsCrossed( const CLine& anotherLine );
+	bool IsIntersect( const CLine<_Type>& anotherLine )const;
+
+	/** 求交点。 */
+	bool GetIntersection( const CLineSegment< _Type >& another, CPoint< double >& intersection ) const;
+
+private:
+	CPoint<_Type> m_p1;
+	CPoint<_Type> m_p2;
 };
 
-typedef std::vector< CPoint > TPosVector;
+template<class _Type>
+ CLineSegment<_Type>::CLineSegment( const CPoint<_Type>& point1, const CPoint<_Type>& point2 )
+ {
+ 	this->m_p1 = point1;
+ 	this->m_p2 = point2;
+ }
+
+
+template<class _Type>
+bool CLineSegment<_Type>::IsIntersect( const CLineSegment<_Type>& another )const
+{
+	// In two dimensions, two line segments AB and CD intersect if and only if A and B are on opposite sides of 
+	// the line CD and C and D are on opposite sides of line AB. 
+	CLine<_Type> lineA( m_p1, m_p2 );
+	CLine<_Type> lineB( another.m_p1, another.m_p2 );
+	if ( lineA.IsSameSide( another.m_p1, another.m_p2 ) )
+	{
+		return false;
+	}
+	if ( lineB.IsSameSide( m_p1, m_p2 ) )
+	{
+		return false;
+	}
+	return true;
+}
+
+template<class _Type>
+bool CLineSegment<_Type>::IsIntersect( const CLine<_Type>& anotherLine )const
+{
+	// 只要判断两点是否在直线的同一侧。
+	bool bSameSide = anotherLine.IsSameSide( this->m_p1, this->m_p2 );
+	return !bSameSide;
+}
+
+template<class _Type>
+bool CLineSegment<_Type>::IsIntersectAbsolutely( const CLine<_Type>& anotherLine ) const
+{
+	// 必须在直线的两侧才行。
+	bool bAbIntersect = ( anotherLine.GetSide( m_p1 ) != 0 &&
+		anotherLine.GetSide( m_p1 ) == -anotherLine.GetSide( m_p2 ) );
+	return bAbIntersect;
+}
+
+template<class _Type>
+bool CLineSegment<_Type>::IsIntersectAbsolutely( const CLineSegment<_Type>& another ) const
+{
+	CLine<_Type> lineA( m_p1, m_p2 );
+	CLine<_Type> lineB( another.m_p1, another.m_p2 );
+	
+	bool bAbIntersect = ( another.IsIntersectAbsolutely( lineA ) && this->IsIntersectAbsolutely( lineB ) );
+	
+	return bAbIntersect;
+}
+
+template< class _Type>
+bool CLineSegment<_Type>::GetIntersection( const CLineSegment< _Type >& another, CPoint< double >& intersection ) const
+{
+	if ( !IsIntersect( another ) )
+	{
+		return false;
+	}
+
+	// 求交点。
+	/*For the lines AB and CD in two dimensions, the most straight-forward way to calculate the intersection of them is to solve the system of two equations and two unknowns:
+
+	Ax + (Bx - Ax)i = Cx + (Dx - Cx) j
+	Ay + (By - Ay)i = Cy + (Dy - Cy) j
+	The point of intersection is:
+	(Ax + (Bx - Ax) i, Ay + (By - Ay) i)*/
+	double Ax = m_p1.x;
+	double Ay = m_p1.y;
+	double Bx = m_p2.x;
+	double By = m_p2.y;
+	double Cx = another.m_p1.x;
+	double Cy = another.m_p1.y;
+	double Dx = another.m_p2.x;
+	double Dy = another.m_p2.y;
+
+	double i = double( (Dy-Cy)*(Cx-Ax) + (Dx-Cx)*(Ay-Cy) )/( (Bx-Ax)*(Dy-Cy) - (By-Ay)*(Dx-Cx) );
+
+	intersection.x = Ax + i * ( Bx-Ax );
+	intersection.y = Ay + i * ( By-Ay );
+
+	return true;
+
+}
+
+typedef CPoint< double > TDBPoint;
+typedef CLineSegment< double > TDBLineSegment;
+typedef std::vector< TDBPoint > TPosVector;
+typedef std::vector< TDBLineSegment > TLineSegmentVector;
+typedef std::set< int > TIndexSet;
+
+
+void PrintFence( ofstream& fs, const TDBPoint& pt1, const TDBPoint& pt2 )
+{
+	fs << (int)pt1.x << " " << (int)pt1.y << " " << (int)pt2.x << " " << (int)pt2.y << endl;
+
+}
 
 int main()
 {
@@ -157,17 +347,190 @@ int main()
 
 	int nFenceNum;
 	fin >> nFenceNum;
-	CPoint observer;
+	TDBPoint observer;
 	fin >> observer.x >> observer.y;
 
 	TPosVector cornerList;
+	TLineSegmentVector fenceList;
+
+	typedef std::set< double > TDoubleSet;
+	TDoubleSet allObserverAngle;	// 所有的观察视角。
+
 	for ( int i=0; i<nFenceNum; ++i )
 	{
-		CPoint corner;
+		TDBPoint corner;
 		fin >> corner.x >> corner.y;
 		cornerList.push_back( corner );
+
+		if ( i > 0 )
+		{
+			fenceList.push_back( TDBLineSegment( cornerList[i-1], corner ) );
+		}
+
+		// 求这个顶点的视角。
+		double dbAng;
+		double dbtg = double( corner.y - observer.y )/( corner.x - observer.x );
+// 		if ( dbtg > 100 )
+// 		{
+// 			double dbctan = double( corner.x - observer.x ) / ( corner.y - observer.y );
+// 			dbAng = tan
+// 		}
+// 		else
+		{
+			dbAng = atan( dbtg );
+		}
+
+		// 将角度修正到0-2pi
+		#define M_PI       3.14159265358979323846
+		if ( corner.x - observer.x < 0  )
+		{
+			if ( corner.y - observer.y > 0 )
+			{
+				dbAng += M_PI;
+			}
+			else
+			{
+				dbAng -= M_PI;
+			}			
+		}
+		if ( dbAng < 0 )
+		{
+			dbAng += 2 * M_PI;
+		}
+		allObserverAngle.insert( dbAng );
+	}
+	fenceList.push_back( TDBLineSegment( cornerList[ nFenceNum -1 ], cornerList[0] ) );
+
+	// 是否有篱笆互相交叉。
+	bool bFenceValid = true;
+	for ( int i=0; i<nFenceNum; ++i )
+	{
+		for ( int k=0; k<nFenceNum; ++k )
+		{
+			if ( i!=k )
+			{
+				if ( fenceList[i].IsIntersectAbsolutely( fenceList[k] ) )
+				{
+					bFenceValid = false;
+					break;
+				}
+			}
+		}
 	}
 
+	if ( bFenceValid )
+	{
+		// 所有能看到的篱笆的index。
+		TIndexSet allFenceCanSaw;
+
+		TDoubleSet::iterator iter = allObserverAngle.begin();
+		TDoubleSet::iterator iterPre = iter;
+		++ iter;
+		bool bFinish = false;
+		while ( !bFinish )
+		{
+			// 最后一个，用第一个和最后一个端点。
+			if ( iter == allObserverAngle.end() )
+			{
+				iter = allObserverAngle.begin();
+				bFinish = true;
+			}
+
+			// 远端点的位置。因为这道题目的范围是200内。
+			const int REMOTE_LEN = 200000;
+
+			// 取锐角部分的角平分线。
+			double dbAngle = ( *iter + *iterPre );
+			dbAngle /= 2;
+			// 一个角在在第四象限
+			if ( max( *iterPre, *iter ) > 2 * M_PI * 3 / 4  )
+			{
+				// 另一个角在第一或第四象限。
+				if ( min( *iterPre, *iter ) < M_PI / 2 )
+				{
+					dbAngle -= M_PI;	// 这时要减pi才能保证得到的是锐角的角平分线。
+				}				
+			}
+
+			// 一个在第四象限，另一个在第一象限。
+
+
+			// 看在中间角度这条射线和那条边最先相交。
+			
+			TDBPoint remotePoint;
+			remotePoint.x = observer.x + REMOTE_LEN * cos( dbAngle );
+			remotePoint.y = observer.y + REMOTE_LEN * sin( dbAngle );
+
+
+			// 看这个线段同其它边的交点。找最近的，最近的这条边就是能看到的边。
+			TDBLineSegment viewLineSegment( observer, remotePoint );
+			int fenceIndexCanSaw = -1;
+			double dbMinDistance = REMOTE_LEN;
+			for ( int i=0; i<nFenceNum; ++i )
+			{
+				TDBPoint intersection;
+				if ( viewLineSegment.GetIntersection( fenceList[i], intersection ) )
+				{
+					// 求距离。
+					double distance = observer.GetDistance( intersection );
+
+					if ( distance < dbMinDistance )
+					{
+						dbMinDistance = distance;
+						fenceIndexCanSaw = i;
+					}
+				}
+			}
+
+			if ( -1 != fenceIndexCanSaw )
+			{
+				allFenceCanSaw.insert( fenceIndexCanSaw );
+			}
+			else
+			{
+				int fwe = 232;
+			}
+
+			iterPre = iter;
+			++iter;
+		}
+
+		fout << allFenceCanSaw.size() << endl;
+		bool bHaveLastFence = false;
+		bool bHave2thRevFence = false;
+		for ( TIndexSet::iterator iter = allFenceCanSaw.begin(); iter != allFenceCanSaw.end(); ++iter )
+		{
+			int fenceIndex = *iter;
+			if ( fenceIndex < nFenceNum -2 )
+			{
+				// 普通输出。
+				PrintFence( fout, cornerList[ fenceIndex ] , cornerList[ fenceIndex+1 ] );
+			}
+			else if( fenceIndex == nFenceNum -1 )
+			{
+				bHaveLastFence = true;
+			}
+			else if( fenceIndex == nFenceNum -2 )
+			{
+				bHave2thRevFence = true;
+			}
+		}
+
+		if ( bHaveLastFence )
+		{
+			PrintFence( fout, cornerList[0], cornerList[ nFenceNum-1 ] );
+		}
+		if ( bHave2thRevFence )
+		{
+			PrintFence( fout, cornerList[ nFenceNum -2 ], cornerList[ nFenceNum -1 ] );
+		}
+	}
+	else
+	{
+		fout << "NOFENCE" << endl;
+	}
+
+	
 
 	fin.close();
 	fout.close();
