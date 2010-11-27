@@ -62,6 +62,7 @@ Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "htmldocs", "htmldocs\", "{C
 		Release.AspNetCompiler.FixedNames = "false"
 		Release.AspNetCompiler.Debug = "False"
 		VWDPort = "52458"
+		StartServerOnDebug = "false"
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "AgriNet", "AgriNet\AgriNet.vcxproj", "{0AE99F70-8839-4409-973E-4CA9F06FC987}"
