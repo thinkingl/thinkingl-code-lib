@@ -45,7 +45,11 @@ AEFDBHGC
 */
 
 /** 
-思路：
+思路：pre-order 树的第一项是树的根节点。
+*	根节点把 in-order 分成两部分，分别就是左右两颗子树。
+*	根据 in-order 的两颗子树的序列，我们又可以去把 pre-order 树拆成左右两颗子树。
+*	这样递归拆下去，就可以得到原本的那棵树。
+*	然后把这棵树按照post-order 的顺序遍历一遍就行了。
 */
 #include <stdio.h>
 #include <stdlib.h>
@@ -86,6 +90,146 @@ typedef unsigned long u32;
 #define THINKINGL 1
 #endif
 
+/** 树 */
+template< class _Type >
+class CTree
+{
+public:
+	CTree();
+	~CTree();
+	_Type Value()const;
+	void Value( const _Type& v );
+	CTree<_Type> *LeftChild();
+	void LeftChild( CTree<_Type>* pc );
+	CTree<_Type> *RightChild();
+	void RightChild( CTree<_Type>* pc );
+private:
+	_Type m_nodeValue;
+	CTree *m_pLeftChild;
+	CTree *m_pRightChild;
+
+};
+
+template< class _Type >
+CTree<_Type>::CTree()
+{
+	m_nodeValue = 0;
+	m_pLeftChild = m_pRightChild = 0;
+};
+
+template< class _Type >
+CTree<_Type>::~CTree()
+{
+	if ( m_pLeftChild )
+	{
+		delete m_pLeftChild;
+		m_pLeftChild = 0;
+	}
+	if ( m_pRightChild )
+	{
+		delete m_pRightChild;
+		m_pRightChild = 0;
+	}
+};
+
+template< class _Type >
+_Type CTree<_Type>::Value()const
+{
+	return m_nodeValue;
+}
+
+template< class _Type >
+void CTree<_Type>::Value( const _Type& v )
+{
+	m_nodeValue = v;
+}
+
+template< class _Type >
+CTree<_Type> * CTree<_Type>::LeftChild()
+{
+	return m_pLeftChild;
+}
+
+template< class _Type >
+CTree<_Type> * CTree<_Type>::RightChild()
+{
+	return m_pRightChild;
+}
+
+template< class _Type >
+void CTree<_Type>::LeftChild( CTree<_Type> * pt )
+{
+	m_pLeftChild = pt;
+}
+
+template< class _Type >
+void CTree<_Type>::RightChild( CTree<_Type> * pt )
+{
+	m_pRightChild = pt;
+}
+
+typedef CTree<char> TCharTree;
+// 根据两种顺序建树。
+void ParseAndBuildTree( const string& inOrderSquence, const string& preOrderSequence, 
+	TCharTree* pTree )
+{
+	if ( inOrderSquence.empty() || preOrderSequence.empty() )
+	{
+		return;
+	}
+	if ( inOrderSquence.size() != preOrderSequence.size() || 0 == pTree )
+	{
+		return;
+	}
+
+	// pre-order 遍历的顺序是 root > left > right
+	// 所以第一个就是 root.
+	char cRoot = preOrderSequence[0];
+	pTree->Value( cRoot ); 
+
+	// root 把 left > root > right 循序的 in-order 树拆成左右两颗子树。
+	int nRootInorder = inOrderSquence.find( cRoot );
+
+	// 从根这里拆成左右两棵树，递归分析。
+	string leftInOrder = inOrderSquence.substr( 0, nRootInorder );
+	string leftPreOrder = preOrderSequence.substr( 1, nRootInorder );
+	if ( !leftInOrder.empty() )
+	{
+		pTree->LeftChild( new TCharTree() );
+		ParseAndBuildTree( leftInOrder, leftPreOrder, pTree->LeftChild() );
+	}
+	
+	// 右边子树
+	string rightInorder = inOrderSquence.substr( nRootInorder + 1 );
+	string rightPreOrder = preOrderSequence.substr( nRootInorder + 1 );
+	if ( !rightInorder.empty() )
+	{
+		pTree->RightChild( new TCharTree() );
+		ParseAndBuildTree( rightInorder, rightPreOrder, pTree->RightChild() );
+	}
+
+}
+
+// post-order 遍历树。 left > right > root
+void PostOrderTravelTree( string& travalSequence, TCharTree * pTree )
+{
+	// The post-order traversal of this tree print the left sub-tree, the right sub-tree, and the root.
+	TCharTree *pLeftChild = pTree->LeftChild();
+	if ( pLeftChild )
+	{
+		PostOrderTravelTree( travalSequence, pLeftChild );
+	}
+
+	TCharTree *pRightChild = pTree->RightChild();
+	if ( pRightChild )
+	{
+		PostOrderTravelTree( travalSequence, pRightChild );
+	}
+
+	// root.
+	travalSequence.push_back( pTree->Value() );
+}
+
 int main()
 {
 	string strProblemName = "heritage";
@@ -100,7 +244,20 @@ int main()
 		return 0;
 	}
 
+	string inOrderSequence, preOrderSequence;
+
+	fin >> inOrderSequence;
+	fin >> preOrderSequence;
+
 	
+
+	TCharTree cowTree;
+	ParseAndBuildTree( inOrderSequence, preOrderSequence, &cowTree );
+
+	string postOrderSequence;
+	PostOrderTravelTree( postOrderSequence, &cowTree );
+
+	fout << postOrderSequence << endl;
 
 	fin.close();
 	fout.close();
