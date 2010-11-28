@@ -32,10 +32,10 @@ SAMPLE OUTPUT (file fence9.out)
 */
 
 /** 
-˼·����ʼ�븴���ˣ���ÿ������㿴��һ�������ӣ�����ò�����ȷ�����
-*	ԭ����Ŀ���������ǵ㣬���Ǹ��ӡ���Щţ����ĺ��ݺ��ݣ�very very thin��
-*	û����д�����ǻ��������ӵķ�������Ϊ�����㡣�����ĺܼ��ѣ��ܳ�����
-*	������������������
+思路：开始想复杂了，把每个坐标点看成一个个格子，结果得不出正确结果。
+*	原来题目中坐标点就是点，不是格子。那些牛是真的很瘦很瘦，very very thin。
+*	没有重写，还是基于数格子的方法，改为了数点。处理的很艰难，总出错。
+*	就是数，从左到右数。
 */
 #include <stdio.h>
 #include <stdlib.h>
@@ -83,16 +83,16 @@ int Integrate( int startX, int startY, int endX, int endY,
 	
 
 	int area = 0;
-	// �������Ǹ���
+	// 是正还是负。
 	int sgn = ( startX < endX ) ? 1 : -1;
-	// ˮƽÿ���㰤���㡣
+	// 水平每个点挨个算。
 	int maxI = abs( endX - startX );
 	for ( int x=startX; x != endX + sgn ; x+=sgn )
 	{
-		// y���ꡣ
+		// y坐标。
 		double y = startY + double ( x - startX ) * ( endY - startY ) / ( endX - startX );
 
-		// �����ϵĲ��㡣�����ų���ʱ��Ҫ�ų�����
+		// 在线上的不算。但在排除的时候要排除掉。
 		int picceArea = y - sgn * 0.000000001;
 		picceArea = max( 0, picceArea );
 
@@ -130,20 +130,20 @@ int main()
 	int totalCowNum = 0;
 
 	int first1,last1;
-	// �ӣ�0��0������n��m�����߶�������֡�
+	// 从（0，0）到（n，m）的线段面积积分。
 	totalCowNum += Integrate( 0, 0, n, m , first1, last1 );
 
-	// ��(n��m) �� (p,0) ���߶�������֣����n>p,��ô���Ӧ���Ǹ��ġ���
+	// 从(n，m) 到 (p,0) 的线段面积积分（如果n>p,那么面积应该是负的。）
 	int first2,last2;
 	int secondArea = Integrate( n,m, p,0, first2, last2 );
 	totalCowNum += secondArea;
 	if( secondArea >=0 )
 	{
-		// ���ڶ����߲����ų���ʱ��ת�۵���������ᱻ����һ�Ρ�
+		// 当第二根线不是排除的时候，转折点所在纵轴会被多数一次。
 		totalCowNum -= max( last1, first2 ); 
 	}
 	else
-	{	// ���ڶ���������عգ��ų���ʱ��ת�۵㣨n��m���ᱻ���ų�һ�Σ�����++��
+	{	// 当第二根线是向回拐，排除的时候，转折点（n，m）会被多排除一次，所以++。
 		totalCowNum ++;
 	}
 
