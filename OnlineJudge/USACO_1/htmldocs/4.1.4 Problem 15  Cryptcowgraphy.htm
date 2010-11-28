@@ -1,0 +1,79 @@
+
+<!-- saved from url=(0056)http://ace.delos.com/usacoprob2?a=0HQcb86ekza&S=cryptcow -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"> <title>Problem 15: Cryptcowgraphy</title> </head>
+<body background="./4.1.4 Problem 15  Cryptcowgraphy_files/bg3.jpg">
+<img src="./4.1.4 Problem 15  Cryptcowgraphy_files/cow1.jpg" width="742" height="118">
+<center>
+<b><font size="7">Cryptcowgraphy</font></b><br>
+<b>Brian Dean</b>
+</center>
+
+<p> The cows of Farmer Brown and Farmer John are planning a coordinated
+escape from their respective farms and have devised a method of encryption
+to protect their written communications.
+
+</p><p> Specifically, if one cow has a message, say, "International
+Olympiad in Informatics", it is altered by inserting the letters
+C, O, and W, in random location in the message, such that C appears
+before O, which appears before W.  Then the cows take the part of the
+message between C and O, and the part between O and W, and swap them.
+Here are two examples:
+
+</p><pre>            International Olympiad in Informatics
+                              -&gt; 
+            CnOIWternational Olympiad in Informatics
+            
+            International Olympiad in Informatics
+                              -&gt; 
+            International Cin InformaticsOOlympiad W
+</pre>
+
+<p>
+To make matters more difficult, the cows can apply their encryption
+scheme several times, by again encrypting the string that results from
+the previous encryption.  One night, Farmer John's cows receive such a
+multiply-encrypted message.  Write a program to compute whether or not
+the non-encrypted original message could have been the string:
+
+</p><pre>            Begin the Escape execution at the Break of Dawn
+</pre>
+
+<h3>PROGRAM NAME: cryptcow</h3>
+
+<h3>INPUT FORMAT</h3>
+
+A single line (with both upper and lower case) with no more than 75
+characters that represents the encrypted message.
+
+<h3>SAMPLE INPUT (file cryptcow.in) </h3>
+
+<pre>Begin the EscCution at the BreOape execWak of Dawn
+</pre>
+
+<h3>OUTPUT FORMAT</h3>
+
+Two integers on a single line.  The first integer is 1 if the message
+decodes as an escape message; 0 otherwise.  The second integer specifies
+the number of encryptions that were applied (or 0 if the first integer
+was 0).
+
+<h3>SAMPLE OUTPUT (file cryptcow.out)</h3>
+
+<pre>1 1
+</pre>
+<br>
+<hr>
+<form action="http://ace.delos.com/upload3" enctype="multipart/form-data" method="POST">
+<b>Submission file Name:</b> <input type="file" name="filename">
+<input type="submit" value="Send it in!">
+<input type="hidden" name="a" value="0HQcb86ekza">
+<input type="hidden" name="S" value="cryptcow">
+</form>
+
+<center>
+<a href="http://ace.delos.com/usacogate?a=0HQcb86ekza"> USACO Gateway </a> &nbsp;| &nbsp;
+<a href="mailto:kolstad@ace.delos.com">Comment or Question </a>
+</center>
+
+
+<div style="background-image: initial; background-attachment: initial; background-origin: initial; background-clip: initial; background-color: rgb(255, 255, 191); border-top-width: 0px; border-right-width: 0px; border-bottom-width: 0px; border-left-width: 0px; border-style: initial; border-color: initial; color: rgb(0, 0, 0); margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; font-family: arial, sans-serif; font-size: 13px; font-style: normal; font-variant: normal; font-weight: normal; height: auto; line-height: normal; text-align: left; width: auto; direction: ltr; z-index: 99995; background-position: initial initial; background-repeat: initial initial; "></div></body></html>
