@@ -107,6 +107,10 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ElectricFence", "ElectricFe
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "RaucousRockers", "RaucousRockers\RaucousRockers.vcxproj", "{89047BD4-7D4A-45A7-8C0C-7AAA15017C9C}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "4", "4", "{8D81B0D9-E9CA-4DEA-B28E-C3724D6A3424}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "BeefMcNuggets", "BeefMcNuggets\BeefMcNuggets.vcxproj", "{2AC90C5F-B17D-40B5-A0C4-5C58E8509314}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -505,6 +509,16 @@ Global
 		{89047BD4-7D4A-45A7-8C0C-7AAA15017C9C}.Release|Mixed Platforms.Build.0 = Release|Win32
 		{89047BD4-7D4A-45A7-8C0C-7AAA15017C9C}.Release|Win32.ActiveCfg = Release|Win32
 		{89047BD4-7D4A-45A7-8C0C-7AAA15017C9C}.Release|Win32.Build.0 = Release|Win32
+		{2AC90C5F-B17D-40B5-A0C4-5C58E8509314}.Debug|Any CPU.ActiveCfg = Debug|Win32
+		{2AC90C5F-B17D-40B5-A0C4-5C58E8509314}.Debug|Mixed Platforms.ActiveCfg = Debug|Win32
+		{2AC90C5F-B17D-40B5-A0C4-5C58E8509314}.Debug|Mixed Platforms.Build.0 = Debug|Win32
+		{2AC90C5F-B17D-40B5-A0C4-5C58E8509314}.Debug|Win32.ActiveCfg = Debug|Win32
+		{2AC90C5F-B17D-40B5-A0C4-5C58E8509314}.Debug|Win32.Build.0 = Debug|Win32
+		{2AC90C5F-B17D-40B5-A0C4-5C58E8509314}.Release|Any CPU.ActiveCfg = Release|Win32
+		{2AC90C5F-B17D-40B5-A0C4-5C58E8509314}.Release|Mixed Platforms.ActiveCfg = Release|Win32
+		{2AC90C5F-B17D-40B5-A0C4-5C58E8509314}.Release|Mixed Platforms.Build.0 = Release|Win32
+		{2AC90C5F-B17D-40B5-A0C4-5C58E8509314}.Release|Win32.ActiveCfg = Release|Win32
+		{2AC90C5F-B17D-40B5-A0C4-5C58E8509314}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -548,5 +562,6 @@ Global
 		{81953046-6F73-4189-86D0-68B2B52CD63D} = {5D218FEE-EF84-4FDE-8C61-9BDE54004F95}
 		{91CCBD47-1994-4460-8C67-BE6E6B9252EC} = {5D218FEE-EF84-4FDE-8C61-9BDE54004F95}
 		{CED56BB7-1C7C-4F73-8F1F-C196CAEB7D67} = {5D218FEE-EF84-4FDE-8C61-9BDE54004F95}
+		{2AC90C5F-B17D-40B5-A0C4-5C58E8509314} = {8D81B0D9-E9CA-4DEA-B28E-C3724D6A3424}
 	EndGlobalSection
 EndGlobal
