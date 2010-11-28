@@ -1,0 +1,92 @@
+
+<!-- saved from url=(0054)http://ace.delos.com/usacoprob2?a=0HQcb86ekza&S=fence8 -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"> <title>Problem 48: Fence Rails</title> </head>
+<body background="./4.1.2 Problem 48  Fence Rails_files/bg3.jpg">
+<img src="./4.1.2 Problem 48  Fence Rails_files/cow1.jpg" width="742" height="118">
+<center>
+<b><font size="7">Fence Rails</font></b><br>
+<b>Burch, Kolstad, and Schrijvers</b>
+</center>
+
+<p> Farmer John is trying to erect a fence around part of his field.
+He has decided on the shape of the fence and has even already installed
+the posts, but he's having a problem with the rails.  The local lumber
+store has dropped off boards of varying lengths; Farmer John must create
+as many of the rails he needs from the supplied boards.
+
+</p><p> Of course, Farmer John can cut the boards, so a 9 foot board can be
+cut into a 5 foot rail and a 4 foot rail (or three 3 foot rails, etc.).
+Farmer John has an `ideal saw', so ignore the `kerf' (distance lost
+during sawing); presume that perfect cuts can be made.
+
+</p><p> The lengths required for the rails might or might not include
+duplicates (e.g., a three foot rail and also another three foot rail
+might both be required).  There is no need to manufacture more rails
+(or more of any kind of rail) than called for the list of required rails.
+
+
+</p><h3>PROGRAM NAME: fence8</h3>
+
+<h3>INPUT FORMAT</h3>
+
+<table border="1">
+<tbody><tr> <td> Line 1: </td> <td> N (1 &lt;= N &lt;= 50), the number of boards
+                  </td> </tr>
+<tr> <td> Line 2..N+1: </td> <td> N lines, each  containing a single
+          integer that represents the length of one supplied board </td> </tr>
+
+<tr> <td> Line N+2: </td> <td> R (1 &lt;= R &lt;= 1023), the number of
+                   rails </td> </tr>
+<tr> <td> Line N+3..N+R+1: </td> <td> R lines, each containing a single
+	       integer (1 &lt;= r<sub>i</sub> &lt;= 128) that represents
+	       the length of a single required fence rail </td> </tr>
+</tbody></table>
+
+<h3>SAMPLE INPUT (file fence8.in) </h3>
+
+<pre>4
+30
+40
+50
+25
+10
+15
+16
+17
+18
+19
+20
+21
+25
+24
+30
+</pre>
+
+<h3>OUTPUT FORMAT</h3>
+
+A single integer on a line that is the total number of fence rails that
+can be cut from the supplied boards.  Of course, it might not be
+possible to cut all the possible rails from the given boards.
+
+<h3>SAMPLE OUTPUT (file fence8.out)</h3>
+
+<pre>7
+</pre>
+<h3> HINTS (use them carefully!)</h3>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="http://ace.delos.com/usacoprob2?a=0HQcb86ekza&S=fence8&h=1"><b>HINT 1</b></a>&nbsp;&nbsp;
+<br>
+<hr>
+<form action="http://ace.delos.com/upload3" enctype="multipart/form-data" method="POST">
+<b>Submission file Name:</b> <input type="file" name="filename">
+<input type="submit" value="Send it in!">
+<input type="hidden" name="a" value="0HQcb86ekza">
+<input type="hidden" name="S" value="fence8">
+</form>
+
+<center>
+<a href="http://ace.delos.com/usacogate?a=0HQcb86ekza"> USACO Gateway </a> &nbsp;| &nbsp;
+<a href="mailto:kolstad@ace.delos.com">Comment or Question </a>
+</center>
+
+
+<div style="background-image: initial; background-attachment: initial; background-origin: initial; background-clip: initial; background-color: rgb(255, 255, 191); border-top-width: 0px; border-right-width: 0px; border-bottom-width: 0px; border-left-width: 0px; border-style: initial; border-color: initial; color: rgb(0, 0, 0); margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; font-family: arial, sans-serif; font-size: 13px; font-style: normal; font-variant: normal; font-weight: normal; height: auto; line-height: normal; text-align: left; width: auto; direction: ltr; z-index: 99995; background-position: initial initial; background-repeat: initial initial; "></div></body></html>
