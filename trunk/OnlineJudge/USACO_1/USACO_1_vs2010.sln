@@ -111,6 +111,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "4", "4", "{8D81B0D9-E9CA-4D
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "BeefMcNuggets", "BeefMcNuggets\BeefMcNuggets.vcxproj", "{2AC90C5F-B17D-40B5-A0C4-5C58E8509314}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "FenceRails", "FenceRails\FenceRails.vcxproj", "{DF1C7D0E-7243-4A5B-9EF0-07861A9A5332}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -519,6 +521,16 @@ Global
 		{2AC90C5F-B17D-40B5-A0C4-5C58E8509314}.Release|Mixed Platforms.Build.0 = Release|Win32
 		{2AC90C5F-B17D-40B5-A0C4-5C58E8509314}.Release|Win32.ActiveCfg = Release|Win32
 		{2AC90C5F-B17D-40B5-A0C4-5C58E8509314}.Release|Win32.Build.0 = Release|Win32
+		{DF1C7D0E-7243-4A5B-9EF0-07861A9A5332}.Debug|Any CPU.ActiveCfg = Debug|Win32
+		{DF1C7D0E-7243-4A5B-9EF0-07861A9A5332}.Debug|Mixed Platforms.ActiveCfg = Debug|Win32
+		{DF1C7D0E-7243-4A5B-9EF0-07861A9A5332}.Debug|Mixed Platforms.Build.0 = Debug|Win32
+		{DF1C7D0E-7243-4A5B-9EF0-07861A9A5332}.Debug|Win32.ActiveCfg = Debug|Win32
+		{DF1C7D0E-7243-4A5B-9EF0-07861A9A5332}.Debug|Win32.Build.0 = Debug|Win32
+		{DF1C7D0E-7243-4A5B-9EF0-07861A9A5332}.Release|Any CPU.ActiveCfg = Release|Win32
+		{DF1C7D0E-7243-4A5B-9EF0-07861A9A5332}.Release|Mixed Platforms.ActiveCfg = Release|Win32
+		{DF1C7D0E-7243-4A5B-9EF0-07861A9A5332}.Release|Mixed Platforms.Build.0 = Release|Win32
+		{DF1C7D0E-7243-4A5B-9EF0-07861A9A5332}.Release|Win32.ActiveCfg = Release|Win32
+		{DF1C7D0E-7243-4A5B-9EF0-07861A9A5332}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -563,5 +575,6 @@ Global
 		{91CCBD47-1994-4460-8C67-BE6E6B9252EC} = {5D218FEE-EF84-4FDE-8C61-9BDE54004F95}
 		{CED56BB7-1C7C-4F73-8F1F-C196CAEB7D67} = {5D218FEE-EF84-4FDE-8C61-9BDE54004F95}
 		{2AC90C5F-B17D-40B5-A0C4-5C58E8509314} = {8D81B0D9-E9CA-4DEA-B28E-C3724D6A3424}
+		{DF1C7D0E-7243-4A5B-9EF0-07861A9A5332} = {8D81B0D9-E9CA-4DEA-B28E-C3724D6A3424}
 	EndGlobalSection
 EndGlobal
