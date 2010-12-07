@@ -37,7 +37,10 @@ SAMPLE OUTPUT (file nuggets.out)
 */
 
 /** 
-思路：
+*	思路：当两个数 m,n 最大公约数为1的时候（就是互质），方程 am + bn = c 在 c> m,n的最小公倍数的时候可以有正整数的 a，b 能满足条件。
+*	这道题目的规模小，最大256，所以不需要用高级算法。
+*	首先，找互质的一对，如果找不到，那么将没有最大的不能构成的数。
+*	如果至少存在互质的一对，那么开始穷尽组合出可能的数字，在最大的数的平方时剪枝停止循环。
 */
 #include <stdio.h>
 #include <stdlib.h>
@@ -78,7 +81,7 @@ typedef unsigned long u32;
 #define THINKINGL 1
 #endif
 
-
+/** 求最大公约数。 */
 template< class _Type >
 _Type gcd( _Type a, _Type b )
 {
