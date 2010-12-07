@@ -76,6 +76,9 @@
   <ItemGroup>
     <ClCompile Include="BeefMcNuggets.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="nuggets.in" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

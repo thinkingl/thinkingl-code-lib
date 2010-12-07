@@ -79,7 +79,22 @@ typedef unsigned long u32;
 #endif
 
 
-
+template< class _Type >
+_Type gcd( _Type a, _Type b )
+{
+	while ( a != b )
+	{
+		if ( a < b )
+		{
+			b -= a;
+		}
+		else
+		{
+			a -= b;
+		}
+	}
+	return a;
+}
 
 int main()
 {
@@ -95,8 +110,90 @@ int main()
 		return 0;
 	}
 
+	int nPakageNum;
+	fin >> nPakageNum;
 
+	typedef std::set< int > TIntSet;
+	TIntSet allPossibleSequence;
 
+	typedef std::vector<int> TIntVector;
+	TIntVector allPackageSequence;
+	for ( int i=0; i<nPakageNum; ++i )
+	{
+		int nPackageSize;
+		fin >> nPackageSize;
+		allPackageSequence.push_back( nPackageSize );
+		allPossibleSequence.insert( nPackageSize );
+	}
+
+	std::sort( allPackageSequence.begin(), allPackageSequence.end() );
+
+	// 先找它们的最大公约数，如果存在一对数字，它们的最大公约数为1，那么题目有结果。。
+	// 否则没有题目要求的结果。
+	bool bPass = false;
+	for ( int i=0; i<allPackageSequence.size() && !bPass; ++i )
+	{		
+		for ( int k=i+1; k<allPackageSequence.size() && !bPass; ++k )
+		{
+			int gcdRet = gcd( allPackageSequence[i], allPackageSequence[k] );
+			if ( gcdRet == 1 )
+			{
+				bPass = true;
+			}
+		}		
+	}
+
+	if ( !bPass )
+	{
+		fout << "0" << endl;
+	}
+	else
+	{
+		// 寻找最大的可能组合。
+		int nCurMaxPackage = *( allPackageSequence.end() - 1 );
+
+		// 题目要求的 不可能得到的组合 不会大于这个数字。
+		int nPackageRange = nCurMaxPackage * nCurMaxPackage;
+
+		TIntSet::iterator itPossible = allPossibleSequence.begin();
+
+		while ( itPossible != allPossibleSequence.end() )
+		{
+			for ( int i=0; i<allPackageSequence.size(); ++i )
+			{
+				int newPackage = allPackageSequence[i] + *itPossible;
+				if ( newPackage < nPackageRange )
+				{
+					// 有效。
+					allPossibleSequence.insert( newPackage );
+				}
+			}
+
+			++itPossible;
+		}
+
+		// 寻找最大的。
+		TIntSet::reverse_iterator riter = allPossibleSequence.rbegin();
+		int nCurNum = *riter;
+		int nMaxImposible = 0;
+		for ( ++riter; riter != allPossibleSequence.rend(); ++riter )
+		{
+			nCurNum--;
+			if ( *riter != nCurNum )
+			{
+				// 找到了。
+				nMaxImposible = nCurNum;
+				break;
+			}			
+		}
+
+		if ( 0==nMaxImposible )
+		{
+			nMaxImposible = *allPossibleSequence.begin() - 1;
+		}
+		
+		fout << nMaxImposible << endl;
+	}
 
 #ifdef THINKINGL
 
