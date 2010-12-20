@@ -97,19 +97,88 @@ typedef std::vector< int > TLengthList;
 *	nLenthLeft : 剩余深度。
 *	TLengthList& boardList : 当前剩余的木板长度列表
 *	TLengthList& railList : 要求的篱笆长度列表
-*	u32& nRailNum : 能截出来的篱笆数目
+*	int nRailCursor : 当前处理的rail序号
 */
-void SearchDeepthLimited( int nLenthLeft, TLengthList& boardList, TLengthList& railList, u32& nRailNum )
+bool SearchDeepthLimited( int nDeepthLeft, TLengthList& boardList, 
+	TLengthList& railList, int nRailCursor,
+	int lastBoardIndex, int lastRailLen,
+	int nMaxWastedBoard, int nCurWastedBoard )
 {
 	// 深度用尽，返回。
-	if ( nLenthLeft == 0 )
+	if ( nDeepthLeft == 0  )
 	{
-		return;
+		return true;
 	}
 
-	// 在当前深度做一次搜索，在每个情况下进行递归。
-	SearchDeepthLimited( nLenthLeft );
 
+	// 在当前深度做一次搜索，在每个情况下进行递归。
+	// 广度上，为每个rail尝试每种可能的board
+	int railLen = railList[ nRailCursor ];
+
+	// 优化.无法再使用的board碎片.
+	int nWastedBoard = 0;
+
+	// 优化,如果当前rail同之前的rail长度一样,那么就从上个rail所在的board序号开始尝试截取.
+	int nBoardBegin = 0;
+	if ( railLen == lastRailLen )
+	{
+		nBoardBegin = lastBoardIndex;
+		nWastedBoard = nCurWastedBoard;
+	}
+	
+	for ( int boardIndex=nBoardBegin; boardIndex<boardList.size(); ++boardIndex )
+	{
+		int& nBoardLen = boardList[ boardIndex ];
+
+		// 跳过相同长度的board
+		if ( boardIndex > 0 )
+		{
+			if ( nBoardLen == boardList[ boardIndex-1 ] )
+			{
+				continue;
+			}
+		}
+		
+
+		if ( nBoardLen >= railLen )
+		{
+			if ( ( nBoardLen - railLen ) < railLen )
+			{
+				if( ( nWastedBoard + ( nBoardLen - railLen ) ) > nMaxWastedBoard )
+				{
+					// 这个不行..
+					continue;
+				}
+			}
+
+			nBoardLen -= railLen;	// 尝试截掉rail长度。
+
+			bool bRet = SearchDeepthLimited( nDeepthLeft-1, boardList, railList, nRailCursor+1,
+				boardIndex, railLen, nMaxWastedBoard, nWastedBoard );
+
+			nBoardLen += railLen;	// 恢复截掉的长度，尝试从别的board上截。
+
+			if ( bRet )
+			{
+				return bRet;	// 成功了.
+			}
+		}
+		else
+		{
+			// 这块board上剩余的部分已经不能再被使用.
+			nWastedBoard += nBoardLen;
+			if ( nWastedBoard > nMaxWastedBoard )
+			{
+				break;	// 超过了最多能浪费的木料数目,剪枝.
+			}
+		}
+	}
+
+	// 还有种情况，就是不截这段rail.因为rail已经被排序,所以这种情况不用考虑,因为后面的rail肯定能被前面不比他大的rail所代替.
+//	u32 railNum = SearchDeepthLimited( nDeepthLeft-1, boardList, railList, nRailCursor+1 );
+//	nMaxRailNum = max( nMaxRailNum, railNum );
+
+	return false;
 }
 
 int main()
@@ -149,14 +218,52 @@ int main()
 		tRailNeeded.push_back( nLen );
 	}
 
-	// 最大深度，要求时间内搜不出就算了。
-	const int MaxLenth = 100;
-	// 每次深度递增幅度。
-	const int LenthIncrease = 1;
-	for ( int nDeepth=1; nDeepth<=MaxLenth; ++nDeepth )
+	// 优化，将rail从小到大排序，这样便于做去重优化。
+	std::sort( tRailNeeded.begin(), tRailNeeded.end() );
+
+	// 优化,将board从大到小排序,这样便于做优化.
+	std::sort( tBoardSupplied.rbegin(), tBoardSupplied.rend() );
+
+	// 最大深度，在这个题目里，就是需要的rail数目。
+	const int MaxLenth = nRailNum+1;
+
+	int nTotalBoardLen = 0;
+	for ( int i=0; i<tBoardSupplied.size(); ++i )
 	{
-		SearchDeepthLimited( nDeepth );
+		nTotalBoardLen += tBoardSupplied[i];
 	}
+	TLengthList tMaxWastedBoardList;
+
+	int nTotalRailLenth = 0;
+	for ( int i=0; i<tRailNeeded.size(); ++i )
+	{
+		nTotalRailLenth += tRailNeeded[i];
+		tMaxWastedBoardList.push_back( nTotalBoardLen - nTotalRailLenth );
+	}
+
+	int maxRailNum = 0;
+	for ( int nDeepth=1; nDeepth<MaxLenth; ++nDeepth )
+	{
+		// 最多能浪费的木料.
+		int maxWastedBoard = tMaxWastedBoardList[ nDeepth-1 ];
+		if ( maxWastedBoard < 0 )
+		{
+			break;	// 木料不够.
+		}
+
+		bool bRet = SearchDeepthLimited( nDeepth, tBoardSupplied, tRailNeeded, 0, 0, -1, maxWastedBoard, 0 );
+
+		// 深度,就是rail数目.
+		// 因为rail是从小到大排序的,所以,如果不能得到现在所有的rail的时候,后面更大的rail更是得不到.
+		// 所以可以直接剪枝.
+		if ( !bRet )
+		{
+			break;
+		}
+		maxRailNum = nDeepth;
+	}
+
+	fout << maxRailNum << endl;
 	
 
 #ifdef THINKINGL
