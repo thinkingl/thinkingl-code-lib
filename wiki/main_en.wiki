@@ -10,11 +10,14 @@
 Code lib personal
 
 = Projects = 
+== USACO == 
 [USACO_Main USACO]
 
+== Blue Whale ==
 [WebFetcher Websit fetch]
 
-[SZMap Sanzhai GMap]
+== ShanZhai GMap ==
+[SZMap Shanzhai GMap]
 
 = About me =
 
