@@ -48,7 +48,7 @@ SAMPLE OUTPUT (file fence8.out)
  
 */
 
-/** ˼·
+/** 采用迭代加深的深度优先搜索算法。
 *	
 */
 #include <stdio.h>
@@ -90,6 +90,27 @@ typedef unsigned long u32;
 #define THINKINGL 1
 #endif
 
+/** 长度列表。 */
+typedef std::vector< int > TLengthList;
+
+/** 深度限制搜索。 
+*	nLenthLeft : 剩余深度。
+*	TLengthList& boardList : 当前剩余的木板长度列表
+*	TLengthList& railList : 要求的篱笆长度列表
+*	u32& nRailNum : 能截出来的篱笆数目
+*/
+void SearchDeepthLimited( int nLenthLeft, TLengthList& boardList, TLengthList& railList, u32& nRailNum )
+{
+	// 深度用尽，返回。
+	if ( nLenthLeft == 0 )
+	{
+		return;
+	}
+
+	// 在当前深度做一次搜索，在每个情况下进行递归。
+	SearchDeepthLimited( nLenthLeft );
+
+}
 
 int main()
 {
@@ -105,7 +126,38 @@ int main()
 		return 0;
 	}
 
+	int nBoardNum;
+	fin >> nBoardNum;
+	
+	
+	TLengthList tBoardSupplied;
 
+	for ( int i=0; i<nBoardNum; ++i )
+	{
+		int nLen;
+		fin >> nLen;
+		tBoardSupplied.push_back( nLen );
+	}
+
+	int nRailNum;
+	TLengthList tRailNeeded;
+	fin >> nRailNum;
+	for ( int i=0; i<nRailNum; ++i )
+	{
+		int nLen;
+		fin >> nLen;
+		tRailNeeded.push_back( nLen );
+	}
+
+	// 最大深度，要求时间内搜不出就算了。
+	const int MaxLenth = 100;
+	// 每次深度递增幅度。
+	const int LenthIncrease = 1;
+	for ( int nDeepth=1; nDeepth<=MaxLenth; ++nDeepth )
+	{
+		SearchDeepthLimited( nDeepth );
+	}
+	
 
 #ifdef THINKINGL
 
