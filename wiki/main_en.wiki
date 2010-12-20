@@ -1,7 +1,8 @@
-#summary One-sentence summary of this page.
+#summary Home page for thinkingl-code-lib
 
 = Language =
 [main_zh 中文]
+
 [main_en English]
 
 = Introduction =
@@ -10,12 +11,18 @@ Code lib personal
 
 = Projects = 
 [USACO_Main USACO]
+
 [WebFetcher Websit fetch]
+
 [SZMap Sanzhai GMap]
 
-= Details =
+= About me =
 
+Software engineer at Shanghai China
+
+<wiki:comment>
 Add your content here.  Format your content with:
   * Text in *bold* or _italic_
   * Headings, paragraphs, and lists
   * Automatic links to other wiki pages
+</wiki:comment>
