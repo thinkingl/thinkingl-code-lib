@@ -1,0 +1,32 @@
+#summary thinkingl-code-lib 主页
+
+= 语言 =
+[main_zh 中文]
+
+[main_en English]
+
+= 简介 =
+
+个人代码库
+
+= 项目 = 
+== USACO题解 == 
+[USACO_Main USACO]
+
+== 蓝鲸 ==
+一个抓网页的程序
+[WebFetcher Websit fetch]
+
+== 山寨GMap ==
+[SZMap Shanzhai GMap]
+
+= 关于我 =
+
+上海程序员
+
+<wiki:comment>
+Add your content here.  Format your content with:
+  * Text in *bold* or _italic_
+  * Headings, paragraphs, and lists
+  * Automatic links to other wiki pages
+</wiki:comment>
