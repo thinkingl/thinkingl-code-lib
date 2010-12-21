@@ -124,6 +124,108 @@ typedef unsigned long u32;
 #define THINKINGL 1
 #endif
 
+const int MaxSegmentLength = 255;
+const int MaxSegmentNum = 100;
+const int InvalidEndPointIndex = -1;
+const int DistanceInfinity = MaxSegmentLength * MaxSegmentNum + 99999;	// 表示不连通的距离
+
+typedef std::set< int > TSegmentIndexSet;	// 线段序号集合.
+
+typedef std::vector< int > TDistanceList;	// 端点间距离链表
+typedef std::vector< TDistanceList > TDistanceTable; // 端点间距离表
+
+// 线段端点的信息.
+struct TEndPointInfo
+{
+	int m_nEndPointIndex;	// 端点序号.
+	TSegmentIndexSet m_tJoinedSegment;	// 连接的线段.
+
+	TEndPointInfo()
+	{
+		m_nEndPointIndex = InvalidEndPointIndex;
+	}
+};
+
+/** Djkstra 求距离.
+*	
+*/
+int Djkstra( const TDistanceTable& tWeightTable, int src, int dst, int cutMaxDistance )
+{
+	//# distance(j) is distance from source vertex to vertex j
+	//# parent(j) is the vertex that precedes vertex j in any shortest path
+	//#                  (to reconstruct the path subsequently) 
+
+	//1 For all nodes i
+	//2     distance(i) = infinity         	# not reachable yet
+	//3     visited(i) = False
+	//4     parent(i) = nil	 # no path to vertex yet 
+	typedef std::vector< bool > TVisitedTable;
+	TVisitedTable tVisited( tWeightTable.size(), false );
+	TDistanceList tDistance( tWeightTable.size(), DistanceInfinity );
+
+	//5 distance(source) = 0	 # source -> source is start of all paths
+	//6 parent(source) = nil
+
+	tDistance[ src ] = 0;
+
+	//7   8 while (nodesvisited < graphsize)
+	//9     find unvisited vertex with min distance to source; call it vertex i
+	//10     assert (distance(i) != infinity, "Graph is not connected") 
+
+	//11     visited(i) = True	 # mark vertex i as visited 
+
+	//# update distances of neighbors of i
+	//12     For all neighbors j of vertex i
+	//13         if distance(i) + weight(i,j) < distance(j) then
+	//14             distance(j) = distance(i) + weight(i,j)
+	//15             parent(j) = i
+	while( 1 )
+	{
+		int minDistance = DistanceInfinity;
+		int nearestVertex = -1;
+		for ( int i=0; i<tDistance.size(); ++i )
+		{
+			if ( !tVisited[i] && tDistance[i] < minDistance )
+			{
+				minDistance = tDistance[i];
+				nearestVertex = i;
+			}
+		}
+
+		if ( minDistance == DistanceInfinity )
+		{
+			cout << "Graph is not connected!" << endl;
+			return DistanceInfinity;
+		}
+
+		tVisited[ nearestVertex ] = true;
+
+		// 判断是否到达了dst
+		if ( nearestVertex == dst )
+		{
+			return minDistance;
+		}
+		// 判断是否该剪枝了.
+		if ( nearestVertex > cutMaxDistance )
+		{
+			return DistanceInfinity;
+		}
+
+		const TDistanceList& tNearestVertexNeighborWeight = tWeightTable[nearestVertex];
+		for ( int i=0; i<tNearestVertexNeighborWeight.size(); ++i )
+		{
+			if ( tNearestVertexNeighborWeight[i] < DistanceInfinity )
+			{
+				if ( tDistance[ nearestVertex ] + tNearestVertexNeighborWeight[i] < tDistance[ i ] )
+				{
+					tDistance[ i ] = tDistance[ nearestVertex ] + tNearestVertexNeighborWeight[i];
+				}
+			}
+		}
+	}
+
+	return 0;
+}
 
 int main()
 {
@@ -139,7 +241,124 @@ int main()
 		return 0;
 	}
 
+	int nSegmentNum;
+	fin >> nSegmentNum;
+
+	// 因为题目中每个端点都被2个以上的线段(篱笆)共享,所以端点数目最大只能是线段数.
+	int nMaxPointNum = nSegmentNum;
+
+
+
 	
+	// 距离表初始化
+	TDistanceTable tDistanceTable( nMaxPointNum, TDistanceList( nMaxPointNum, DistanceInfinity ) );
+
+	typedef std::pair< TEndPointInfo, TEndPointInfo > TSegmentConnectState;	// 线段两端的连接情况.
+	typedef std::vector< TSegmentConnectState > TSegmentConnectStateList;
+	TSegmentConnectStateList tSegmentConnectStateList( nSegmentNum+1 );		// 线段们两端的连接情况链表.
+
+	int nCurEndPointIndex = 0;
+
+	for ( int i=0; i<nSegmentNum; ++i )
+	{
+		int nSegmentIndex, nSegmentLen, nItemNum1, nItemNum2;
+		fin >> nSegmentIndex >> nSegmentLen >> nItemNum1 >> nItemNum2;
+
+		for ( int k=0; k<nItemNum1; ++k )
+		{
+			int nSegConnect;
+			fin >> nSegConnect;
+			
+			TEndPointInfo& endPointInfo = tSegmentConnectStateList[ nSegmentIndex ].first;
+			endPointInfo.m_tJoinedSegment.insert( nSegConnect );
+
+			// 这个点在之前是否就已经有了.
+			if ( tSegmentConnectStateList[ nSegConnect ].first.m_tJoinedSegment.find( nSegmentIndex )
+				!= tSegmentConnectStateList[ nSegConnect ].first.m_tJoinedSegment.end() )
+			{
+				// 是这个点.
+				endPointInfo.m_nEndPointIndex 
+					= tSegmentConnectStateList[ nSegConnect ].first.m_nEndPointIndex;
+			}
+			else if( tSegmentConnectStateList[ nSegConnect ].second.m_tJoinedSegment.find( nSegmentIndex )
+				!= tSegmentConnectStateList[ nSegConnect ].second.m_tJoinedSegment.end() )
+			{
+				// 是这个点.
+				endPointInfo.m_nEndPointIndex 
+					= tSegmentConnectStateList[ nSegConnect ].second.m_nEndPointIndex;
+			}
+			
+		}
+
+		if ( InvalidEndPointIndex == tSegmentConnectStateList[ nSegmentIndex ].first.m_nEndPointIndex )
+		{
+			tSegmentConnectStateList[ nSegmentIndex ].first.m_nEndPointIndex = nCurEndPointIndex;
+			nCurEndPointIndex++;
+		}
+
+		for ( int k=0; k<nItemNum2; ++k )
+		{
+			int nSegConnect;
+			fin >> nSegConnect;
+
+			TEndPointInfo& endPointInfo = tSegmentConnectStateList[ nSegmentIndex ].second;
+			endPointInfo.m_tJoinedSegment.insert( nSegConnect );
+
+			// 这个点在之前应该就已经有了.
+			if ( tSegmentConnectStateList[ nSegConnect ].first.m_tJoinedSegment.find( nSegmentIndex )
+				!= tSegmentConnectStateList[ nSegConnect ].first.m_tJoinedSegment.end() )
+			{
+				// 是这个点.
+				endPointInfo.m_nEndPointIndex 
+					= tSegmentConnectStateList[ nSegConnect ].first.m_nEndPointIndex;
+			}
+			else if( tSegmentConnectStateList[ nSegConnect ].second.m_tJoinedSegment.find( nSegmentIndex )
+				!= tSegmentConnectStateList[ nSegConnect ].second.m_tJoinedSegment.end() )
+			{
+				// 是这个点.
+				endPointInfo.m_nEndPointIndex 
+					= tSegmentConnectStateList[ nSegConnect ].second.m_nEndPointIndex;
+			}
+				
+		}
+
+		if ( InvalidEndPointIndex == tSegmentConnectStateList[ nSegmentIndex ].second.m_nEndPointIndex )
+		{
+			tSegmentConnectStateList[ nSegmentIndex ].second.m_nEndPointIndex = nCurEndPointIndex;
+			nCurEndPointIndex++;
+		}
+
+		// 把当前线段的长度更新进端点距离表.
+		int p1 = tSegmentConnectStateList[ nSegmentIndex ].first.m_nEndPointIndex;
+		int p2 = tSegmentConnectStateList[ nSegmentIndex ].second.m_nEndPointIndex;
+		tDistanceTable[ p1 ][ p2 ] = nSegmentLen;
+		tDistanceTable[ p2 ][ p1 ] = nSegmentLen;
+	}
+
+	int nMinPerimeter = DistanceInfinity;
+	for ( int i=0; i<nMaxPointNum; ++i )
+	{
+		for ( int k=i+1; k<nMaxPointNum; ++k )
+		{
+			if ( tDistanceTable[ i ][ k ] < DistanceInfinity )
+			{
+				// 说明点 i 到 k 是有线段连接的.
+				// 去掉这跟线段后,i到k的最短距离加上 现在i到k之间的线段长度,就是线段ik所在的多边形的最小周长.
+				int ikLen = tDistanceTable[i][k];
+				tDistanceTable[i][k] = DistanceInfinity;
+
+				int nCurPerimeter = ikLen + Djkstra( tDistanceTable, i, k, nMinPerimeter );
+
+				nMinPerimeter = min( nCurPerimeter, nMinPerimeter );
+
+				tDistanceTable[i][k] = ikLen;
+			}
+		}
+	}
+
+	fout << nMinPerimeter << endl;
+
+
 
 #ifdef THINKINGL
 
