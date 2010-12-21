@@ -1,0 +1,7 @@
+4.1.2 Fence Rails
+
+
+
+[usaco_code_fence8 Source Code]
+
+[usaco_result_fence8 Result]
