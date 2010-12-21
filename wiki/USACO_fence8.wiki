@@ -3,7 +3,7 @@
 
 == Analysis ==
 It's a classic [DFSID] problem.
-The Order and Tree-pruning is most important thing.
+The Order and Tree-pruning is the most important thing.
 
 == Code ==
 
