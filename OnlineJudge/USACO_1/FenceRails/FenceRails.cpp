@@ -49,6 +49,7 @@ SAMPLE OUTPUT (file fence8.out)
 */
 
 /** 采用迭代加深的深度优先搜索算法。
+*	顺序和剪枝是关键!
 *	
 */
 #include <stdio.h>
@@ -93,18 +94,17 @@ typedef unsigned long u32;
 /** 长度列表。 */
 typedef std::vector< int > TLengthList;
 
-TLengthList g_railList;
-TLengthList g_boardListBk;
-TLengthList g_boardList;
-int g_nMaxWastedBoard;
-int g_nCurWastedBoard = 0;
+TLengthList g_railList;	// 要求的篱笆长度列表
+TLengthList g_boardList;// 当前剩余的木板长度列表
+int g_nMaxWastedBoard;	// 最多能浪费的长度.
+int g_nCurWastedBoard = 0;	// 当前已经浪费的长度.
+
 /** 深度限制搜索。 
 *	nLenthLeft : 剩余深度。
-*	TLengthList& g_boardList : 当前剩余的木板长度列表
-*	TLengthList& g_railList : 要求的篱笆长度列表
-*	int nRailCursor : 当前处理的rail序号
+*	int lastBoardIndex : 上次使用的board序号.
+*	int lastRailLen : 上次rail长度.
 */
-bool SearchDeepthLimited( int nDeepthLeft, int nRailCursor,
+bool SearchDeepthLimited( int nDeepthLeft,
 	int lastBoardIndex, int lastRailLen )
 {
 	// 深度用尽，返回。
@@ -114,7 +114,7 @@ bool SearchDeepthLimited( int nDeepthLeft, int nRailCursor,
 	}
 
 	// 尝试倒着试rail
-	nRailCursor = nDeepthLeft-1;
+	int nRailCursor = nDeepthLeft-1;
 
 	// 在当前深度做一次搜索，在每个情况下进行递归。
 	// 广度上，为每个rail尝试每种可能的board
@@ -132,16 +132,6 @@ bool SearchDeepthLimited( int nDeepthLeft, int nRailCursor,
 	{
 		int& nBoardLen = g_boardList[ boardIndex ];
 
-		// 跳过相同长度的board
-// 		if ( boardIndex > 0 )
-// 		{
-// 			if ( g_boardListBk[boardIndex] == g_boardListBk[ boardIndex-1 ] )
-// 			{
-// 				continue;
-// 			}
-// 		}
-		
-		
 		if ( nBoardLen >= railLen )
 		{
 	
@@ -162,7 +152,7 @@ bool SearchDeepthLimited( int nDeepthLeft, int nRailCursor,
 			}
 
 			bool bRet = SearchDeepthLimited( nDeepthLeft-1,  nRailCursor+1,
-				boardIndex, railLen );
+				boardIndex );
 
 			if ( bHaveWaste )
 			{
@@ -243,7 +233,6 @@ int main()
 	}
 
 	g_boardList = tBoardSupplied;
-	g_boardListBk = g_boardList;
 	g_railList = tRailNeeded;
 
 
@@ -260,7 +249,7 @@ int main()
 		g_nMaxWastedBoard = maxWastedBoard;
 		g_nCurWastedBoard = 0;
 
-		bool bRet = SearchDeepthLimited( nDeepth, 0, 0, -1 );
+		bool bRet = SearchDeepthLimited( nDeepth, 0, -1 );
 
 		// 深度,就是rail数目.
 		// 因为rail是从小到大排序的,所以,如果不能得到现在所有的rail的时候,后面更大的rail更是得不到.
