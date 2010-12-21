@@ -1,4 +1,9 @@
+#labels DFSID
 4.1.2 Fence Rails
+
+== Analysis ==
+It's a classic [DFSID] problem.
+The Order and Tree-pruning is most important thing.
 
 == Code ==
 
