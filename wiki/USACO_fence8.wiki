@@ -2,7 +2,7 @@
 4.1.2 Fence Rails
 
 == Analysis ==
-It's a classic [DFSID] problem.
+It's a [DFSID] problem.
 The Order and Tree-pruning is the most important thing.
 
 == Code ==
