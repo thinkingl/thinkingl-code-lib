@@ -1,5 +1,8 @@
 #labels USACO
 USACO = USA Computing Olympiad
+
+[USACO_fence8 4.1.2 Fence Rails]
+
 <wiki:comment>
 #summary One-sentence summary of this page.
 
