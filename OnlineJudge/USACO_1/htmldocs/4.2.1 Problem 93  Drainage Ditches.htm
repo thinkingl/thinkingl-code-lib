@@ -1,0 +1,87 @@
+
+<!-- saved from url=(0053)http://ace.delos.com/usacoprob2?a=7aINa8oIvCq&S=ditch -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"> <title>Problem 93: Drainage Ditches</title> </head>
+<body background="./4.2.1 Problem 93  Drainage Ditches_files/bg3.jpg">
+<img src="./4.2.1 Problem 93  Drainage Ditches_files/cow1.jpg" width="742" height="118">
+<center>
+<b><font size="7">Drainage Ditches</font></b><br>
+<b>Hal Burch</b>
+</center>
+
+<p> Every time it rains on Farmer John's fields, a pond forms over
+Bessie's favorite clover patch.  This means that the clover is covered
+by water for awhile and takes quite a long time to regrow.  Thus, Farmer
+John has built a set of drainage ditches so that Bessie's clover patch
+is never covered in water.  Instead, the water is drained to a nearby
+stream.  Being an ace engineer, Farmer John has also installed regulators
+at the beginning of each ditch, so he can control at what rate water
+flows into that ditch.
+
+</p><p> Farmer John knows not only how many gallons of water each ditch
+can transport per minute but also the exact layout of the ditches,
+which feed out of the pond and into each other and stream in a
+potentially complex network.  Note however, that there can be more
+than one ditch between two intersections.
+
+</p><p>Given all this information, determine the maximum rate at which water
+can be transported out of the pond and into the stream.  For any given
+ditch, water flows in only one direction, but there might be a way that
+water can flow in a circle.
+
+</p><h3>PROGRAM NAME: ditch</h3>
+
+<h3>INPUT FORMAT</h3>
+
+<table border="1">
+<tbody><tr> <td> Line 1: </td> <td> Two space-separated integers, N (0 &lt;=
+	 N &lt;= 200) and M (2 &lt;= M &lt;= 200).  N is the number of
+	 ditches that Farmer John has dug.  M is the number of
+	 intersections points for those ditches.  Intersection 1 is the
+	 pond.  Intersection point M is the stream.  </td> </tr>
+
+<tr> <td> Line 2..N+1: </td> <td> Each of N lines contains three integers,
+	 S<sub>i</sub>, E<sub>i</sub>, and C<sub>i</sub>.  S<sub>i</sub>
+	 and E<sub>i</sub> (1 &lt;= S<sub>i</sub>, E<sub>i</sub> &lt;=
+	 M) designate the intersections between which this ditch flows.
+	 Water will flow through this ditch from S<sub>i</sub> to
+	 E<sub>i</sub>.  C<sub>i</sub> (0 &lt;= C<sub>i</sub> &lt;=
+	 10,000,000) is the maximum rate at which water will flow through
+	 the ditch.  </td> </tr>
+</tbody></table>
+
+<h3>SAMPLE INPUT (file ditch.in) </h3>
+
+<pre>5 4
+1 2 40
+1 4 20
+2 4 20
+2 3 30
+3 4 10
+</pre>
+
+<h3>OUTPUT FORMAT</h3>
+
+<p>
+One line with a single integer, the maximum rate at which water may
+emptied from the pond.
+
+</p><h3>SAMPLE OUTPUT (file ditch.out)</h3>
+
+<pre>50
+</pre>
+<br>
+<hr>
+<form action="http://ace.delos.com/upload3" enctype="multipart/form-data" method="POST">
+<b>Submission file Name:</b> <input type="file" name="filename">
+<input type="submit" value="Send it in!">
+<input type="hidden" name="a" value="7aINa8oIvCq">
+<input type="hidden" name="S" value="ditch">
+</form>
+
+<center>
+<a href="http://ace.delos.com/usacogate?a=7aINa8oIvCq"> USACO Gateway </a> &nbsp;| &nbsp;
+<a href="mailto:kolstad@ace.delos.com">Comment or Question </a>
+</center>
+
+
+</body></html>
