@@ -38,23 +38,23 @@ public:
 	void Move2Center( const CCoord& centerCoord );
 
 public:
-	class CMapCtrlImageCallback : public IImageCallback
-	{
-	public:
-		virtual void operator()()
-		{
-			if( this->m_hMapWnd )
-			{
-				// 发送消息通知地图控件，刷新某区域。
-				::SendMessage( this->m_hMapWnd, WM_MAP_ON_LOAD_IMAGE, WPARAM( this ), 0 ); 
-			}
-
-			// 自尽
-			delete this;
-		}
-	public: 
-		 HWND m_hMapWnd;
-	};
+// 	class CMapCtrlImageCallback : public IImageCallback
+// 	{
+// 	public:
+// 		virtual void operator()()
+// 		{
+// 			if( this->m_hMapWnd )
+// 			{
+// 				// 发送消息通知地图控件，刷新某区域。
+// 				::SendMessage( this->m_hMapWnd, WM_MAP_ON_LOAD_IMAGE, WPARAM( this ), 0 ); 
+// 			}
+// 
+// 			// 自尽
+// 			delete this;
+// 		}
+// 	public: 
+// 		 HWND m_hMapWnd;
+// 	};
 	
 private:
 	/** 刷新图片。 */

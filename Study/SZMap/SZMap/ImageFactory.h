@@ -54,7 +54,7 @@ public:
 	*	如果本地没有缓存此图片，会将其 
 	*	返回的是图片状态。
 	*/
-	EImageLoadingStatus GetImage( const CImageIndex& imgIndex );
+	EImageLoadingStatus GetImageStatus( const CImageIndex& imgIndex );
 
 	/** 获取某图片。 
 	*	返回图片指针。
@@ -78,7 +78,7 @@ private:
 private:
 
 	/** 图片下载/加载线程。 */
-	DWORD WINAPI ImageLoadThread( void * param );
+	static DWORD WINAPI ImageLoadThread( void * param );
 
 private:
 	/** 图片下载线程句柄。 */
