@@ -10,19 +10,19 @@
 Code lib personal
 
 = Projects = 
-== USACO == 
-Solved problems on USACO.
-The projects are built by VS2010,but the code can be compiled by g++.
-The codes also can be submissioned to USACO directly.
+ * USACO 
+ Solved problems on USACO.
+ The projects are built by VS2010,but the code can be compiled by g++.
+ The codes also can be submissioned to USACO directly.
 
-More details:
-[USACO_Main USACO]
+ More details:
+ [USACO_Main USACO]
 
-== Blue Whale ==
-[WebFetcher Websit fetch]
+ * Blue Whale 
+ [WebFetcher Websit fetch]
 
-== ShanZhai GMap ==
-[SZMap Shanzhai GMap]
+ *  ShanZhai GMap 
+ [SZMap Shanzhai GMap]
 
 = About me =
 
