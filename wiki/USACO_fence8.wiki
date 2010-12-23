@@ -1,4 +1,4 @@
-#labels DFSID
+#labels DFSID,Search,Cut
 4.1.2 Fence Rails
 
 == Analysis ==
@@ -69,5 +69,3 @@ or
  Fence Rails: Hint 1
 
  This is a high dimensionality multiple knapsack problem, so we just have to test the cases. Given that the search space has a high out-degree, we will use depth first search with iterative deepening in order to limit the depth of the tree. However, straight DFSID will be too slow, so some tree-pruning is necessary.
-
-
