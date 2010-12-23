@@ -13,6 +13,10 @@ or
 
 [usaco_code_fence8 Source Code]
 
+== Result and data of test cases ==
+
+[usaco_result_fence8 Result]
+
 == Problem == 
 
  Fence Rails
@@ -67,5 +71,3 @@ or
  This is a high dimensionality multiple knapsack problem, so we just have to test the cases. Given that the search space has a high out-degree, we will use depth first search with iterative deepening in order to limit the depth of the tree. However, straight DFSID will be too slow, so some tree-pruning is necessary.
 
 
-
-[usaco_result_fence8 Result]
