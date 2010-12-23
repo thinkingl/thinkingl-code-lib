@@ -11,6 +11,11 @@ Code lib personal
 
 = Projects = 
 == USACO == 
+Solved problems on USACO.
+The projects is build by VS2010,but the code can be compiled by g++.
+The codes also can be submissioned to USACO directly.
+
+More details:
 [USACO_Main USACO]
 
 == Blue Whale ==
