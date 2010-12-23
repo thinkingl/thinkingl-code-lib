@@ -3,6 +3,8 @@ USACO = USA Computing Olympiad
 
 [USACO_fence8 4.1.2 Fence Rails]
 
+[USACO_fence6 4.1.3 Fence Loops]
+
 <wiki:comment>
 #summary One-sentence summary of this page.
 
