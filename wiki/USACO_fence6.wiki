@@ -1,3 +1,4 @@
+#labels ShortestPath
 # 4.1.3 Fence Loops
 = USACO 4.1.3 Fence Loops =
 
