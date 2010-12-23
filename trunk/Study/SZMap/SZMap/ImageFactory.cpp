@@ -31,4 +31,5 @@ DWORD CImageFactory::ImageLoadThread( void * param )
 			Sleep( 500 );
 		}
 	}
+	return 0;
 }
