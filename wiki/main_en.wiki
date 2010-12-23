@@ -10,7 +10,7 @@
 Code lib personal
 
 = Projects = 
- * USACO 
+ * [USACO_Main USACO] 
  Solved problems on USACO.
  The projects are built by VS2010,but the code can be compiled by g++.
  The codes also can be submissioned to USACO directly.
