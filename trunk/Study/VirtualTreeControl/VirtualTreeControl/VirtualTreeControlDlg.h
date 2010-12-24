@@ -3,7 +3,8 @@
 //
 
 #pragma once
-
+#include "afxcmn.h"
+#include "VirtualTreeCtrl.h"
 
 // CVirtualTreeControlDlg ¶Ô»°¿ò
 class CVirtualTreeControlDlg : public CDialog
@@ -31,4 +32,6 @@ protected:
 	DECLARE_MESSAGE_MAP()
 public:
 	afx_msg void OnTvnSelchangedTreeTest(NMHDR *pNMHDR, LRESULT *pResult);
+	CVirtualTreeCtrl m_treeTest;
+	afx_msg void OnBnClickedTest();
 };

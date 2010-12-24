@@ -56,6 +56,7 @@ CVirtualTreeControlDlg::CVirtualTreeControlDlg(CWnd* pParent /*=NULL*/)
 void CVirtualTreeControlDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialog::DoDataExchange(pDX);
+	DDX_Control(pDX, IDC_TREE_TEST, m_treeTest);
 }
 
 BEGIN_MESSAGE_MAP(CVirtualTreeControlDlg, CDialog)
@@ -64,6 +65,7 @@ BEGIN_MESSAGE_MAP(CVirtualTreeControlDlg, CDialog)
 	ON_WM_QUERYDRAGICON()
 	//}}AFX_MSG_MAP
 	ON_NOTIFY(TVN_SELCHANGED, IDC_TREE_TEST, &CVirtualTreeControlDlg::OnTvnSelchangedTreeTest)
+	ON_BN_CLICKED(ID_TEST, &CVirtualTreeControlDlg::OnBnClickedTest)
 END_MESSAGE_MAP()
 
 
@@ -99,6 +101,8 @@ BOOL CVirtualTreeControlDlg::OnInitDialog()
 	SetIcon(m_hIcon, FALSE);		// 设置小图标
 
 	// TODO: 在此添加额外的初始化代码
+
+	
 
 	return TRUE;  // 除非将焦点设置到控件，否则返回 TRUE
 }
@@ -158,4 +162,11 @@ void CVirtualTreeControlDlg::OnTvnSelchangedTreeTest(NMHDR *pNMHDR, LRESULT *pRe
 	LPNMTREEVIEW pNMTreeView = reinterpret_cast<LPNMTREEVIEW>(pNMHDR);
 	// TODO: 在此添加控件通知处理程序代码
 	*pResult = 0;
+}
+
+void CVirtualTreeControlDlg::OnBnClickedTest()
+{
+	// TODO: 在此添加控件通知处理程序代码
+	// 性能测试..
+	this->m_treeTest.UnitTestBuild();
 }
