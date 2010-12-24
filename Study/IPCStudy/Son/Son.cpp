@@ -18,6 +18,8 @@ using namespace std;
 
 
 
+
+
 int _tmain(int argc, TCHAR* argv[], TCHAR* envp[])
 {
 	int nRetCode = 0;
@@ -32,9 +34,30 @@ int _tmain(int argc, TCHAR* argv[], TCHAR* envp[])
 	else
 	{
 		// TODO: 在此处为应用程序的行为编写代码。
+		const int BUFSIZE = 4000;
+		CHAR chBuf[BUFSIZE]; 
+		DWORD dwRead, dwWritten; 
+		HANDLE hStdin, hStdout; 
+		BOOL fSuccess; 
 
-		
+		hStdout = GetStdHandle(STD_OUTPUT_HANDLE); 
+		hStdin = GetStdHandle(STD_INPUT_HANDLE); 
+		if ((hStdout == INVALID_HANDLE_VALUE) || 
+			(hStdin == INVALID_HANDLE_VALUE)) 
+			ExitProcess(1); 
 
+		for (;;) 
+		{ 
+			// Read from standard input. 
+			fSuccess = ReadFile(hStdin, chBuf, BUFSIZE, &dwRead, NULL); 
+			if (! fSuccess || dwRead == 0) 
+				break; 
+
+			// Write to standard output. 
+			fSuccess = WriteFile(hStdout, chBuf, dwRead, &dwWritten, NULL); 
+			if (! fSuccess) 
+				break; 
+		} 
 
 	}
 
