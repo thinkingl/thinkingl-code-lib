@@ -32,7 +32,30 @@ typedef unsigned long u32;
 
 bool DFS( CSudoku& sudoku , int row, int col )
 {
-	sudoku.DumpToCout();
+	//if ( sudoku.GetNum( 0, 0 ) == 3 
+	//	&& sudoku.GetNum( 0, 2 ) == 7 
+	//	&& sudoku.GetNum( 0, 3 ) == 9 
+	//	&& sudoku.GetNum( 0, 5 ) == 1 
+	//	&& sudoku.GetNum( 0, 6 ) == 6 
+	//	&& sudoku.GetNum( 0, 7 ) == 5
+	//	&& sudoku.GetNum( 1, 1 ) == 1 
+	//	&& sudoku.GetNum( 1, 3 ) == 2 
+	//	&& sudoku.GetNum( 1, 6 ) == 7 
+	//	&& sudoku.GetNum( 1, 7 ) == 4
+	//	&& sudoku.GetNum( 2, 0 ) == 4 
+	//	&& sudoku.GetNum( 2, 1 ) == 8 
+	//	&& sudoku.GetNum( 2, 3 ) == 6
+	//	&& sudoku.GetNum( 2, 5 ) == 7
+	//	&& sudoku.GetNum( 2, 8 ) == 1
+	//	&& sudoku.GetNum( 3, 0 ) == 5
+	//	&& sudoku.GetNum( 3, 2 ) == 3
+
+	//	&& sudoku.GetNum( 3, 5 ) == 4
+	//	&& sudoku.GetNum( 4, 2 ) == 8 )
+	//{
+	//	sudoku.DumpToCout();
+	//}
+//	sudoku.DumpToCout();
 
 	if ( 0 == sudoku.GetNum( row, col ) )
 	{
@@ -40,6 +63,10 @@ bool DFS( CSudoku& sudoku , int row, int col )
 		int oldCol = col;
 		for ( int i=1; i<=9; ++i )
 		{
+			row = oldRow;
+			col = oldCol;
+
+
 			if ( sudoku.SetNumAndCheck( row, col, i ) )
 			{
 				bool bOk = sudoku.Next( row, col );
@@ -50,7 +77,11 @@ bool DFS( CSudoku& sudoku , int row, int col )
 					{
 						return bOk;
 					}
-				}			 
+				}	
+				else
+				{
+					return true;
+				}
 			}
 		}
 		// »¹Ô­.
@@ -111,6 +142,8 @@ int main()
 	{
 		cout << "Invalid sudoku!!!!" << endl;
 	}
+
+	system( "pause" );
 
 	return 0;
 }
