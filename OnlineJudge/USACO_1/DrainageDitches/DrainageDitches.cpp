@@ -37,7 +37,8 @@ SAMPLE OUTPUT (file ditch.out)
 */
 
 /** 
-*	
+*	Network Flow 问题.
+*	需要注意的是,题目数据中有两个点之间有多条水管的情况,所以输入的时候用的是 += .
 */
 #include <stdio.h>
 #include <stdlib.h>
@@ -78,7 +79,133 @@ typedef unsigned long u32;
 #define THINKINGL 1
 #endif
 
+typedef std::vector< u32 > TFlowRateList;
+typedef std::vector< TFlowRateList > TFlowRateTable;
 
+u32 GetMaxNetwordFlow( const TFlowRateTable& flowRateTable, int source, int sink )
+{
+//	1   if (source = sink)
+//		2     totalflow = Infinity
+//		3     DONE 
+	if ( source == sink )
+	{
+		return -1;
+	}
+//		4   totalflow = 0 
+
+	u32 totalFlow = 0;
+	TFlowRateTable capacityTable = flowRateTable;
+//
+//		5   while (True)
+//		6 # find path with highest capacity from source to sink uses a modified djikstra's algorithm
+//		8     for all nodes i
+//		9       prevnode(i) = nil
+//		10       flow(i) = 0
+//		11       visited(i) = False
+//		12     flow(source) = infinity 
+//
+//		13     while (True)
+//		14       maxflow = 0
+//		15       maxloc = nil 
+//		16       # find the unvisited node with the highest capacity to it
+//		17       for all nodes i
+//		18         if (flow(i) > maxflow AND not visited(i))
+//		19           maxflow = flow(i)
+//		20           maxloc = i
+//		21       if (maxloc = nil)
+//		22         break inner while loop
+//		23       if (maxloc = sink)
+//		24         break inner while loop
+//		24a      visited(maxloc) = true
+//		25       # update its neighbors
+//		26       for all neighbors i of maxloc
+//		27         if (flow(i) < min(maxflow, capacity(maxloc,i)))
+//		28           prevnode(i) = maxloc
+//		29           flow(i) = min(maxflow,	capacity(maxloc,i)) 
+//
+//		30     if (maxloc = nil)         # no path break outer while loop 
+//
+//		32     pathcapacity = flow(sink)
+//		33     totalflow = totalflow + pathcapacity 
+//
+	// find path with highest capacity from source to sink uses a modified djikstra's algorithm
+	int nPointNum = flowRateTable.size();
+	typedef std::vector< bool > TVisitedList;
+	typedef std::vector< int > TNodeIndexList;
+	const u32 INFINITE = -100;
+	while ( true )
+	{
+		TFlowRateList tFlow( nPointNum, 0 );
+		TVisitedList tVisit( nPointNum, false );
+		TNodeIndexList tPreNode( nPointNum, -1 );
+
+		tFlow[ source ] = INFINITE;
+
+		int maxLoc = -1;
+		while( true )
+		{
+			// find the unvisited node with the highest capacity to it
+			u32 maxFlow = 0;
+			maxLoc = -1;
+			for ( int i=0; i<nPointNum; ++i )
+			{
+				if ( !tVisit[i] && tFlow[i] > maxFlow )
+				{
+					maxFlow = tFlow[i];
+					maxLoc = i;
+				}
+			}
+			if ( maxLoc == -1 || maxLoc == sink )
+			{
+				break;
+			}
+
+			tVisit[ maxLoc ] = true;
+
+			// update its neighbors
+			for ( int i=0; i<nPointNum; ++i )
+			{
+				u32 newFlow = min ( maxFlow, capacityTable[maxLoc][i] );
+				if ( tFlow[ i ] < newFlow )
+				{
+					tFlow[i] = newFlow;
+					tPreNode[i] = maxLoc;
+				}
+			}
+		}
+
+		if ( maxLoc == -1 )
+		{
+			break;	// no path break outer while loop 
+		}
+
+		u32 pathCapacity = tFlow[ sink ];
+		totalFlow += pathCapacity;
+
+		//# add that flow to the network, update capacity appropriately
+		//		35     curnode = sink
+		//# for each arc, prevnode(curnode), curnode on path:
+		//		36     while (curnode != source)       
+		//		38       nextnode = prevnode(curnode)
+		//		39       capacity(nextnode,curnode) =capacity(nextnode,curnode) - pathcapacity
+		//				capacity(curnode,nextnode) = capacity(curnode,nextnode) + pathcapacity
+		//		43       curnode = nextnode 
+
+		// add that flow to the network, update capacity appropriately
+		int curNode = sink;
+		while ( curNode != source )
+		{
+			int nextNode = tPreNode[ curNode ];
+			capacityTable[ nextNode ][ curNode ] -= pathCapacity;
+			capacityTable[ curNode ][ nextNode ] += pathCapacity;
+			curNode = nextNode;
+		}
+	}
+
+	return totalFlow;
+
+
+}
 
 int main()
 {
@@ -94,7 +221,22 @@ int main()
 		return 0;
 	}
 
+	int nDitchNum, nPointNum;
+	fin >> nDitchNum >> nPointNum;
 
+
+
+	TFlowRateTable tWaterNet( nPointNum, TFlowRateList( nPointNum, 0 ) );
+	for ( int i=0; i<nDitchNum; ++i )
+	{
+		int src, dst, rate;
+		fin >> src >> dst >> rate;
+		tWaterNet[ src-1 ][ dst-1 ] += rate;
+	}
+
+	u32 maxFlow = GetMaxNetwordFlow( tWaterNet, 0, nPointNum-1 );
+
+	fout << maxFlow << endl;
 
 #ifdef THINKINGL
 
