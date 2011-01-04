@@ -76,7 +76,44 @@ typedef unsigned long u32;
 #define THINKINGL 1
 #endif
 
+const u32 INFINITE = 0xFFFFFF;	// 无限大.
+typedef std::vector< u32 > TWeightList;
+typedef std::vector< TWeightList > TWeightTable;
 
+u32 GetMaxFlow( const TWeightTable& weightTable, int source, int dst )
+{
+	int nPointNum = weightTable.size();
+	int nMaxFlow = 0;
+
+	TWeightTable flowTable = weightTable;
+
+	// 一直寻找最大路径
+	while ( true )
+	{
+		typedef std::vector< bool > TVisited;
+		TVisited visited( nPointNum, false );
+		TWeightList tFlow( nPointNum, 0 );
+
+		tFlow[ source ] = INFINITE;
+		u32 maxflow = 0;
+		int maxflowIndex = -1;
+		for ( int i=0; i<nPointNum; ++i )
+		{
+			if ( !visited[ i ] && tFlow[i] > maxflow )
+			{
+				maxflow = tFlow[i];
+				maxflowIndex = i;
+			}
+		}
+
+		if ( maxflowIndex == -1 )
+		{
+			break;
+		}
+		
+	}
+	return 0;
+}
 
 int main()
 {
@@ -92,6 +129,43 @@ int main()
 		return 0;
 	}
 
+	// Maxmum Matching problem.
+
+	int nCowNum, nStallNum;
+	fin >> nCowNum >> nStallNum;
+
+	// 节点矩阵的大小,是牛的数目 + Stalls 的数目 + source + sink.
+	int nTotalNum = nCowNum + nStallNum + 2;
+
+	// 矩阵
+	TWeightTable tNetworkFlowTable( nTotalNum, TWeightList( nTotalNum, 0 ) );
+
+	for ( int i=0; i<nCowNum; ++i )
+	{
+		int nCowIndex = i + 2;	// 奶牛在表中的序号.
+		tNetworkFlowTable[0][ nCowIndex ] = 1;
+		int nStallNum;
+		for ( int k=0; k<nStallNum; ++k )
+		{
+			int nStallIndex;
+			fin >> nStallIndex;
+
+			int nStallIndexInTable = 2 + nCowNum + nStallIndex - 1;
+
+			tNetworkFlowTable[ nCowIndex ][ nStallIndexInTable ] = 1;
+		}
+	}
+
+	for ( int i=0; i<nStallNum; ++i )
+	{
+		int nStallIndexInTable = 2 + nCowNum + i;
+		tNetworkFlowTable[1][nStallIndexInTable] = 1;
+	}
+
+	int nMaxFlow = GetMaxFlow( tNetworkFlowTable, 0, 1 );
+
+	int maxCowNum = nMaxFlow / 3;
+	fout << maxCowNum << endl;
 
 
 #ifdef THINKINGL
