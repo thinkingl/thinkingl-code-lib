@@ -1,0 +1,85 @@
+
+<!-- saved from url=(0051)http://ace.delos.com/usacoprob2?a=aXWLBOue4oF&S=job -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"> <title>Problem 49: Job Processing</title> </head>
+<body background="./Problem 49  Job Processing_files/bg3.jpg">
+<img src="./Problem 49  Job Processing_files/cow1.jpg" width="742" height="118">
+<center>
+<b><font size="7">Job Processing</font></b><br>
+<b>IOI'96</b>
+</center>
+
+<p>A factory is running a production line that requires two operations
+to be performed on each job: first operation "A" then operation "B".
+Only a certain number of machines are capable of performing each
+operation.
+
+</p><center>
+<img src="./Problem 49  Job Processing_files/ioi96d1.gif">
+</center>
+
+Figure 1 shows the organization of the production line that works as
+follows. A type "A" machine takes a job from the input container, performs
+operation "A" and puts the job into the intermediate container.  A type
+"B" machine takes a job from the intermediate container, performs
+operation "B" and puts the job into the output container. All machines
+can work in parallel and independently of each other, and the size of
+each container is unlimited. The machines have different performance
+characteristics, a given machine requires a given processing time for
+its operation.
+
+<p> Give the earliest time operation "A" can be completed for all N jobs
+provided that the jobs are available at time 0. Compute the minimal
+amount of time that is necessary to perform both operations (successively,
+of course) on all N jobs.
+
+</p><h3>PROGRAM NAME: job</h3>
+
+<h3>INPUT FORMAT</h3>
+
+<table border="1">
+<tbody><tr> <td> Line 1: </td> <td>
+Three space-separated integers:
+<ul>
+<li> N, the number of jobs (1&lt;=N&lt;=1000).
+</li><li>M1, the number of type "A" machines (1&lt;=M1&lt;=30)
+</li><li>M2, the number of type "B" machines (1&lt;=M2&lt;=30)
+</li></ul>
+</td> </tr>
+<tr> <td> Line 2..etc: </td> <td> M1 integers that are the job processing
+times of each type "A" machine (1..20) followed by M2 integers, the job
+processing times of each type "B" machine (1..20).
+</td> </tr>
+</tbody></table>
+
+<h3>SAMPLE INPUT (file job.in) </h3>
+
+<pre>5 2 3
+1 1 3 1 4
+</pre>
+
+<h3>OUTPUT FORMAT</h3>
+
+A single line containing two integers:  the minimum time to perform all
+"A" tasks and the minimum time to perform all "B" tasks (which require
+"A" tasks, of course).
+
+<h3>SAMPLE OUTPUT (file job.out)</h3>
+
+<pre>3 5
+</pre>
+<br>
+<hr>
+<form action="http://ace.delos.com/upload3" enctype="multipart/form-data" method="POST">
+<b>Submission file Name:</b> <input type="file" name="filename">
+<input type="submit" value="Send it in!">
+<input type="hidden" name="a" value="aXWLBOue4oF">
+<input type="hidden" name="S" value="job">
+</form>
+
+<center>
+<a href="http://ace.delos.com/usacogate?a=aXWLBOue4oF"> USACO Gateway </a> &nbsp;| &nbsp;
+<a href="mailto:kolstad@ace.delos.com">Comment or Question </a>
+</center>
+
+
+</body></html>
