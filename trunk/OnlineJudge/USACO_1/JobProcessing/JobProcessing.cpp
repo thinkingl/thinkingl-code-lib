@@ -76,7 +76,81 @@ typedef unsigned long u32;
 #define THINKINGL 1
 #endif
 
+typedef std::vector< int > TTimeList;
 
+const int IFINITE = 0xFFFFFFF;
+
+/** 解题,获取操作完成时间.
+*	
+*/
+void GetOperationFinishTime( int nJobNum, 
+	const TTimeList& tMachineAOpTime, const TTimeList& tMachineBOpTime,
+	int& nOpAFinishTime, int& nOpBFinishTime )
+{
+	// 两种机器的数目.
+	int nMachineANum = tMachineAOpTime.size();
+	int nMachineBNum = tMachineBOpTime.size();
+
+	// 两种机器的状态,存放的是完成操作需要的全部时间.初始化没有工作,为0.
+	TTimeList tMachineATotalTime( nMachineANum, 0 );
+	TTimeList tMachineBTotalTime( nMachineBNum, 0 );
+
+	// 三个job container.
+	int nInputContainer = nJobNum;
+	int nIntermediateContainer = 0;
+	int nOutContainer = 0;
+
+	// 把job一个个分配给机器.
+	for ( int i=0; i<nJobNum; ++i )
+	{
+		// 寻找能最早完成这个job的A操作的机器.
+		// 最早能完成的时间.
+		int nMinFinishATime = IFINITE;
+		// 进行A操作的机器序号.
+		int nOpAMachine = 0;
+		// 遍历所有的A机器,寻找能最早完成操作的.
+		for ( int a=0; a<nMachineANum; ++a )
+		{
+			int finishTime = tMachineATotalTime[a] + tMachineAOpTime[a];
+			if ( finishTime < nMinFinishATime )
+			{
+				nOpAMachine = a;
+				nMinFinishATime = finishTime;
+			}
+		}
+
+		// 让这台机器进行A操作.
+		tMachineATotalTime[ nOpAMachine ] = nMinFinishATime;
+
+		// 这台机器完成了A操作后,传给B机器们,进行B操作.
+
+		// 寻找一个最早完成这个jobB操作的机器.
+		int nMinFinishBTime = IFINITE;
+		int nOpBMachine = 0;
+		for ( int b=0; b<nMachineBNum; ++b )
+		{
+			// 一台机器只能在 A操作完成了之后( nMinFinishATime ) 才能进行B操作.
+			int beginTime = max( tMachineBTotalTime[b], nMinFinishATime );
+			int finishTime = beginTime + tMachineBOpTime[b];
+			if ( finishTime < nMinFinishBTime )
+			{
+				nOpBMachine = b;
+				nMinFinishBTime = finishTime;
+			}
+		}
+
+		// 让这台机器完成B操作.
+		tMachineBTotalTime[ nOpBMachine ] = nMinFinishBTime;
+
+	}
+
+	// 把最后完成的A操作找出来.
+	TTimeList::iterator itMaxFinishATime = max_element( tMachineATotalTime.begin(), tMachineATotalTime.end() );
+	nOpAFinishTime = *itMaxFinishATime;
+
+	TTimeList::iterator itMaxFinishBTime = max_element( tMachineBTotalTime.begin(), tMachineBTotalTime.end() );
+	nOpBFinishTime = *itMaxFinishBTime;
+}
 int main()
 {
 	string strProblemName = "job";
@@ -91,7 +165,31 @@ int main()
 		return 0;
 	}
 
+	int nJobNum, nMachineANum, nMachineBNum;
+	fin >> nJobNum >> nMachineANum >> nMachineBNum;
+
 	
+	TTimeList tMachineAOpTime;
+	for ( int i=0; i<nMachineANum; ++i )
+	{
+		int nTime;
+		fin >> nTime;
+		tMachineAOpTime.push_back( nTime );
+	}
+	TTimeList tMachineBOpTime;
+	for ( int i=0; i<nMachineBNum; ++i )
+	{
+		int nTime;
+		fin >> nTime;
+		tMachineBOpTime.push_back( nTime );
+	}
+
+	// 模拟.
+	int nOpATotalTime = 0;
+	int nOpBTotalTime = 0;
+	GetOperationFinishTime( nJobNum, tMachineAOpTime, tMachineBOpTime, nOpATotalTime, nOpBTotalTime );
+
+	fout << nOpATotalTime << " " << nOpBTotalTime << endl;
 
 #ifdef THINKINGL
 
