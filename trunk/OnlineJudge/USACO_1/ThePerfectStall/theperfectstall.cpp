@@ -35,7 +35,8 @@ SAMPLE OUTPUT (file stall4.out)
 */
 
 /** 
-*	
+*	Max matching problem.
+*	Use Network flow algorithm.
 */
 #include <stdio.h>
 #include <stdlib.h>
@@ -80,10 +81,10 @@ const u32 INFINITE = 0xFFFFFF;	// 无限大.
 typedef std::vector< u32 > TWeightList;
 typedef std::vector< TWeightList > TWeightTable;
 
-u32 GetMaxFlow( const TWeightTable& weightTable, int source, int dst )
+u32 GetMaxFlow( const TWeightTable& weightTable, int source, int sink )
 {
 	int nPointNum = weightTable.size();
-	int nMaxFlow = 0;
+	int nTotalFlow = 0;
 
 	TWeightTable flowTable = weightTable;
 
@@ -94,25 +95,77 @@ u32 GetMaxFlow( const TWeightTable& weightTable, int source, int dst )
 		TVisited visited( nPointNum, false );
 		TWeightList tFlow( nPointNum, 0 );
 
+		typedef std::vector< int > TIndexList;
+		TIndexList tPreNode( nPointNum, -1 );
+
 		tFlow[ source ] = INFINITE;
 		u32 maxflow = 0;
 		int maxflowIndex = -1;
-		for ( int i=0; i<nPointNum; ++i )
+		while( true )
 		{
-			if ( !visited[ i ] && tFlow[i] > maxflow )
+			maxflow = 0;
+			maxflowIndex = -1;
+
+			// 寻找有最大流量的点.
+			for ( int i=0; i<nPointNum; ++i )
 			{
-				maxflow = tFlow[i];
-				maxflowIndex = i;
+				if ( !visited[ i ] && (tFlow[i] > maxflow) )
+				{
+					maxflow = tFlow[i];
+					maxflowIndex = i;
+				}
 			}
+
+			// 如果没能找到,或者最大流量的点就是目标点.
+			// 这时跳出寻找最大流量路径的循环.
+			// 如果没能找到,说明已经没有通路了.
+			// 如果最大流量点是目标点,说明已经找到了.
+			if ( maxflowIndex == -1 || maxflowIndex == sink )
+			{
+				break;
+			}
+
+			// 标记这点为已访问.
+			visited[ maxflowIndex ] = true;
+
+			// 遍历它的邻居
+			TWeightList& tNeighbour = flowTable[ maxflowIndex ];
+			for ( int i=0; i<nPointNum; ++i )
+			{
+				u32 newflow = min( maxflow, tNeighbour[i] );
+				if ( newflow > tFlow[i] )
+				{
+					tFlow[ i ] = newflow;
+					tPreNode[ i ] = maxflowIndex;
+				}				 
+			}
+
 		}
 
-		if ( maxflowIndex == -1 )
+		// 如果最大流量点没有找到,说明已经不通了,跳出循环.
+		if ( -1 == maxflowIndex )
 		{
 			break;
 		}
+
+		// 将这条最大通路从原始图中弄出来.
+		int nCurPreNode = sink;
+		while( nCurPreNode != source )
+		{
+			int nextPreNode = tPreNode[ nCurPreNode ];
+
+			flowTable[ nextPreNode ][ nCurPreNode ] -= maxflow;
+			flowTable[ nCurPreNode ][ nextPreNode ] += maxflow;
+
+			nCurPreNode = nextPreNode;
+		}
+		// 累加这条通路的流量.
+		nTotalFlow += maxflow;
+
+		
 		
 	}
-	return 0;
+	return nTotalFlow;
 }
 
 int main()
@@ -145,6 +198,7 @@ int main()
 		int nCowIndex = i + 2;	// 奶牛在表中的序号.
 		tNetworkFlowTable[0][ nCowIndex ] = 1;
 		int nStallNum;
+		fin >> nStallNum;
 		for ( int k=0; k<nStallNum; ++k )
 		{
 			int nStallIndex;
@@ -156,15 +210,16 @@ int main()
 		}
 	}
 
+	// 初始化各个Stall到sink的值为1.
 	for ( int i=0; i<nStallNum; ++i )
 	{
 		int nStallIndexInTable = 2 + nCowNum + i;
-		tNetworkFlowTable[1][nStallIndexInTable] = 1;
+		tNetworkFlowTable[nStallIndexInTable][1] = 1;
 	}
 
 	int nMaxFlow = GetMaxFlow( tNetworkFlowTable, 0, 1 );
 
-	int maxCowNum = nMaxFlow / 3;
+	int maxCowNum = nMaxFlow;
 	fout << maxCowNum << endl;
 
 
