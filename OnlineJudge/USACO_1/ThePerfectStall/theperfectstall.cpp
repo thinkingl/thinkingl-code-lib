@@ -77,7 +77,7 @@ typedef unsigned long u32;
 #define THINKINGL 1
 #endif
 
-const u32 INFINITE = 0xFFFFFF;	// ÎŞÏŞ´ó.
+const u32 INFINITE = 0xFFFFFF;	// æ— é™å¤§.
 typedef std::vector< u32 > TWeightList;
 typedef std::vector< TWeightList > TWeightTable;
 
@@ -88,7 +88,7 @@ u32 GetMaxFlow( const TWeightTable& weightTable, int source, int sink )
 
 	TWeightTable flowTable = weightTable;
 
-	// Ò»Ö±Ñ°ÕÒ×î´óÂ·¾¶
+	// ä¸€ç›´å¯»æ‰¾æœ€å¤§è·¯å¾„
 	while ( true )
 	{
 		typedef std::vector< bool > TVisited;
@@ -106,7 +106,7 @@ u32 GetMaxFlow( const TWeightTable& weightTable, int source, int sink )
 			maxflow = 0;
 			maxflowIndex = -1;
 
-			// Ñ°ÕÒÓĞ×î´óÁ÷Á¿µÄµã.
+			// å¯»æ‰¾æœ‰æœ€å¤§æµé‡çš„ç‚¹.
 			for ( int i=0; i<nPointNum; ++i )
 			{
 				if ( !visited[ i ] && (tFlow[i] > maxflow) )
@@ -116,19 +116,19 @@ u32 GetMaxFlow( const TWeightTable& weightTable, int source, int sink )
 				}
 			}
 
-			// Èç¹ûÃ»ÄÜÕÒµ½,»òÕß×î´óÁ÷Á¿µÄµã¾ÍÊÇÄ¿±êµã.
-			// ÕâÊ±Ìø³öÑ°ÕÒ×î´óÁ÷Á¿Â·¾¶µÄÑ­»·.
-			// Èç¹ûÃ»ÄÜÕÒµ½,ËµÃ÷ÒÑ¾­Ã»ÓĞÍ¨Â·ÁË.
-			// Èç¹û×î´óÁ÷Á¿µãÊÇÄ¿±êµã,ËµÃ÷ÒÑ¾­ÕÒµ½ÁË.
+			// å¦‚æœæ²¡èƒ½æ‰¾åˆ°,æˆ–è€…æœ€å¤§æµé‡çš„ç‚¹å°±æ˜¯ç›®æ ‡ç‚¹.
+			// è¿™æ—¶è·³å‡ºå¯»æ‰¾æœ€å¤§æµé‡è·¯å¾„çš„å¾ªç¯.
+			// å¦‚æœæ²¡èƒ½æ‰¾åˆ°,è¯´æ˜å·²ç»æ²¡æœ‰é€šè·¯äº†.
+			// å¦‚æœæœ€å¤§æµé‡ç‚¹æ˜¯ç›®æ ‡ç‚¹,è¯´æ˜å·²ç»æ‰¾åˆ°äº†.
 			if ( maxflowIndex == -1 || maxflowIndex == sink )
 			{
 				break;
 			}
 
-			// ±ê¼ÇÕâµãÎªÒÑ·ÃÎÊ.
+			// æ ‡è®°è¿™ç‚¹ä¸ºå·²è®¿é—®.
 			visited[ maxflowIndex ] = true;
 
-			// ±éÀúËüµÄÁÚ¾Ó
+			// éå†å®ƒçš„é‚»å±…
 			TWeightList& tNeighbour = flowTable[ maxflowIndex ];
 			for ( int i=0; i<nPointNum; ++i )
 			{
@@ -142,13 +142,13 @@ u32 GetMaxFlow( const TWeightTable& weightTable, int source, int sink )
 
 		}
 
-		// Èç¹û×î´óÁ÷Á¿µãÃ»ÓĞÕÒµ½,ËµÃ÷ÒÑ¾­²»Í¨ÁË,Ìø³öÑ­»·.
+		// å¦‚æœæœ€å¤§æµé‡ç‚¹æ²¡æœ‰æ‰¾åˆ°,è¯´æ˜å·²ç»ä¸é€šäº†,è·³å‡ºå¾ªç¯.
 		if ( -1 == maxflowIndex )
 		{
 			break;
 		}
 
-		// ½«ÕâÌõ×î´óÍ¨Â·´ÓÔ­Ê¼Í¼ÖĞÅª³öÀ´.
+		// å°†è¿™æ¡æœ€å¤§é€šè·¯ä»åŸå§‹å›¾ä¸­å¼„å‡ºæ¥.
 		int nCurPreNode = sink;
 		while( nCurPreNode != source )
 		{
@@ -159,7 +159,7 @@ u32 GetMaxFlow( const TWeightTable& weightTable, int source, int sink )
 
 			nCurPreNode = nextPreNode;
 		}
-		// ÀÛ¼ÓÕâÌõÍ¨Â·µÄÁ÷Á¿.
+		// ç´¯åŠ è¿™æ¡é€šè·¯çš„æµé‡.
 		nTotalFlow += maxflow;
 
 		
@@ -187,15 +187,15 @@ int main()
 	int nCowNum, nStallNum;
 	fin >> nCowNum >> nStallNum;
 
-	// ½Úµã¾ØÕóµÄ´óĞ¡,ÊÇÅ£µÄÊıÄ¿ + Stalls µÄÊıÄ¿ + source + sink.
+	// èŠ‚ç‚¹çŸ©é˜µçš„å¤§å°,æ˜¯ç‰›çš„æ•°ç›® + Stalls çš„æ•°ç›® + source + sink.
 	int nTotalNum = nCowNum + nStallNum + 2;
 
-	// ¾ØÕó
+	// çŸ©é˜µ
 	TWeightTable tNetworkFlowTable( nTotalNum, TWeightList( nTotalNum, 0 ) );
 
 	for ( int i=0; i<nCowNum; ++i )
 	{
-		int nCowIndex = i + 2;	// ÄÌÅ£ÔÚ±íÖĞµÄĞòºÅ.
+		int nCowIndex = i + 2;	// å¥¶ç‰›åœ¨è¡¨ä¸­çš„åºå·.
 		tNetworkFlowTable[0][ nCowIndex ] = 1;
 		int nStallNum;
 		fin >> nStallNum;
@@ -210,7 +210,7 @@ int main()
 		}
 	}
 
-	// ³õÊ¼»¯¸÷¸öStallµ½sinkµÄÖµÎª1.
+	// åˆå§‹åŒ–å„ä¸ªStallåˆ°sinkçš„å€¼ä¸º1.
 	for ( int i=0; i<nStallNum; ++i )
 	{
 		int nStallIndexInTable = 2 + nCowNum + i;
