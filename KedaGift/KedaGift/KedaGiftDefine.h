@@ -9,8 +9,10 @@ public:
 	CEmployer();
 
 	/** 工号*/
+	CString m_strKedaNo;
 
 	/** 姓名 */
-
+	CString m_strName;
 	/** 中奖情况. */
+	CTime m_time;
 };
