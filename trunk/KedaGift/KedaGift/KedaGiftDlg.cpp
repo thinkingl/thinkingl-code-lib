@@ -7,8 +7,11 @@
 #include "KedaGiftDlg.h"
 #include "afxdialogex.h"
 #include "KedaGiftDefine.h"
-#include "RadomPick.h"
+#include "RandomPick.h"
 #include "UnitTest.h"
+
+#include "EmployerInput.h"
+#include "GiftStatusView.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -53,16 +56,24 @@ END_MESSAGE_MAP()
 
 CKedaGiftDlg::CKedaGiftDlg(CWnd* pParent /*=NULL*/)
 	: CDialogEx(CKedaGiftDlg::IDD, pParent)
+	, m_strGifted(_T(""))
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 
 	m_bEmployRefreshing = false;
+
+	CEmployerInput emIn;
+//	emIn.GetAllNoGiftEmployer();
+	m_radomLuckyPick.SetEmployerList( emIn.GetAllNoGiftEmployer() );
 }
 
 void CKedaGiftDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogEx::DoDataExchange(pDX);
 	DDX_Control(pDX, IDC_STATIC_EMPLOYER, m_staticEmplyer);
+	DDX_Control(pDX, ID_START_STOP, m_btnStartStop);
+	DDX_Control(pDX, IDC_EDIT_GIFTED, m_editGifted);
+	DDX_Text(pDX, IDC_EDIT_GIFTED, m_strGifted);
 }
 
 BEGIN_MESSAGE_MAP(CKedaGiftDlg, CDialogEx)
@@ -72,6 +83,11 @@ BEGIN_MESSAGE_MAP(CKedaGiftDlg, CDialogEx)
 	ON_BN_CLICKED(ID_START_STOP, &CKedaGiftDlg::OnBnClickedStartStop)
 	ON_MESSAGE( WM_REFRESH_EMPLOY, &CKedaGiftDlg::OnEmployRefresh)
 	ON_BN_CLICKED(ID_UNITTEST, &CKedaGiftDlg::OnBnClickedUnittest)
+	ON_WM_LBUTTONDOWN()
+	ON_WM_KEYDOWN()
+	ON_BN_CLICKED(ID_GIFT_STATE, &CKedaGiftDlg::OnBnClickedGiftState)
+	ON_BN_CLICKED(ID_NEXT_TURN, &CKedaGiftDlg::OnBnClickedNextTurn)
+	ON_WM_SIZE()
 END_MESSAGE_MAP()
 
 
@@ -89,12 +105,9 @@ LRESULT CKedaGiftDlg::OnEmployRefresh( WPARAM, LPARAM )
 {
 	if ( m_bEmployRefreshing )
 	{
-		CRadomPick rp;
-		int nRandNum = rp.GetRadomNum( 0, 450 );
-		CString strTmp;
-		strTmp.Format( _T( "%d" ), nRandNum  );
-
-		this->m_staticEmplyer.SetWindowText( strTmp );
+		CEmployer randomShowEmployer = this->m_radomLuckyPick.RandomPickOneNoGiftToShow();
+		
+		this->ShowAMan( randomShowEmployer );
 	}
 	return 0;
 }
@@ -130,6 +143,25 @@ BOOL CKedaGiftDlg::OnInitDialog()
 
 	// TODO: 在此添加额外的初始化代码
 	this->SetTimer( Timer_Refresh, 1, TimerCB );
+
+	this->m_fontShowName.CreateFont(
+		72,                        // nHeight
+		0,                         // nWidth
+		0,                         // nEscapement
+		0,                         // nOrientation
+		FW_NORMAL,                 // nWeight
+		FALSE,                     // bItalic
+		FALSE,                     // bUnderline
+		0,                         // cStrikeOut
+		ANSI_CHARSET,              // nCharSet
+		OUT_DEFAULT_PRECIS,        // nOutPrecision
+		CLIP_DEFAULT_PRECIS,       // nClipPrecision
+		DEFAULT_QUALITY,           // nQuality
+		DEFAULT_PITCH | FF_SWISS,  // nPitchAndFamily
+		_T("Arial"));                 // lpszFacename
+
+
+	this->m_staticEmplyer.SetFont( &m_fontShowName );
 
 	return TRUE;  // 除非将焦点设置到控件，否则返回 TRUE
 }
@@ -189,6 +221,19 @@ void CKedaGiftDlg::OnBnClickedStartStop()
 {
 	// TODO: 在此添加控件通知处理程序代码
 	this->m_bEmployRefreshing = !m_bEmployRefreshing;
+
+	if ( !m_bEmployRefreshing )
+	{
+		// 选一个人中奖.
+		CEmployer luckyOne = this->m_radomLuckyPick.GetLukyOne();
+		this->ShowAMan( luckyOne );
+		
+		this->m_strGifted += this->GetShowText( luckyOne );
+		m_strGifted += "\r\n";
+		this->UpdateData( FALSE );
+	}
+
+	this->m_btnStartStop.SetWindowText( m_bEmployRefreshing ? _T( "停止" ) : _T( "开始" ) );
 }
 
 
@@ -196,4 +241,78 @@ void CKedaGiftDlg::OnBnClickedUnittest()
 {
 	// TODO: 在此添加控件通知处理程序代码
 	CUnitTest ut;
+}
+
+void CKedaGiftDlg::ShowAMan( const CEmployer& oneMan )
+{
+	CString strText = this->GetShowText( oneMan );	
+	this->m_staticEmplyer.SetWindowText( strText );
+}
+
+CString CKedaGiftDlg::GetShowText( const CEmployer& oneMan )
+{
+	CString strTmp;
+	strTmp.Format( _T( "%s  %s" ), oneMan.m_strKedaNo, oneMan.m_strName );
+	return strTmp;
+}
+
+void CKedaGiftDlg::OnLButtonDown(UINT nFlags, CPoint point)
+{
+	// TODO: 在此添加消息处理程序代码和/或调用默认值
+	this->OnBnClickedStartStop();
+
+	CDialogEx::OnLButtonDown(nFlags, point);
+}
+
+
+void CKedaGiftDlg::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
+{
+	// TODO: 在此添加消息处理程序代码和/或调用默认值
+
+	CDialogEx::OnKeyDown(nChar, nRepCnt, nFlags);
+
+	this->OnBnClickedStartStop();
+
+}
+
+
+void CKedaGiftDlg::OnBnClickedGiftState()
+{
+	// TODO: 在此添加控件通知处理程序代码
+	CGiftStatusView dlg;
+	dlg.SetRandomPicker( &m_radomLuckyPick );
+	dlg.DoModal();
+
+	CEmployerGiftConfig config;
+	TEmployerList tAllLucky = config.GetLuckies();
+	if ( tAllLucky.empty() )
+	{
+		// 清空了中奖的人.
+		this->m_staticEmplyer.SetWindowText( "KEDACOM" );
+
+		this->m_editGifted.SetWindowText( "" );
+	}
+	this->m_radomLuckyPick;
+}
+
+
+void CKedaGiftDlg::OnBnClickedNextTurn()
+{
+	// TODO: 在此添加控件通知处理程序代码
+	this->m_strGifted = "";
+	this->m_staticEmplyer.SetWindowText( "KEDACOM" );
+	this->UpdateData( FALSE );
+
+}
+
+
+void CKedaGiftDlg::OnSize(UINT nType, int cx, int cy)
+{
+	CDialogEx::OnSize(nType, cx, cy);
+
+	if ( this->GetSafeHwnd() && m_staticEmplyer.GetSafeHwnd() )
+	{
+
+	}
+	// TODO: 在此处添加消息处理程序代码
 }

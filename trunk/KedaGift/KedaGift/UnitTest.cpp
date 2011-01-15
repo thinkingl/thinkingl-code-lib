@@ -1,8 +1,9 @@
 #include "StdAfx.h"
 #include "UnitTest.h"
-#include "RadomPick.h"
+#include "RandomPick.h"
+#include "EmployerInput.h"
 #include <vector>
-
+#include <map>
 
 CUnitTest::CUnitTest(void)
 {
@@ -16,34 +17,55 @@ CUnitTest::~CUnitTest(void)
 
 void CUnitTest::UTRadomPick()
 {
-	CRadomPick rp;
+	CRandomPick rp;
 
-	const int TEST_NUM = 356;
 
-	typedef std::vector< int > TCounterList;
-	TCounterList tCounter( TEST_NUM, 0 );
 
-	const int TEST_TIMES = 10000000;
+	CEmployerInput employInput;
+	TEmployerList allEmp = employInput.GetAllNoGiftEmployer();
+
+	int nEmployerNum = allEmp.size();
+
+	typedef std::map< CString, int > TCounterList;
+	TCounterList tCounter;
+
+	rp.SetEmployerList( allEmp );
+
+	// 奖品数目.
+	const int GIFT_NUM = 50;
+
+	// 抽奖轮数.
+	const int TEST_TIMES = 10000;
+
 	for ( int i=0; i<TEST_TIMES; ++i )
 	{
-		int nRadom = rp.GetRadomNum( 0, tCounter.size()-1 );
-		tCounter[ nRadom ] ++;
+		for ( int k=0; k<GIFT_NUM; ++k )
+		{
+			CEmployer luckone = rp.GetLukyOne();
+			tCounter[ luckone.m_strKedaNo ] ++;
+		}
+		rp.ResetGift();	// 重新一轮抽奖...
 	}
 
-	int nAvrage = TEST_TIMES / TEST_NUM;
+	// 每个人能得到的奖品的平均数.
+	int nAvrage = TEST_TIMES * GIFT_NUM / nEmployerNum;
 
 	int nMax  = 0;
-	for ( size_t i=0; i<tCounter.size(); ++i )
+	CEmployer unluckOne;
+	for ( size_t i=0; i<allEmp.size(); ++i )
 	{
-		int nOffset = abs( nAvrage - tCounter[i] );
+		CString strKedaNo = allEmp[i].m_strKedaNo;
+		int nOffset = abs( nAvrage - tCounter[ strKedaNo ] );
 		if ( nOffset > nMax )
 		{
+			unluckOne = allEmp[i];
 			nMax = nOffset;
 		}
 	}
 
 	CString strMsg;
-	strMsg.Format( _T( "随机最大偏差比例为 %02f 平均值应为 %d 最大偏差项偏差值为 %d " ),float( nMax )/nAvrage, nAvrage, nMax  );
+	strMsg.Format( _T( "随机最大偏差比例为 %02f%% 平均值应为 %d 最大偏差项偏差值为 %d 最倒霉的家伙是 : %s" ),
+		float( nMax * 100 )/nAvrage, nAvrage, nMax, unluckOne.m_strName  );
 	AfxMessageBox( strMsg );
 //	_ASSERT( FALSE );
 }

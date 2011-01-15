@@ -22,6 +22,7 @@
     <None Include="res\KedaGift.ico">
       <Filter>资源文件</Filter>
     </None>
+    <None Include="EmployerList.txt" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="KedaGift.h">
@@ -39,9 +40,6 @@
     <ClInclude Include="Resource.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="RadomPick.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="UnitTest.h">
       <Filter>头文件</Filter>
     </ClInclude>
@@ -49,6 +47,18 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="KedaGiftDefine.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="EmployerGiftConfig.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="iniparse.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="GiftStatusView.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="RandomPick.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
@@ -62,13 +72,22 @@
     <ClCompile Include="stdafx.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="RadomPick.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="UnitTest.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="EmployerInput.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="EmployerGiftConfig.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="iniparse.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="GiftStatusView.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="RandomPick.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

@@ -1,3 +1,8 @@
+#pragma once
+
+#include <vector>
+
+
 enum EMessage
 {
 	WM_REFRESH_EMPLOY = WM_USER + 1000,	// 刷新界面上显示的人.
@@ -6,7 +11,7 @@ enum EMessage
 class CEmployer
 {
 public:
-	CEmployer();
+//	CEmployer();
 
 	/** 工号*/
 	CString m_strKedaNo;
@@ -16,3 +21,6 @@ public:
 	/** 中奖情况. */
 	CTime m_time;
 };
+
+
+typedef std::vector< CEmployer > TEmployerList;

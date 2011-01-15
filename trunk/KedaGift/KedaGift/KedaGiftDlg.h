@@ -5,6 +5,7 @@
 #pragma once
 #include "afxwin.h"
 
+#include "RandomPick.h"
 
 // CKedaGiftDlg 对话框
 class CKedaGiftDlg : public CDialogEx
@@ -36,6 +37,12 @@ public:
 
 private:
 	static void CALLBACK CKedaGiftDlg::TimerCB(HWND hWnd, UINT eventId, UINT_PTR, DWORD);
+
+	/** 显示一个人. */
+	void ShowAMan( const CEmployer& oneMan );
+
+	/** 获取显示的字符.*/
+	CString GetShowText( const CEmployer& oneMan );
 private:
 	// 定时器.
 	enum ETimer
@@ -45,7 +52,21 @@ private:
 
 	/** 是否正在刷新员工. */
 	bool m_bEmployRefreshing;
+
+	/** 幸运摇奖. */
+	CRandomPick m_radomLuckyPick;
+
+	CFont m_fontShowName;
 public:
 	CStatic m_staticEmplyer;
 	afx_msg void OnBnClickedUnittest();
+	CButton m_btnStartStop;
+	afx_msg void OnLButtonDown(UINT nFlags, CPoint point);
+	afx_msg void OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags);
+	afx_msg void OnBnClickedGiftState();
+
+	CEdit m_editGifted;
+	CString m_strGifted;
+	afx_msg void OnBnClickedNextTurn();
+	afx_msg void OnSize(UINT nType, int cx, int cy);
 };
