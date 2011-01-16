@@ -1,0 +1,19 @@
+// 计算机生成了由 Microsoft Visual C++ 创建的 IDispatch 包装类
+
+// 注意: 不要修改此文件的内容。如果此类由
+//  Microsoft Visual C++ 重新生成，您的修改将被覆盖。
+
+
+#include "stdafx.h"
+#include "shockwaveflash_background.h"
+
+/////////////////////////////////////////////////////////////////////////////
+// CShockwaveflash_background
+
+IMPLEMENT_DYNCREATE(CShockwaveflash_background, CWnd)
+
+/////////////////////////////////////////////////////////////////////////////
+// CShockwaveflash_background 属性
+
+/////////////////////////////////////////////////////////////////////////////
+// CShockwaveflash_background 操作

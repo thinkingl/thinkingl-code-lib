@@ -61,6 +61,18 @@
     <ClInclude Include="RandomPick.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="FlashDialog.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="shockwaveflash_background.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="PictureStatic.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="kedagiftcommon.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="KedaGift.cpp">
@@ -88,6 +100,18 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="RandomPick.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="FlashDialog.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="shockwaveflash_background.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="PictureStatic.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="kedagiftcommon.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
