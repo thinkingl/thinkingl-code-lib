@@ -5,7 +5,7 @@
 #include "KedaGift.h"
 #include "FlashDialog.h"
 #include "afxdialogex.h"
-
+#include <MMSystem.h>
 #include <vector>
 
 // CFlashDialog 对话框
@@ -17,7 +17,6 @@ CFlashDialog::CFlashDialog(CWnd* pParent, CRandomPick* pRandomPic )
 {
 	this->m_pRandomPick = pRandomPic;
 	this->m_eState = State_Ready;
-	m_nLuckPeopleNum = 0;
 }
 
 CFlashDialog::~CFlashDialog()
@@ -55,6 +54,7 @@ BEGIN_MESSAGE_MAP(CFlashDialog, CDialogEx)
 	ON_MESSAGE( WM_REFRESH_EMPLOY, &CFlashDialog::OnEmployRefresh)
 	ON_WM_LBUTTONDBLCLK()
 	ON_BN_CLICKED(ID_ABSENT, &CFlashDialog::OnBnClickedAbsent)
+	ON_WM_DESTROY()
 END_MESSAGE_MAP()
 
 
@@ -128,6 +128,11 @@ BOOL CFlashDialog::OnInitDialog()
 
 	this->m_staticName.SetFont( &m_fontShowName );
 
+	this->m_staticLuckyNum.SetFont( &m_fontShowName );
+	this->UpdateLuckNum();
+
+	CString strSoundPath = strCurrentDir + "defBBSound.wav";
+	::PlaySound( strSoundPath,  NULL, SND_ASYNC | SND_FILENAME );
 
 	return TRUE;  // return TRUE unless you set the focus to a control
 	// 异常: OCX 属性页应返回 FALSE
@@ -158,7 +163,7 @@ void CFlashDialog::OnSize(UINT nType, int cx, int cy)
 		this->m_btnTest.MoveWindow( rcNewButton );
 
 		// 第几个..
-		this->m_staticLuckyNum.MoveWindow( 0, 50, cx, 200 );
+		this->m_staticLuckyNum.MoveWindow( 0, 50, cx, 100 );
 
 		// 6个文字一行排开.
 		typedef std::vector< CWnd* > TWndList;
@@ -192,10 +197,13 @@ void CFlashDialog::OnSize(UINT nType, int cx, int cy)
 		this->m_btnClose.GetWindowRect( rcBtnSize );
 		
 		int nBtnTop = cy - rcBtnSize.Height() - 30;
-		m_btnClose.MoveWindow( rcBtnSize.left, nBtnTop, rcBtnSize.Width(), rcBtnSize.Height() );
+		m_btnClose.MoveWindow( 200, nBtnTop, rcBtnSize.Width(), rcBtnSize.Height() );
 		
 		m_btnAbsent.GetWindowRect( rcBtnSize );
-		m_btnAbsent.MoveWindow( rcBtnSize.left, nBtnTop, rcBtnSize.Width(), rcBtnSize.Height() );
+		m_btnAbsent.MoveWindow( 400, nBtnTop, rcBtnSize.Width(), rcBtnSize.Height() );
+	
+		
+	
 	}
 
 	// TODO: 在此处添加消息处理程序代码
@@ -339,7 +347,7 @@ void CFlashDialog::GoOrStop()
 	CTime timeNow = CTime::GetCurrentTime();
 	CTimeSpan timeSpan = timeNow - s_timeLastOp;
 
-	if ( timeSpan.GetTotalSeconds() < 2 )
+	if ( timeSpan.GetTotalSeconds() < 1 )
 	{
 		return;
 	}
@@ -348,7 +356,11 @@ void CFlashDialog::GoOrStop()
 		s_timeLastOp = timeNow;
 	}
 	
-	
+	CString strCurrentDir;
+	LPSTR lpBufCurDir = strCurrentDir.GetBuffer( MAX_PATH * 2 );
+	::GetCurrentDirectory( MAX_PATH*2, lpBufCurDir );
+	strCurrentDir.ReleaseBuffer();
+	strCurrentDir += _T( "\\" );
 
 	if ( m_eState == State_Ready )
 	{
@@ -359,18 +371,26 @@ void CFlashDialog::GoOrStop()
 // 			CString strMov = m_tAllNumberFlashControls[i]->get_Movie();
 // 			m_tAllNumberFlashControls[i]->GotoFrame( 0 );
 // 		}
+
+		CString strSoundPath = strCurrentDir + "defBKSound.wav";
+		::PlaySound( strSoundPath,  NULL, SND_ASYNC | SND_LOOP | SND_FILENAME );
 	}
 	else
 	{
 
 		m_eState = State_Ready;
 
+		CString strSoundPath = strCurrentDir + "defStopSound.wav";
+		::PlaySound( strSoundPath,  NULL, SND_ASYNC | SND_FILENAME );
+
 		// 刷新.....
 		CEmployer randomShowEmployer = this->m_pRandomPick->GetLukyOne();
 
 		this->ShowAEmployer( randomShowEmployer );
 
-		this->m_nLuckPeopleNum++;
+		this->m_tLuckyMen.push_back( randomShowEmployer );
+
+		this->UpdateLuckNum();
 	}
 }
 
@@ -430,9 +450,64 @@ void CFlashDialog::OnLButtonDblClk(UINT nFlags, CPoint point)
 void CFlashDialog::OnBnClickedAbsent()
 {
 	// TODO: 在此添加控件通知处理程序代码
+	int nIndex = this->m_tLuckyMen.size() - 1;
+	if ( nIndex < 0 )
+	{
+		return;
+	}
+
+	CEmployer absentMan = this->m_tLuckyMen[ nIndex ];
+	CString strMsg;
+	strMsg.Format( "%s 将失去奖品!", absentMan.m_strName );
+	if ( IDYES == this->MessageBox( strMsg, "杯具了.....", MB_YESNO ) )
+	{
+		// 删除最后一个.
+		this->m_tLuckyMen.erase( this->m_tLuckyMen.begin() + nIndex );
+		this->UpdateLuckNum();
+
+		CString strCurrentDir;
+		LPSTR lpBufCurDir = strCurrentDir.GetBuffer( MAX_PATH * 2 );
+		::GetCurrentDirectory( MAX_PATH*2, lpBufCurDir );
+		strCurrentDir.ReleaseBuffer();
+		strCurrentDir += _T( "\\" );
+		for ( int i=0; i<m_tAllNumberFlashControls.size(); ++i )
+		{
+			m_tAllNumberFlashControls[i]->SetPicture( strCurrentDir + "KedaGiftTextNull.png" );
+		}
+
+		this->m_staticName.SetWindowText( "╮(￣▽￣)╭" );
+
+		this->Invalidate();
+	}
+	
 }
 
 void CFlashDialog::UpdateLuckNum()
 {
+	CString strTxt;
 
+	int nNum = this->m_tLuckyMen.size();
+	if ( nNum > 0 )
+	{
+		strTxt.Format( "第%d个", this->m_tLuckyMen.size() );
+	}
+	else
+	{
+		strTxt = _T( "Good Luck!" );
+	}
+	
+	this->m_staticLuckyNum.SetWindowText( strTxt );
+
+	CRect rcNum;
+	this->m_staticLuckyNum.GetWindowRect( rcNum );
+	rcNum.top -= 50;
+	this->InvalidateRect( rcNum );
+}
+
+void CFlashDialog::OnDestroy()
+{
+	CDialogEx::OnDestroy();
+
+	::PlaySound( NULL, NULL, NULL );
+	// TODO: 在此处添加消息处理程序代码
 }
