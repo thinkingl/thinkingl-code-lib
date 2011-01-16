@@ -68,6 +68,15 @@
     <None Include="defBG.swf">
       <Filter>资源文件</Filter>
     </None>
+    <None Include="defBBSound.wav">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="defBKSound.wav">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="defStopSound.wav">
+      <Filter>资源文件</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="KedaGift.h">

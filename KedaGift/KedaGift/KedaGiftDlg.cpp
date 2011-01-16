@@ -58,6 +58,7 @@ END_MESSAGE_MAP()
 CKedaGiftDlg::CKedaGiftDlg(CWnd* pParent /*=NULL*/)
 	: CDialogEx(CKedaGiftDlg::IDD, pParent)
 	, m_strGifted(_T(""))
+	, m_nAutoPickNum(0)
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 
@@ -75,6 +76,8 @@ void CKedaGiftDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, ID_START_STOP, m_btnStartStop);
 	DDX_Control(pDX, IDC_EDIT_GIFTED, m_editGifted);
 	DDX_Text(pDX, IDC_EDIT_GIFTED, m_strGifted);
+	DDX_Text(pDX, IDC_EDIT_AUTO_PICK_NUM, m_nAutoPickNum);
+	DDX_Control(pDX, IDC_LIST_GIFT, m_listLuckyMen);
 }
 
 BEGIN_MESSAGE_MAP(CKedaGiftDlg, CDialogEx)
@@ -90,6 +93,8 @@ BEGIN_MESSAGE_MAP(CKedaGiftDlg, CDialogEx)
 	ON_BN_CLICKED(ID_NEXT_TURN, &CKedaGiftDlg::OnBnClickedNextTurn)
 	ON_WM_SIZE()
 	ON_BN_CLICKED(ID_FLASH, &CKedaGiftDlg::OnBnClickedFlash)
+	ON_WM_VSCROLL()
+	ON_BN_CLICKED(ID_AUTO_PICK, &CKedaGiftDlg::OnBnClickedAutoPick)
 END_MESSAGE_MAP()
 
 
@@ -147,7 +152,7 @@ BOOL CKedaGiftDlg::OnInitDialog()
 //	this->SetTimer( Timer_Refresh, 1, TimerCB );
 
 	this->m_fontShowName.CreateFont(
-		72,                        // nHeight
+		36,                        // nHeight
 		0,                         // nWidth
 		0,                         // nEscapement
 		0,                         // nOrientation
@@ -160,10 +165,16 @@ BOOL CKedaGiftDlg::OnInitDialog()
 		CLIP_DEFAULT_PRECIS,       // nClipPrecision
 		DEFAULT_QUALITY,           // nQuality
 		DEFAULT_PITCH | FF_SWISS,  // nPitchAndFamily
-		_T("Arial"));                 // lpszFacename
+		_T("宋体"));                 // lpszFacename
 
 
 	this->m_staticEmplyer.SetFont( &m_fontShowName );
+
+	this->m_listLuckyMen.SetFont( &m_fontShowName );
+
+	this->m_listLuckyMen.InsertColumn( 0, "序号", LVCFMT_CENTER, 100 );
+	this->m_listLuckyMen.InsertColumn( 1, "工号", LVCFMT_CENTER, 200 );
+	this->m_listLuckyMen.InsertColumn( 2, "姓名", LVCFMT_CENTER, 235 );
 
 	return TRUE;  // 除非将焦点设置到控件，否则返回 TRUE
 }
@@ -322,7 +333,35 @@ void CKedaGiftDlg::OnSize(UINT nType, int cx, int cy)
 
 void CKedaGiftDlg::OnBnClickedFlash()
 {
+	this->m_listLuckyMen.DeleteAllItems();
+
 	// TODO: 在此添加控件通知处理程序代码
 	CFlashDialog dlg( this, &this->m_radomLuckyPick );
 	dlg.DoModal();
+
+	TEmployerList allLucky = dlg.GetAllLuckyMen();
+	for ( int i=0; i<allLucky.size(); ++i )
+	{
+		CEmployer& emp = allLucky[i];
+		CString strSn;
+		strSn.Format( "%d", i+1 );
+		int nItem = this->m_listLuckyMen.InsertItem( i, strSn );
+		this->m_listLuckyMen.SetItemText( nItem, 1, emp.m_strKedaNo );
+		this->m_listLuckyMen.SetItemText( nItem, 2, emp.m_strName );
+	}
+}
+
+
+void CKedaGiftDlg::OnVScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar)
+{
+	// TODO: 在此添加消息处理程序代码和/或调用默认值
+	this->m_nAutoPickNum;
+	
+	CDialogEx::OnVScroll(nSBCode, nPos, pScrollBar);
+}
+
+
+void CKedaGiftDlg::OnBnClickedAutoPick()
+{
+	// TODO: 在此添加控件通知处理程序代码
 }

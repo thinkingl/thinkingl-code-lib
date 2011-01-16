@@ -6,6 +6,7 @@
 #include "afxwin.h"
 
 #include "RandomPick.h"
+#include "afxcmn.h"
 
 // CKedaGiftDlg ¶Ô»°¿ò
 class CKedaGiftDlg : public CDialogEx
@@ -70,4 +71,8 @@ public:
 	afx_msg void OnBnClickedNextTurn();
 	afx_msg void OnSize(UINT nType, int cx, int cy);
 	afx_msg void OnBnClickedFlash();
+	afx_msg void OnVScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar);
+	int m_nAutoPickNum;
+	afx_msg void OnBnClickedAutoPick();
+	CListCtrl m_listLuckyMen;
 };

@@ -22,6 +22,12 @@ protected:
 
 	DECLARE_MESSAGE_MAP()
 
+public:
+	/** 获取本轮所有中奖的人. */
+	TEmployerList GetAllLuckyMen()const
+	{
+		return m_tLuckyMen;
+	}
 private:
 	// 定时器.
 	enum ETimer
@@ -57,9 +63,9 @@ private:
 	TFlashCtrlList m_tAllNumberFlashControls;
 
 	CFont m_fontShowName;
-
-	/** 已经中奖人数. */
-	int m_nLuckPeopleNum;
+	
+	/** 中奖人列表. */
+	TEmployerList m_tLuckyMen;
 public:
 //	CShockwaveflash_background m_flashBackground;
 	virtual BOOL OnInitDialog();
@@ -91,4 +97,5 @@ public:
 	CButton m_btnAbsent;
 	afx_msg void OnBnClickedAbsent();
 	CStatic m_staticLuckyNum;
+	afx_msg void OnDestroy();
 };
