@@ -44,6 +44,9 @@ private:
 
 	static void CALLBACK TimerCB(HWND hWnd, UINT , UINT_PTR timerId, DWORD de);
 	afx_msg LRESULT OnEmployRefresh( WPARAM, LPARAM );
+
+	/** 更新本轮中奖人数. */
+	void UpdateLuckNum();
 private:
 
 	CRandomPick * m_pRandomPick;
@@ -54,10 +57,13 @@ private:
 	TFlashCtrlList m_tAllNumberFlashControls;
 
 	CFont m_fontShowName;
+
+	/** 已经中奖人数. */
+	int m_nLuckPeopleNum;
 public:
-	CShockwaveflash_background m_flashBackground;
+//	CShockwaveflash_background m_flashBackground;
 	virtual BOOL OnInitDialog();
-	CShockwaveflash_background m_flashNumberFirst;
+//	CShockwaveflash_background m_flashNumberFirst;
 	afx_msg void OnSize(UINT nType, int cx, int cy);
 	afx_msg void OnBnClickedTest();
 	CButton m_btnTest;
@@ -70,9 +76,9 @@ public:
 	afx_msg void OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags);
 	virtual BOOL PreTranslateMessage(MSG* pMsg);
 	CPictureStatic m_picK;
-	CShockwaveflash_background m_flashNum2;
-	CShockwaveflash_background m_flashNum3;
-	CShockwaveflash_background m_flashNum4;
+// 	CShockwaveflash_background m_flashNum2;
+// 	CShockwaveflash_background m_flashNum3;
+// 	CShockwaveflash_background m_flashNum4;
 	CPictureStatic m_picD;
 	afx_msg void OnTimer(UINT_PTR nIDEvent);
 	CPictureStatic m_picNum1;
@@ -81,4 +87,8 @@ public:
 	CPictureStatic m_picNum4;
 	CStatic m_staticName;
 	afx_msg void OnLButtonDblClk(UINT nFlags, CPoint point);
+	CButton m_btnClose;
+	CButton m_btnAbsent;
+	afx_msg void OnBnClickedAbsent();
+	CStatic m_staticLuckyNum;
 };

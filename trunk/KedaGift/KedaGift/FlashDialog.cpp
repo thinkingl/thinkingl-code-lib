@@ -17,6 +17,7 @@ CFlashDialog::CFlashDialog(CWnd* pParent, CRandomPick* pRandomPic )
 {
 	this->m_pRandomPick = pRandomPic;
 	this->m_eState = State_Ready;
+	m_nLuckPeopleNum = 0;
 }
 
 CFlashDialog::~CFlashDialog()
@@ -26,19 +27,22 @@ CFlashDialog::~CFlashDialog()
 void CFlashDialog::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogEx::DoDataExchange(pDX);
-	DDX_Control(pDX, IDC_SHOCKWAVEFLASH_BACKGROUND, m_flashBackground);
-	DDX_Control(pDX, IDC_SHOCKWAVEFLASH_NUM_FIRST, m_flashNumberFirst);
+	// 	DDX_Control(pDX, IDC_SHOCKWAVEFLASH_BACKGROUND, m_flashBackground);
+	// 	DDX_Control(pDX, IDC_SHOCKWAVEFLASH_NUM_FIRST, m_flashNumberFirst);
 	DDX_Control(pDX, ID_TEST, m_btnTest);
 	DDX_Control(pDX, IDC_STATIC_PIC_K, m_picK);
-	DDX_Control(pDX, IDC_SHOCKWAVEFLASH_NUM_SECOND, m_flashNum2);
-	DDX_Control(pDX, IDC_SHOCKWAVEFLASH_NUM_THIRD, m_flashNum3);
-	DDX_Control(pDX, IDC_SHOCKWAVEFLASH_NUM_4TH, m_flashNum4);
+	// 	DDX_Control(pDX, IDC_SHOCKWAVEFLASH_NUM_SECOND, m_flashNum2);
+	// 	DDX_Control(pDX, IDC_SHOCKWAVEFLASH_NUM_THIRD, m_flashNum3);
+	// 	DDX_Control(pDX, IDC_SHOCKWAVEFLASH_NUM_4TH, m_flashNum4);
 	DDX_Control(pDX, IDC_STATIC_PIC_D, m_picD);
 	DDX_Control(pDX, IDC_STATIC_PIC_NUM_1, m_picNum1);
 	DDX_Control(pDX, IDC_STATIC_PIC_NUM_2, m_picNum2);
 	DDX_Control(pDX, IDC_STATIC_PIC_NUM_3, m_picNum3);
 	DDX_Control(pDX, IDC_STATIC_PIC_NUM_4, m_picNum4);
 	DDX_Control(pDX, IDC_STATIC_NAME, m_staticName);
+	DDX_Control(pDX, IDCANCEL, m_btnClose);
+	DDX_Control(pDX, ID_ABSENT, m_btnAbsent);
+	DDX_Control(pDX, IDC_STATIC_LUCKY_NUM, m_staticLuckyNum);
 }
 
 
@@ -50,6 +54,7 @@ BEGIN_MESSAGE_MAP(CFlashDialog, CDialogEx)
 	ON_WM_TIMER()
 	ON_MESSAGE( WM_REFRESH_EMPLOY, &CFlashDialog::OnEmployRefresh)
 	ON_WM_LBUTTONDBLCLK()
+	ON_BN_CLICKED(ID_ABSENT, &CFlashDialog::OnBnClickedAbsent)
 END_MESSAGE_MAP()
 
 
@@ -134,22 +139,26 @@ void CFlashDialog::OnSize(UINT nType, int cx, int cy)
 	CDialogEx::OnSize(nType, cx, cy);
 
 	if ( this->GetSafeHwnd() 
-		&& this->m_flashBackground.GetSafeHwnd() 
-		&& this->m_flashNumberFirst.GetSafeHwnd() )
+		&& this->m_picD.GetSafeHwnd()
+/*		&& this->m_flashBackground.GetSafeHwnd() 
+		&& this->m_flashNumberFirst.GetSafeHwnd()*/ )
 	{
 		int nBottom = cy - 60;
 
 		CRect rcBackGround( 0, 0, cx, nBottom );
-		this->m_flashBackground.MoveWindow( rcBackGround );
+//		this->m_flashBackground.MoveWindow( rcBackGround );
 
 		CRect rcButton;
 		this->m_btnTest.GetWindowRect( rcButton );
 
 		CRect rcNewButton;
 		rcNewButton = rcButton;
-		rcNewButton.bottom = cy - 10;
+		rcNewButton.bottom = cy - 30;
 		rcNewButton.top = rcNewButton.bottom - rcButton.Height();
 		this->m_btnTest.MoveWindow( rcNewButton );
+
+		// 第几个..
+		this->m_staticLuckyNum.MoveWindow( 0, 50, cx, 200 );
 
 		// 6个文字一行排开.
 		typedef std::vector< CWnd* > TWndList;
@@ -179,7 +188,14 @@ void CFlashDialog::OnSize(UINT nType, int cx, int cy)
 		CRect rcName( 0, nTop + 200, cx, cy - 200 );;
 		this->m_staticName.MoveWindow( rcName );
 
+		CRect rcBtnSize;
+		this->m_btnClose.GetWindowRect( rcBtnSize );
 		
+		int nBtnTop = cy - rcBtnSize.Height() - 30;
+		m_btnClose.MoveWindow( rcBtnSize.left, nBtnTop, rcBtnSize.Width(), rcBtnSize.Height() );
+		
+		m_btnAbsent.GetWindowRect( rcBtnSize );
+		m_btnAbsent.MoveWindow( rcBtnSize.left, nBtnTop, rcBtnSize.Width(), rcBtnSize.Height() );
 	}
 
 	// TODO: 在此处添加消息处理程序代码
@@ -199,10 +215,10 @@ void CFlashDialog::OnBnClickedTest()
 	int dfwef = 3;
 }
 BEGIN_EVENTSINK_MAP(CFlashDialog, CDialogEx)
-	ON_EVENT(CFlashDialog, IDC_SHOCKWAVEFLASH_BACKGROUND, 197, CFlashDialog::FlashCallShockwaveflashBackground, VTS_BSTR)
-	ON_EVENT(CFlashDialog, IDC_SHOCKWAVEFLASH_BACKGROUND, 150, CFlashDialog::FSCommandShockwaveflashBackground, VTS_BSTR VTS_BSTR)
-	ON_EVENT(CFlashDialog, IDC_SHOCKWAVEFLASH_BACKGROUND, 1958, CFlashDialog::OnProgressShockwaveflashBackground, VTS_I4)
-	ON_EVENT(CFlashDialog, IDC_SHOCKWAVEFLASH_BACKGROUND, DISPID_READYSTATECHANGE, CFlashDialog::OnReadyStateChangeShockwaveflashBackground, VTS_I4)
+// 	ON_EVENT(CFlashDialog, IDC_SHOCKWAVEFLASH_BACKGROUND, 197, CFlashDialog::FlashCallShockwaveflashBackground, VTS_BSTR)
+// 	ON_EVENT(CFlashDialog, IDC_SHOCKWAVEFLASH_BACKGROUND, 150, CFlashDialog::FSCommandShockwaveflashBackground, VTS_BSTR VTS_BSTR)
+// 	ON_EVENT(CFlashDialog, IDC_SHOCKWAVEFLASH_BACKGROUND, 1958, CFlashDialog::OnProgressShockwaveflashBackground, VTS_I4)
+// 	ON_EVENT(CFlashDialog, IDC_SHOCKWAVEFLASH_BACKGROUND, DISPID_READYSTATECHANGE, CFlashDialog::OnReadyStateChangeShockwaveflashBackground, VTS_I4)
 END_EVENTSINK_MAP()
 
 
@@ -319,7 +335,7 @@ void CFlashDialog::ShowAEmployer( const CEmployer& employer )
 void CFlashDialog::GoOrStop()
 {
 	// 防止段时间误操作..
-	static CTime s_timeLastOp = CTime::GetCurrentTime();
+	static CTime s_timeLastOp = 0;//CTime::GetCurrentTime();
 	CTime timeNow = CTime::GetCurrentTime();
 	CTimeSpan timeSpan = timeNow - s_timeLastOp;
 
@@ -350,9 +366,11 @@ void CFlashDialog::GoOrStop()
 		m_eState = State_Ready;
 
 		// 刷新.....
-		CEmployer randomShowEmployer = this->m_pRandomPick->RandomPickOneNoGiftToShow();
+		CEmployer randomShowEmployer = this->m_pRandomPick->GetLukyOne();
 
 		this->ShowAEmployer( randomShowEmployer );
+
+		this->m_nLuckPeopleNum++;
 	}
 }
 
@@ -406,4 +424,15 @@ void CFlashDialog::OnLButtonDblClk(UINT nFlags, CPoint point)
 	this->GoOrStop();
 
 	CDialogEx::OnLButtonDblClk(nFlags, point);
+}
+
+
+void CFlashDialog::OnBnClickedAbsent()
+{
+	// TODO: 在此添加控件通知处理程序代码
+}
+
+void CFlashDialog::UpdateLuckNum()
+{
+
 }
