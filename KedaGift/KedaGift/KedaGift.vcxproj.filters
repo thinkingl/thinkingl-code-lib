@@ -23,6 +23,51 @@
       <Filter>资源文件</Filter>
     </None>
     <None Include="EmployerList.txt" />
+    <None Include="KedaGiftTextNull.png">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="KedaGiftText0.png">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="KedaGiftText1.png">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="KedaGiftText2.png">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="KedaGiftText3.png">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="KedaGiftText4.png">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="KedaGiftText5.png">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="KedaGiftText6.png">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="KedaGiftText7.png">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="KedaGiftText8.png">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="KedaGiftText9.png">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="KedaGiftTextD.png">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="KedaGiftTextK.png">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="defsym.swf">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="defBG.swf">
+      <Filter>资源文件</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="KedaGift.h">

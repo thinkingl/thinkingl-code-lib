@@ -8,20 +8,20 @@ CRandomPick::CRandomPick(void)
 
 	CTime timeNow = GetCurrentTime();
 	CString strLogFileName = timeNow.Format( _T( "KedagiftLog_%y%m%d%H%M%S.txt" ) );
-	m_fileLog.Open( strLogFileName, CFile::modeCreate | CFile::modeWrite | CFile::shareDenyNone );
-	m_pArchiveLog = new CArchive( &m_fileLog, CArchive::store );
+//	m_fileLog.Open( strLogFileName, CFile::modeCreate | CFile::modeWrite | CFile::shareDenyNone );
+//	m_pArchiveLog = new CArchive( &m_fileLog, CArchive::store );
 }
 
 
 CRandomPick::~CRandomPick(void)
 {
-	if ( m_pArchiveLog )
-	{
-		m_pArchiveLog->Close();
-		delete m_pArchiveLog;
-		m_pArchiveLog = NULL;
-	}
-	m_fileLog.Close();	
+// 	if ( m_pArchiveLog )
+// 	{
+// 		m_pArchiveLog->Close();
+// 		delete m_pArchiveLog;
+// 		m_pArchiveLog = NULL;
+// 	}
+// 	m_fileLog.Close();	
 }
 
 int CRandomPick::GetRadomNum( int nBegin, int nEnd ) const
