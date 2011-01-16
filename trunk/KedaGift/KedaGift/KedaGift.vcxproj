@@ -94,7 +94,22 @@
     </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <None Include="defBG.swf" />
+    <None Include="defsym.swf" />
     <None Include="EmployerList.txt" />
+    <None Include="KedaGiftText0.png" />
+    <None Include="KedaGiftText1.png" />
+    <None Include="KedaGiftText2.png" />
+    <None Include="KedaGiftText3.png" />
+    <None Include="KedaGiftText4.png" />
+    <None Include="KedaGiftText5.png" />
+    <None Include="KedaGiftText6.png" />
+    <None Include="KedaGiftText7.png" />
+    <None Include="KedaGiftText8.png" />
+    <None Include="KedaGiftText9.png" />
+    <None Include="KedaGiftTextD.png" />
+    <None Include="KedaGiftTextK.png" />
+    <None Include="KedaGiftTextNull.png" />
     <None Include="ReadMe.txt" />
     <None Include="res\KedaGift.ico" />
     <None Include="res\KedaGift.rc2" />
