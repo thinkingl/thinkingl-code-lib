@@ -12,6 +12,7 @@
 
 #include "EmployerInput.h"
 #include "GiftStatusView.h"
+#include "FlashDialog.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -88,6 +89,7 @@ BEGIN_MESSAGE_MAP(CKedaGiftDlg, CDialogEx)
 	ON_BN_CLICKED(ID_GIFT_STATE, &CKedaGiftDlg::OnBnClickedGiftState)
 	ON_BN_CLICKED(ID_NEXT_TURN, &CKedaGiftDlg::OnBnClickedNextTurn)
 	ON_WM_SIZE()
+	ON_BN_CLICKED(ID_FLASH, &CKedaGiftDlg::OnBnClickedFlash)
 END_MESSAGE_MAP()
 
 
@@ -98,7 +100,7 @@ void CALLBACK CKedaGiftDlg::TimerCB(HWND hWnd, UINT , UINT_PTR timerId, DWORD de
 	{
 		::PostMessage( hWnd, WM_REFRESH_EMPLOY, 0, 0 );
 	}
-	
+
 }
 
 LRESULT CKedaGiftDlg::OnEmployRefresh( WPARAM, LPARAM )
@@ -106,7 +108,7 @@ LRESULT CKedaGiftDlg::OnEmployRefresh( WPARAM, LPARAM )
 	if ( m_bEmployRefreshing )
 	{
 		CEmployer randomShowEmployer = this->m_radomLuckyPick.RandomPickOneNoGiftToShow();
-		
+
 		this->ShowAMan( randomShowEmployer );
 	}
 	return 0;
@@ -142,7 +144,7 @@ BOOL CKedaGiftDlg::OnInitDialog()
 	SetIcon(m_hIcon, FALSE);		// 设置小图标
 
 	// TODO: 在此添加额外的初始化代码
-	this->SetTimer( Timer_Refresh, 1, TimerCB );
+//	this->SetTimer( Timer_Refresh, 1, TimerCB );
 
 	this->m_fontShowName.CreateFont(
 		72,                        // nHeight
@@ -315,4 +317,12 @@ void CKedaGiftDlg::OnSize(UINT nType, int cx, int cy)
 
 	}
 	// TODO: 在此处添加消息处理程序代码
+}
+
+
+void CKedaGiftDlg::OnBnClickedFlash()
+{
+	// TODO: 在此添加控件通知处理程序代码
+	CFlashDialog dlg( this, &this->m_radomLuckyPick );
+	dlg.DoModal();
 }

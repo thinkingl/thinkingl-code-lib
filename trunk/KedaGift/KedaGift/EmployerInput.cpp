@@ -83,6 +83,7 @@ TEmployerList CEmployerInput::GetAllNoGiftEmployer() const
 				allEmplyer.push_back( employerIn );
 
 				_ASSERT( tAllKedaNo.find( employerIn.m_strKedaNo ) == tAllKedaNo.end() );
+				_ASSERT( employerIn.m_strKedaNo.GetLength() == 6 );
 
 				tAllKedaNo.insert( employerIn.m_strKedaNo );
 			}			
