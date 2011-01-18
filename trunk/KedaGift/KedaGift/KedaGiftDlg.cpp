@@ -67,6 +67,7 @@ CKedaGiftDlg::CKedaGiftDlg(CWnd* pParent /*=NULL*/)
 	CEmployerInput emIn;
 //	emIn.GetAllNoGiftEmployer();
 	m_radomLuckyPick.SetEmployerList( emIn.GetAllNoGiftEmployer() );
+	m_nCurShowTurn = 0;
 }
 
 void CKedaGiftDlg::DoDataExchange(CDataExchange* pDX)
@@ -78,6 +79,7 @@ void CKedaGiftDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Text(pDX, IDC_EDIT_GIFTED, m_strGifted);
 	DDX_Text(pDX, IDC_EDIT_AUTO_PICK_NUM, m_nAutoPickNum);
 	DDX_Control(pDX, IDC_LIST_GIFT, m_listLuckyMen);
+	DDX_Control(pDX, IDC_STATIC_TURN, m_staticTurn);
 }
 
 BEGIN_MESSAGE_MAP(CKedaGiftDlg, CDialogEx)
@@ -95,6 +97,12 @@ BEGIN_MESSAGE_MAP(CKedaGiftDlg, CDialogEx)
 	ON_BN_CLICKED(ID_FLASH, &CKedaGiftDlg::OnBnClickedFlash)
 	ON_WM_VSCROLL()
 	ON_BN_CLICKED(ID_AUTO_PICK, &CKedaGiftDlg::OnBnClickedAutoPick)
+	ON_NOTIFY(NM_RCLICK, IDC_LIST_GIFT, &CKedaGiftDlg::OnNMRClickListGift)
+	ON_BN_CLICKED(ID_BUTTON_PRE_PAGE, &CKedaGiftDlg::OnBnClickedButtonPrePage)
+	ON_BN_CLICKED(ID_BUTTON_NEXT_PAGE, &CKedaGiftDlg::OnBnClickedButtonNextPage)
+	ON_COMMAND(ID_GET_GIFT, &CKedaGiftDlg::OnGetGift)
+	ON_BN_CLICKED(ID_BUTTON_LAST_PAGE, &CKedaGiftDlg::OnBnClickedButtonLastPage)
+	ON_BN_CLICKED(ID_BUTTON_GET_GIFT, &CKedaGiftDlg::OnBnClickedButtonGetGift)
 END_MESSAGE_MAP()
 
 
@@ -167,14 +175,34 @@ BOOL CKedaGiftDlg::OnInitDialog()
 		DEFAULT_PITCH | FF_SWISS,  // nPitchAndFamily
 		_T("宋体"));                 // lpszFacename
 
+	this->m_fontTurn.CreateFont(
+		18,                        // nHeight
+		0,                         // nWidth
+		0,                         // nEscapement
+		0,                         // nOrientation
+		FW_NORMAL,                 // nWeight
+		FALSE,                     // bItalic
+		FALSE,                     // bUnderline
+		0,                         // cStrikeOut
+		ANSI_CHARSET,              // nCharSet
+		OUT_DEFAULT_PRECIS,        // nOutPrecision
+		CLIP_DEFAULT_PRECIS,       // nClipPrecision
+		DEFAULT_QUALITY,           // nQuality
+		DEFAULT_PITCH | FF_SWISS,  // nPitchAndFamily
+		_T("宋体"));                 // lpszFacename
 
 	this->m_staticEmplyer.SetFont( &m_fontShowName );
 
 	this->m_listLuckyMen.SetFont( &m_fontShowName );
 
+	this->m_staticTurn.SetFont( &m_fontTurn );
+
 	this->m_listLuckyMen.InsertColumn( 0, "序号", LVCFMT_CENTER, 100 );
 	this->m_listLuckyMen.InsertColumn( 1, "工号", LVCFMT_CENTER, 200 );
 	this->m_listLuckyMen.InsertColumn( 2, "姓名", LVCFMT_CENTER, 235 );
+	this->m_listLuckyMen.InsertColumn( 3, "已领奖", LVCFMT_CENTER, 150 );
+
+	m_listLuckyMen.SetExtendedStyle(LVS_EX_GRIDLINES |LVS_EX_FULLROWSELECT);
 
 	return TRUE;  // 除非将焦点设置到控件，否则返回 TRUE
 }
@@ -339,15 +367,16 @@ void CKedaGiftDlg::OnBnClickedFlash()
 	CFlashDialog dlg( this, &this->m_radomLuckyPick );
 	dlg.DoModal();
 
-	TEmployerList allLucky = dlg.GetAllLuckyMen();
-	for ( int i=0; i<allLucky.size(); ++i )
+	TKedaNoList allLucky = dlg.GetAllLuckyMen();
+
+	if ( allLucky.size() > 0 )
 	{
-		CEmployer& emp = allLucky[i];
-		CString strSn;
-		strSn.Format( "%d", i+1 );
-		int nItem = this->m_listLuckyMen.InsertItem( i, strSn );
-		this->m_listLuckyMen.SetItemText( nItem, 1, emp.m_strKedaNo );
-		this->m_listLuckyMen.SetItemText( nItem, 2, emp.m_strName );
+		this->m_giftStateTable.push_back( allLucky );
+		
+		
+		this->m_nCurShowTurn = m_giftStateTable.size()-1;
+
+		this->ShowGiftState( m_nCurShowTurn );
 	}
 }
 
@@ -364,4 +393,144 @@ void CKedaGiftDlg::OnVScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar)
 void CKedaGiftDlg::OnBnClickedAutoPick()
 {
 	// TODO: 在此添加控件通知处理程序代码
+}
+
+
+void CKedaGiftDlg::OnNMRClickListGift(NMHDR *pNMHDR, LRESULT *pResult)
+{
+	LPNMITEMACTIVATE pNMItemActivate = reinterpret_cast<LPNMITEMACTIVATE>(pNMHDR);
+	// TODO: 在此添加控件通知处理程序代码
+
+	POSITION ps = this->m_listLuckyMen.GetFirstSelectedItemPosition();
+	if ( ps )
+	{
+		int nSelItem = this->m_listLuckyMen.GetNextSelectedItem( ps );
+
+		CString strSN = this->m_listLuckyMen.GetItemText( nSelItem, 0 );
+		if ( !strSN.IsEmpty() )
+		{
+			CMenu giftMenu;
+			giftMenu.LoadMenu( IDR_MENU_GIFT );
+			CMenu *menuPop = giftMenu.GetSubMenu( 0 );
+			POINT pt;
+			::GetCursorPos(&pt);
+			menuPop->TrackPopupMenu(TPM_LEFTALIGN | TPM_RIGHTBUTTON, pt.x, pt.y, this);
+
+			giftMenu.DestroyMenu();
+		}
+	}
+
+	
+
+	*pResult = 0;
+}
+
+void CKedaGiftDlg::ShowGiftState( int nTurnNum )
+{
+	if ( nTurnNum < 0 || nTurnNum >= int( this->m_giftStateTable.size() ) )
+	{
+		return;
+	}
+	const TKedaNoList& allLucky = this->m_giftStateTable[ nTurnNum ];
+
+	CEmployerGiftConfig empCfg;
+
+	m_listLuckyMen.DeleteAllItems();
+	for ( int i=0; i<allLucky.size(); ++i )
+	{
+		CString strKedaNO = allLucky[i];
+
+		CEmployer emp;
+		BOOL bOk = empCfg.GetEmployerLucky( strKedaNO, emp );
+		_ASSERT( bOk );
+		if ( !bOk )
+		{
+			continue;
+		}
+
+		CString strSn;
+		strSn.Format( "%d", i+1 );
+		int nItem = this->m_listLuckyMen.InsertItem( i, strSn );
+		this->m_listLuckyMen.SetItemText( nItem, 1, emp.m_strKedaNo );
+		this->m_listLuckyMen.SetItemText( nItem, 2, emp.m_strName );
+
+		CString strGetGift = emp.m_timeGetGift.GetTime() == 0 ? _T( "否" ) : _T( "是" );
+		this->m_listLuckyMen.SetItemText( nItem, 3, strGetGift );
+	}
+
+	CString strShowMsg;
+	strShowMsg.Format( "第%d轮", nTurnNum + 1 );
+	this->m_staticTurn.SetWindowText( strShowMsg );
+}
+
+void CKedaGiftDlg::OnBnClickedButtonPrePage()
+{
+	// TODO: 在此添加控件通知处理程序代码
+	if( this->m_nCurShowTurn > 0 )
+	{
+		this->m_nCurShowTurn --;
+
+		this->ShowGiftState( m_nCurShowTurn );
+	}
+}
+
+
+void CKedaGiftDlg::OnBnClickedButtonNextPage()
+{
+	// TODO: 在此添加控件通知处理程序代码
+	if( this->m_nCurShowTurn < int( m_giftStateTable.size()-1 ) )
+	{
+		this->m_nCurShowTurn ++;
+
+		this->ShowGiftState( m_nCurShowTurn );
+	}
+}
+
+
+void CKedaGiftDlg::OnGetGift()
+{
+	// TODO: 在此添加命令处理程序代码
+
+	// 选中的人领奖.....
+	CString strKedaNO;
+	POSITION ps = this->m_listLuckyMen.GetFirstSelectedItemPosition();
+	if ( ps )
+	{
+		int nSelItem = this->m_listLuckyMen.GetNextSelectedItem( ps );
+
+		CString strKedaNO = this->m_listLuckyMen.GetItemText( nSelItem, 1 );
+
+		CEmployerGiftConfig config;
+		CEmployer manGetGift;
+		BOOL bOk = config.GetEmployerLucky( strKedaNO, manGetGift );
+		_ASSERT( bOk );
+		if ( bOk )
+		{
+			manGetGift.m_timeGetGift = CTime::GetCurrentTime();
+			config.AddLuckMan( manGetGift );
+		}
+
+		// 更新显示..
+		this->m_listLuckyMen.SetItemText( nSelItem, 3, _T( "是" ) );
+
+	}
+}
+
+
+void CKedaGiftDlg::OnBnClickedButtonLastPage()
+{
+	// TODO: 在此添加控件通知处理程序代码
+	int nLastPage = int( m_giftStateTable.size()-1 );
+	if ( nLastPage > 0 )
+	{
+		this->m_nCurShowTurn = nLastPage;
+		this->ShowGiftState( m_nCurShowTurn );
+	}
+}
+
+
+void CKedaGiftDlg::OnBnClickedButtonGetGift()
+{
+	// TODO: 在此添加控件通知处理程序代码
+	this->OnGetGift();
 }

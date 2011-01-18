@@ -24,7 +24,7 @@ protected:
 
 public:
 	/** 获取本轮所有中奖的人. */
-	TEmployerList GetAllLuckyMen()const
+	TKedaNoList GetAllLuckyMen()const
 	{
 		return m_tLuckyMen;
 	}
@@ -65,7 +65,7 @@ private:
 	CFont m_fontShowName;
 	
 	/** 中奖人列表. */
-	TEmployerList m_tLuckyMen;
+	TKedaNoList m_tLuckyMen;
 public:
 //	CShockwaveflash_background m_flashBackground;
 	virtual BOOL OnInitDialog();

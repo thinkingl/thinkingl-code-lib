@@ -34,9 +34,13 @@ private:
 		ColHead_KedaNo,
 		ColHead_Name,
 		ColHead_Time,
+		ColHead_GetGift,	// 是否领奖.
+		ColHead_Absent,		// 是否缺席
 	};
 
 	CRandomPick* m_pRandomPick;
 public:
 	afx_msg void OnBnClickedClearAll();
+	afx_msg void OnNMRClickListGift(NMHDR *pNMHDR, LRESULT *pResult);
+	afx_msg void OnGetGift();
 };

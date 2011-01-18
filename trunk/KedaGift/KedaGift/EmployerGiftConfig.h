@@ -19,6 +19,9 @@ public:
 	/** 重置. */
 	void Reset();
 
+	/** 获取一个已经中奖的人. */
+	BOOL GetEmployerLucky( LPCTSTR strKedaNo, CEmployer& employer );
+
 private:
 	/** ini配置文件解析. */
 	CIniParse m_iniFileParser;

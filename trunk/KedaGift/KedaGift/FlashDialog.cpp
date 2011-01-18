@@ -388,7 +388,7 @@ void CFlashDialog::GoOrStop()
 
 		this->ShowAEmployer( randomShowEmployer );
 
-		this->m_tLuckyMen.push_back( randomShowEmployer );
+		this->m_tLuckyMen.push_back( randomShowEmployer.m_strKedaNo );
 
 		this->UpdateLuckNum();
 	}
@@ -456,7 +456,17 @@ void CFlashDialog::OnBnClickedAbsent()
 		return;
 	}
 
-	CEmployer absentMan = this->m_tLuckyMen[ nIndex ];
+	CEmployer absentMan;
+	CString strKedaNO = this->m_tLuckyMen[ nIndex ];
+
+	CEmployerGiftConfig empCfg;
+	BOOL bOk = empCfg.GetEmployerLucky( strKedaNO, absentMan );
+	_ASSERT( bOk );
+	if ( !bOk )
+	{
+		return;
+	}
+
 	CString strMsg;
 	strMsg.Format( "%s 将失去奖品!", absentMan.m_strName );
 	if ( IDYES == this->MessageBox( strMsg, "杯具了.....", MB_YESNO ) )
@@ -478,6 +488,9 @@ void CFlashDialog::OnBnClickedAbsent()
 		this->m_staticName.SetWindowText( "╮(￣▽￣)╭" );
 
 		this->Invalidate();
+
+		absentMan.m_bAbsent = TRUE;
+		empCfg.AddLuckMan( absentMan );
 	}
 	
 }
