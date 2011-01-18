@@ -44,6 +44,10 @@ private:
 
 	/** 获取显示的字符.*/
 	CString GetShowText( const CEmployer& oneMan );
+
+	/** 显示一轮的得奖情况.. */
+	void ShowGiftState( int nTurnNum );
+
 private:
 	// 定时器.
 	enum ETimer
@@ -58,6 +62,14 @@ private:
 	CRandomPick m_radomLuckyPick;
 
 	CFont m_fontShowName;
+	CFont m_fontTurn;
+
+	/** 几轮抽奖的情况. */
+	typedef std::vector< TKedaNoList > TGiftStateTable;
+	TGiftStateTable m_giftStateTable;
+
+	/** 当前显示的轮数.. */
+	int m_nCurShowTurn;
 public:
 	CStatic m_staticEmplyer;
 	afx_msg void OnBnClickedUnittest();
@@ -75,4 +87,11 @@ public:
 	int m_nAutoPickNum;
 	afx_msg void OnBnClickedAutoPick();
 	CListCtrl m_listLuckyMen;
+	afx_msg void OnNMRClickListGift(NMHDR *pNMHDR, LRESULT *pResult);
+	afx_msg void OnBnClickedButtonPrePage();
+	afx_msg void OnBnClickedButtonNextPage();
+	afx_msg void OnGetGift();
+	afx_msg void OnBnClickedButtonLastPage();
+	CStatic m_staticTurn;
+	afx_msg void OnBnClickedButtonGetGift();
 };

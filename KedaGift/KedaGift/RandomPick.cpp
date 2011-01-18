@@ -59,7 +59,7 @@ CEmployer CRandomPick::GetLukyOne()
 {
 	int luckyIndex = this->GetRadomNum( m_nFirstNoGift, m_tAllEmployer.size() -1 );
 
-	this->m_tAllEmployer[ luckyIndex ].m_time = CTime::GetCurrentTime();
+	this->m_tAllEmployer[ luckyIndex ].m_timeLuck = CTime::GetCurrentTime();
 	CEmployer luckyOne = this->m_tAllEmployer[ luckyIndex ];
 
 	this->HandleGiftedLucyMan( luckyIndex );
@@ -106,7 +106,8 @@ void CRandomPick::InitAllReadyGifted()
 		{
 			if ( allGifted[i].m_strKedaNo == m_tAllEmployer[k].m_strKedaNo )
 			{
-				m_tAllEmployer[k].m_time = allGifted[i].m_time;
+				m_tAllEmployer[k] = allGifted[i];
+				
 				this->HandleGiftedLucyMan( k );
 				break;
 			}
