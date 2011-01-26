@@ -1,0 +1,53 @@
+###
+### copyrigth(c) 2010 kedacom, inc.
+###
+
+###############################################
+###
+###  DESCRIPTION:
+###    Common definitions for all Makefiles in UAS linux project.
+###
+#################################################
+TOP := ..
+COMM_DIR := ..
+SRC_DIR := $(TOP)/src
+
+APP_TARGET := g200msv5
+
+DEBUG = 1
+LINUX_COMPILER=_LINUX_# _EQUATOR_, _HHPPC_, _LINUX_ and so on
+PWLIB_SUPPORT = 0
+
+CFLAGS += -fno-omit-frame-pointer
+CFLAGS += -D_KDM_2800_
+
+OBJS := $(SRC_DIR)/cclientconn \
+				$(SRC_DIR)/srvmain \
+				$(SRC_DIR)/devreg \
+				$(SRC_DIR)/3assn \
+				$(SRC_DIR)/../../common/codingtransform \
+				$(SRC_DIR)/../../common/kdvsys \
+				$(SRC_DIR)/../../common/markup \
+				$(SRC_DIR)/../../common/xmlmsg
+				
+INC_PATH += $(TOP)/include \
+						../../include \
+						../../../../10-Common/include/aaasdk \
+						../../../../10-Common/include/cbb/system \
+						../../../../10-Common/include/cbb/protocol \
+						../../../../10-Common/include/cbb/platform \
+						../../../../10-Common/include/aaa \
+						../../../../10-Common/include/common \
+						../../../../10-Common/include/cms
+						
+LIBS := osp aaasdk rt pthread kdmsearch_280x kdvencrypt
+
+LIB_PATH := ../../../../10-Common/lib/debug/linux \
+		../../../../10-Common/lib/debug/linux/ggate/v5r1b1sp3
+
+INSTALL_APP_PATH := ../../../../10-Common/version/debug/linux/g200
+
+include $(COMM_DIR)/common.mk
+						
+				
+				
