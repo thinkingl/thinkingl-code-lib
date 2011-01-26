@@ -1,0 +1,246 @@
+/* CSS Document */
+
+body{background-color:#A0ADBB}
+
+.contentBody{
+	background-color: #DCE6F1;
+}
+
+.tableConentPadding{
+	padding-top: 8px;
+	padding-right: 5px;
+	padding-bottom: 6px;
+	padding-left: 0px;	
+}
+#tableContentBorder{
+	border: 1px solid #5F81A3;
+	background-color:#ECF1F4
+}
+
+#container{
+}
+/**************************登陆按钮***********************************/
+.btLoginNor{
+	background-image: url(../images/loginform/loginform_login.bmp);
+	height: 37px;
+	width: 108px;
+	border-top-width: 0px;
+	border-right-width: 0px;
+	border-bottom-width: 0px;
+	border-left-width: 0px;
+}
+.btLoginOver{
+	background-image: url(../images/loginform/loginform_login_over.bmp);
+	height: 37px;
+	width: 108px;
+	border-top-width: 0px;
+	border-right-width: 0px;
+	border-bottom-width: 0px;
+	border-left-width: 0px;
+}
+.btLoginDown{
+	background-image: url(../images/loginform/loginform_login_press.bmp);
+	height: 37px;
+	width: 108px;
+	border-top-width: 0px;
+	border-right-width: 0px;
+	border-bottom-width: 0px;
+	border-left-width: 0px;
+}
+.btLoginDisable{
+	background-image: url(../images/loginform/loginform_login_unable.bmp);
+	height: 37px;
+	width: 108px;
+	border-top-width: 0px;
+	border-right-width: 0px;
+	border-bottom-width: 0px;
+	border-left-width: 0px;
+}
+
+/*************************系统按钮***************************/
+.btIconNor{
+	background-image: url(../images/button/btn.bmp);
+	color: #205699;
+	border:0px;
+	height: 24px;
+	width: 78px;
+	filter:chroma(color=#FF00FF);
+	padding-top: 2px;
+	margin:0px;
+}
+.btIconOver{
+	color: #0036FF;
+	background-image: url(../images/button/btn_over.bmp);
+	border:0px;
+	height: 24px;
+	width: 78px;
+	filter:chroma(color=#FF00FF);
+	padding-top: 2px;
+	margin:0px;
+}
+.btIconDown{
+	color: #0036FF;
+	background-image: url(../images/button/btn_press.bmp);
+	border:0px;
+	height: 24px;
+	width: 78px;
+	filter:chroma(color=#FF00FF);
+	padding-top: 2px;
+	margin:0px;
+}
+.btIconDisable{
+	background-image: url(../images/button/btn_unable.bmp);
+	color: #95A8BC;
+	border:0px;
+	height: 24px;
+	width: 78px;
+	filter:chroma(color=#FF00FF);
+	padding-top: 2px;
+	margin:0px;
+}
+
+/******************系统左边菜单样式**************************/
+#menuItem{
+	margin-top: 8px;
+	margin-right: 6px;
+	margin-bottom: 0px;
+	margin-left: 6px;
+}
+#menuItem a
+ {
+	font-family: "宋体";
+	font-size: 14px;
+	font-weight: bold;
+	background-image: url(../images/nav_button/navbtn.bmp);
+	background-repeat: no-repeat;
+	background-position: left top;
+	display: block;
+	line-height: 46px;
+	margin-top: 0px;
+	margin-right: 0px;
+	margin-bottom: 6px;
+	margin-left: 0px;
+	padding-top: 0px;
+	padding-right: 0px;
+	padding-bottom: 0px;
+	padding-left: 23px;
+	text-decoration: none;
+	color: #E1F1FF;
+}
+
+#menuItem .sel a{ 
+	color: #275EC1;
+	background-image: url(../images/nav_button/navbtn_select.bmp);
+}
+
+#menuItem .hvr a{
+	color: #00FFFF;
+	background-image: url(../images/nav_button/navbtn_over.bmp);
+}
+
+#menuItem .prs a{
+	color: #00FFFF;
+	background-image:url(../images/nav_button/navbtn_press.bmp);
+}
+
+
+/******************登陆窗体样式**********************/
+#loginWin {
+	position:absolute;
+	width:441px;
+	height:266px;
+	z-index:1;
+	left: 50%;
+	top: 292px;
+	margin-left:-220px;
+	margin-top:-133px;
+	display:block;
+	background-image: url(../images/loginform/loginform_background.bmp);
+	background-position: left top;
+	background-repeat: no-repeat;
+}
+#loginWin #divLog {
+	background-image: url(../images/loginform/loginform_login_g.GIF);
+	background-repeat: no-repeat;
+	background-position: left top;
+	height: 37px;
+	width: 108px;
+}
+.statusBar {
+	font-family: "宋体" Arial;
+	font-size: 12px;
+	color: #D0DCE9;
+	background-image: url(../images/status_bar/statusbar_background.bmp);
+}
+.titleBar {
+	background-image: url(../images/title/title_banner.bmp);
+	background-repeat: no-repeat;
+	background-position:left top;
+	font-family: "宋体 Arial";
+	font-size: 12px;
+	color: #E0EAF4;
+}
+.shiftdown{
+	padding-top: 5px;
+}
+.titleBar a{
+	font-family: "宋体 Arial";
+	font-size: 12px;
+	color: #E0EAF4;
+	text-decoration: none;
+}
+.titleBar a:hover,
+.titleBar a:active{
+	color: #0024E1;
+	text-decoration: none;
+}
+
+.lblTitlePrmt,
+.lblLog {
+	font-family: "宋体" Arial;
+	font-size: 12px;
+	color: #205699;
+}
+
+.paddingLeft{
+	padding-left:9px
+}
+.inputConfig,
+.inputLog {
+	font-family: "宋体" Arial;
+	font-size: 12px;
+	color: #000000;
+	border: 1px solid #6385A3;
+}
+
+.inputIp{
+	font-family: "宋体" Arial;
+	font-size: 12px;
+	color: #000000;
+	border: 1px solid #6385A3;
+	width:160px;
+}
+
+.inputPort{
+	font-family: "宋体" Arial;
+	font-size: 12px;
+	color: #000000;
+	border: 1px solid #6385A3;
+	width:50px;
+}
+
+.inputEnterNet{
+	font-family: "宋体" Arial;
+	font-size: 12px;
+	color: #000000;
+	border: 1px solid #6385A3;
+	width:200px;
+}
+/*********************分组信息标题栏***************************/
+.titleGroup{
+	font-family: "宋体 Arial";
+	font-size: 12px;
+	color: #E5F0F9;
+	background-color: #527594;
+	padding-left: 9px;
+}
