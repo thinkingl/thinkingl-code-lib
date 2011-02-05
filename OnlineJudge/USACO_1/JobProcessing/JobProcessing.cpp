@@ -84,16 +84,17 @@ const int IFINITE = 0xFFFFFFF;
 *	
 */
 void GetOperationFinishTime( int nJobNum, 
-	const TTimeList& tMachineAOpTime, const TTimeList& tMachineBOpTime,
-	int& nOpAFinishTime, int& nOpBFinishTime )
+	const TTimeList& tMachineOpTime,
+	TTimeList& tOpAFinishTime )
 {
 	// 两种机器的数目.
-	int nMachineANum = tMachineAOpTime.size();
-	int nMachineBNum = tMachineBOpTime.size();
+	int nMachineNum = tMachineOpTime.size();
 
 	// 两种机器的状态,存放的是完成操作需要的全部时间.初始化没有工作,为0.
-	TTimeList tMachineATotalTime( nMachineANum, 0 );
-	TTimeList tMachineBTotalTime( nMachineBNum, 0 );
+	TTimeList tMachineTotalTime( nMachineNum, 0 );
+
+	// 初始化完成时间列表.
+	tOpAFinishTime.clear();
 
 	// 三个job container.
 	int nInputContainer = nJobNum;
@@ -105,51 +106,26 @@ void GetOperationFinishTime( int nJobNum,
 	{
 		// 寻找能最早完成这个job的A操作的机器.
 		// 最早能完成的时间.
-		int nMinFinishATime = IFINITE;
+		int nMinFinishTime = IFINITE;
 		// 进行A操作的机器序号.
-		int nOpAMachine = 0;
+		int nOpMachine = 0;
 		// 遍历所有的A机器,寻找能最早完成操作的.
-		for ( int a=0; a<nMachineANum; ++a )
+		for ( int a=0; a<nMachineNum; ++a )
 		{
-			int finishTime = tMachineATotalTime[a] + tMachineAOpTime[a];
-			if ( finishTime < nMinFinishATime )
+			int finishTime = tMachineTotalTime[a] + tMachineOpTime[a];
+			if ( finishTime < nMinFinishTime )
 			{
-				nOpAMachine = a;
-				nMinFinishATime = finishTime;
+				nOpMachine = a;
+				nMinFinishTime = finishTime;
 			}
 		}
 
-		// 让这台机器进行A操作.
-		tMachineATotalTime[ nOpAMachine ] = nMinFinishATime;
-
-		// 这台机器完成了A操作后,传给B机器们,进行B操作.
-
-		// 寻找一个最早完成这个jobB操作的机器.
-		int nMinFinishBTime = IFINITE;
-		int nOpBMachine = 0;
-		for ( int b=0; b<nMachineBNum; ++b )
-		{
-			// 一台机器只能在 A操作完成了之后( nMinFinishATime ) 才能进行B操作.
-			int beginTime = max( tMachineBTotalTime[b], nMinFinishATime );
-			int finishTime = beginTime + tMachineBOpTime[b];
-			if ( finishTime < nMinFinishBTime )
-			{
-				nOpBMachine = b;
-				nMinFinishBTime = finishTime;
-			}
-		}
-
-		// 让这台机器完成B操作.
-		tMachineBTotalTime[ nOpBMachine ] = nMinFinishBTime;
-
+		// 让这台机器进行操作.
+		tMachineTotalTime[ nOpMachine ] = nMinFinishTime;
+		// 保存这个job完成的时间.
+		tOpAFinishTime.push_back( nMinFinishTime );	
+		
 	}
-
-	// 把最后完成的A操作找出来.
-	TTimeList::iterator itMaxFinishATime = max_element( tMachineATotalTime.begin(), tMachineATotalTime.end() );
-	nOpAFinishTime = *itMaxFinishATime;
-
-	TTimeList::iterator itMaxFinishBTime = max_element( tMachineBTotalTime.begin(), tMachineBTotalTime.end() );
-	nOpBFinishTime = *itMaxFinishBTime;
 }
 int main()
 {
@@ -185,11 +161,24 @@ int main()
 	}
 
 	// 模拟.
-	int nOpATotalTime = 0;
-	int nOpBTotalTime = 0;
-	GetOperationFinishTime( nJobNum, tMachineAOpTime, tMachineBOpTime, nOpATotalTime, nOpBTotalTime );
+	TTimeList tOpAFinishTime;
+	GetOperationFinishTime( nJobNum, tMachineAOpTime, tOpAFinishTime );
 
-	fout << nOpATotalTime << " " << nOpBTotalTime << endl;
+	TTimeList tOpBFinishTime;
+	GetOperationFinishTime( nJobNum, tMachineBOpTime, tOpBFinishTime );
+
+	int nMaxATime = tOpAFinishTime[ tOpAFinishTime.size() - 1 ];
+	int nMaxBTime = 0;
+	for ( int i=0; i<tOpAFinishTime.size(); ++i )
+	{
+		int nTime = tOpAFinishTime[i] + tOpBFinishTime[ tOpBFinishTime.size()- i - 1 ];
+		if ( nMaxBTime < nTime )
+		{
+			nMaxBTime = nTime;
+		}
+	}
+
+	fout << nMaxATime << " " << nMaxBTime << endl;
 
 #ifdef THINKINGL
 
