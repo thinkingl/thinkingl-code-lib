@@ -80,36 +80,36 @@ typedef std::vector< int > TTimeList;
 
 const int IFINITE = 0xFFFFFFF;
 
-/** ½âÌâ,»ñÈ¡²Ù×÷Íê³ÉÊ±¼ä.
+/** è§£é¢˜,è·å–æ“ä½œå®Œæˆæ—¶é—´.
 *	
 */
 void GetOperationFinishTime( int nJobNum, 
 	const TTimeList& tMachineOpTime,
 	TTimeList& tOpAFinishTime )
 {
-	// Á½ÖÖ»úÆ÷µÄÊıÄ¿.
+	// ä¸¤ç§æœºå™¨çš„æ•°ç›®.
 	int nMachineNum = tMachineOpTime.size();
 
-	// Á½ÖÖ»úÆ÷µÄ×´Ì¬,´æ·ÅµÄÊÇÍê³É²Ù×÷ĞèÒªµÄÈ«²¿Ê±¼ä.³õÊ¼»¯Ã»ÓĞ¹¤×÷,Îª0.
+	// ä¸¤ç§æœºå™¨çš„çŠ¶æ€,å­˜æ”¾çš„æ˜¯å®Œæˆæ“ä½œéœ€è¦çš„å…¨éƒ¨æ—¶é—´.åˆå§‹åŒ–æ²¡æœ‰å·¥ä½œ,ä¸º0.
 	TTimeList tMachineTotalTime( nMachineNum, 0 );
 
-	// ³õÊ¼»¯Íê³ÉÊ±¼äÁĞ±í.
+	// åˆå§‹åŒ–å®Œæˆæ—¶é—´åˆ—è¡¨.
 	tOpAFinishTime.clear();
 
-	// Èı¸öjob container.
+	// ä¸‰ä¸ªjob container.
 	int nInputContainer = nJobNum;
 	int nIntermediateContainer = 0;
 	int nOutContainer = 0;
 
-	// °ÑjobÒ»¸ö¸ö·ÖÅä¸ø»úÆ÷.
+	// æŠŠjobä¸€ä¸ªä¸ªåˆ†é…ç»™æœºå™¨.
 	for ( int i=0; i<nJobNum; ++i )
 	{
-		// Ñ°ÕÒÄÜ×îÔçÍê³ÉÕâ¸öjobµÄA²Ù×÷µÄ»úÆ÷.
-		// ×îÔçÄÜÍê³ÉµÄÊ±¼ä.
+		// å¯»æ‰¾èƒ½æœ€æ—©å®Œæˆè¿™ä¸ªjobçš„Aæ“ä½œçš„æœºå™¨.
+		// æœ€æ—©èƒ½å®Œæˆçš„æ—¶é—´.
 		int nMinFinishTime = IFINITE;
-		// ½øĞĞA²Ù×÷µÄ»úÆ÷ĞòºÅ.
+		// è¿›è¡ŒAæ“ä½œçš„æœºå™¨åºå·.
 		int nOpMachine = 0;
-		// ±éÀúËùÓĞµÄA»úÆ÷,Ñ°ÕÒÄÜ×îÔçÍê³É²Ù×÷µÄ.
+		// éå†æ‰€æœ‰çš„Aæœºå™¨,å¯»æ‰¾èƒ½æœ€æ—©å®Œæˆæ“ä½œçš„.
 		for ( int a=0; a<nMachineNum; ++a )
 		{
 			int finishTime = tMachineTotalTime[a] + tMachineOpTime[a];
@@ -120,9 +120,9 @@ void GetOperationFinishTime( int nJobNum,
 			}
 		}
 
-		// ÈÃÕâÌ¨»úÆ÷½øĞĞ²Ù×÷.
+		// è®©è¿™å°æœºå™¨è¿›è¡Œæ“ä½œ.
 		tMachineTotalTime[ nOpMachine ] = nMinFinishTime;
-		// ±£´æÕâ¸öjobÍê³ÉµÄÊ±¼ä.
+		// ä¿å­˜è¿™ä¸ªjobå®Œæˆçš„æ—¶é—´.
 		tOpAFinishTime.push_back( nMinFinishTime );	
 		
 	}
@@ -160,7 +160,7 @@ int main()
 		tMachineBOpTime.push_back( nTime );
 	}
 
-	// Ä£Äâ.
+	// æ¨¡æ‹Ÿ.
 	TTimeList tOpAFinishTime;
 	GetOperationFinishTime( nJobNum, tMachineAOpTime, tOpAFinishTime );
 
