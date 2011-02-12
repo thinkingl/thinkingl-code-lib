@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<G400>
+  <Head>
+    <MsgName>login_req</MsgName>
+    <Sn>1</Sn>
+  </Head>
+  <Data>
+<User>admin</User>
+<Password>888888</Password>
+  </Data>
+</G400>

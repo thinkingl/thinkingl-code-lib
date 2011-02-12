@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<G400>
+  <Head>
+    <MsgName>login_ack</MsgName>
+    <Sn>1</Sn>
+  </Head>
+  <Data>
+    <Result>1</Result>
+    <ErrorMessage>密码错误</ErrorMessage>
+  </Data>
+</G400>
