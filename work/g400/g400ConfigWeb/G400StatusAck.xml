@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<G400>
+  <Head>
+    <MsgName>status_ack</MsgName>
+    <Sn>2</Sn>
+  </Head>
+  <Data>
+    <ClientStatus>
+      <Connect>1</Connect>
+      <Version>客户端版本 V1R2</Version>
+    </ClientStatus>
+    <GKStatus>
+      <Use>1</Use>
+      <Connect>1</Connect>
+    </GKStatus>
+    <KDMStatus>
+      <Name>平台1</Name>
+      <Version>kdm ver 123</Version>
+      <Connect>0</Connect>
+    </KDMStatus>
+    <KDMStatus>
+      <Name>平台2</Name>
+      <Version>gk ver 456</Version>
+      <Connect>1</Connect>
+    </KDMStatus>
+  </Data>
+</G400>
