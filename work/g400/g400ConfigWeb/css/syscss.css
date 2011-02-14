@@ -1,0 +1,24 @@
+.statusBar {
+	font-family: "宋体" Arial;
+	font-size: 12px;
+	color: #D0DCE9;
+}
+.titleBar {
+	background-image: url(../images/title/title_banner.bmp);
+	background-repeat: no-repeat;
+	font-family: "宋体 Arial";
+	font-size: 12px;
+	color: #E0EAF4;
+}
+
+.lblLog {
+	font-family: "宋体" Arial;
+	font-size: 12px;
+	color: #205699;
+}
+.inputLog {
+	font-family: "宋体" Arial;
+	font-size: 12px;
+	color: #000000;
+	border: 1px solid #6385A3;
+}

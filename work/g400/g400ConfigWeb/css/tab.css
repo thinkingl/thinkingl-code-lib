@@ -1,0 +1,34 @@
+/* CSS DOCUMENT*/
+
+#tabMenu{
+	width:725px;
+}
+
+#tabMenu li {
+    float:left;
+    background:url("../images/TAB-left.jpg")
+      no-repeat left bottom;
+    margin:0 2px 0 0px;
+    padding:0 0 0 9px;
+}
+
+#tabMenu a {
+    float:left;
+    display:block;
+     background:url("../images/TAB-right.jpg")
+      no-repeat right bottom;
+    padding:5px 10px 0px 0px;
+    text-decoration:none;
+	  color:black;
+}
+
+#tabMenu .current{
+	background:url("../images/TAB-selected-left.jpg")
+  no-repeat left bottom;
+}
+
+#tabMenu .current a{
+  
+	background:url("../images/TAB-selected-right.jpg")
+  no-repeat right bottom;
+}

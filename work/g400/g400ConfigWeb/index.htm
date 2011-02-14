@@ -1,0 +1,113 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
+    <link rel="stylesheet" type="text/css" href="ext/ext-3/resources/css/ext-all.css" />
+
+    <link rel="stylesheet"  href="css/sytle.css" type="text/css" media="all" />
+    <link rel="stylesheet"  href="css/syscss.css" type="text/css" media="all" />
+
+    <script type="text/javascript" src="js/jquery-1.5.js"></script>
+
+    <script type="text/javascript" src="js/jquery.timers.js"></script>
+    <script type="text/javascript" src="ext/ext-3/adapter/jquery/ext-jquery-adapter.js"></script>
+    <script type="text/javascript" src="ext/ext-3/ext-all.js"></script>
+    <script type="text/javascript" src="ext/ext-3/examples/ux/PagingMemoryProxy.js"></script>
+    <script type="text/javascript" src="ext/ext-3/src/locale/ext-lang-zh_CN.js"></script>
+    <script type="text/javascript">    Ext.BLANK_IMAGE_URL = 'ext/ext-3/resources/images/default/s.gif';</script>
+
+    <script type="text/javascript" src="js/g400define.js"></script>
+    <script type="text/javascript" src="js/login.js"></script>
+
+    <title>G400控制台 - 苏州科达科技有限公司</title>
+</head>
+<body>
+    <div id="loginWin" style="display:block" >
+        <table style="height:100%; width:100%; text-align:left; border:0;" >
+            <tr>
+				<td width="33%" height="83">&nbsp;</td>
+				<td width="37%">&nbsp;</td>
+				<td width="30%">&nbsp;</td>
+            </tr>
+            <tr>
+				<td height="28" align="right" class="lblLog">用户名：</td>
+				<td><input id="txt_username" name="user" type="text" class="inputLog" maxlength="24"/></td>
+				<td>&nbsp;</td>
+            </tr>
+            <tr>
+				<td height="24" align="right" class="lblLog">密  &nbsp;码：</td>
+				<td><input name="psw" id="txt_password" type="password" class="inputLog" maxlength="24"/></td>
+				<td>&nbsp;</td>
+            </tr>
+            <tr>
+				<td height="26">&nbsp;</td>
+				<td class="lblLog"><input type="checkbox" id="chkRem" name="chkRem" value="checkbox" checked="checked">
+								记住密码</td>
+				<td rowspan="2" valign="top"><input name="button" type="button" class="btLoginNor"  value="" id="btLog">																												</td>
+            </tr>
+            <tr>
+				<td height="29">&nbsp;</td>
+				<td align="right">&nbsp;</td>
+            </tr>
+        </table>
+    </div>
+
+    <table style="width:800; height:900; border:0; " align="center"  cellpadding="1" cellspacing="0" class="main" id='main'>
+     <tr valign="top">
+       <td height="104"  colspan="2">
+            <table style="width:100%; height:100; border:0; background-image:url(images/title/title_background.bmp)" cellspacing="0" cellpadding="0" >
+  			    <tr>
+  				    <td width="2%" height="17"  align="left" valign="top">&nbsp;</td>
+  				    <td width="66%" rowspan="3"  align="left" valign="top"><img alt="G400" src="images/title/title_logo1.bmp" width="261" height="71"></td>
+  				    <td width="30%"  align="left" valign="top">&nbsp;</td>
+  				    <td width="2%"  align="left" valign="top">&nbsp;</td>
+  			    </tr>
+  			    <tr>
+  				    <td height="17"  align="left" valign="top">&nbsp;</td>
+  				    <td rowspan="2"  align="right" valign="top"><img alt="KEDACOM" src="images/title/title_logo2.bmp" width="129" height="40"></td>
+  				    <td height="17"  align="left" valign="top">&nbsp;</td>
+  			    </tr>
+  			    <tr>
+  				    <td height="35"  align="left" valign="top">&nbsp;</td>
+  				    <td height="35"  align="left" valign="top">&nbsp;</td>
+  			    </tr>
+  			    <tr>
+    			    <td height="27" colspan="4"  align="center" valign="top">
+                        <div id="bannerLog">
+    					    <table class="titleBar" style="display:block; width:766; height:30; border:0;">
+							    <tr align="right" valign="middle">
+								    <td width="457" height="26">&nbsp;</td>
+								    <td width="128" align="right" valign="middle" style="padding-top:5px">当前用户：<span id= 'curUserName'>admin</span></td>
+								    <td width="2">&nbsp;</td>
+								    <td width="73" align="center" valign="middle" style="padding-top:5px"><a href="#" class="top" id="changePass">[修改密码]</a></td>
+								    <td width="5">&nbsp;</td>
+								    <td width="40" valign="middle" style="padding-top:5px"  align="left"><a href="#" class="top" id="unlogin">[注销]</a></td>
+								    <td width="28">&nbsp;</td>
+							    </tr>
+					        </table>
+    				    </div>
+                    </td>
+		        </tr>
+            </table>
+        </td>
+     </tr>
+  <tr class="content">
+    <td width="152" height="728" align="center" valign="top">
+	    <div id="leftGuaid">	</div>
+	</td>
+    <td width="648"  valign="top">
+        <div class="rightFrame" style="display:none">
+            <div  class="rightTab">
+            </div>
+	    </div>
+    </td>
+  </tr>	
+    <tr>
+	    <td height="40" colspan="2" align="center" class="rightTabCharater STYLE8" style="background-image:url(images/status_bar/statusbar_background.bmp);">86-521-68418188(电话)　&nbsp;86-521-68412699(传真)　&nbsp;www.kedacom.com &nbsp;&nbsp;&nbsp;版权所有&nbsp;@&nbsp;2010苏州科达科技有限公司 </td>
+    </tr>  
+</table>
+
+<div class="STYLE2" id="sysworking" >正在请求数据，请稍等！</div>
+</body>
+</html>

@@ -12,14 +12,10 @@ var CMonMsg =
         this.msgBody.push(strNode);
     },
 
+    // 获取xml头.
     getHeader: function () {
-        return "<?xml version = \"1.0\" encoding = \"gb2312\"?>"
+        return "<?xml version = \"1.0\" encoding = \"utf-8\"?>";
     },
-
-    /*getTail:function()
-    {
-    return "</xml>";	
-    },*/
 
     getMsg: function () {
         var body = "";
