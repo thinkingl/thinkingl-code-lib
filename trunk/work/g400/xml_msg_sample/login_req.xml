@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<KedacomXMLData>
+  <Msg>MSG_LOGIN</Msg>
+  <Sn>1</Sn>
+  <Session></Session>
+  <Content>
+    <User>admin</User>
+    <Password>888888</Password>
+  </Content>
+</KedacomXMLData>

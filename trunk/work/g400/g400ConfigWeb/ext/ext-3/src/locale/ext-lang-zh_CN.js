@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  * Simplified Chinese translation
  * By DavidHu
  * 09 April 2007
@@ -7,62 +7,62 @@
  * 2009-10-22 15:00:57
  */
 
-Ext.UpdateManager.defaults.indicatorText = '<div class="loading-indicator">¼ÓÔØÖĞ...</div>';
+Ext.UpdateManager.defaults.indicatorText = '<div class="loading-indicator">åŠ è½½ä¸­...</div>';
 
 if(Ext.DataView){
    Ext.DataView.prototype.emptyText = "";
 }
 
 if(Ext.grid.GridPanel){
-   Ext.grid.GridPanel.prototype.ddText = "Ñ¡ÔñÁË {0} ĞĞ";
+   Ext.grid.GridPanel.prototype.ddText = "é€‰æ‹©äº† {0} è¡Œ";
 }
 
 if(Ext.TabPanelItem){
-   Ext.TabPanelItem.prototype.closeText = "¹Ø±Õ´Ë±êÇ©";
+   Ext.TabPanelItem.prototype.closeText = "å…³é—­æ­¤æ ‡ç­¾";
 }
 
 if(Ext.form.Field){
-   Ext.form.Field.prototype.invalidText = "ÊäÈëÖµ·Ç·¨";
+   Ext.form.Field.prototype.invalidText = "è¾“å…¥å€¼éæ³•";
 }
 
 if (Ext.LoadMask) {
-    Ext.LoadMask.prototype.msg = "¶ÁÈ¡ÖĞ...";
+    Ext.LoadMask.prototype.msg = "è¯»å–ä¸­...";
 }
 
 Date.monthNames = [
-   "Ò»ÔÂ",
-   "¶şÔÂ",
-   "ÈıÔÂ",
-   "ËÄÔÂ",
-   "ÎåÔÂ",
-   "ÁùÔÂ",
-   "ÆßÔÂ",
-   "°ËÔÂ",
-   "¾ÅÔÂ",
-   "Ê®ÔÂ",
-   "Ê®Ò»ÔÂ",
-   "Ê®¶şÔÂ"
+   "ä¸€æœˆ",
+   "äºŒæœˆ",
+   "ä¸‰æœˆ",
+   "å››æœˆ",
+   "äº”æœˆ",
+   "å…­æœˆ",
+   "ä¸ƒæœˆ",
+   "å…«æœˆ",
+   "ä¹æœˆ",
+   "åæœˆ",
+   "åä¸€æœˆ",
+   "åäºŒæœˆ"
 ];
 
 Date.dayNames = [
-   "ÈÕ",
-   "Ò»",
-   "¶ş",
-   "Èı",
-   "ËÄ",
-   "Îå",
-   "Áù"
+   "æ—¥",
+   "ä¸€",
+   "äºŒ",
+   "ä¸‰",
+   "å››",
+   "äº”",
+   "å…­"
 ];
 
-Date.formatCodes.a = "(this.getHours() < 12 ? 'ÉÏÎç' : 'ÏÂÎç')";
-Date.formatCodes.A = "(this.getHours() < 12 ? 'ÉÏÎç' : 'ÏÂÎç')";
+Date.formatCodes.a = "(this.getHours() < 12 ? 'ä¸Šåˆ' : 'ä¸‹åˆ')";
+Date.formatCodes.A = "(this.getHours() < 12 ? 'ä¸Šåˆ' : 'ä¸‹åˆ')";
 
 if(Ext.MessageBox){
    Ext.MessageBox.buttonText = {
-      ok     : "È·¶¨",
-      cancel : "È¡Ïû",
-      yes    : "ÊÇ",
-      no     : "·ñ"
+      ok     : "ç¡®å®š",
+      cancel : "å–æ¶ˆ",
+      yes    : "æ˜¯",
+      no     : "å¦"
    };
 }
 
@@ -70,48 +70,48 @@ if(Ext.util.Format){
    Ext.util.Format.date = function(v, format){
       if(!v) return "";
       if(!(v instanceof Date)) v = new Date(Date.parse(v));
-      return v.dateFormat(format || "yÄêmÔÂdÈÕ");
+      return v.dateFormat(format || "yå¹´mæœˆdæ—¥");
    };
 }
 
 if(Ext.DatePicker){
    Ext.apply(Ext.DatePicker.prototype, {
-      todayText         : "½ñÌì",
-      minText           : "ÈÕÆÚ±ØĞë´óÓÚ×îĞ¡ÔÊĞíÈÕÆÚ",//update
-      maxText           : "ÈÕÆÚ±ØĞëĞ¡ÓÚ×î´óÔÊĞíÈÕÆÚ",//update
+      todayText         : "ä»Šå¤©",
+      minText           : "æ—¥æœŸå¿…é¡»å¤§äºæœ€å°å…è®¸æ—¥æœŸ",//update
+      maxText           : "æ—¥æœŸå¿…é¡»å°äºæœ€å¤§å…è®¸æ—¥æœŸ",//update
       disabledDaysText  : "",
       disabledDatesText : "",
       monthNames        : Date.monthNames,
       dayNames          : Date.dayNames,
-      nextText          : 'ÏÂ¸öÔÂ (Ctrl+Right)',
-      prevText          : 'ÉÏ¸öÔÂ (Ctrl+Left)',
-      monthYearText     : 'Ñ¡ÔñÒ»¸öÔÂ (Control+Up/Down À´¸Ä±äÄê·İ)',//update
-      todayTip          : "{0} (¿Õ¸ñ¼üÑ¡Ôñ)",
-      format            : "yÄêmÔÂdÈÕ",
-      okText            : "È·¶¨",
-      cancelText        : "È¡Ïû"
+      nextText          : 'ä¸‹ä¸ªæœˆ (Ctrl+Right)',
+      prevText          : 'ä¸Šä¸ªæœˆ (Ctrl+Left)',
+      monthYearText     : 'é€‰æ‹©ä¸€ä¸ªæœˆ (Control+Up/Down æ¥æ”¹å˜å¹´ä»½)',//update
+      todayTip          : "{0} (ç©ºæ ¼é”®é€‰æ‹©)",
+      format            : "yå¹´mæœˆdæ—¥",
+      okText            : "ç¡®å®š",
+      cancelText        : "å–æ¶ˆ"
    });
 }
 
 if(Ext.PagingToolbar){
    Ext.apply(Ext.PagingToolbar.prototype, {
-      beforePageText : "µÚ",//update
-      afterPageText  : "Ò³,¹² {0} Ò³",//update
-      firstText      : "µÚÒ»Ò³",
-      prevText       : "ÉÏÒ»Ò³",//update
-      nextText       : "ÏÂÒ»Ò³",
-      lastText       : "×îºóÒ³",
-      refreshText    : "Ë¢ĞÂ",
-      displayMsg     : "ÏÔÊ¾ {0} - {1}Ìõ£¬¹² {2} Ìõ",//update
-      emptyMsg       : 'Ã»ÓĞÊı¾İ'
+      beforePageText : "ç¬¬",//update
+      afterPageText  : "é¡µ,å…± {0} é¡µ",//update
+      firstText      : "ç¬¬ä¸€é¡µ",
+      prevText       : "ä¸Šä¸€é¡µ",//update
+      nextText       : "ä¸‹ä¸€é¡µ",
+      lastText       : "æœ€åé¡µ",
+      refreshText    : "åˆ·æ–°",
+      displayMsg     : "æ˜¾ç¤º {0} - {1}æ¡ï¼Œå…± {2} æ¡",//update
+      emptyMsg       : 'æ²¡æœ‰æ•°æ®'
    });
 }
 
 if(Ext.form.TextField){
    Ext.apply(Ext.form.TextField.prototype, {
-      minLengthText : "¸ÃÊäÈëÏîµÄ×îĞ¡³¤¶ÈÊÇ {0} ¸ö×Ö·û",
-      maxLengthText : "¸ÃÊäÈëÏîµÄ×î´ó³¤¶ÈÊÇ {0} ¸ö×Ö·û",
-      blankText     : "¸ÃÊäÈëÏîÎª±ØÊäÏî",
+      minLengthText : "è¯¥è¾“å…¥é¡¹çš„æœ€å°é•¿åº¦æ˜¯ {0} ä¸ªå­—ç¬¦",
+      maxLengthText : "è¯¥è¾“å…¥é¡¹çš„æœ€å¤§é•¿åº¦æ˜¯ {0} ä¸ªå­—ç¬¦",
+      blankText     : "è¯¥è¾“å…¥é¡¹ä¸ºå¿…è¾“é¡¹",
       regexText     : "",
       emptyText     : null
    });
@@ -119,111 +119,111 @@ if(Ext.form.TextField){
 
 if(Ext.form.NumberField){
    Ext.apply(Ext.form.NumberField.prototype, {
-      minText : "¸ÃÊäÈëÏîµÄ×îĞ¡ÖµÊÇ {0}",
-      maxText : "¸ÃÊäÈëÏîµÄ×î´óÖµÊÇ {0}",
-      nanText : "{0} ²»ÊÇÓĞĞ§ÊıÖµ"
+      minText : "è¯¥è¾“å…¥é¡¹çš„æœ€å°å€¼æ˜¯ {0}",
+      maxText : "è¯¥è¾“å…¥é¡¹çš„æœ€å¤§å€¼æ˜¯ {0}",
+      nanText : "{0} ä¸æ˜¯æœ‰æ•ˆæ•°å€¼"
    });
 }
 
 if(Ext.form.DateField){
    Ext.apply(Ext.form.DateField.prototype, {
-      disabledDaysText  : "½ûÓÃ",
-      disabledDatesText : "½ûÓÃ",
-      minText           : "¸ÃÊäÈëÏîµÄÈÕÆÚ±ØĞëÔÚ {0} Ö®ºó",
-      maxText           : "¸ÃÊäÈëÏîµÄÈÕÆÚ±ØĞëÔÚ {0} Ö®Ç°",
-      invalidText       : "{0} ÊÇÎŞĞ§µÄÈÕÆÚ - ±ØĞë·ûºÏ¸ñÊ½£º {1}",
-      format            : "yÄêmÔÂdÈÕ"
+      disabledDaysText  : "ç¦ç”¨",
+      disabledDatesText : "ç¦ç”¨",
+      minText           : "è¯¥è¾“å…¥é¡¹çš„æ—¥æœŸå¿…é¡»åœ¨ {0} ä¹‹å",
+      maxText           : "è¯¥è¾“å…¥é¡¹çš„æ—¥æœŸå¿…é¡»åœ¨ {0} ä¹‹å‰",
+      invalidText       : "{0} æ˜¯æ— æ•ˆçš„æ—¥æœŸ - å¿…é¡»ç¬¦åˆæ ¼å¼ï¼š {1}",
+      format            : "yå¹´mæœˆdæ—¥"
    });
 }
 
 if(Ext.form.ComboBox){
    Ext.apply(Ext.form.ComboBox.prototype, {
-      loadingText       : "¼ÓÔØÖĞ...",
+      loadingText       : "åŠ è½½ä¸­...",
       valueNotFoundText : undefined
    });
 }
 
 if(Ext.form.VTypes){
    Ext.apply(Ext.form.VTypes, {
-      emailText    : '¸ÃÊäÈëÏî±ØĞëÊÇµç×ÓÓÊ¼şµØÖ·£¬¸ñÊ½Èç£º "user@example.com"',
-      urlText      : '¸ÃÊäÈëÏî±ØĞëÊÇURLµØÖ·£¬¸ñÊ½Èç£º "http:/'+'/www.example.com"',
-      alphaText    : '¸ÃÊäÈëÏîÖ»ÄÜ°üº¬°ë½Ç×ÖÄ¸ºÍ_',//update
-      alphanumText : '¸ÃÊäÈëÏîÖ»ÄÜ°üº¬°ë½Ç×ÖÄ¸,Êı×ÖºÍ_'//update
+      emailText    : 'è¯¥è¾“å…¥é¡¹å¿…é¡»æ˜¯ç”µå­é‚®ä»¶åœ°å€ï¼Œæ ¼å¼å¦‚ï¼š "user@example.com"',
+      urlText      : 'è¯¥è¾“å…¥é¡¹å¿…é¡»æ˜¯URLåœ°å€ï¼Œæ ¼å¼å¦‚ï¼š "http:/'+'/www.example.com"',
+      alphaText    : 'è¯¥è¾“å…¥é¡¹åªèƒ½åŒ…å«åŠè§’å­—æ¯å’Œ_',//update
+      alphanumText : 'è¯¥è¾“å…¥é¡¹åªèƒ½åŒ…å«åŠè§’å­—æ¯,æ•°å­—å’Œ_'//update
    });
 }
 //add HTMLEditor's tips by andy_ghg
 if(Ext.form.HtmlEditor){
   Ext.apply(Ext.form.HtmlEditor.prototype, {
-    createLinkText : 'Ìí¼Ó³¬¼¶Á´½Ó:',
+    createLinkText : 'æ·»åŠ è¶…çº§é“¾æ¥:',
     buttonTips : {
       bold : {
-        title: '´ÖÌå (Ctrl+B)',
-        text: '½«Ñ¡ÖĞµÄÎÄ×ÖÉèÖÃÎª´ÖÌå',
+        title: 'ç²—ä½“ (Ctrl+B)',
+        text: 'å°†é€‰ä¸­çš„æ–‡å­—è®¾ç½®ä¸ºç²—ä½“',
         cls: 'x-html-editor-tip'
       },
       italic : {
-        title: 'Ğ±Ìå (Ctrl+I)',
-        text: '½«Ñ¡ÖĞµÄÎÄ×ÖÉèÖÃÎªĞ±Ìå',
+        title: 'æ–œä½“ (Ctrl+I)',
+        text: 'å°†é€‰ä¸­çš„æ–‡å­—è®¾ç½®ä¸ºæ–œä½“',
         cls: 'x-html-editor-tip'
       },
       underline : {
-        title: 'ÏÂ»®Ïß (Ctrl+U)',
-        text: '¸øËùÑ¡ÎÄ×Ö¼ÓÏÂ»®Ïß',
+        title: 'ä¸‹åˆ’çº¿ (Ctrl+U)',
+        text: 'ç»™æ‰€é€‰æ–‡å­—åŠ ä¸‹åˆ’çº¿',
         cls: 'x-html-editor-tip'
       },
       increasefontsize : {
-        title: 'Ôö´ó×ÖÌå',
-        text: 'Ôö´ó×ÖºÅ',
+        title: 'å¢å¤§å­—ä½“',
+        text: 'å¢å¤§å­—å·',
         cls: 'x-html-editor-tip'
       },
       decreasefontsize : {
-        title: 'ËõĞ¡×ÖÌå',
-        text: '¼õĞ¡×ÖºÅ',
+        title: 'ç¼©å°å­—ä½“',
+        text: 'å‡å°å­—å·',
         cls: 'x-html-editor-tip'
       },
       backcolor : {
-        title: 'ÒÔ²»Í¬ÑÕÉ«Í»³öÏÔÊ¾ÎÄ±¾',
-        text: 'Ê¹ÎÄ×Ö¿´ÉÏÈ¥ÏñÊÇÓÃÓ«¹â±Ê×öÁË±ê¼ÇÒ»Ñù',
+        title: 'ä»¥ä¸åŒé¢œè‰²çªå‡ºæ˜¾ç¤ºæ–‡æœ¬',
+        text: 'ä½¿æ–‡å­—çœ‹ä¸Šå»åƒæ˜¯ç”¨è§å…‰ç¬”åšäº†æ ‡è®°ä¸€æ ·',
         cls: 'x-html-editor-tip'
       },
       forecolor : {
-        title: '×ÖÌåÑÕÉ«',
-        text: '¸ü¸Ä×ÖÌåÑÕÉ«',
+        title: 'å­—ä½“é¢œè‰²',
+        text: 'æ›´æ”¹å­—ä½“é¢œè‰²',
         cls: 'x-html-editor-tip'
       },
       justifyleft : {
-        title: '×ó¶ÔÆë',
-        text: '½«ÎÄ×Ö×ó¶ÔÆë',
+        title: 'å·¦å¯¹é½',
+        text: 'å°†æ–‡å­—å·¦å¯¹é½',
         cls: 'x-html-editor-tip'
       },
       justifycenter : {
-        title: '¾ÓÖĞ',
-        text: '½«ÎÄ×Ö¾ÓÖĞ¶ÔÆë',
+        title: 'å±…ä¸­',
+        text: 'å°†æ–‡å­—å±…ä¸­å¯¹é½',
         cls: 'x-html-editor-tip'
       },
       justifyright : {
-        title: 'ÓÒ¶ÔÆë',
-        text: '½«ÎÄ×ÖÓÒ¶ÔÆë',
+        title: 'å³å¯¹é½',
+        text: 'å°†æ–‡å­—å³å¯¹é½',
         cls: 'x-html-editor-tip'
       },
       insertunorderedlist : {
-        title: 'ÏîÄ¿·ûºÅ',
-        text: '¿ªÊ¼´´½¨ÏîÄ¿·ûºÅÁĞ±í',
+        title: 'é¡¹ç›®ç¬¦å·',
+        text: 'å¼€å§‹åˆ›å»ºé¡¹ç›®ç¬¦å·åˆ—è¡¨',
         cls: 'x-html-editor-tip'
       },
       insertorderedlist : {
-        title: '±àºÅ',
-        text: '¿ªÊ¼´´½¨±àºÅÁĞ±í',
+        title: 'ç¼–å·',
+        text: 'å¼€å§‹åˆ›å»ºç¼–å·åˆ—è¡¨',
         cls: 'x-html-editor-tip'
       },
       createlink : {
-        title: '×ª³É³¬¼¶Á´½Ó',
-        text: '½«ËùÑ¡ÎÄ±¾×ª»»³É³¬¼¶Á´½Ó',
+        title: 'è½¬æˆè¶…çº§é“¾æ¥',
+        text: 'å°†æ‰€é€‰æ–‡æœ¬è½¬æ¢æˆè¶…çº§é“¾æ¥',
         cls: 'x-html-editor-tip'
       },
       sourceedit : {
-        title: '´úÂëÊÓÍ¼',
-        text: 'ÒÔ´úÂëµÄĞÎÊ½Õ¹ÏÖÎÄ±¾',
+        title: 'ä»£ç è§†å›¾',
+        text: 'ä»¥ä»£ç çš„å½¢å¼å±•ç°æ–‡æœ¬',
         cls: 'x-html-editor-tip'
       }
     }
@@ -233,25 +233,25 @@ if(Ext.form.HtmlEditor){
 
 if(Ext.grid.GridView){
    Ext.apply(Ext.grid.GridView.prototype, {
-      sortAscText  : "ÕıĞò",//update
-      sortDescText : "µ¹Ğò",//update
-      lockText     : "Ëø¶¨ÁĞ",//update
-      unlockText   : "½â³ıËø¶¨",//update
-      columnsText  : "ÁĞ"
+      sortAscText  : "æ­£åº",//update
+      sortDescText : "å€’åº",//update
+      lockText     : "é”å®šåˆ—",//update
+      unlockText   : "è§£é™¤é”å®š",//update
+      columnsText  : "åˆ—"
    });
 }
 
 if(Ext.grid.PropertyColumnModel){
    Ext.apply(Ext.grid.PropertyColumnModel.prototype, {
-      nameText   : "Ãû³Æ",
-      valueText  : "Öµ",
-      dateFormat : "yÄêmÔÂdÈÕ"
+      nameText   : "åç§°",
+      valueText  : "å€¼",
+      dateFormat : "yå¹´mæœˆdæ—¥"
    });
 }
 
 if(Ext.layout.BorderLayout && Ext.layout.BorderLayout.SplitRegion){
    Ext.apply(Ext.layout.BorderLayout.SplitRegion.prototype, {
-      splitTip            : "ÍÏ¶¯À´¸Ä±ä³ß´ç.",
-      collapsibleSplitTip : "ÍÏ¶¯À´¸Ä±ä³ß´ç. Ë«»÷Òş²Ø."
+      splitTip            : "æ‹–åŠ¨æ¥æ”¹å˜å°ºå¯¸.",
+      collapsibleSplitTip : "æ‹–åŠ¨æ¥æ”¹å˜å°ºå¯¸. åŒå‡»éšè—."
    });
 }

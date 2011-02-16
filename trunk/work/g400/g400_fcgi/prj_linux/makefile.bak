@@ -1,0 +1,16 @@
+
+MAKE := make --no-print-directory
+
+all :
+	@$(MAKE) -f makefile_2800_debug clean;
+	@$(MAKE) -f makefile_2800_debug;
+	@$(MAKE) -f makefile_2800_debug clean;
+	@$(MAKE) -f makefile_2800_release clean;
+	@$(MAKE) -f makefile_2800_release;
+	@$(MAKE) -f makefile_2800_release clean;
+	@$(MAKE) -f makefile_2800_debug_kdm26 clean;
+	@$(MAKE) -f makefile_2800_debug_kdm26;
+	@$(MAKE) -f makefile_2800_debug_kdm26 clean;
+	@$(MAKE) -f makefile_2800_release_kdm26 clean;
+	@$(MAKE) -f makefile_2800_release_kdm26;
+	@$(MAKE) -f makefile_2800_release_kdm26 clean
