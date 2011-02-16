@@ -22,38 +22,37 @@ $(document).ready(function () {
     // 尝试用cookie中的登录session登录.
     // 如果这个session还没有失效,那么就不必再次登录了.
     // 这样用户刷新页面时不必重新登录.
-    // 未实现.
+    // 还未实现.
 
     //登陆按键按下时响应
     $('#btLog').click(function () {
         if (!saveCookie())
             return false;
-        CMonMsg.setId(G100_COMMAND.COMMAND_LOGION);
-        CMonMsg.setMsgNode("username", $('#txt_username').val());
-        CMonMsg.setMsgNode("password", $('#txt_password').val());
-        ResourceLoader.loadXmlData(CMonMsg.getMsg(), function (json)//通过ajax发送登陆消息到服务器
+        var loginMsg = new CMonMsg();
+        loginMsg.setId(G400_MESSAGE.MSG_LOGIN);
+        loginMsg.setMsgNode("User", $('#txt_username').val());
+        loginMsg.setMsgNode("Password", $('#txt_password').val());
+        ResourceLoader.loadXmlData(loginMsg.getMsg(), function (json)//通过ajax发送登陆消息到服务器
         {
+            //            alert("login " + json.KedacomXMLData.Head.Session);
             if (isErrorCommand(json) === false)
                 return;
-            var value = json.kedacomxmldata.content.status;
-            if (value == 1) {//登陆成功
+            var loginStatus = json.KedacomXMLData.Head.Status;
+            if (loginStatus == 1) {//登陆成功
                 loginSuccessed(json);
                 return;
-            } else if (value == 2) {
-                messageToShow = "用户名不存在";
-            } else if (value == 3) {
-                messageToShow = "密码错误";
-            } else if (value == 4) {
-                messageToShow = "已有其他用户登录";
-            } else {
-                messageToShow = "末定义的错误";
             }
-            myAlert("提示", messageToShow, 180, 0);
+            else {
+                var loginErr = json.KedacomXMLData.Content.ErrorMesssage;
+                myAlert("提示", loginErr, 180, 0);
+            }
+
+
         });
     });
     button_hover_function();
     loadCookie();
-}); ////////onready方法over
+});   ////////onready方法over
 
 /************************************************
 登陆成功后调用这个方法，更新左面的leftGuaid,获得g100的基本数据
@@ -149,9 +148,9 @@ function saveCookie() {
 
 //判断返回的命令是否为错误命令
 function isErrorCommand(json) {
-    var command = json.kedacomxmldata.command;
-    if (command == 0) {
-        myAlert(null, json.kedacomxmldata.content.status, 330, 0);
+    var msgId = json.KedacomXMLData.Head.Msg;
+    if ( msgId == "" ) {
+        myAlert(null, json.KedacomXMLData.Head.Status, 330, 0);
         //alert(json.kedacomxmldata.content.status);
         return false;
     }

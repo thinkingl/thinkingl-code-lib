@@ -2,21 +2,63 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
     <title>Demo</title>
-    <style>
+    <style type="text/css">
     a.test { font-weight:bold; }
     </style>
+
+       <link rel="stylesheet" type="text/css" href="ext/ext-3/resources/css/ext-all.css" />
+
+    <link rel="stylesheet"  href="css/sytle.css" type="text/css" media="all" />
+    <link rel="stylesheet"  href="css/syscss.css" type="text/css" media="all" />
+
   </head>
   <body>
     <a href="http://jquery.com/">jQuery</a>
     <a href="http://jquery.com/">jQuery2</a>
     <a href="http://jquery.com/">jQuery3中文</a>
-    <script src="jquery-1.5.js"></script>
-    <script>
+    <div id="result" >result</div>
+        <script type="text/javascript" src="js/jquery-1.5.js"></script>
+
+    <script type="text/javascript" src="js/jquery.timers.js"></script>
+    <script type="text/javascript" src="ext/ext-3/adapter/jquery/ext-jquery-adapter.js"></script>
+    <script type="text/javascript" src="ext/ext-3/ext-all.js"></script>
+    <script type="text/javascript" src="ext/ext-3/examples/ux/PagingMemoryProxy.js"></script>
+    <script type="text/javascript" src="ext/ext-3/src/locale/ext-lang-zh_CN.js"></script>
+    <script type="text/javascript">        Ext.BLANK_IMAGE_URL = 'ext/ext-3/resources/images/default/s.gif';</script>
+
+    <script type="text/javascript" src="js/g400define.js"></script>
+    <script type="text/javascript" src="js/utils.js"></script>
+    <script type="text/javascript" src="js/common.js"></script>
+    <script type="text/javascript" src="js/ajax.js"></script>
+    <script type="text/javascript" src="js/xmlParser.js"></script>
+    <script type="text/javascript" src="js/server.js"></script>
+    <script type="text/javascript" src="js/login.js"></script>
+    <script type="text/javascript">
+        function TestArray() {
+            var ar = new Array();
+            ar["cc"] = "alt";
+            ar["abcde"] = "看看";
+
+            var str = "";
+            for (var i in ar) {
+                str += (i + "=" + ar[i] + " ");
+            }
+            alert(str);
+        };
+
+        function TestMessage() {
+            unitTestCMonMsg();
+        }
+    </script>
+    <script type="text/javascript">
         $(document).ready(function () {
+
+            myAlert("提示", "提示啊", 180, 0);
+
             var xmltest = $.parseXML("");
-            
+
             $("a").addClass("test");
 
             $("a").click(function () {

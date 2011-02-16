@@ -1,0 +1,60 @@
+###
+### Copyright (c) 2004 Keda Telecom, Inc.
+###
+
+#########################################################################
+###
+###  DESCRIPTION:
+###    Common definitions for all Makefiles in UAS linux project.
+###
+#########################################################################
+
+TOP := ..
+
+COMM_DIR := ..
+
+SRC_DIR := $(TOP)/src
+
+## Name and type of the target for this Makefile
+
+APP_TARGET := g400.fcgi
+
+## Define debugging symbols
+DEBUG = 0
+LINUX_COMPILER=_LINUX_# _EQUATOR_, _HHPPC_, _LINUX_ and so on
+CFLAGS += -D_SNMP_  -fno-omit-frame-pointer 
+PWLIB_SUPPORT = 0
+
+## Object files that compose the target(s)
+
+CPP_FILES = $(wildcard $(SRC_DIR)/*.cpp)
+
+OBJS := $(CPP_FILES:%.cpp=%)
+
+## Libraries to include in shared object file
+
+LIBS := fcgi
+
+##	pthread rt osp kdvsys snmpadp dbi mysqlclient comdata\
+##        sybct sybcs sybtcl sybblk sybdb sybunic dl z kdvencrypt nipx86
+
+## Add driver-specific include directory to the search path
+
+INC_PATH += $(TOP)/include \
+							/usr/include 
+##            ../../../10-Common/include/database \
+##            ../../../10-Common/include/cbb/system \
+##            ../../../10-Common/include/cbb/platform \
+##            ../../../10-Common/include/aaa \
+##            ../../../10-Common/include/common \
+##            ../../../10-Common/include/cms \
+##            ../../../10-Common/include/cbb/protocol \
+##            ../../../10-Common/include/nms \
+##            ../../../10-Common/include/kcm
+
+LIB_PATH := /usr/lib
+##	../../../10-Common/lib/release/linux
+
+INSTALL_APP_PATH = 
+##	../../../10-Common/version/release/linux/uas
+include $(COMM_DIR)/common.mk
