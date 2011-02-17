@@ -4,9 +4,9 @@
     <Msg>MSG_LOGIN</Msg>
     <Sn>1</Sn>
     <Session>2011021615555200</Session>
-    <Status>1</Status>
+    <Status> 1 </Status>
   </Head>  
   <Content>
-    <ErrorMesssage>登录成功</ErrorMesssage>
+    <ErrorMesssage >登录成功</ErrorMesssage>
   </Content>
 </KedacomXMLData>
