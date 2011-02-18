@@ -1,0 +1,539 @@
+# depslib dependency file v1.0
+1298023933 source:/mnt/svn-work/g400/g400_fcgi/src/main.cpp
+	"fcgi_config.h"
+	<stdlib.h>
+	<memory.h>
+	<string>
+	<unistd.h>
+	<process.h>
+	"fcgi_stdio.h"
+	"xmldom.h"
+
+1265190111 /usr/include/fcgi_config.h
+
+1287718123 /usr/include/stdlib.h
+	<features.h>
+	<stddef.h>
+	<bits/waitflags.h>
+	<bits/waitstatus.h>
+	<xlocale.h>
+	<sys/types.h>
+	<alloca.h>
+	<bits/stdlib.h>
+	<bits/stdlib-ldbl.h>
+
+1287718081 /usr/include/features.h
+	<bits/predefs.h>
+	<sys/cdefs.h>
+	<gnu/stubs.h>
+
+1287718081 /usr/include/bits/predefs.h
+
+1287718147 /usr/include/sys/cdefs.h
+	<features.h>
+	<bits/wordsize.h>
+
+1287718123 /usr/include/bits/wordsize.h
+
+1287718081 /usr/include/gnu/stubs.h
+	<bits/wordsize.h>
+	<gnu/stubs-32.h>
+	<gnu/stubs-64.h>
+
+1287717227 /usr/include/gnu/stubs-32.h
+
+1287718141 /usr/include/bits/waitflags.h
+
+1287718141 /usr/include/bits/waitstatus.h
+	<endian.h>
+
+1287718131 /usr/include/endian.h
+	<features.h>
+	<bits/endian.h>
+	<bits/byteswap.h>
+
+1287718131 /usr/include/bits/endian.h
+
+1287718131 /usr/include/bits/byteswap.h
+	<bits/wordsize.h>
+
+1287718085 /usr/include/xlocale.h
+
+1287718141 /usr/include/sys/types.h
+	<features.h>
+	<bits/types.h>
+	<time.h>
+	<stddef.h>
+	<endian.h>
+	<sys/select.h>
+	<sys/sysmacros.h>
+	<bits/pthreadtypes.h>
+
+1287718141 /usr/include/bits/types.h
+	<features.h>
+	<bits/wordsize.h>
+	<bits/typesizes.h>
+
+1287718141 /usr/include/bits/typesizes.h
+
+1287718137 /usr/include/time.h
+	<features.h>
+	<stddef.h>
+	<bits/time.h>
+	<bits/types.h>
+	<bits/types.h>
+	<bits/types.h>
+	<bits/types.h>
+	<bits/types.h>
+	<xlocale.h>
+
+1287718137 /usr/include/bits/time.h
+	<bits/types.h>
+	<bits/types.h>
+
+1287718147 /usr/include/sys/select.h
+	<features.h>
+	<bits/types.h>
+	<bits/select.h>
+	<bits/sigset.h>
+	<time.h>
+	<bits/time.h>
+
+1287718147 /usr/include/bits/select.h
+	<bits/wordsize.h>
+
+1287718122 /usr/include/bits/sigset.h
+
+1287718141 /usr/include/sys/sysmacros.h
+	<features.h>
+
+1287718141 /usr/include/bits/pthreadtypes.h
+	<bits/wordsize.h>
+
+1287718123 /usr/include/alloca.h
+	<features.h>
+	<stddef.h>
+
+1287718123 /usr/include/bits/stdlib.h
+
+1287718123 /usr/include/bits/stdlib-ldbl.h
+
+1287718131 /usr/include/memory.h
+	<features.h>
+	<string.h>
+
+1287718131 /usr/include/string.h
+	<features.h>
+	<stddef.h>
+	<xlocale.h>
+	<bits/string.h>
+	<bits/string2.h>
+	<bits/string3.h>
+
+1287718131 /usr/include/bits/string.h
+
+1287718131 /usr/include/bits/string2.h
+	<endian.h>
+	<bits/types.h>
+	<stdlib.h>
+
+1287718131 /usr/include/bits/string3.h
+
+1287718141 /usr/include/unistd.h
+	<features.h>
+	<bits/posix_opt.h>
+	<bits/environments.h>
+	<bits/types.h>
+	<stddef.h>
+	<bits/confname.h>
+	<getopt.h>
+	<bits/unistd.h>
+
+1287718141 /usr/include/bits/posix_opt.h
+
+1287718141 /usr/include/bits/environments.h
+	<bits/wordsize.h>
+
+1287718141 /usr/include/bits/confname.h
+
+1287718141 /usr/include/getopt.h
+	<ctype.h>
+
+1287718113 /usr/include/ctype.h
+	<features.h>
+	<bits/types.h>
+	<endian.h>
+	<xlocale.h>
+
+1287718141 /usr/include/bits/unistd.h
+
+1265190111 /usr/include/fcgi_stdio.h
+	<stdio.h>
+	<sys/types.h>
+	"fcgiapp.h"
+
+1287718127 /usr/include/stdio.h
+	<features.h>
+	<stddef.h>
+	<bits/types.h>
+	<libio.h>
+	<stdarg.h>
+	<bits/stdio_lim.h>
+	<bits/sys_errlist.h>
+	<getopt.h>
+	<bits/stdio.h>
+	<bits/stdio2.h>
+	<bits/stdio-ldbl.h>
+
+1287718127 /usr/include/libio.h
+	<_G_config.h>
+	<stdarg.h>
+	<sys/cdefs.h>
+	<bits/stdio-lock.h>
+	<shlib-compat.h>
+	<bits/libio-ldbl.h>
+
+1287718127 /usr/include/_G_config.h
+	<bits/types.h>
+	<stddef.h>
+	<wchar.h>
+	<gconv.h>
+
+1287718132 /usr/include/wchar.h
+	<features.h>
+	<stdio.h>
+	<stdarg.h>
+	<bits/wchar.h>
+	<stddef.h>
+	<wctype.h>
+	<xlocale.h>
+	<xlocale.h>
+	<xlocale.h>
+	<wctype.h>
+	<bits/wchar2.h>
+	<bits/wchar-ldbl.h>
+
+1287718132 /usr/include/bits/wchar.h
+
+1287718152 /usr/include/wctype.h
+	<features.h>
+	<bits/types.h>
+	<stddef.h>
+	<endian.h>
+	<xlocale.h>
+
+1287718132 /usr/include/bits/wchar2.h
+
+1287718132 /usr/include/bits/wchar-ldbl.h
+
+1287718083 /usr/include/gconv.h
+	<features.h>
+	<wchar.h>
+	<stddef.h>
+
+1287718127 /usr/include/bits/stdio-lock.h
+	<bits/libc-lock.h>
+	<lowlevellock.h>
+
+1287718081 /usr/include/bits/libc-lock.h
+	<pthread.h>
+	<stddef.h>
+	<lowlevellock.h>
+	<tls.h>
+	<pthread-functions.h>
+	<errno.h>
+	<gnu/option-groups.h>
+	<bp-sym.h>
+
+1287718160 /usr/include/pthread.h
+	<features.h>
+	<endian.h>
+	<sched.h>
+	<time.h>
+	<signal.h>
+	<bits/pthreadtypes.h>
+	<bits/setjmp.h>
+	<bits/wordsize.h>
+
+1287718141 /usr/include/sched.h
+	<features.h>
+	<bits/types.h>
+	<stddef.h>
+	<time.h>
+	<bits/sched.h>
+
+1287718141 /usr/include/bits/sched.h
+
+1287718122 /usr/include/signal.h
+	<features.h>
+	<bits/sigset.h>
+	<bits/types.h>
+	<bits/signum.h>
+	<time.h>
+	<bits/siginfo.h>
+	<bits/sigaction.h>
+	<bits/sigcontext.h>
+	<stddef.h>
+	<bits/sigstack.h>
+	<sys/ucontext.h>
+	<bits/pthreadtypes.h>
+	<bits/sigthread.h>
+
+1287718122 /usr/include/bits/signum.h
+
+1287718122 /usr/include/bits/siginfo.h
+	<bits/wordsize.h>
+
+1287718122 /usr/include/bits/sigaction.h
+
+1287718122 /usr/include/bits/sigcontext.h
+	<bits/wordsize.h>
+
+1287718122 /usr/include/bits/sigstack.h
+
+1287718123 /usr/include/sys/ucontext.h
+	<features.h>
+	<signal.h>
+	<bits/wordsize.h>
+	<bits/sigcontext.h>
+
+1287718122 /usr/include/bits/sigthread.h
+
+1287718121 /usr/include/bits/setjmp.h
+	<bits/wordsize.h>
+
+1287718123 /usr/include/errno.h
+	<features.h>
+	<bits/errno.h>
+
+1287718123 /usr/include/bits/errno.h
+	<linux/errno.h>
+
+1290015539 /usr/include/linux/errno.h
+	<asm/errno.h>
+
+1290015540 /usr/include/asm/errno.h
+	<asm-generic/errno.h>
+
+1290015537 /usr/include/asm-generic/errno.h
+	<asm-generic/errno-base.h>
+
+1290015537 /usr/include/asm-generic/errno-base.h
+
+1287718185 /usr/include/gnu/option-groups.h
+
+1287718127 /usr/include/bits/libio-ldbl.h
+
+1287718125 /usr/include/bits/stdio_lim.h
+
+1287718127 /usr/include/bits/sys_errlist.h
+
+1287718127 /usr/include/bits/stdio.h
+
+1287718127 /usr/include/bits/stdio2.h
+
+1287718127 /usr/include/bits/stdio-ldbl.h
+
+1265190111 /usr/include/fcgiapp.h
+	<stdarg.h>
+	<varargs.h>
+
+1297997025 /mnt/svn-work/g400/g400_fcgi/include/xmldom.h
+	<string>
+	<map>
+
+1298024014 source:/mnt/svn-work/g400/g400_fcgi/src/xmldom.cpp
+	"xmldom.h"
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<sstream>
+	<libxml/SAX2.h>
+	<libxml/parser.h>
+	<libxml/parserInternals.h>
+	"fcgi_stdio.h"
+
+1289247162 /usr/include/libxml2/libxml/SAX2.h
+	<stdio.h>
+	<stdlib.h>
+	<libxml/xmlversion.h>
+	<libxml/parser.h>
+	<libxml/xlink.h>
+
+1289247162 /usr/include/libxml2/libxml/xmlversion.h
+	<libxml/xmlexports.h>
+	<ansidecl.h>
+
+1289247162 /usr/include/libxml2/libxml/xmlexports.h
+
+1289247162 /usr/include/libxml2/libxml/parser.h
+	<stdarg.h>
+	<libxml/xmlversion.h>
+	<libxml/tree.h>
+	<libxml/dict.h>
+	<libxml/hash.h>
+	<libxml/valid.h>
+	<libxml/entities.h>
+	<libxml/xmlerror.h>
+	<libxml/xmlstring.h>
+	<libxml/encoding.h>
+	<libxml/xmlIO.h>
+	<libxml/globals.h>
+
+1289247162 /usr/include/libxml2/libxml/tree.h
+	<stdio.h>
+	<libxml/xmlversion.h>
+	<libxml/xmlstring.h>
+	<libxml/xmlregexp.h>
+	<libxml/xmlmemory.h>
+
+1289247162 /usr/include/libxml2/libxml/xmlstring.h
+	<stdarg.h>
+	<libxml/xmlversion.h>
+
+1289247162 /usr/include/libxml2/libxml/xmlregexp.h
+	<libxml/xmlversion.h>
+	<libxml/tree.h>
+	<libxml/dict.h>
+
+1289247162 /usr/include/libxml2/libxml/dict.h
+	<libxml/xmlversion.h>
+	<libxml/tree.h>
+
+1289247162 /usr/include/libxml2/libxml/xmlmemory.h
+	<stdio.h>
+	<libxml/xmlversion.h>
+	<libxml/threads.h>
+	<libxml/globals.h>
+
+1289247162 /usr/include/libxml2/libxml/threads.h
+	<libxml/xmlversion.h>
+	<libxml/globals.h>
+
+1289247162 /usr/include/libxml2/libxml/globals.h
+	<libxml/xmlversion.h>
+	<libxml/parser.h>
+	<libxml/xmlerror.h>
+	<libxml/SAX.h>
+	<libxml/SAX2.h>
+	<libxml/xmlmemory.h>
+	<libxml/threads.h>
+
+1289247162 /usr/include/libxml2/libxml/xmlerror.h
+	<libxml/parser.h>
+
+1289247162 /usr/include/libxml2/libxml/SAX.h
+	<stdio.h>
+	<stdlib.h>
+	<libxml/xmlversion.h>
+	<libxml/parser.h>
+	<libxml/xlink.h>
+
+1289247162 /usr/include/libxml2/libxml/xlink.h
+	<libxml/xmlversion.h>
+	<libxml/tree.h>
+
+1289247162 /usr/include/libxml2/libxml/hash.h
+	<libxml/xmlversion.h>
+	<libxml/parser.h>
+	<libxml/dict.h>
+
+1289247162 /usr/include/libxml2/libxml/valid.h
+	<libxml/xmlversion.h>
+	<libxml/xmlerror.h>
+	<libxml/tree.h>
+	<libxml/list.h>
+	<libxml/xmlautomata.h>
+	<libxml/xmlregexp.h>
+
+1289247162 /usr/include/libxml2/libxml/list.h
+	<libxml/xmlversion.h>
+
+1289247162 /usr/include/libxml2/libxml/xmlautomata.h
+	<libxml/xmlversion.h>
+	<libxml/tree.h>
+	<libxml/xmlregexp.h>
+
+1289247162 /usr/include/libxml2/libxml/entities.h
+	<libxml/xmlversion.h>
+	<libxml/tree.h>
+
+1289247162 /usr/include/libxml2/libxml/encoding.h
+	<libxml/xmlversion.h>
+	<iconv.h>
+	<libxml/tree.h>
+
+1287718083 /usr/include/iconv.h
+	<features.h>
+	<stddef.h>
+
+1289247162 /usr/include/libxml2/libxml/xmlIO.h
+	<stdio.h>
+	<libxml/xmlversion.h>
+	<libxml/globals.h>
+	<libxml/tree.h>
+	<libxml/parser.h>
+	<libxml/encoding.h>
+
+1289247162 /usr/include/libxml2/libxml/parserInternals.h
+	<libxml/xmlversion.h>
+	<libxml/parser.h>
+	<libxml/HTMLparser.h>
+	<libxml/chvalid.h>
+
+1289247162 /usr/include/libxml2/libxml/HTMLparser.h
+	<libxml/xmlversion.h>
+	<libxml/parser.h>
+
+1289247162 /usr/include/libxml2/libxml/chvalid.h
+	<libxml/xmlversion.h>
+	<libxml/xmlstring.h>
+
+1298025172 source:/mnt/svn-work/g400/g400_fcgi/src/xmlmessagehandle.cpp
+	"xmlmessagehandle.h"
+	"g400define.h"
+
+1298024991 /mnt/svn-work/g400/g400_fcgi/include/xmlmessagehandle.h
+	<set>
+	"xmlmessageobserver.h"
+	"xmldom.h"
+
+1298025193 /mnt/svn-work/g400/g400_fcgi/include/xmlmessageobserver.h
+	"xmldom.h"
+
+1298023478 /mnt/svn-work/g400/g400_fcgi/include/g400define.h
+	"portabledefine.h"
+
+1298011597 /mnt/svn-work/g400/g400_fcgi/include/portabledefine.h
+	"configure.h"
+	<sys/time.h>
+	<sys/stat.h>
+	<e32cmn.h>
+	<vector>
+	<iostream>
+	<string>
+	<sstream>
+	<map>
+	<set>
+	<queue>
+	<fstream>
+	<iomanip>
+	<stdlib.h>
+
+1298022282 /mnt/svn-work/g400/g400_fcgi/include/configure.h
+
+1287718137 /usr/include/sys/time.h
+	<features.h>
+	<bits/types.h>
+	<time.h>
+	<bits/time.h>
+	<sys/select.h>
+
+1287718143 /usr/include/sys/stat.h
+	<features.h>
+	<bits/types.h>
+	<time.h>
+	<bits/stat.h>
+
+1287718143 /usr/include/bits/stat.h
+

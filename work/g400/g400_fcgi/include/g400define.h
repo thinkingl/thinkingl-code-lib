@@ -44,8 +44,15 @@ namespace G400Message
 
 };
 
-
-
+/** */
+namespace G400Status
+{
+	enum EG400Status
+	{
+		UNKNOWN_ERR,
+		OK,
+	};
+};
 
 
 

@@ -203,6 +203,13 @@ void CXMLDom::Value( const char *pValue )
 	this->m_strValue = pValue;
 }
 
+void CXMLDom::Value( int nValue )
+{
+	char szValue[100] = { 0 };
+	sprintf( szValue, "%d", nValue );
+	this->Value( szValue );
+}
+
 const string CXMLDom::ToString() const
 {
 	stringstream ssXml;

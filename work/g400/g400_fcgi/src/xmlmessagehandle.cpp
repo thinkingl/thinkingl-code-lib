@@ -34,7 +34,7 @@ bool CXMLMessageHandle::HandleXMLMessage( CXMLDom& inXMLMessage, CXMLDom& outXML
 
     if( outXMLMessage.IsEmpty())
     {
-    	outXMLMessage[ G400XML::ELE_ROOT ][ G400XML::ELE_HEAD ][ G400XML::ELE_STATUS ].Value( "0" );
+    	this->OnEmptyOutXml( inXMLMessage, outXMLMessage );
     }
     return true;
 }
@@ -49,5 +49,13 @@ void CXMLMessageHandle::UnregObserver( IXMLMessageObserver* pObserver )
     this->m_xmlMsgObserverList.erase( pObserver );
 }
 
+void CXMLMessageHandle::OnEmptyOutXml( CXMLDom& inXmlMsg, CXMLDom& outXMLMsg )
+{
+	outXMLMsg[ G400XML::ELE_HEAD ] = inXmlMsg[ G400XML::ELE_HEAD ];
+
+	outXMLMsg[ G400XML::ELE_HEAD ][ G400XML::ELE_STATUS ].Value( G400Status::UNKNOWN_ERR );
+	outXMLMsg[ G400XML::ELE_CONTENT][ G400XML::ELE_ERRMSG ].Value( "Unknown error!" );
+
+}
 
 

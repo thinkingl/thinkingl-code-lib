@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="g400_fcgi" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="Debug">
+				<Option output="bin/Debug/g400" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Debug/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-g" />
+				</Compiler>
+			</Target>
+			<Target title="Release">
+				<Option output="../../bin/g400_fcgi" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Release/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-O2" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+				</Linker>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-Wall" />
+			<Add directory="/mnt/svn-work/g400/g400_fcgi/include" />
+			<Add directory="/usr/include" />
+			<Add directory="/usr/include/libxml2" />
+		</Compiler>
+		<Linker>
+			<Add library="libfcgi.a" />
+			<Add library="libxml2.a" />
+		</Linker>
+		<Unit filename="../../include/common.h" />
+		<Unit filename="../../include/configure.h" />
+		<Unit filename="../../include/g400define.h" />
+		<Unit filename="../../include/portabledefine.h" />
+		<Unit filename="../../include/xmldom.h" />
+		<Unit filename="../../include/xmlmessagehandle.h" />
+		<Unit filename="../../include/xmlmessageobserver.h" />
+		<Unit filename="../../src/main.cpp" />
+		<Unit filename="../../src/xmldom.cpp" />
+		<Unit filename="../../src/xmlmessagehandle.cpp" />
+		<Extensions>
+			<code_completion>
+				<search_path add="/mnt/svn-work/g400/g400_fcgi/include" />
+				<search_path add="/usr/include/libxml2" />
+				<search_path add="/usr/include" />
+			</code_completion>
+			<debugger />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>
