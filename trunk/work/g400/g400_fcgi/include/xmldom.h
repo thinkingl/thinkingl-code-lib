@@ -31,6 +31,7 @@ public:
 	/** Get and Set the value of the xml element. */
 	const string Value()const;
 	void Value( const char *pValue );
+	void Value( int nValue );
 
 	void Clear();
 

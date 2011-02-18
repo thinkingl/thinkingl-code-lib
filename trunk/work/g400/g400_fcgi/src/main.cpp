@@ -72,17 +72,14 @@ bool HandleXMLMessage()
 
 		inputXML.ParseString( szInputBuf );
 
-		CXMLMessageHandle::GetInstance()->HandleXMLMessage( inputXML, outXML );
+		CXMLMessageHandle::GetInstance()->HandleXMLMessage( inputXML[ G400XML::ELE_ROOT ], outXML[ G400XML::ELE_ROOT ] );
 
 		time_t now;
 		time( &now );
-
-//		char szTime[1000] = {0};
-//		sprintf( szTime, "%ld", now );
-//		outXML[G400XML::ELE_ROOT]["time"].Value( szTime );
+		int nRadom = rand();
 
 		// update the time to avoid cache.
-		printf( "Last-Modified: %d GMT\r\n", now );
+		printf( "Last-Modified: %d %d GMT\r\n", now, nRadom );
 
 		// return xml.
 		printf("Content-type: text/xml\r\n"

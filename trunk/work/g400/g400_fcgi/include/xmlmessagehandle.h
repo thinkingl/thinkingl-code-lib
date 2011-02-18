@@ -19,6 +19,9 @@ public:
 	void UnregObserver( IXMLMessageObserver* pObserver );
 
 private:
+	/** Handle empty out.. */
+	void OnEmptyOutXml( CXMLDom&  inXMLMessage, CXMLDom & outXMLDom );
+private:
 	static CXMLMessageHandle *s_pInstance;
 
 	typedef std::set<IXMLMessageObserver*> TXmlMsgObserverList;
