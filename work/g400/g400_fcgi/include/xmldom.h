@@ -8,6 +8,7 @@
 
 #include <string>
 #include <map>
+#include "portabledefine.h"
 
 using namespace std;
 
@@ -18,25 +19,29 @@ public:
 	~CXMLDom();
 
 	/** parse the xml in string .
-	*	Build the XML DOM Tree.
+	*	Build the XML DOM Tree. 
 	*/
-	bool ParseString( char * pStr );
+	bool ParseString( const char * pStrXML );
 
 	/** Find Element. Create a new one if not exist. */
-	CXMLDom& operator []( char *pName );
+	CXMLDom& operator []( const char *pName );
+	CXMLDom& operator []( ctstring& strName );
 //	const CXMLDom& operator[]( char *pName ) const;C
 
 	/** Get and Set the value of the xml element. */
 	const string Value()const;
-	void Value( char *pValue );
+	void Value( const char *pValue );
 
 	void Clear();
 
 	CXMLDom *Parent();
+	const CXMLDom* Parent() const;
 	void Parent( CXMLDom * pParent);
 
 	/** Trans to string . */
 	const string ToString() const;
+
+	bool IsEmpty()const;
 
 private:
 
