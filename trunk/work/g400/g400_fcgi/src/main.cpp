@@ -20,6 +20,8 @@ static const char rcsid[] = "$Id: echo.c,v 1.5 1999/07/28 00:29:37 roberts Exp $
 #include <memory.h>
 #include <string>
 
+#include <time.h>
+
 using namespace std;
 
 #ifdef HAVE_UNISTD_H
@@ -32,26 +34,77 @@ using namespace std;
 extern char **environ;
 #endif
 
-#include "fcgi_stdio.h"
+
 #include "xmldom.h"
+#include "xmlmessagehandle.h"
+#include "g400define.h"
 
+#include "fcgi_stdio.h"
 
+//static void PrintEnv(char *label, char **envp)
+//{
+//    printf("%s:<br>\n<pre>\n", label);
+//    for ( ; *envp != NULL; envp++) {
+//        printf("%s\n", *envp);
+//    }
+//    printf("</pre><p>\n");
+//}
 
-static void PrintEnv(char *label, char **envp)
+bool HandleXMLMessage()
 {
-    printf("%s:<br>\n<pre>\n", label);
-    for ( ; *envp != NULL; envp++) {
-        printf("%s\n", *envp);
-    }
-    printf("</pre><p>\n");
+	const int CON_BUFLEN_DEF = 1024*100;
+	char szInputBuf[ CON_BUFLEN_DEF ];
+
+	while (FCGI_Accept() >= 0)
+	{
+		memset( szInputBuf, 0, sizeof( szInputBuf ) );
+		// read the stdin to get the post data.
+		char *contentLength = getenv("CONTENT_LENGTH");
+		int inputLen = 0;
+		if (contentLength != NULL)
+		{
+			inputLen = strtol(contentLength, NULL, 10);
+		}
+
+		fread( szInputBuf, 1, inputLen, stdin );
+
+		CXMLDom inputXML, outXML;
+
+		inputXML.ParseString( szInputBuf );
+
+		CXMLMessageHandle::GetInstance()->HandleXMLMessage( inputXML, outXML );
+
+		time_t now;
+		time( &now );
+
+//		char szTime[1000] = {0};
+//		sprintf( szTime, "%ld", now );
+//		outXML[G400XML::ELE_ROOT]["time"].Value( szTime );
+
+		// update the time to avoid cache.
+		printf( "Last-Modified: %d GMT\r\n", now );
+
+		// return xml.
+		printf("Content-type: text/xml\r\n"
+			    "\r\n" );
+		printf( "%s", outXML.ToString().c_str() );
+
+
+	}
+	return true;
 }
 
 int main ()
 {
-    char **initialEnv = environ;
-    int count = 0;
+//    char **initialEnv = environ;
+//    int count = 0;
+
+	::HandleXMLMessage();
+	return 0;
 
     while (FCGI_Accept() >= 0) {
+
+
 
 		// Read g400 xml message sample
 		const char * XML_FILE_PATH = "/mnt/svn-work/g400/xml_msg_sample/login_ack.xml";
@@ -60,18 +113,16 @@ int main ()
 	    "\r\n" );
 
 		FILE* pXmlSample = fopen( XML_FILE_PATH, "r" );
+		char arData[10000] = { 0 };
 		if( NULL == pXmlSample )
 		{
 			printf( "can't open file!!! %s", XML_FILE_PATH );
 		}
 		else
 		{
-			char arData[1000] = { 0 };
-			while( fread( arData, 1, 1000, pXmlSample ) )
-			{
-				printf( "%s", arData );
-				memset( arData, 0, sizeof( arData ) );
-			}
+			fread( arData, 1, sizeof( arData ), pXmlSample ) ;
+//			printf( "ardata: \n %s \n", arData );
+
 			fclose( pXmlSample );
 			pXmlSample = NULL;
 		}
@@ -86,7 +137,7 @@ int main ()
 		{
 			strQueryString = "dumpinput=1";
 		}
-		if( strQueryString.find( "dumpinput=1" ) != -1 )
+		if( strQueryString.find( "dumpinput=1" ) != string::npos )
 		{
 			char *contentLength = getenv("CONTENT_LENGTH");
 	        int len = 0;
@@ -100,13 +151,17 @@ int main ()
                 char ch = getchar();
                 strInput.push_back( ch );
 			}
-			printf( "<dump2>%s</dump2>", strInput.c_str() );
+//			printf( "<dump2>%s</dump2>\n", strInput.c_str() );
 
 			CXMLDom xmlTest;
-			xmlTest.ParseString( "" );
+			xmlTest.ParseString( arData );
+
+			xmlTest["KedacomXMLData"]["DumpInput"].Value( strInput.c_str() );
+
+			printf( "%s", xmlTest.ToString().c_str() );
 
 	//		printf( "end!!!!" );
-			
+
 		}
 /*
         char *contentLength = getenv("CONTENT_LENGTH");
@@ -145,7 +200,7 @@ int main ()
         PrintEnv("Request environment", environ);
         PrintEnv("Initial environment", initialEnv);
         */
-        
+
     } /* while */
 
     return 0;
