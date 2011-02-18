@@ -33,7 +33,7 @@ OBJS := $(CPP_FILES:%.cpp=%)
 
 ## Libraries to include in shared object file
 
-LIBS := fcgi
+LIBS := fcgi xml2
 
 ##	pthread rt osp kdvsys snmpadp dbi mysqlclient comdata\
 ##        sybct sybcs sybtcl sybblk sybdb sybunic dl z kdvencrypt nipx86
@@ -41,7 +41,8 @@ LIBS := fcgi
 ## Add driver-specific include directory to the search path
 
 INC_PATH += $(TOP)/include \
-							/usr/include 
+							/usr/include \
+							/usr/include/libxml2/  
 ##            ../../../10-Common/include/database \
 ##            ../../../10-Common/include/cbb/system \
 ##            ../../../10-Common/include/cbb/platform \
