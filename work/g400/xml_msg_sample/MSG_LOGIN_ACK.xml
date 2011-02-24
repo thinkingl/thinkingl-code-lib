@@ -1,11 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<KedacomXMLData>
-  <Head>
+<KedacomXMLData>  
     <Msg>MSG_LOGIN</Msg>
     <Sn>1</Sn>
     <Session>2011021615555200</Session>
-    <Status> 1 </Status>
-  </Head>  
+    <Status> 1 </Status>  
   <Content>
     <ErrorMesssage >登录成功</ErrorMesssage>
   </Content>

@@ -32,12 +32,12 @@ $(document).ready(function () {
         loginMsg.setId(G400_MESSAGE.MSG_LOGIN);
         loginMsg.setMsgNode("User", $('#txt_username').val());
         loginMsg.setMsgNode("Password", $('#txt_password').val());
-        ResourceLoader.loadXmlData(loginMsg.getMsg(), function (json)//通过ajax发送登陆消息到服务器
+        ResourceLoader.loadXmlData(loginMsg, function (json)//通过ajax发送登陆消息到服务器
         {
-            //            alert("login " + json.KedacomXMLData.Head.Session);
+//            alert("login " + json.KedacomXMLData.Status );
             if (isErrorCommand(json) === false)
                 return;
-            var loginStatus = json.KedacomXMLData.Head.Status;
+            var loginStatus = json.KedacomXMLData.Status;
             if (loginStatus == 1) {//登陆成功
                 loginSuccessed(json);
                 return;
@@ -61,17 +61,18 @@ function loginSuccessed(json) {
     ResourceLoader.loadTemplate("leftGuaid", function (html) {
         $("#leftGuaid").html(html);
 
+        // 保存session.
+        CMonMsg.setSession ( json.KedacomXMLData.Session );
 
         LEFT_GUAID();               //leftList.js中的方法，点击左测导航栏的响应事件
 
-        CMonMsg.setId(G100_COMMAND.COMMAND_GETG100);
-        CMonMsg.setMsgNode("range", "1");           //只得到G100的类型
-        CMonMsg.setMsgNode("host", location.host);
-        ResourceLoader.loadXmlData(CMonMsg.getMsg(), function (json) {
+        var msg = new CMonMsg;
+        msg.setId(G400_MESSAGE.MSG_BASE_STATUS);
+        ResourceLoader.loadXmlData(msg, function (json) {
             $("#loginWin").hide();
             $(".titleBar").show();
             $(".rightFrame").show();
-            OnProcessG100Main(json);
+            OnProcess400BaseStatus(json);
         }, false);
     });
 }; //loginSuccessed() over
@@ -148,9 +149,12 @@ function saveCookie() {
 
 //判断返回的命令是否为错误命令
 function isErrorCommand(json) {
-    var msgId = json.KedacomXMLData.Head.Msg;
-    if ( msgId == "" ) {
-        myAlert(null, json.KedacomXMLData.Head.Status, 330, 0);
+
+    var msgId = json.KedacomXMLData.Msg;
+    var status = json.KedacomXMLData.Status;
+    if (msgId == "" || status != G400_ERROR.ERR_OK ) 
+    {
+        myAlert(null, json.KedacomXMLData.Status, 330, 0);
         //alert(json.kedacomxmldata.content.status);
         return false;
     }
@@ -158,19 +162,26 @@ function isErrorCommand(json) {
 }
 
 //登陆成功后，根据G100的类型来确定页面所在的位置
-function OnProcessG100Main(json) {
+function OnProcess400BaseStatus(json) {
     //根据类型设置左边导航栏的状态
-    if (json.kedacomxmldata.content.type == "A") {
-        $("#main_mtu").attr('class', 'leftGuaidList_disable');
-        $("#main_dvr").attr('class', 'leftGuaidList_clicked');
-        goToDvrlist();
-    } else if (json.kedacomxmldata.content.type == "T") {
-        $("#main_dvr").attr('class', 'leftGuaidList_disable');
-        $("#main_mtu").attr('class', 'leftGuaidList_clicked');
-        goToMTUDetails();
+    if (json.KedacomXMLData.Content.Connect != 1) {
+        // G400 配置服务器没有启动,全部置灰...
+        $("#main_kdm").attr('class', 'leftGuaidList_disable');
+        $("#main_kdm_device").attr('class', 'leftGuaidList_disable');
+        $("#main_mt_log").attr('class', 'leftGuaidList_disable');
+        $("#main_sys_config").attr('class', 'leftGuaidList_disable');
+        $("#main_sys_manage").attr('class', 'leftGuaidList_disable');
+   //     goToDvrlist();
+    } else if (json.KedacomXMLData.Content.License != 1) {
+        // 证书状态不正确.只保留系统配置,系统维护管理界面.
+        $("#main_kdm").attr('class', 'leftGuaidList_disable');
+        $("#main_kdm_device").attr('class', 'leftGuaidList_disable');
+        $("#main_mt_log").attr('class', 'leftGuaidList_disable');
+        $("#main_sys_config").attr('class', 'leftGuaidList_clicked');
+        goToSysCfg();
     } else {
-        $("#main_dvr").attr('class', 'leftGuaidList_clicked');
-        goToDvrlist();
+        $("#main_kdm").attr('class', 'leftGuaidList_clicked');
+        goToKDMStatus();
     }
 
     $('body').everyTime(3000, "heartSkip", heartSkip); //设置一个心跳计时器，定期向服务器发送心跳  
@@ -228,20 +239,20 @@ function changePassword(event) {
                 if (!UiUtil.checkField('surePass', '确认密码'))
                     return;
 
-                CMonMsg.setId(G100_COMMAND.COMMAND_CHANGEPASSWORD);
-                CMonMsg.setMsgNode("oldpassword", win.findById('oldPass').getValue());
-                CMonMsg.setMsgNode("newpassword", win.findById('newPass').getValue());
-                ResourceLoader.loadXmlData(CMonMsg.getMsg(), function (json) {
-                    if (isErrorCommand(json) === false)
-                        return;
-                    var value = json.kedacomxmldata.content.status;
+                    var changePasswordMsg = new CMonMsg;
+                changePasswordMsg.setId(G400_MESSAGE.MSG_CHANGE_PASSWORD);
+                changePasswordMsg.setMsgNode("User", win.findById('oldPass').getValue());
+                changePasswordMsg.setMsgNode("OldPassword", win.findById('newPass').getValue());
+                changePasswordMsg.setMsgNode( "NewPassword", win.findById('newPass').getValue() );
+                ResourceLoader.loadXmlData( changePasswordMsg, function (json) {
+                    var value = json.KedacomXMLData.Status;
                     if (value == 1) {
                         win.close();
                         myAlert("提示", "密码修改成功", 200, 0);
                     } else if (value == 2) {
-                        myAlert("提示", "密码修改失败", 200, 0);
-                    } else if (value == 3) {
                         myAlert("提示", "旧密码不正确", 200, 0);
+                    } else {
+                        myAlert("提示", "修改密码失败!", 200, 0);
                     }
                 }); //loadXmlData over
             } //function over
@@ -259,17 +270,12 @@ function changePassword(event) {
 
 //注销
 function unlogin(event) {
-    CMonMsg.setId(G100_COMMAND.COMMAND_UNLOGIN);
-    CMonMsg.setMsgNode("unlogin", "unlogin");
-    ResourceLoader.loadXmlData(CMonMsg.getMsg(), function (json) {
-        if (isErrorCommand(json) === false)
-            return;
-        var value = json.kedacomxmldata.content.status;
-        if (value == 1) {
-            location.reload();
-        } else if (value == 2) {
-            myAlert("提示", "注销失败,请关闭浏览器", 220, 0);
-        }
+    var loginoutMsg = new CMonMsg;
+
+    loginoutMsg.setId(G400_MESSAGE.MSG_LOGINOUT);
+    ResourceLoader.loadXmlData( loginoutMsg, function (json) {
+        // 重新载入页面.
+        location.reload();        
     }); //loadXmlData over    
     event.preventDefault();
 
@@ -277,7 +283,16 @@ function unlogin(event) {
 
 //确定用户在线的心跳
 function heartSkip() {
-    CMonMsg.setId(G100_COMMAND.COMMAND_HERTSKIP);
-    CMonMsg.setMsgNode("skip ", "skip ");
-    ResourceLoader.loadXmlData(CMonMsg.getMsg(), function (json) { }, false);  //以异步的方式发送心跳
+    var heartMsg = new CMonMsg;
+    heartMsg.setId(G400_MESSAGE.MSG_GET_NOTIFY);
+    ResourceLoader.loadXmlData(heartMsg, function (json) {
+
+    var msgId = json.KedacomXMLData.Msg;
+    if (G400_MESSAGE.MSG_GET_NOTIFY == msgId) {
+        }
+        else if( G400_MESSAGE.MSG_NTY_MT_STATUS == msgId )
+        {
+
+        }
+    }, false);   //以异步的方式发送心跳
 };

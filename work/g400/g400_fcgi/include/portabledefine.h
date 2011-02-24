@@ -9,7 +9,9 @@
 #ifdef __GNUC__
 #include <sys/time.h>
 #include <sys/stat.h>
+#include <unistd.h>
 #endif
+
 
 // This is a GCCE toolchain workaround needed when compiling with GCCE
 // and using main() entry point
@@ -77,7 +79,7 @@ using namespace std;
 
 #endif
 
-/** Ö»¶Á×Ö·û´®¡£ */
+/** Ö»ï¿½ï¿½ï¿½Ö·ï¿½ */
 typedef const tstring ctstring;
 
 typedef std::vector<std::tstring> tstringarray;
@@ -85,7 +87,7 @@ typedef std::vector<std::tstring> tstringarray;
 #endif
 
 
-/** »ù±¾ÀàÐÍ. */
+/** ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½. */
 /* Basic data types */
 
 #ifndef BOOL
@@ -171,7 +173,7 @@ typedef const TCHAR *LPCTSTR;
 
 /** 
 //////////////////////////////////////////////////////////////////////////
-// ×î´ó,×îÐ¡ */
+// ï¿½ï¿½ï¿½,ï¿½ï¿½Ð¡ */
 #ifndef INT_MAX
 #define INT_MAX (1<<30)
 #endif
@@ -184,7 +186,7 @@ typedef const TCHAR *LPCTSTR;
 #define INT_MIN (-1<<30)
 #endif
 
-/** ±È½Ï´óÐ¡. */
+/** ï¿½È½Ï´ï¿½Ð¡. */
 #define MU_MAX(a,b) ((a) > (b) ? (a) : (b))
 #define MU_MIN(a,b) ((a) > (b) ? (b) : (a))
 
@@ -213,7 +215,7 @@ typedef const TCHAR *LPCTSTR;
 
 #if defined(UNICODE) || defined( _UNICODE )  
 
-/** thinkingl: !!!!!ÓÐÐ©ÐèÒªÐÞ¸Ä£¡£¡£¡£¡£¡£¡£¡
+/** thinkingl: !!!!!ï¿½ï¿½Ð©ï¿½ï¿½Òªï¿½Þ¸Ä£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
  * 	Unicode functions
  */
 #define	_tprintf	wprintf

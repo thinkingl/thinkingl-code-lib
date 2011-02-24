@@ -5,11 +5,19 @@ var g_msgSn = 0;
 // session.
 var g_G400Session = "";
 
+// 消息打印过滤. 因为一直会发送 MSG_GET_NOTIFY ,所以默认把它去掉,否则打印太多了.
+var g_MessageLogFilt = new Array();
+
+// 默认过滤这个消息..
+g_MessageLogFilt[G400_MESSAGE.MSG_GET_NOTIFY] = 1;
+
 //封装消息
 function CMonMsg() 
 {
     this.id="";
-    this.msgBody = new Array();
+    this.msgBody = new Object();
+
+
 
     // 每次实例化时流水号自增.
     g_msgSn++;
@@ -17,6 +25,10 @@ function CMonMsg()
     this.setId = function (strId) {
         this.id = strId;
     };
+
+    this.getId = function(){
+        return this.id;
+    }
     
     this.setMsgNode = function (name, value) {
         //       var strNode = "<" + name + ">" + value + "</" + name + ">";
@@ -28,6 +40,8 @@ function CMonMsg()
     this.getHeader = function () {
         return "<?xml version = \"1.0\" encoding = \"utf-8\"?>";
     };
+
+    
 
     this.getMsg = function () {
         var bodyXml = "";
@@ -48,6 +62,10 @@ function CMonMsg()
         return msg;
     };
 };
+
+CMonMsg.setSession = function ( newSession ) {
+        g_G400Session = newSession;
+    };
 
 function unitTestCMonMsg() {
     var utMsg = new CMonMsg();
@@ -73,12 +91,12 @@ var ResourceLoader = {
     m_fastCgiUrl: "/g400-xml/g400.fcgi",   //login_ack.xml",
 
     loadTemplate: function (templateName, handler) {
-            
-        var url = this._resourceUrl + templateName + ".tpl";
+        var noCacheParam = new Date().getTime();
+        var url = this._resourceUrl + templateName + ".tpl?time="+noCacheParam;
         //记录当前的页面
         currentTemplete = templateName;
         printf("$ - start loading template=" + url);
-            
+
         ajGet(url, function (html, ret) {
             if (ret) {
                 handler(html);
@@ -87,16 +105,24 @@ var ResourceLoader = {
             }
         });
     },
-    loadXmlData: function (xmlMessage, handler, bSynParam) {
-        var g400url = this.m_fastCgiUrl;
-        
-        printf("$send request = " + xmlMessage);
+
+    loadXmlData: function (monMsg, handler, bSynParam) {
+        var xmlMessage = monMsg.getMsg();
+        var msgId = monMsg.getId();
+
+        // url 附加参数只为调试更方便..
+        var g400url = this.m_fastCgiUrl + "?msg=" + msgId;
+        if (!g_MessageLogFilt[msgId]) {
+            JLog.writeXML("$send request = " + xmlMessage);
+        }
+        //       alert("sendreq: "+ xmlMessage);
+
         ajPost(g400url, xmlMessage, function (xhr, ret) {
             if (ret) {
                 handler(WebConsole_Interceptor(xhr));
                 //handler(xhr);
                 $('#result').html(xhr.responseText);
-                alert(xhr.responseText);
+                //               alert(xhr.responseText);
                 //                  alert( xhr.responseXML.text );
                 //                  alert(ret);
             } else {
@@ -147,7 +173,16 @@ function AjaxErrorHandler(t) {
 
 //将xml的形式转换成json的格式对象
 function WebConsole_Interceptor( xhr ) {
-    printf(xhr.responseText);
+//    printf(xhr.responseText);
+    
+
+//    alert( "rcvmsg: " + xhr.responseText);
     json = JXmlParser.parseElement(xhr.responseXML);
+
+    // 打印.
+    var msgId = json.KedacomXMLData.Msg;
+    if (!g_MessageLogFilt[msgId]) {
+        JLog.writeXML("rcvmsg: " + xhr.responseText);
+    }
     return json;
 }

@@ -51,9 +51,11 @@ void CXMLMessageHandle::UnregObserver( IXMLMessageObserver* pObserver )
 
 void CXMLMessageHandle::OnEmptyOutXml( CXMLDom& inXmlMsg, CXMLDom& outXMLMsg )
 {
-	outXMLMsg[ G400XML::ELE_HEAD ] = inXmlMsg[ G400XML::ELE_HEAD ];
+	outXMLMsg = inXmlMsg;
+	outXMLMsg[ G400XML::ELE_CONTENT].Clear();
+//	outXMLMsg[ G400XML::ELE_MSG_ID ] = inXmlMsg[ G400XML::ELE_MSG_ID ];
 
-	outXMLMsg[ G400XML::ELE_HEAD ][ G400XML::ELE_STATUS ].Value( G400Status::UNKNOWN_ERR );
+	outXMLMsg[ G400XML::ELE_STATUS ].Value( G400Status::UNKNOWN_ERR );
 	outXMLMsg[ G400XML::ELE_CONTENT][ G400XML::ELE_ERRMSG ].Value( "Unknown error!" );
 
 }

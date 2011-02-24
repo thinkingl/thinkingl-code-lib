@@ -5,7 +5,7 @@
 
 class IXMLMessageObserver
 {
-    public:
+public:
 
 	/** handle xml message. */
 	virtual bool HandleXMLMessage( CXMLDom&  inXMLMessage, CXMLDom & outXMLDom) = 0;

@@ -18,15 +18,21 @@ public:
 	CXMLDom();
 	~CXMLDom();
 
+	CXMLDom( const CXMLDom& another );
+
 	/** parse the xml in string .
 	*	Build the XML DOM Tree. 
 	*/
 	bool ParseString( const char * pStrXML );
 
+	bool ParseFile( const char* pStrFilePath );
+
 	/** Find Element. Create a new one if not exist. */
 	CXMLDom& operator []( const char *pName );
 	CXMLDom& operator []( ctstring& strName );
 //	const CXMLDom& operator[]( char *pName ) const;C
+
+	CXMLDom& operator =( const CXMLDom& another );
 
 	/** Get and Set the value of the xml element. */
 	const string Value()const;

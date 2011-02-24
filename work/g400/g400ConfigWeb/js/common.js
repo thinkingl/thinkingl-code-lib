@@ -30,12 +30,12 @@ function button_hover_function() {
     });
     $(".mainButton").hover(function () {
 
-        $(this).css({ 'color': '#0036FF', 'background-image': 'url(../images/button/btn_over.bmp)' });
+        $(this).css({ 'color': '#0036FF', 'background-image': 'url(../images/button/btn_over.png)' });
     }, function () {
-        $(this).css({ 'color': '#205699', 'background-image': 'url(../images/button/btn.bmp)' });
+        $(this).css({ 'color': '#205699', 'background-image': 'url(../images/button/btn.png)' });
     });
     $(".mainButton").mousedown(function () {
-        $(this).css({ 'color': '#0036FF', 'background-image': 'url(../images/button/btn_press.bmp)' });
+        $(this).css({ 'color': '#0036FF', 'background-image': 'url(../images/button/btn_press.png)' });
     });
 };
 

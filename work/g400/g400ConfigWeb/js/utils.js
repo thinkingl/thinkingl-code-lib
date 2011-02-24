@@ -300,38 +300,38 @@ window.onerror = function ignoreError(msg,url,line) {
 	else return true;
 };
 
-document.onkeydown = function (event){
-	evt = event || window.event;
-	if(evt.ctrlKey && evt.shiftLeft && evt.keyCode === 38){
-		if(logging__){
-				JLog.clear();
-				debugging__ = false;
-				logging__ = false;
-				$('#logCtrl').hide();
-				$('#log').hide();
-		}
-				
-	}
+document.onkeydown = function (event) {
+    evt = event || window.event;
 
-	if(evt.ctrlKey && evt.shiftLeft && evt.keyCode === 40){
-			debugging__ = true;
-			logging__ = true;
-			printf("::::: ReStart Debugging Output Window :::::");
-			$('#logCtrl').show();
-			$('#log').show();
-	}
 
-	if(evt.altKey && evt.keyCode === 40)
-	{
-		debugging__ = true;
-		logging__  = true;
-	}
+    if (evt.ctrlKey && evt.shiftLeft && evt.keyCode === 38) {
+        if (logging__) {
+            JLog.clear();
+            debugging__ = false;
+            logging__ = false;
+            $('#logCtrl').hide();
+            $('#log').hide();
+        }
 
-	if(evt.altKey && evt.keyCode === 38)
-	{
-		debugging__ = false;
-		logging__  = false;
-	}
+    }
+
+    if (evt.ctrlKey && evt.shiftLeft && evt.keyCode === 40) {
+        debugging__ = true;
+        logging__ = true;
+        printf("::::: ReStart Debugging Output Window :::::");
+        $('#logCtrl').show();
+        $('#log').show();
+    }
+
+    if (evt.altKey && evt.keyCode === 40) {
+        debugging__ = true;
+        logging__ = true;
+    }
+
+    if (evt.altKey && evt.keyCode === 38) {
+        debugging__ = false;
+        logging__ = false;
+    }
 };
 
 /**
