@@ -121,10 +121,8 @@ static void chars_found(void *ctx,const CHAR*chars,int len)
 
 }
 
-bool parseXML( const char* pStrXML )
+bool parseXML( xmlParserCtxtPtr ctxt_ptr )
 {
-	xmlParserCtxtPtr ctxt_ptr;
-
 	static xmlSAXHandler mySAXParseCallbacks;
 	memset(&mySAXParseCallbacks, 0,sizeof(mySAXParseCallbacks));
 	mySAXParseCallbacks.startDocument=start_document;
@@ -134,7 +132,7 @@ bool parseXML( const char* pStrXML )
 	mySAXParseCallbacks.characters=chars_found;
 
 
-	ctxt_ptr=xmlCreateMemoryParserCtxt( pStrXML, strlen( pStrXML ) );
+
 	if(!ctxt_ptr)
 	{
 		fprintf( stderr, "Failed to create file parser\n");
@@ -147,7 +145,7 @@ bool parseXML( const char* pStrXML )
 //	printf("XML version %s, encoding %s \n",ctxt_ptr->version,ctxt_ptr->encoding);
 	if(!ctxt_ptr->wellFormed)
 	{
-		fprintf( stderr, "Document not well formed doc:\n %s \n", pStrXML );
+		fprintf( stderr, "Document not well formed doc:\n " );
 		return false;
 	}
 
@@ -168,16 +166,36 @@ CXMLDom::~CXMLDom()
 {
 }
 
+CXMLDom::CXMLDom( const CXMLDom& another )
+{
+	this->operator =( another );
+}
+
 bool CXMLDom::ParseString( const char* pStrXML )
 {
 	s_pXmlDomTmp = this;
 
-	bool bRet = parseXML( pStrXML );
+	xmlParserCtxtPtr ctxt_ptr=xmlCreateMemoryParserCtxt( pStrXML, strlen( pStrXML ) );
+	bool bRet = parseXML( ctxt_ptr );
 
 //	printf( "value is %s\n", (*this)["KedacomXMLData"]["Content"]["ErrorMesssage"].Value().c_str() );
 
 //	(*this)["KedacomXMLData"]["Content"]["ErrorMesssage"].Value( "modified! " );
 //	printf( "to string: %s \n", this->ToString().c_str() );
+	s_pXmlDomTmp = NULL;
+
+	return bRet;
+}
+
+bool CXMLDom::ParseFile( const char* pStrFilePath )
+{
+	s_pXmlDomTmp = this;
+
+	xmlParserCtxtPtr ctxt_ptr = xmlCreateFileParserCtxt( pStrFilePath );
+
+	bool bRet = parseXML( ctxt_ptr );
+
+	s_pXmlDomTmp = NULL;
 
 	return bRet;
 }
@@ -268,5 +286,25 @@ bool CXMLDom::IsEmpty()const
 	}
 }
 
+CXMLDom& CXMLDom::operator =( const CXMLDom& another )
+{
+	if( this == &another )
+	{
+		return *this;
+	}
+
+	this->m_strValue = another.m_strValue;
+	this->m_xmlDomTree = another.m_xmlDomTree;
+
+	TXMLDomTreeTable::iterator it = this->m_xmlDomTree.begin();
+	while( it != this->m_xmlDomTree.end() )
+	{
+		it->second.m_pParentXMLDOM = this;
+
+		++it;
+	}
+
+	return *this;
+}
 
 

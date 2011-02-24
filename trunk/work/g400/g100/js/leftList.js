@@ -35,23 +35,27 @@ function LEFT_GUAID(){
                 $(this).attr('class' , 'leftGuaidList');   
         });
         $(this).attr('class' , 'leftGuaidList_clicked');
-        isClicked = true;    
-        if($(this).attr('id') == "main_g100Info"){
+        isClicked = true;
+        if ($(this).attr('id') == "main_kdm") {
             isInDvrList=false;
 			mtuStatusTimer = false;
-            goToG100Main();    
-        }else if($(this).attr('id') == "main_mtu"){
+			goToKDMStatus();
+        } else if ($(this).attr('id') == "main_kdm_device") {
             isInDvrList=false;   
 			mtuStatusTimer = true;
-            goToMTUDetails();    
-        }else if($(this).attr('id') == "main_dvr"){
+			goToKDMDeviceList();
+        } else if ($(this).attr('id') == "main_mt_log") {
             isInDvrList=true; 
 			mtuStatusTimer = false;
-            goToDvrlist();    
-        }else if($(this).attr('id') == "main_g100Man"){
+			goToMTLog();
+        } else if ($(this).attr('id') == "main_sys_config") {
            isInDvrList=false;
 		   mtuStatusTimer = false;
-           goToVersion();      
+		   goToSysCfg();
+       } else if ($(this).attr('id') == "main_sys_manage") {
+           isInDvrList = false;
+           mtuStatusTimer = false;
+           goToSysMng();
         }
     });
 };

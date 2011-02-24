@@ -332,7 +332,7 @@ div.rightFrame {
 	background-color: #FFFFFF;
 	height: 24px;
 	color: #205699;
-	background-image: url(../images/button/btn.bmp);
+	background-image: url(../images/button/btn.png);
 	background-position: center;
 	vertical-align: middle;
 	filter:chroma(color=#FF00FF);
@@ -353,11 +353,11 @@ div.rightFrame {
 
 .mainButton_over {
 	color: #0036FF;
-	background-image: url(../images/button/btn_over.bmp);
+	background-image: url(../images/button/btn_over.png);
 }
 .mainButton_press {
 	color: #0036FF;
-	background-image: url(../images/button/btn_press.bmp);
+	background-image: url(../images/button/btn_press.png);
 }
 
 

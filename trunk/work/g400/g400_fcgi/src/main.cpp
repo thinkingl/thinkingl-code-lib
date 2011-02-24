@@ -38,6 +38,7 @@ extern char **environ;
 #include "xmldom.h"
 #include "xmlmessagehandle.h"
 #include "g400define.h"
+#include "unittestxmlmessagehandler.h"
 
 #include "fcgi_stdio.h"
 
@@ -49,6 +50,37 @@ extern char **environ;
 //    }
 //    printf("</pre><p>\n");
 //}
+void UnitTest()
+{
+	printf( "== unit test out =====================================\n" );
+
+	// unittest.
+	ctstring strUnittestDir = "/mnt/svn-work/g400/xml_msg_sample/";
+	ctstring strUnittestIn = strUnittestDir + "unittestin.xml";
+
+	CXMLDom unittestIn;
+	unittestIn.ParseFile( strUnittestIn.c_str() );
+	tstring strXMLInPath = strUnittestDir + unittestIn["utroot"][ "infile_1" ].Value();
+	int nCursor = 1;
+	while( strXMLInPath != strUnittestDir )
+	{
+		CXMLDom utinXML;
+		utinXML.ParseFile( strXMLInPath.c_str() );
+
+		CXMLDom utoutXML;
+
+		CXMLMessageHandle::GetInstance()->HandleXMLMessage(
+				utinXML[ G400XML::ELE_ROOT ], utoutXML[ G400XML::ELE_ROOT ] );
+
+		printf( "unittest in: \n %s \n", utinXML.ToString().c_str() );
+		printf( "unittest out: \n %s \n\n", utoutXML.ToString().c_str() );
+
+		nCursor++;
+		char szPath[100] = {0};
+		sprintf( szPath, "infile_%d", nCursor );
+		strXMLInPath = strUnittestDir + unittestIn["utroot"][ szPath ].Value();
+	}
+}
 
 bool HandleXMLMessage()
 {
@@ -66,13 +98,20 @@ bool HandleXMLMessage()
 			inputLen = strtol(contentLength, NULL, 10);
 		}
 
-		fread( szInputBuf, 1, inputLen, stdin );
+		int nlen = fread( szInputBuf, 1, inputLen, stdin );
 
 		CXMLDom inputXML, outXML;
 
-		inputXML.ParseString( szInputBuf );
+		if( nlen > 0 )
+		{
+			inputXML.ParseString( szInputBuf );
 
-		CXMLMessageHandle::GetInstance()->HandleXMLMessage( inputXML[ G400XML::ELE_ROOT ], outXML[ G400XML::ELE_ROOT ] );
+			CXMLMessageHandle::GetInstance()->HandleXMLMessage( inputXML[ G400XML::ELE_ROOT ], outXML[ G400XML::ELE_ROOT ] );
+		}
+		else
+		{
+			::UnitTest();
+		}
 
 		time_t now;
 		time( &now );
@@ -95,71 +134,16 @@ int main ()
 {
 //    char **initialEnv = environ;
 //    int count = 0;
+	CUnitTestXMLMessageHandler utXmlHandler;
+	CXMLMessageHandle::GetInstance()->RegObserver( &utXmlHandler );
 
 	::HandleXMLMessage();
+
+
+	CXMLMessageHandle::ReleaseInstance();
+
 	return 0;
 
-    while (FCGI_Accept() >= 0) {
-
-
-
-		// Read g400 xml message sample
-		const char * XML_FILE_PATH = "/mnt/svn-work/g400/xml_msg_sample/login_ack.xml";
-
-		printf("Content-type: text/xml\r\n"
-	    "\r\n" );
-
-		FILE* pXmlSample = fopen( XML_FILE_PATH, "r" );
-		char arData[10000] = { 0 };
-		if( NULL == pXmlSample )
-		{
-			printf( "can't open file!!! %s", XML_FILE_PATH );
-		}
-		else
-		{
-			fread( arData, 1, sizeof( arData ), pXmlSample ) ;
-//			printf( "ardata: \n %s \n", arData );
-
-			fclose( pXmlSample );
-			pXmlSample = NULL;
-		}
-
-		string strQueryString;
-		char * pQS = getenv( "QUERY_STRING" );
-		if( pQS )
-		{
-			strQueryString = pQS;
-		}
-		else
-		{
-			strQueryString = "dumpinput=1";
-		}
-		if( strQueryString.find( "dumpinput=1" ) != string::npos )
-		{
-			char *contentLength = getenv("CONTENT_LENGTH");
-	        int len = 0;
-	        string strInput;
-
-	        if (contentLength != NULL) {
-            	len = strtol(contentLength, NULL, 10);
-	        }
-
-	        for ( int i = 0; i < len; i++) {
-                char ch = getchar();
-                strInput.push_back( ch );
-			}
-//			printf( "<dump2>%s</dump2>\n", strInput.c_str() );
-
-			CXMLDom xmlTest;
-			xmlTest.ParseString( arData );
-
-			xmlTest["KedacomXMLData"]["DumpInput"].Value( strInput.c_str() );
-
-			printf( "%s", xmlTest.ToString().c_str() );
-
-	//		printf( "end!!!!" );
-
-		}
 /*
         char *contentLength = getenv("CONTENT_LENGTH");
         int len;
@@ -198,7 +182,6 @@ int main ()
         PrintEnv("Initial environment", initialEnv);
         */
 
-    } /* while */
 
     return 0;
 }

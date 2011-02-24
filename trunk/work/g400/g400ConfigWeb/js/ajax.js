@@ -27,7 +27,6 @@ function GetAjaxObj()
 function ajGet(szURI, fCall)
 {
     var obj = GetAjaxObj();
-   
     obj.onreadystatechange = function()
     {   
       if(obj.readyState==4)

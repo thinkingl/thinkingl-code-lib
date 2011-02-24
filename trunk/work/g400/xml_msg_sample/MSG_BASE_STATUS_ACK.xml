@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<KedacomXMLData>
+  <Msg>MSG_BASE_STATUS</Msg>
+  <Sn>2</Sn>
+  <Session>2011021615555200</Session>
+  <Status> 1 </Status>
+  <Content>
+    <Connect>1</Connect><!--是否与G400平台连接 0未连接 1连接 -->
+    <License>1</License> <!--证书状态 0 未知错误 1 正常 2 缺少 3 过期 -->
+    <CMOS>1</CMOS>  <!--CMOS状态 0 未知错误 1正常就绪 2初始化失败 3正在获取设备列表-->
+    <Version>客户端版本 V1R2</Version>
+    <GK>1</GK> <!--GK状态 0 未知错误 1正常就绪 2不使用GK 3 GK注册失败-->
+  </Content>
+</KedacomXMLData>

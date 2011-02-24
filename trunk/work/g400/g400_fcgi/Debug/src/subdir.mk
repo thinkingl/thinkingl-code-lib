@@ -5,21 +5,25 @@
 # Add inputs and outputs from these tool invocations to the build variables 
 O_SRCS += \
 ../src/main.o \
+../src/unittestxmlmessagehandler.o \
 ../src/xmldom.o \
 ../src/xmlmessagehandle.o 
 
 CPP_SRCS += \
 ../src/main.cpp \
+../src/unittestxmlmessagehandler.cpp \
 ../src/xmldom.cpp \
 ../src/xmlmessagehandle.cpp 
 
 OBJS += \
 ./src/main.o \
+./src/unittestxmlmessagehandler.o \
 ./src/xmldom.o \
 ./src/xmlmessagehandle.o 
 
 CPP_DEPS += \
 ./src/main.d \
+./src/unittestxmlmessagehandler.d \
 ./src/xmldom.d \
 ./src/xmlmessagehandle.d 
 
