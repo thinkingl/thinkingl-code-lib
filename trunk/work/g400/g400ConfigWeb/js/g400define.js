@@ -44,3 +44,7 @@ var G400_ERROR = {
     ERR_UNKNOWN : 0,
     ERR_OK : 1
 }
+
+var G400_CONST = {
+    UPDATE_FILE_PATH: "/opt/uploadtest/update.tar"
+}
