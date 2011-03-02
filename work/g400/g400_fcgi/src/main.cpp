@@ -21,6 +21,8 @@ static const char rcsid[] = "$Id: echo.c,v 1.5 1999/07/28 00:29:37 roberts Exp $
 #include <string>
 
 #include <time.h>
+#include <errno.h>
+#include <fstream>
 
 using namespace std;
 
@@ -82,50 +84,156 @@ void UnitTest()
 	}
 }
 
-bool HandleXMLMessage()
+int GetInputLen()
+{
+	char *contentLength = getenv("CONTENT_LENGTH");
+	int inputLen = 0;
+	if (contentLength != NULL)
+	{
+		inputLen = strtol(contentLength, NULL, 10);
+	}
+	return inputLen;
+}
+
+string ReadLine( FILE *pFile, const char * chToken )
+{
+	return "";
+}
+
+bool HandleFileUpload( CXMLDom& outXML )
+{
+	char *queryString = getenv("QUERY_STRING");
+	if( queryString )
+	{
+		const tstring UPLOAD_PARAM_TOKEN = "upload=";
+		tstring strQueryString = queryString;
+		size_t upPos = strQueryString.find( UPLOAD_PARAM_TOKEN );
+		if( upPos != tstring::npos )
+		{
+			int upEnd = strQueryString.find( "&", upPos );
+			upPos += UPLOAD_PARAM_TOKEN.size();
+			// File upload req..
+			tstring strPath = strQueryString.substr( upPos, upEnd-upPos );
+
+
+
+			// Read the post in std input, to the file .
+			FILE *pUploadFile = fopen( strPath.c_str(), "w+");
+			if( pUploadFile )
+			{
+				// the total length of post data.
+				int nInputLen = GetInputLen();
+				// the end of upload file in post data.
+				int nUploadFileEndPos = nInputLen;
+				int nRWLen = 0;
+				bool bReadHead = true;
+				int nEndLen = 0;
+				tstring strFileName;
+				while( nRWLen < nInputLen )
+				{
+					char szBuf[1024*10] = {0};
+					int rdLen = 0;
+					if( bReadHead )
+					{
+						char *rdLine = gets( szBuf );
+
+						// debug.
+//						char szEle[100] = {0};
+//						sprintf( szEle, "rdPos_%d", nRWLen );
+//						outXML[G400XML::ELE_ROOT][G400XML::ELE_CONTENT][szEle].Value( rdLine );
+
+						// the length of read  is the string + '\n' .
+						rdLen = strlen( rdLine ) + 1 ;//fread( szBuf, 1, sizeof(szBuf), stdin );
+
+						// the head end with a empty line "\r\n"
+						if( strlen(rdLine) == 1 && *rdLine=='\r')
+						{
+							bReadHead = false;
+						}
+
+						// remove '\r' at the end.
+						if( *rdLine && rdLine[ strlen(rdLine) - 1 ] == '\r')
+						{
+							rdLine[ strlen(rdLine) - 1 ] = 0;
+						}
+
+						if( nRWLen == 0 )
+						{
+							// the length of the end equal to the length of first line + 2 + 2.
+							// eg. first line is ------WebKitFormBoundarytQNhytTAmfxwNQML
+							// last line is ------WebKitFormBoundarytQNhytTAmfxwNQML--\r\n
+							nEndLen = rdLen +2 + 2;
+							nUploadFileEndPos = nInputLen - nEndLen;
+						}
+					}
+					else if( nRWLen < nUploadFileEndPos )
+					{
+						// read the upload file.
+						int nNeedRd = min( (int)sizeof( szBuf ), nUploadFileEndPos-nRWLen );
+						rdLen = fread( szBuf, 1, nNeedRd, stdin );
+						fwrite( szBuf, 1, rdLen, pUploadFile );
+
+//						sleep(1000);
+					}
+					else
+					{
+						// read the end.
+						int nNeedRd = sizeof( szBuf );
+						rdLen = fread( szBuf, 1, nNeedRd, stdin );
+					}
+
+					if( 0 == rdLen )
+					{
+						break;
+					}
+					nRWLen += rdLen;
+				}
+				fclose( pUploadFile );
+				pUploadFile = NULL;
+				outXML[G400XML::ELE_ROOT][G400XML::ELE_STATUS].Value( true );
+//				outXML[G400XML::ELE_ROOT][G400XML::ELE_CONTENT]["path"].Value( strPath.c_str() );
+			}
+			else
+			{
+				outXML[G400XML::ELE_ROOT][G400XML::ELE_STATUS].Value( false );
+				outXML[G400XML::ELE_ROOT][G400XML::ELE_CONTENT]["errcode"].Value( errno );
+				outXML[G400XML::ELE_ROOT][G400XML::ELE_CONTENT]["error"].Value( strerror( errno ) );
+				outXML[G400XML::ELE_ROOT][G400XML::ELE_CONTENT][G400XML::ELE_ERRMSG].Value( strerror( errno ) );
+			}
+
+			return true;
+		}
+	}
+	return false;
+}
+
+bool HandleXMLMessage( CXMLDom& outXML )
 {
 	const int CON_BUFLEN_DEF = 1024*100;
 	char szInputBuf[ CON_BUFLEN_DEF ];
 
-	while (FCGI_Accept() >= 0)
+	memset( szInputBuf, 0, sizeof( szInputBuf ) );
+	// read the stdin to get the post data.
+	int inputLen = GetInputLen();
+
+	int nlen = fread( szInputBuf, 1, min( inputLen, CON_BUFLEN_DEF ), stdin );
+
+	CXMLDom inputXML;
+
+	if( nlen == inputLen )
 	{
-		memset( szInputBuf, 0, sizeof( szInputBuf ) );
-		// read the stdin to get the post data.
-		char *contentLength = getenv("CONTENT_LENGTH");
-		int inputLen = 0;
-		if (contentLength != NULL)
-		{
-			inputLen = strtol(contentLength, NULL, 10);
-		}
+		inputXML.ParseString( szInputBuf );
 
-		int nlen = fread( szInputBuf, 1, inputLen, stdin );
-
-		CXMLDom inputXML, outXML;
-
-		if( nlen > 0 )
-		{
-			inputXML.ParseString( szInputBuf );
-
-			CXMLMessageHandle::GetInstance()->HandleXMLMessage( inputXML[ G400XML::ELE_ROOT ], outXML[ G400XML::ELE_ROOT ] );
-		}
-		else
-		{
-			::UnitTest();
-		}
-
-		time_t now;
-		time( &now );
-		int nRadom = rand();
-
-		// update the time to avoid cache.
-		printf( "Last-Modified: %d %d GMT\r\n", now, nRadom );
-
-		// return xml.
-		printf("Content-type: text/xml\r\n"
-			    "\r\n" );
-		printf( "%s", outXML.ToString().c_str() );
-
-
+		CXMLMessageHandle::GetInstance()->HandleXMLMessage( inputXML[ G400XML::ELE_ROOT ], outXML[ G400XML::ELE_ROOT ] );
+	}
+	else if( nlen < inputLen )
+	{
+		outXML[G400XML::ELE_ROOT][G400XML::ELE_STATUS].Value( 0 );
+		outXML[G400XML::ELE_ROOT][G400XML::ELE_CONTENT][G400XML::ELE_ERRMSG].Value( "Can't read all input data! Maybe input too long!" );
+	}
+	else if( nlen == 0 )
+	{
+		return false;
 	}
 	return true;
 }
@@ -137,8 +245,36 @@ int main ()
 	CUnitTestXMLMessageHandler utXmlHandler;
 	CXMLMessageHandle::GetInstance()->RegObserver( &utXmlHandler );
 
-	::HandleXMLMessage();
+	while (FCGI_Accept() >= 0)
+	{
+		CXMLDom outXML;
 
+		if( ::HandleFileUpload( outXML ) )
+		{
+
+		}
+		else if( ::HandleXMLMessage( outXML ) )
+		{
+
+		}
+		else
+		{
+			::UnitTest();
+		}
+
+
+		time_t now;
+		time( &now );
+		int nRadom = rand();
+
+		// update the time to avoid cache.
+		printf( "Last-Modified: %d %d GMT\r\n", now, nRadom );
+
+		// return xml.
+		printf("Content-type: text/xml\r\n"
+				"\r\n" );
+		printf( "%s", outXML.ToString().c_str() );
+	}
 
 	CXMLMessageHandle::ReleaseInstance();
 

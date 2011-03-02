@@ -87,12 +87,12 @@ var ResourceLoader = {
 
     _resourceUrl: "./template/",
     _cgiUrl: "/kedacomxmldata",
-    _cgiFile: "/kedacomfile",
+    _cgiFile: "/g400-xml/g400.fcgi?upload=",
     m_fastCgiUrl: "/g400-xml/g400.fcgi",   //login_ack.xml",
 
     loadTemplate: function (templateName, handler) {
         var noCacheParam = new Date().getTime();
-        var url = this._resourceUrl + templateName + ".tpl?time="+noCacheParam;
+        var url = this._resourceUrl + templateName + ".tpl?time=" + noCacheParam;
         //记录当前的页面
         currentTemplete = templateName;
         printf("$ - start loading template=" + url);
@@ -121,7 +121,7 @@ var ResourceLoader = {
             if (ret) {
                 handler(WebConsole_Interceptor(xhr));
                 //handler(xhr);
-                $('#result').html(xhr.responseText);
+                // $('#result').html(xhr.responseText);
                 //               alert(xhr.responseText);
                 //                  alert( xhr.responseXML.text );
                 //                  alert(ret);
@@ -144,16 +144,19 @@ var ResourceLoader = {
         printf("@ - satrt JS");
     },
 
-    uploadFile: function (formName, handler) {
-        var url = this._cgiFile;
+    uploadFile: function (formName, fileDstPath, handler) {
+        var url = this._cgiFile + fileDstPath;
         printf("\n@start to upload file...\n");
         Ext.Ajax.request({
             url: url,
             method: 'POST',
             success: function (response, opts) {
+//                 alert("up ok" + response.responseXML);
+//                 alert(response.responseText);
                 handler(WebConsole_Interceptor(response));
             },
             failure: function (response, opts) {
+//                alert("up fail");
                 AjaxErrorHandler(response);
             },
             form: formName,
