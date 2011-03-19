@@ -73,6 +73,7 @@ BEGIN_MESSAGE_MAP(CFileCompareDlg, CDialogEx)
 	ON_BN_CLICKED(IDC_BUTTON_READ_TEST, &CFileCompareDlg::OnBnClickedButtonReadTest)
 	ON_BN_CLICKED(IDC_BUTTON_COMPARE, &CFileCompareDlg::OnBnClickedButtonCompare)
 	ON_BN_CLICKED(IDC_BUTTON_MERGE, &CFileCompareDlg::OnBnClickedButtonMerge)
+	ON_BN_CLICKED(IDC_BUTTON_SPLIT, &CFileCompareDlg::OnBnClickedButtonSplit)
 END_MESSAGE_MAP()
 
 
@@ -315,4 +316,64 @@ void CFileCompareDlg::OnBnClickedButtonMerge()
 	}
 
 	MessageBox( _T( "Merge Success!!!" ) );
+}
+
+
+void CFileCompareDlg::OnBnClickedButtonSplit()
+{
+	// TODO: 在此添加控件通知处理程序代码
+	this->UpdateData();
+
+	CFile fSrc,fDst;
+	fSrc.Open( this->m_strSrcFilePath,
+		CFile::modeReadWrite | CFile::modeNoTruncate |
+		CFile::shareDenyRead | CFile::shareDenyWrite );
+	if( CFile::hFileNull == fSrc.m_hFile )
+	{
+		MessageBox( _T( "Open src file fail!" ) );
+		return;
+	}
+
+	const ULONGLONG dvdLen = 4700805020;// 4500 * 1024 * 1024;
+	ULONGLONG flen = fSrc.GetLength();
+	fSrc.Seek( dvdLen, CFile::begin );
+	ULONGLONG curPos = fSrc.GetPosition();
+	if ( curPos < dvdLen   )
+	{
+		MessageBox( _T( "File is not biger then dvd!" ) );
+		return;
+	}
+	else
+	{
+		// 读取到另外一个文件...
+		CString strBkFileName = m_strSrcFilePath + ".bk";
+		fDst.Open( strBkFileName, 
+			CFile::modeCreate | CFile::modeWrite | CFile::shareDenyNone );
+		
+		if( CFile::hFileNull == fDst.m_hFile )
+		{
+			int adfsdf = ::GetLastError();
+			MessageBox( _T( "Open dst file fail!" ) );
+			return;
+		}
+
+		char dataBuf[1000];
+		while( 1 )
+		{
+			int nRead = fSrc.Read( dataBuf, sizeof( dataBuf ) );
+			fDst.Write( dataBuf, nRead );
+			if ( nRead <= 0 )
+			{
+				break;
+			}
+		}
+		fDst.Close();
+
+		fSrc.Seek( dvdLen-1, CFile::begin );
+
+		fSrc.SetLength( dvdLen );
+		
+	}
+	fSrc.Close();
+
 }

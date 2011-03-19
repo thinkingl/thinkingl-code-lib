@@ -36,4 +36,5 @@ public:
 	afx_msg void OnBnClickedButtonReadTest();
 	afx_msg void OnBnClickedButtonCompare();
 	afx_msg void OnBnClickedButtonMerge();
+	afx_msg void OnBnClickedButtonSplit();
 };

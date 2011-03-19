@@ -97,6 +97,7 @@
     <None Include="ReadMe.txt" />
     <None Include="res\FileCompare.ico" />
     <None Include="res\FileCompare.rc2" />
+    <None Include="test.txt" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="FileCompare.h" />
