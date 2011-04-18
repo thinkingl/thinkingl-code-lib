@@ -321,6 +321,8 @@ void CSZMapDlg::OnBnClickedButtonConfig()
 	// TODO: 在此添加控件通知处理程序代码
 	CDialogConfig dlg;
 	dlg.DoModal();
+
+	this->m_mapCtrl.SetZLevel( this->m_mapCtrl.GetZLevel() );
 }
 
 
@@ -329,8 +331,8 @@ void CSZMapDlg::OnBnClickedButtonGoToKeda()
 	// TODO: 在此添加控件通知处理程序代码
 	CCoord kedacom;
 	kedacom.SetZLevel( -2 );
-	kedacom.SetLatitude( 31.171912 );
-	kedacom.SetLongitude( 121.394865 );
+	kedacom.SetLatitude( 31.173395 /*31.171912*/ );
+	kedacom.SetLongitude( 121.389688 /*121.394865*/ );
 	this->m_mapCtrl.Move2Center( kedacom );
 	this->m_sliderMapZlevel.SetPos( kedacom.GetZLevel() );
 	this->m_sliderMapZlevel.SetFocus();

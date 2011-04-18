@@ -14,6 +14,7 @@ IMPLEMENT_DYNAMIC(CDialogConfig, CDialogEx)
 CDialogConfig::CDialogConfig(CWnd* pParent /*=NULL*/)
 	: CDialogEx(CDialogConfig::IDD, pParent)
 	, m_strImgDir(_T(""))
+	, m_strImgSubDir(_T(""))
 {
 
 }
@@ -26,6 +27,7 @@ void CDialogConfig::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogEx::DoDataExchange(pDX);
 	DDX_Text(pDX, IDC_EDIT_MAP_IMAGE_DIRECTORY, m_strImgDir);
+	DDX_CBString(pDX, IDC_COMBO_IMG_SUB_DIR, m_strImgSubDir);
 }
 
 
@@ -59,6 +61,13 @@ BOOL CDialogConfig::OnInitDialog()
 	strImgPath.ReleaseBuffer();
 
 	this->m_strImgDir = strImgPath;
+
+
+	CString strImgSubDir;
+	LPTSTR szSubDir = strImgSubDir.GetBuffer( MAX_PATH );
+	GetPrivateProfileString( _T( "szmapcfg" ), _T( "subdir" ), _T("tiles"), szSubDir, MAX_PATH, _T( "szmap.ini" ) );
+	strImgSubDir.ReleaseBuffer();
+	this->m_strImgSubDir = strImgSubDir;
 
 	this->UpdateData( FALSE );
 
@@ -97,6 +106,8 @@ void CDialogConfig::OnBnClickedOk()
 	this->UpdateData( TRUE );
 
 	::WritePrivateProfileString( _T( "szmapcfg" ), _T( "mapdir" ), this->m_strImgDir, _T( "szmap.ini" ) );
+
+	::WritePrivateProfileString( _T( "szmapcfg" ), _T( "subdir" ), this->m_strImgSubDir, _T( "szmap.ini" ) );
 
 	CDialogEx::OnOK();
 }
