@@ -23,4 +23,5 @@ public:
 	CString m_strImgDir;
 	afx_msg void OnBnClickedButtonExplorer();
 	afx_msg void OnBnClickedOk();
+	CString m_strImgSubDir;
 };

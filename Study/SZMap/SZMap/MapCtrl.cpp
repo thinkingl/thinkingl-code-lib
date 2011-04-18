@@ -318,13 +318,18 @@ CString CMapCtrl::ImageIndex2ImagePath( int zLevel, const CImageIndex& imgIndex 
 	GetPrivateProfileString( _T( "szmapcfg" ), _T( "mapdir" ), strDefImgDir, buffer, MAX_PATH, _T( "szmap.ini" ) );
 	strImgDir.ReleaseBuffer();
 
+	CString strImgSubDir;
+	LPTSTR szSubDir = strImgSubDir.GetBuffer( MAX_PATH );
+	GetPrivateProfileString( _T( "szmapcfg" ), _T( "subdir" ), _T("tiles"), szSubDir, MAX_PATH, _T( "szmap.ini" ) );
+	strImgSubDir.ReleaseBuffer();
+
 	if ( strImgDir.Right( 1 ) != _T( "\\" ) )
 	{
 		strImgDir += _T( "\\" );
 	}
 
 	CString strPath;
-	strPath.Format( _T( "%s.googlemaps\\tiles\\%d\\%d\\%d\\%d\\%d.png" ), strImgDir, zLevel, ( imgIndex.x >> 10 ) % 1024, ( imgIndex.x % 1024 ), 
+	strPath.Format( _T( "%s\\%s\\%d\\%d\\%d\\%d\\%d.png" ), strImgDir, strImgSubDir, zLevel, ( imgIndex.x >> 10 ) % 1024, ( imgIndex.x % 1024 ), 
 		( imgIndex.y >> 10 ) % 1024, imgIndex.y % 1024 );
 
 	return strPath;
