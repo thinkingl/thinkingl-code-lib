@@ -1,0 +1,178 @@
+
+<!-- saved from url=(0056)http://ace.delos.com/usacoprob2?a=HQIi3tfgAwQ&S=cowcycle -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"> <title>Problem 39: Cowcycles</title> </head>
+<body background="./4.2.4 Problem 39  Cowcycles_files/bg3.jpg">
+<img src="./4.2.4 Problem 39  Cowcycles_files/cow1.jpg" width="742" height="118">
+<center>
+<b><font size="7">Cowcycles</font></b><br>
+<b>Originally by Don Gillies</b>
+</center>
+
+<p> [International readers should note that some words are puns on cows.]
+
+</p><p> Having made a fortune on Playbov magazine, Hugh Heifer has moved
+from his original field in the country to a fashionable yard in the
+suburbs.  To visit fond pastoral memories, he wishes to cowmmute back
+to his old stomping grounds.  Being environmentally minded, Hugh wishes
+to transport himself using his own power on a Cowcycle (a bicycle
+specially fitted for his neatly manicured hooves).
+
+</p><p> Hugh weighs over a ton; as such, getting smoothly up to speed on
+traditional cowcycle gear sets is a bit challenging.  Changing among
+some of the widely spaced gear ratios causes exertion that's hard on
+Hugh's heart.
+
+</p><p> Help Hugh outfit his Cowcycle by choosing F (1 &lt;= F &lt;= 5)
+gears (sprockets) in the front and R (1 &lt;= R &lt;= 10) gears in the
+rear of his F*R speed cowcycle subject to these rules:
+</p><ul>
+<li> The possible sizes (number of teeth) for the F front gears are specified.
+</li><li> The possible sizes (number of teeth) for the R rear gears are specified.
+</li><li> At any given gear setting, the gear ratio is the quotient of the
+     number of teeth on the front gear and the number of teeth on the
+     rear gear (i.e., number of front gear teeth divided by number of
+     rear gear teeth)
+</li><li> The largest gear ratio must be at least three times the smallest.
+</li><li> The variance (see below) of the set of DIFFERENCES between successive
+     (i.e., after sorting) gear ratios should be minimized.
+</li></ul>
+
+<p> Calculate the mean and variance of a set of differences (x<sub>i</sub>
+in this formula) by the following formulae:
+
+</p><pre>                       1    n
+               mean = ---  SUM x<sub>i</sub>
+                       n   i=1   
+
+                       1    n    
+           variance = ---  SUM (x<sub>i</sub> - mean)<sup>2</sup>
+                       n   i=1    
+</pre>
+
+<p>Deduce and print the optimal sets of F front gears and R rear gears so that
+the variance is minimized (and the ratios span a factor of at least 3x).
+
+
+</p><h3>PROGRAM NAME: cowcycle</h3>
+
+<h3>INPUT FORMAT</h3>
+
+<p>The first line contains F and R, the numbers of front and rear gears.
+The second line contains four numbers: F1, F2 (25 &lt;= F1 &lt; F2 &lt;=
+80), R1, and R2 (5 &lt;= R1 &lt; R2 &lt;= 40).  All front gears from F1
+through F2 are available; all rear gears from R1 through R2 are available.
+There will exist at least one legal set of gears.
+
+</p><h3>SAMPLE INPUT (file cowcycle.in) </h3>
+
+<pre>2 5
+39 62 12 28
+</pre>
+
+<h3>OUTPUT FORMAT</h3>
+
+<p>Display the number of teeth on the set of F chosen front gears, from
+smallest to largest, on the first line of output (separated by spaces).
+Display the number of teeth on the set of R chosen rear gears, from
+smallest to largest, on the second line of output.  All gears have an
+integer number of teeth, of course.
+
+</p><p>If multiple optimal answers exist, output the answer with the
+smallest front gear set (smallest first gear, or smallest second gear
+if first gears match, etc.).  Likewise, if all first gears match, output
+the answer with the smallest rear gear set (similar rules to the front
+gear set).
+
+</p><h3>SAMPLE OUTPUT (file cowcycle.out)</h3>
+
+<pre>39 53
+12 13 15 23 27
+</pre>
+
+<h3> Comment </h3>
+
+<p> The challenge in this problem is "reading the problem".  Don't
+read further if you are working on that level of challenge.  If
+the problem is just completely unclear to you, read in.
+
+</p><p> The problem wants you to find "an optimal set of gear ratios" such
+that the spacing between the ratios is most uniform.  Consider the
+test case above:
+</p><pre>2 5
+39 62 12 28
+</pre>
+This specifies two front gears from the set 39..62; five rear gears from
+the set 12..28.  The program must examine all possible pairs of
+62-39+1=24 front gears and all possible quintuples from 28-12+1=17 rear
+gears.  Combinatorically, The total number of possibilities is (24 take
+2) times (17 take 5), which is 24!/22!/2! x 17!/5!/12! which is 656,880
+possibilities (I think).
+
+<p>For each of these possibilities, calculations like the following.
+This example considers in some sense the "first" case: front gears of
+39 and 40, rear gears of 12, 13, 14, 15, and 16.
+
+</p><p> First, calculate all the possible ratios:
+</p><pre>39/12 = 3.25000000000000000000
+39/13 = 3.00000000000000000000
+39/14 = 2.78571428571428571428
+39/15 = 2.60000000000000000000
+39/16 = 2.43750000000000000000
+40/12 = 3.33333333333333333333
+40/13 = 3.07692307692307692307
+40/14 = 2.85714285714285714285
+40/15 = 2.66666666666666666666
+40/16 = 2.50000000000000000000
+</pre>
+
+<p>Then, sort them:
+</p><pre>39/16 = 2.43750000000000000000
+40/16 = 2.50000000000000000000
+39/15 = 2.60000000000000000000
+40/15 = 2.66666666666666666666
+39/14 = 2.78571428571428571428
+40/14 = 2.85714285714285714285
+39/13 = 3.00000000000000000000
+40/13 = 3.07692307692307692307
+39/12 = 3.25000000000000000000
+40/12 = 3.33333333333333333333
+</pre>
+
+<p>Then, calculate the absolute value of the differences:
+</p><pre>2.43750000000000000000 - 2.50000000000000000000 = 0.06250000000000000000
+2.50000000000000000000 - 2.60000000000000000000 = 0.10000000000000000000
+2.60000000000000000000 - 2.66666666666666666666 = 0.06666666666666666666
+2.66666666666666666666 - 2.78571428571428571428 = 0.11904761904761904762
+2.78571428571428571428 - 2.85714285714285714285 = 0.07142857142857142857
+2.85714285714285714285 - 3.00000000000000000000 = 0.14285714285714285715
+3.00000000000000000000 - 3.07692307692307692307 = 0.07692307692307692307
+3.07692307692307692307 - 3.25000000000000000000 = 0.17307692307692307693
+3.25000000000000000000 - 3.33333333333333333333 = 0.08333333333333333333
+</pre>
+
+<p>Then, calculate the mean and variance of the set of numbers
+on the right, above.  The mean is (I think): 0.0995370370370370370366666.
+The variance is approximately 0.00129798488416722.
+
+</p><p>Of course this set of gears is not valid, since it does not have
+a 3x span from highest gear to lowest.
+
+</p><p>Find the set of gears that minimizes the variance and has a 3x
+or greater span.
+
+<br>
+</p><hr>
+<form action="http://ace.delos.com/upload3" enctype="multipart/form-data" method="POST">
+<b>Submission file Name:</b> <input type="file" name="filename">
+<input type="submit" value="Send it in!">
+<input type="hidden" name="a" value="HQIi3tfgAwQ">
+<input type="hidden" name="S" value="cowcycle">
+</form>
+
+<center>
+<a href="http://ace.delos.com/usacogate?a=HQIi3tfgAwQ"> USACO Gateway </a> &nbsp;| &nbsp;
+<a href="mailto:kolstad@ace.delos.com">Comment or Question </a>
+</center>
+
+
+</body></html>
