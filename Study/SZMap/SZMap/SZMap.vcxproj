@@ -105,6 +105,7 @@
     <ClInclude Include="DialogConfig.h" />
     <ClInclude Include="ImageFactory.h" />
     <ClInclude Include="MapCtrl.h" />
+    <ClInclude Include="MapDownloadDialog.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="SZMap.h" />
@@ -116,6 +117,7 @@
     <ClCompile Include="DialogConfig.cpp" />
     <ClCompile Include="ImageFactory.cpp" />
     <ClCompile Include="MapCtrl.cpp" />
+    <ClCompile Include="MapDownloadDialog.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
