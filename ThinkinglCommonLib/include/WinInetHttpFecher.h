@@ -17,6 +17,9 @@ public:
 	/** 下载文件。 */
 	virtual BOOL DownloadFile( LPCTSTR strLocFilePath ) ;
 
+	/** 打开http文件. */
+	virtual BOOL OpenFile( TDataBuffer & dataBuf );
+
     /** 设置http代理。 */
     virtual BOOL SetHttpProxy( BOOL bUseProxy,
         LPCTSTR strIp, 

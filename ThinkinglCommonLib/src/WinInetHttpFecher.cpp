@@ -202,6 +202,50 @@ BOOL CWinInetHttpFecher::DownloadFile( LPCTSTR strLocFilePath )
     return bResult;
 }
 
+BOOL CWinInetHttpFecher::OpenFile( TDataBuffer & dataBuf )
+{
+	dataBuf.clear();
+
+	ASSERT( m_pInetFile );
+	if ( !m_pInetFile )
+	{
+		return FALSE;
+	}
+	BOOL bResult = FALSE;
+	try
+	{
+		if ( m_pInetFile )
+		{			
+			const int nReadLen = 1000;
+			char buff[ nReadLen ];
+			while( 1 )
+			{
+				uint32 uLen = m_pInetFile->Read( buff, nReadLen );
+				if ( uLen > 0 )
+				{
+					dataBuf.insert( dataBuf.end(), buff, buff+uLen );
+				}
+				else
+				{					
+					bResult = TRUE;
+					break;
+				}
+			}
+
+		}
+	}
+	catch( CInternetException* pEx )
+	{
+		TCHAR sz[1024];
+		pEx->GetErrorMessage(sz, 1024);
+		_tprintf_s(_T("ERROR!  %s\n"), sz);
+		pEx->Delete();
+
+		bResult = FALSE;
+	}
+	return bResult;
+}
+
 BOOL CWinInetHttpFecher::TestNetwork( LPCTSTR strUrl )
 {
  //   ASSERT( FALSE );
