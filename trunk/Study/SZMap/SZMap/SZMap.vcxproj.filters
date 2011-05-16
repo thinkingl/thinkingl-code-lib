@@ -54,6 +54,9 @@
     <ClInclude Include="DialogConfig.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="MapDownloadDialog.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="SZMap.cpp">
@@ -75,6 +78,9 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="DialogConfig.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="MapDownloadDialog.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
