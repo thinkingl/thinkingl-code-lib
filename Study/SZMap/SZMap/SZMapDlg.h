@@ -7,6 +7,8 @@
 #include "MapCtrl.h"
 #include "afxcmn.h"
 
+#include "MapDownloadDialog.h"
+
 // CSZMapDlg 对话框
 class CSZMapDlg : public CDialogEx
 {
@@ -26,6 +28,9 @@ private:
 private:
 	/** 地图控件。 */
 	CMapCtrl m_mapCtrl;
+
+	/** 地图下载窗口. */
+	CMapDownloadDialog m_mapDownloadDlg;
 
 // 实现
 protected:
@@ -53,4 +58,5 @@ public:
 	double m_dbGoLatitude;
 	double m_dbGoLongitude;
 	afx_msg void OnBnClickedButtonGo();
+	afx_msg void OnBnClickedButtonDownload();
 };

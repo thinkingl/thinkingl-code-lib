@@ -8,7 +8,7 @@ class IHttpDownloader
 public:
     virtual ~IHttpDownloader(){};
 
-
+	typedef std::vector< char > TDataBuffer;
 
 
 	/** 打开Url*/
@@ -19,6 +19,8 @@ public:
     /** 下载文件。 */
     virtual BOOL DownloadFile( LPCTSTR strLocFilePath ) = 0;
 	
+	/** 打开http文件. */
+	virtual BOOL OpenFile( TDataBuffer & dataBuf ) = 0;
 
 	/** 设置http代理。 */
 	virtual BOOL SetHttpProxy( BOOL bUseProxy,
