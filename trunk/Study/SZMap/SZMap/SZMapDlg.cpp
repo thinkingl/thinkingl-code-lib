@@ -81,6 +81,7 @@ BEGIN_MESSAGE_MAP(CSZMapDlg, CDialogEx)
 	ON_BN_CLICKED(IDC_BUTTON_CONFIG, &CSZMapDlg::OnBnClickedButtonConfig)
 	ON_BN_CLICKED(IDC_BUTTON_GO_TO_KEDA, &CSZMapDlg::OnBnClickedButtonGoToKeda)
 	ON_BN_CLICKED(IDC_BUTTON_GO, &CSZMapDlg::OnBnClickedButtonGo)
+	ON_BN_CLICKED(ID_BUTTON_DOWNLOAD, &CSZMapDlg::OnBnClickedButtonDownload)
 END_MESSAGE_MAP()
 
 
@@ -352,4 +353,19 @@ void CSZMapDlg::OnBnClickedButtonGo()
 	this->m_mapCtrl.Move2Center( goPos );
 
 	this->m_sliderMapZlevel.SetFocus();
+}
+
+
+void CSZMapDlg::OnBnClickedButtonDownload()
+{
+	// TODO: 在此添加控件通知处理程序代码
+	if ( ::IsWindow( m_mapDownloadDlg.GetSafeHwnd() ) )
+	{
+		m_mapDownloadDlg.ShowWindow( SW_SHOW );
+	}
+	else
+	{
+		m_mapDownloadDlg.Create( CMapDownloadDialog::IDD, this );
+		m_mapDownloadDlg.ShowWindow( SW_SHOW );
+	}
 }
