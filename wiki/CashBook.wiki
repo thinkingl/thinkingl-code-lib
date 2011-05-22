@@ -1,0 +1,12 @@
+#summary One-sentence summary of this page.
+
+= 简介 =
+记帐本, 采用复式记账法, 解决我的记账问题.
+
+= 详细功能 =
+* 创建账户
+
+= 基本架构 =
+* C++
+* Sqlite
+* MFC
