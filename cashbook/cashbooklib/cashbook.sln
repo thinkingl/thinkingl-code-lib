@@ -1,0 +1,42 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "cashbooklib", "cashbooklib\cashbooklib.vcxproj", "{95C7CC7F-4518-4994-BC91-2683F968B272}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "cashbookmfc", "cashbookmfc\cashbookmfc.vcxproj", "{F7BB6900-E58A-4240-ABAC-143BFE9E6948}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ThinkinglCommonLib", "..\..\ThinkinglCommonLib\prj_win32\ThinkinglCommonLib.vcxproj", "{3C80BBD3-ADCE-4154-BC63-01DA7CFA8ECE}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "sqlite", "..\..\sqlite\prj_win32\sqlite.vcxproj", "{9D858D33-7695-4EB4-B7D7-087D6A67ABD4}"
+EndProject
+Global
+	GlobalSection(SubversionScc) = preSolution
+		Svn-Managed = True
+		Manager = AnkhSVN - Subversion Support for Visual Studio
+	EndGlobalSection
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{95C7CC7F-4518-4994-BC91-2683F968B272}.Debug|Win32.ActiveCfg = Debug|Win32
+		{95C7CC7F-4518-4994-BC91-2683F968B272}.Debug|Win32.Build.0 = Debug|Win32
+		{95C7CC7F-4518-4994-BC91-2683F968B272}.Release|Win32.ActiveCfg = Release|Win32
+		{95C7CC7F-4518-4994-BC91-2683F968B272}.Release|Win32.Build.0 = Release|Win32
+		{F7BB6900-E58A-4240-ABAC-143BFE9E6948}.Debug|Win32.ActiveCfg = Debug|Win32
+		{F7BB6900-E58A-4240-ABAC-143BFE9E6948}.Debug|Win32.Build.0 = Debug|Win32
+		{F7BB6900-E58A-4240-ABAC-143BFE9E6948}.Release|Win32.ActiveCfg = Release|Win32
+		{F7BB6900-E58A-4240-ABAC-143BFE9E6948}.Release|Win32.Build.0 = Release|Win32
+		{3C80BBD3-ADCE-4154-BC63-01DA7CFA8ECE}.Debug|Win32.ActiveCfg = Debug|Win32
+		{3C80BBD3-ADCE-4154-BC63-01DA7CFA8ECE}.Debug|Win32.Build.0 = Debug|Win32
+		{3C80BBD3-ADCE-4154-BC63-01DA7CFA8ECE}.Release|Win32.ActiveCfg = Release|Win32
+		{3C80BBD3-ADCE-4154-BC63-01DA7CFA8ECE}.Release|Win32.Build.0 = Release|Win32
+		{9D858D33-7695-4EB4-B7D7-087D6A67ABD4}.Debug|Win32.ActiveCfg = Debug|Win32
+		{9D858D33-7695-4EB4-B7D7-087D6A67ABD4}.Debug|Win32.Build.0 = Debug|Win32
+		{9D858D33-7695-4EB4-B7D7-087D6A67ABD4}.Release|Win32.ActiveCfg = Release|Win32
+		{9D858D33-7695-4EB4-B7D7-087D6A67ABD4}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
