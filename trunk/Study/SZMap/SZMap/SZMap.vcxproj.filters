@@ -54,7 +54,19 @@
     <ClInclude Include="DialogConfig.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="MapDownloadThread.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="DownloadTask.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="ITask.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
     <ClInclude Include="MapDownloadDialog.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="MapDownloadTaskManage.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
@@ -80,7 +92,19 @@
     <ClCompile Include="DialogConfig.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="DownloadTask.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="ITask.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
     <ClCompile Include="MapDownloadDialog.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="MapDownloadTaskManage.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="MapDownloadThread.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

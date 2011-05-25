@@ -41,7 +41,8 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(IncludePath)</IncludePath>
+    <IncludePath>E:\svn\thinkingl-code-lib\trunk\ThinkinglCommonLib\include;$(IncludePath)</IncludePath>
+    <LibraryPath>..\Debug;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -57,6 +58,7 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>ThinkinglCommonLib.lib</AdditionalDependencies>
     </Link>
     <Midl>
       <MkTypLibCompatible>false</MkTypLibCompatible>
@@ -103,9 +105,13 @@
   <ItemGroup>
     <ClInclude Include="Coord.h" />
     <ClInclude Include="DialogConfig.h" />
+    <ClInclude Include="DownloadTask.h" />
     <ClInclude Include="ImageFactory.h" />
+    <ClInclude Include="ITask.h" />
     <ClInclude Include="MapCtrl.h" />
     <ClInclude Include="MapDownloadDialog.h" />
+    <ClInclude Include="MapDownloadThread.h" />
+    <ClInclude Include="MapDownloadTaskManage.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="SZMap.h" />
@@ -115,9 +121,13 @@
   <ItemGroup>
     <ClCompile Include="Coord.cpp" />
     <ClCompile Include="DialogConfig.cpp" />
+    <ClCompile Include="DownloadTask.cpp" />
     <ClCompile Include="ImageFactory.cpp" />
+    <ClCompile Include="ITask.cpp" />
     <ClCompile Include="MapCtrl.cpp" />
     <ClCompile Include="MapDownloadDialog.cpp" />
+    <ClCompile Include="MapDownloadThread.cpp" />
+    <ClCompile Include="MapDownloadTaskManage.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>

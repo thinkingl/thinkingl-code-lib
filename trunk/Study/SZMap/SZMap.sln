@@ -2,6 +2,10 @@
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SZMap", "SZMap\SZMap.vcxproj", "{0474C6F8-6FE6-4826-A5AF-0D62C7079F91}"
+	ProjectSection(ProjectDependencies) = postProject
+		{9D858D33-7695-4EB4-B7D7-087D6A67ABD4} = {9D858D33-7695-4EB4-B7D7-087D6A67ABD4}
+		{3C80BBD3-ADCE-4154-BC63-01DA7CFA8ECE} = {3C80BBD3-ADCE-4154-BC63-01DA7CFA8ECE}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ThinkinglCommonLib", "..\..\ThinkinglCommonLib\prj_win32\ThinkinglCommonLib.vcxproj", "{3C80BBD3-ADCE-4154-BC63-01DA7CFA8ECE}"
 EndProject
