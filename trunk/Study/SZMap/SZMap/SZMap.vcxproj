@@ -106,12 +106,17 @@
     <ClInclude Include="Coord.h" />
     <ClInclude Include="DialogConfig.h" />
     <ClInclude Include="DownloadTask.h" />
+    <ClInclude Include="GoogleMapServer.h" />
     <ClInclude Include="ImageFactory.h" />
+    <ClInclude Include="IMapServer.h" />
     <ClInclude Include="ITask.h" />
+    <ClInclude Include="ITaskManage.h" />
     <ClInclude Include="MapCtrl.h" />
     <ClInclude Include="MapDownloadDialog.h" />
-    <ClInclude Include="MapDownloadThread.h" />
-    <ClInclude Include="MapDownloadTaskManage.h" />
+    <ClInclude Include="szmapdefine.h" />
+    <ClInclude Include="TaskThread.h" />
+    <ClInclude Include="MapDownloadMission.h" />
+    <ClInclude Include="ParseMainPageTask.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="SZMap.h" />
@@ -122,12 +127,16 @@
     <ClCompile Include="Coord.cpp" />
     <ClCompile Include="DialogConfig.cpp" />
     <ClCompile Include="DownloadTask.cpp" />
+    <ClCompile Include="GoogleMapServer.cpp" />
     <ClCompile Include="ImageFactory.cpp" />
+    <ClCompile Include="IMapServer.cpp" />
     <ClCompile Include="ITask.cpp" />
+    <ClCompile Include="ITaskManage.cpp" />
     <ClCompile Include="MapCtrl.cpp" />
     <ClCompile Include="MapDownloadDialog.cpp" />
-    <ClCompile Include="MapDownloadThread.cpp" />
-    <ClCompile Include="MapDownloadTaskManage.cpp" />
+    <ClCompile Include="TaskThread.cpp" />
+    <ClCompile Include="MapDownloadMission.cpp" />
+    <ClCompile Include="ParseMainPageTask.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
