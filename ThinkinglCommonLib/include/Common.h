@@ -71,4 +71,7 @@ public:
 
 	/** 递归的创建文件夹。 */
 	static BOOL CreateDirRecurse( LPCTSTR strDir );
+
+	/** 睡眠 单位毫秒.. */
+	static void Sleep( int sleepMSec );
 };

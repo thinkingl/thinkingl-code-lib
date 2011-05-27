@@ -11,7 +11,7 @@ public:
 	virtual void SetTimeOut( uint32 nMilliSeconds ) = 0;
 
 	/** 运行。 */
-	virtual BOOL Start() = 0;
+	virtual BOOL Start( LPCTSTR lpstrLogFolder /*= NULL*/ ) = 0;
 
 	/** 同步等待停止。*/
 	virtual BOOL Stop() = 0;

@@ -28,10 +28,17 @@ CMapDownloadDialog::CMapDownloadDialog(CWnd* pParent /*=NULL*/)
 	m_bDownloadMap = TRUE;
 	m_bDownloadSatellite = FALSE;
 
+	m_pMapDownloadMission = NULL;
 }
 
 CMapDownloadDialog::~CMapDownloadDialog()
 {
+	// 删除...
+	if ( m_pMapDownloadMission )
+	{
+		delete m_pMapDownloadMission;
+		m_pMapDownloadMission = NULL;
+	}
 }
 
 void CMapDownloadDialog::DoDataExchange(CDataExchange* pDX)
@@ -63,6 +70,21 @@ END_MESSAGE_MAP()
 void CMapDownloadDialog::OnBnClickedButtonDownload()
 {
 	// TODO: 在此添加控件通知处理程序代码
-
+	this->UpdateData( );
 	
+	if ( NULL == this->m_pMapDownloadMission )
+	{
+		
+		m_pMapDownloadMission = new CMapDownloadMission(
+			CCoord( m_dbLatitudeLefttop, m_dbLongitudeLeftTop, m_nMinMapLevel ),
+			CCoord( m_dbLatitudeRightbottom, m_dbLongitudeRightbottom, m_nMaxLevel ),
+			(LPCTSTR)m_strMapDownloadPath,
+			GoogleMaps,
+			MAP_NORMAL
+			);
+	}
+	else
+	{
+
+	}
 }

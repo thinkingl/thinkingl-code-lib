@@ -54,9 +54,6 @@
     <ClInclude Include="DialogConfig.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="MapDownloadThread.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="DownloadTask.h">
       <Filter>头文件</Filter>
     </ClInclude>
@@ -66,7 +63,25 @@
     <ClInclude Include="MapDownloadDialog.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="MapDownloadTaskManage.h">
+    <ClInclude Include="ParseMainPageTask.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="TaskThread.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="ITaskManage.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="MapDownloadMission.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="szmapdefine.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="GoogleMapServer.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="IMapServer.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
@@ -101,10 +116,22 @@
     <ClCompile Include="MapDownloadDialog.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="MapDownloadTaskManage.cpp">
+    <ClCompile Include="ParseMainPageTask.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="MapDownloadThread.cpp">
+    <ClCompile Include="TaskThread.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="ITaskManage.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="MapDownloadMission.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="GoogleMapServer.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="IMapServer.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

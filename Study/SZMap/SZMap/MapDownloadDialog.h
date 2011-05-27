@@ -2,6 +2,7 @@
 #include "afxcmn.h"
 #include "afxwin.h"
 
+#include "MapDownloadMission.h"
 
 // CMapDownloadDialog 对话框
 
@@ -20,6 +21,10 @@ protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV 支持
 
 	DECLARE_MESSAGE_MAP()
+
+private:
+	/** 实际负责整个下载任务的. */
+	CMapDownloadMission *m_pMapDownloadMission;
 public:
 	double m_dbLongitudeLeftTop;
 	double m_dbLatitudeLefttop;

@@ -526,4 +526,9 @@ BOOL CCommon::CreateDirRecurse( LPCTSTR strDir )
 	return _tmkdir( strDir );
 }
 
+void CCommon::Sleep( int sleepMSec )
+{
+	::Sleep( sleepMSec );
+}
+// end of file
 
