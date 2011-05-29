@@ -4,6 +4,7 @@
 #include "stdafx.h"
 
 #include "MapCtrl.h"
+#include "szmapconfig.h"
 #include <math.h>
 
 // CMapCtrl
@@ -313,15 +314,8 @@ CString CMapCtrl::ImageIndex2ImagePath( int zLevel, const CImageIndex& imgIndex 
 		strDefImgDir = strDefImgDir.Left( nPos );
 	}
 
-	CString strImgDir;
-	LPTSTR buffer = strImgDir.GetBuffer( MAX_PATH );
-	GetPrivateProfileString( _T( "szmapcfg" ), _T( "mapdir" ), strDefImgDir, buffer, MAX_PATH, _T( "szmap.ini" ) );
-	strImgDir.ReleaseBuffer();
-
-	CString strImgSubDir;
-	LPTSTR szSubDir = strImgSubDir.GetBuffer( MAX_PATH );
-	GetPrivateProfileString( _T( "szmapcfg" ), _T( "subdir" ), _T("tiles"), szSubDir, MAX_PATH, _T( "szmap.ini" ) );
-	strImgSubDir.ReleaseBuffer();
+	CString strImgDir = CSZMapConfig::GetMapImageDir().c_str();
+	CString strImgSubDir = CSZMapConfig::GetMapSubDir().c_str();
 
 	if ( strImgDir.Right( 1 ) != _T( "\\" ) )
 	{

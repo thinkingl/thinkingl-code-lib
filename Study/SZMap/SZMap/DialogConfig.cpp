@@ -5,7 +5,7 @@
 #include "SZMap.h"
 #include "DialogConfig.h"
 #include "afxdialogex.h"
-
+#include "szmapconfig.h"
 
 // CDialogConfig 对话框
 
@@ -45,29 +45,10 @@ BOOL CDialogConfig::OnInitDialog()
 	CDialogEx::OnInitDialog();
 
 	// TODO:  在此添加额外的初始化
-	CString strDefImgDir;
-	::GetModuleFileName( NULL, strDefImgDir.GetBuffer( MAX_PATH ), MAX_PATH );
-	strDefImgDir.ReleaseBuffer();
-	int nPos = strDefImgDir.ReverseFind( '\\' );
-	if ( nPos != -1 )
-	{
-		strDefImgDir = strDefImgDir.Left( nPos );
-	}
 
+	this->m_strImgDir = CSZMapConfig::GetMapImageDir().c_str();
 
-	CString strImgPath;
-	LPTSTR buffer = strImgPath.GetBuffer( MAX_PATH );
-	GetPrivateProfileString( _T( "szmapcfg" ), _T( "mapdir" ), strDefImgDir, buffer, MAX_PATH, _T( "szmap.ini" ) );
-	strImgPath.ReleaseBuffer();
-
-	this->m_strImgDir = strImgPath;
-
-
-	CString strImgSubDir;
-	LPTSTR szSubDir = strImgSubDir.GetBuffer( MAX_PATH );
-	GetPrivateProfileString( _T( "szmapcfg" ), _T( "subdir" ), _T("tiles"), szSubDir, MAX_PATH, _T( "szmap.ini" ) );
-	strImgSubDir.ReleaseBuffer();
-	this->m_strImgSubDir = strImgSubDir;
+	this->m_strImgSubDir = CSZMapConfig::GetMapSubDir().c_str();
 
 	this->UpdateData( FALSE );
 
@@ -105,9 +86,8 @@ void CDialogConfig::OnBnClickedOk()
 	// TODO: 在此添加控件通知处理程序代码
 	this->UpdateData( TRUE );
 
-	::WritePrivateProfileString( _T( "szmapcfg" ), _T( "mapdir" ), this->m_strImgDir, _T( "szmap.ini" ) );
-
-	::WritePrivateProfileString( _T( "szmapcfg" ), _T( "subdir" ), this->m_strImgSubDir, _T( "szmap.ini" ) );
+	CSZMapConfig::SetMapImageDir( (LPCTSTR)this->m_strImgDir );
+	CSZMapConfig::SetMapSubDir( (LPCTSTR)this->m_strImgSubDir );
 
 	CDialogEx::OnOK();
 }
