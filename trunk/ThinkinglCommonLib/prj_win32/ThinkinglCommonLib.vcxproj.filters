@@ -60,6 +60,9 @@
     <ClInclude Include="..\include\ClassFactory.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="..\include\IniConfigFile.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\ScopeLock.cpp">
@@ -87,6 +90,9 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="..\src\ClassFactory.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\IniConfigFile.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

@@ -90,6 +90,9 @@
     <ClCompile Include="..\src\WinInetHttpFecher.cpp">
       <Filter>win32 impl</Filter>
     </ClCompile>
+    <ClCompile Include="IniConfigFile.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\Common.h">

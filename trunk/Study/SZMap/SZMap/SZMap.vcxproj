@@ -41,7 +41,7 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>E:\svn\thinkingl-code-lib\trunk\ThinkinglCommonLib\include;$(IncludePath)</IncludePath>
+    <IncludePath>..\..\..\ThinkinglCommonLib\include;$(IncludePath)</IncludePath>
     <LibraryPath>..\Debug;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -113,6 +113,7 @@
     <ClInclude Include="ITaskManage.h" />
     <ClInclude Include="MapCtrl.h" />
     <ClInclude Include="MapDownloadDialog.h" />
+    <ClInclude Include="szmapconfig.h" />
     <ClInclude Include="szmapdefine.h" />
     <ClInclude Include="TaskThread.h" />
     <ClInclude Include="MapDownloadMission.h" />
@@ -134,6 +135,7 @@
     <ClCompile Include="ITaskManage.cpp" />
     <ClCompile Include="MapCtrl.cpp" />
     <ClCompile Include="MapDownloadDialog.cpp" />
+    <ClCompile Include="szmapconfig.cpp" />
     <ClCompile Include="TaskThread.cpp" />
     <ClCompile Include="MapDownloadMission.cpp" />
     <ClCompile Include="ParseMainPageTask.cpp" />

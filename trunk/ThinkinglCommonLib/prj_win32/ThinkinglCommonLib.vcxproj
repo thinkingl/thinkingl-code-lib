@@ -83,6 +83,7 @@
     <ClInclude Include="..\include\Common.h" />
     <ClInclude Include="..\include\IHttpDownloader.h" />
     <ClInclude Include="..\include\IMutex.h" />
+    <ClInclude Include="..\include\IniConfigFile.h" />
     <ClInclude Include="..\include\INoCopy.h" />
     <ClInclude Include="..\include\IThread.h" />
     <ClInclude Include="..\include\Log.h" />
@@ -97,6 +98,7 @@
   <ItemGroup>
     <ClCompile Include="..\src\ClassFactory.cpp" />
     <ClCompile Include="..\src\Common.cpp" />
+    <ClCompile Include="..\src\IniConfigFile.cpp" />
     <ClCompile Include="..\src\Log.cpp" />
     <ClCompile Include="..\src\LogManager.cpp" />
     <ClCompile Include="..\src\MimeType.cpp" />

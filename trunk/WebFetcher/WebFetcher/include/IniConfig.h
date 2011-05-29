@@ -2,6 +2,7 @@
 
 #include "portabledefine.h"
 #include "IConfig.h"
+#include "IniConfigFile.h"
 
 class CIniConfig : public IConfig
 {
@@ -52,11 +53,8 @@ private:
 	/**  */
 	BOOL Init();
 
-	tstring ReadConfigStr(  LPCTSTR strApp, LPCTSTR strKey );
-	int32 ReadConfigInt( LPCTSTR strApp, LPCTSTR strKey );
 
-	tstringarray ReadKeys( LPCTSTR strApp );
 
 private:
-	tstring m_strIniFilePath;
+	CIniConfigFile m_iniFile;
 };
