@@ -26,5 +26,8 @@ private:
 
 	/** 下载主页的任务.*/
 	CDownloadTask *m_pMainpageDownloadTask;
+
+	/** 地图图片Index -> url 的规则的信息. */
+
 };
 

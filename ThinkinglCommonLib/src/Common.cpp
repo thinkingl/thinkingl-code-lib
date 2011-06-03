@@ -511,6 +511,10 @@ tstring CCommon::Url2FileName( LPCTSTR strUrl )
 
 BOOL CCommon::CreateDirRecurse( LPCTSTR strDir )
 {
+	if ( NULL == strDir || _tcslen( strDir ) == 0 )
+	{
+		return FALSE;
+	}
 	tstring strCurDir = strDir;
 	if ( strCurDir.at( strCurDir.length() - 1 ) == '\\' || strCurDir.at( strCurDir.length() - 1 ) == '/' )
 	{

@@ -246,10 +246,10 @@ BOOL CWinInetHttpFecher::OpenFile( TDataBuffer & dataBuf )
 	return bResult;
 }
 
-BOOL CWinInetHttpFecher::TestNetwork( LPCTSTR strUrl )
+BOOL CWinInetHttpFecher::TestNetwork( )
 {
  //   ASSERT( FALSE );
- //   tstring strRootUrl = IConfig::Instance()->GetRootUrl();
+    LPCTSTR strUrl = _T( "http://www.bing.com" );
 
     BOOL bResult = this->OpenUrl( strUrl );
 

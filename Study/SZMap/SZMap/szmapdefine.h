@@ -18,7 +18,7 @@ enum EMapServer
 
 namespace ServerUrl
 {
-	DEF_STR GoogleMaps = _T( "https://maps.google.com" );
+	DEF_STR GoogleMaps = _T( "http://maps.google.com" );
 }
 // end of file
 

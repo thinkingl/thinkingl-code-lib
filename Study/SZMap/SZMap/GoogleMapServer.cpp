@@ -47,8 +47,8 @@ void CGoogleMapServer::FinishMapPicUrlParseTask( ITask * pTask )
 }
 
 BOOL CGoogleMapServer::IsKnowUrlTemplete() const
-{
-	_ASSERT( FALSE );
+{	
+
 	return FALSE;
 }
 

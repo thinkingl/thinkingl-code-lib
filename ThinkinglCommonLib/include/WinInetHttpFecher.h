@@ -30,7 +30,7 @@ public:
     /** 网络测试。 
     *   连接抓取目标主页测试。
     */
-    virtual BOOL TestNetwork( LPCTSTR strUrl );
+    virtual BOOL TestNetwork( );
 
 private:
 	void Release();

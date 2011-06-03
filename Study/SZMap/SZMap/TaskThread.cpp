@@ -16,7 +16,10 @@ int CTaskThread::DoPieceWork( BOOL& bExit )
 	ITask *pTask = m_pTaskManager->GetTask();
 	if ( pTask )
 	{
-		pTask->Do();
+		BOOL bRet = pTask->Do();
+
+		// 任务完成.
+		m_pTaskManager->TaskFinishNotify( pTask );
 	}
 	else
 	{
