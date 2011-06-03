@@ -13,7 +13,7 @@ public:
 
 public:	// 继承自 ITask.
 	/** 完成这个任务. */
-	virtual bool Do();
+	virtual BOOL Do();
 
 public: // 下载任务特有的.
 	ctstring GetUrl()const;

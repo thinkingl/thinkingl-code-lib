@@ -1,5 +1,6 @@
 #include "DownloadTask.h"
 
+#include "WinInetHttpFecher.h"
 
 CDownloadTask::CDownloadTask( ctstring& url, ctstring& localFilePath )
 {
@@ -12,12 +13,15 @@ CDownloadTask::~CDownloadTask(void)
 {
 }
 
-bool CDownloadTask::Do()
+BOOL CDownloadTask::Do()
 {
 	// 完成这个任务.
+	CWinInetHttpFecher httpDownloader;
 
+	BOOL bRet = httpDownloader.OpenUrl( this->m_url.c_str() );
+	bRet &= httpDownloader.DownloadFile( m_localFilePath.c_str() );
 
-	return true;
+	return bRet;
 }
 
 ctstring CDownloadTask::GetLocalPath() const
