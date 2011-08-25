@@ -31,4 +31,7 @@ public:
 	CString m_strImgSubDir;
 
 
+	CString m_strDatabasePath;
+	afx_msg void OnBnClickedButtonExplorerDatabase();
+	afx_msg void OnBnClickedButtonDatabaseImport();
 };
