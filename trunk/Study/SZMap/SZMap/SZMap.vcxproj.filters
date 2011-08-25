@@ -87,6 +87,12 @@
     <ClInclude Include="szmapconfig.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="chinamapdeviationfix.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="correctionpointdatabase.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="SZMap.cpp">
@@ -138,6 +144,9 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="szmapconfig.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="correctionpointdatabase.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

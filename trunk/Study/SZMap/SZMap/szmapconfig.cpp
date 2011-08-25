@@ -35,4 +35,15 @@ BOOL CSZMapConfig::SetMapSubDir( ctstring& subDir )
 	BOOL ret = s_iniConfigFile.Write( _T("szmapcfg"), _T( "subdir" ), subDir );
 	return ret;
 }
+
+tstring CSZMapConfig::GetDatabasePath()
+{
+	return s_iniConfigFile.ReadString( _T("szmapcfg"), _T("DatabasePath"),_T("") );
+}
+
+BOOL CSZMapConfig::SetDatabasePath( ctstring& databasePath )
+{
+	BOOL ret = s_iniConfigFile.Write( _T("szmapcfg"), _T("DatabasePath"), databasePath );
+	return ret;
+}
 //end of file

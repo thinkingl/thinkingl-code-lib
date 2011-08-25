@@ -15,6 +15,11 @@ public:
 
 	static tstring GetMapSubDir();
 	static BOOL SetMapSubDir( ctstring& subDir );
+
+	/** 数据库文件路径. */
+	static tstring GetDatabasePath();
+	static BOOL SetDatabasePath( ctstring& databasePath );
+
 private:
 	/** 配置文件. */
 	static 	CIniConfigFile s_iniConfigFile;
