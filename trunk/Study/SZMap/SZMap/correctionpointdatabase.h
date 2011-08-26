@@ -22,12 +22,24 @@ public:
 		double marsLongitude, double marsLatitude );
 
 	/** 查询. */
-
+	struct TRecord
+	{
+		double m_earthLongitude;
+		double m_earthLatitude;
+		double m_marsLongitude;
+		double m_marsLatitude;
+	};
+	typedef std::vector< TRecord > TRecordList;
+	TRecordList GetEarthPointsAround( double earthLongitude, double earthLatitude, double distance );
+	TRecordList GetMarsPointsAround( double marsLongitude, double marsLatitude, double distance );
 
 
 private:
 	/** sqlite databse object. */
 	sqlite3 *m_pSqlite3;
+
+	/** 优化性能, 用事务批量插入. */
+	int m_recordCountWaitCommit;
 };
 
 // end of the file

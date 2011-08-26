@@ -136,7 +136,14 @@ void CDialogConfig::OnBnClickedButtonDatabaseImport()
 		iFile >> longitudeEarth >> lantitudeEarth >> marsLongitudeOffset >> marsLantitudeOffset;
 
 		// 将这条记录导入数据库.
+		double longitudeMars = longitudeEarth + marsLongitudeOffset;
+		double latitudeMars = lantitudeEarth + marsLantitudeOffset;
+		cpdb.InsertCorrectionPoint( longitudeEarth, lantitudeEarth, longitudeMars, latitudeMars );
+
 
 	}
+
+	// 关闭数据库.
+	cpdb.Close();
 
 }
