@@ -7,6 +7,7 @@
 #include "szmapconfig.h"
 #include <math.h>
 
+#include "chinamapdeviationfix.h"
 // CMapCtrl
 
 IMPLEMENT_DYNAMIC(CMapCtrl, CWnd)
@@ -396,9 +397,17 @@ void CMapCtrl::OnRButtonUp(UINT nFlags, CPoint point)
 {
 	// TODO: 在此添加消息处理程序代码和/或调用默认值
 	CCoord coord = this->ClientArea2Coord( point );
+	
+	CChinaMapDeviationFix fixer;
+	double earthLongitude, earthLatitude;
+	fixer.MarsToEarth( coord.GetLongitude(), coord.GetLatitude(), earthLongitude, earthLatitude );
 
 	CString strMsg;
-	strMsg.Format( _T( "latitude : %lf longitude : %lf " ), coord.GetLatitude(), coord.GetLongitude() );
+	strMsg.Format( _T( "mars latitude : %lf mars longitude : %lf Earth : %lf, %lf" ), 
+		coord.GetLatitude(), coord.GetLongitude() ,
+		earthLatitude, earthLongitude
+		);
+
 	this->MessageBox( strMsg );
 
 	CWnd::OnRButtonUp(nFlags, point);
