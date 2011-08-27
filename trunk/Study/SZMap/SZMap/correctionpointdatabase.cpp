@@ -244,6 +244,7 @@ CCorrectionPointDatabase::TRecordList CCorrectionPointDatabase::GetMarsPointsAro
 		if ( SQLITE_OK != ret )
 		{
 			Log() << "sqlite3_step fail " << endl;
+			break;
 		}
 		// 读取.
 		// 地球经度 地球纬度 火星经度 火星纬度. 
