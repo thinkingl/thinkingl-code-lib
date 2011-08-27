@@ -70,13 +70,15 @@ void CChinaMapDeviationFix::MarsToEarth( double marsLongitude, double marsLatitu
 	ASSERT( righttopIndex != -1 );
 	ASSERT( rightbottomIndex != -1 );
 
-	// 双线性插值确定当前点的地球坐标.
+	// 增强的双线性插值确定当前点的地球坐标.
 	// 双线性插值是三次线性插值. 只适用于校正点为矩形的情况下.
+	// 而我们的校正点的地球坐标不是矩形的, 所以不适用普通的双线性插值算法, 这里扩展了一下.
+	// 第一次算出的临时线性插值点的纬度由一次线性插值算出.
 	ASSERT( pointsAround.size() == 4 );
-	ASSERT( pointsAround[ lefttopIndex ].m_marsLongitude == pointsAround[ leftbottomIndex ].m_marsLongitude );
-	ASSERT( pointsAround[ lefttopIndex ].m_marsLatitude == pointsAround[ righttopIndex ].m_marsLatitude );
-	ASSERT( pointsAround[ rightbottomIndex].m_marsLongitude == pointsAround[ righttopIndex ].m_marsLongitude );
-	ASSERT( pointsAround[ rightbottomIndex].m_marsLatitude == pointsAround[ leftbottomIndex ].m_marsLatitude );
+//	ASSERT( pointsAround[ lefttopIndex ].m_marsLongitude == pointsAround[ leftbottomIndex ].m_marsLongitude );
+//	ASSERT( pointsAround[ lefttopIndex ].m_marsLatitude == pointsAround[ righttopIndex ].m_marsLatitude );
+//	ASSERT( pointsAround[ rightbottomIndex].m_marsLongitude == pointsAround[ righttopIndex ].m_marsLongitude );
+//	ASSERT( pointsAround[ rightbottomIndex].m_marsLatitude == pointsAround[ leftbottomIndex ].m_marsLatitude );
 	
 	//////////////////////////////////////////////////////////////////////////
 	// 用双线性插值求地球坐标经度.
@@ -85,13 +87,19 @@ void CChinaMapDeviationFix::MarsToEarth( double marsLongitude, double marsLatitu
 		pointsAround[lefttopIndex].m_marsLongitude, pointsAround[lefttopIndex].m_earthLongitude,
 		pointsAround[righttopIndex].m_marsLongitude, pointsAround[righttopIndex].m_earthLongitude,
 		marsLongitude );
-	double topMarsLatitude = pointsAround[ lefttopIndex ].m_marsLatitude;
+	double topMarsLatitude = this->LinearInterpolate(
+		pointsAround[lefttopIndex].m_marsLongitude, pointsAround[lefttopIndex].m_marsLatitude,
+		pointsAround[righttopIndex].m_marsLongitude, pointsAround[righttopIndex].m_marsLatitude,
+		marsLongitude );
 
 	double bottomEarthLongitude = this->LinearInterpolate( 
 		pointsAround[leftbottomIndex].m_marsLongitude, pointsAround[leftbottomIndex].m_earthLongitude,
 		pointsAround[rightbottomIndex].m_marsLongitude, pointsAround[rightbottomIndex].m_earthLongitude,
 		marsLongitude );
-	double bottomMarsLatitude = pointsAround[ leftbottomIndex ].m_marsLatitude;
+	double bottomMarsLatitude = this->LinearInterpolate(
+		pointsAround[leftbottomIndex].m_marsLongitude, pointsAround[leftbottomIndex].m_marsLatitude,
+		pointsAround[rightbottomIndex].m_marsLongitude, pointsAround[rightbottomIndex].m_marsLatitude,
+		marsLongitude );
 	
 	// 在纬度上对刚刚得出的两个插值点进行插值.
 	earthLongitude = this->LinearInterpolate( 
