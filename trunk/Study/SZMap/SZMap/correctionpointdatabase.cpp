@@ -241,9 +241,9 @@ CCorrectionPointDatabase::TRecordList CCorrectionPointDatabase::GetMarsPointsAro
 	while( 1 )
 	{
 		ret = sqlite3_step( stmt );
-		if ( SQLITE_OK != ret )
+		if ( SQLITE_ROW != ret )
 		{
-			Log() << "sqlite3_step fail " << endl;
+			Log() << "sqlite3_step fail or end ret: " << ret << endl;
 			break;
 		}
 		// 读取.
@@ -264,22 +264,77 @@ CCorrectionPointDatabase::TRecordList CCorrectionPointDatabase::GetMarsPointsAro
 	}
 
 	// 测试插值算法是否正确.
-	TRecord lt, lb, rt, rb;
-	lt.m_marsLatitude = rt.m_marsLatitude = marsLatitude + 1;
-	rt.m_marsLongitude = rb.m_marsLongitude = marsLongitude + 1;
-	rb.m_marsLatitude = lb.m_marsLatitude = marsLatitude - 1;
-	lb.m_marsLongitude = lt.m_marsLongitude = marsLongitude - 1;
-
-	// 左下0,0 -> 右上10,10
-	lt.m_earthLatitude = rt.m_earthLatitude = 10;
-	rt.m_earthLongitude = rb.m_earthLongitude = 10;
-	rb.m_earthLatitude = lb.m_earthLatitude = 0;
-	lb.m_earthLongitude = lt.m_earthLongitude = 0;
-
-	recordList.push_back( rb );
-	recordList.push_back( rt );
-	recordList.push_back( lb );
-	recordList.push_back( lt );
+// 	TRecord lt, lb, rt, rb;
+// 	lt.m_marsLatitude = rt.m_marsLatitude = marsLatitude + 1;
+// 	rt.m_marsLongitude = rb.m_marsLongitude = marsLongitude + 1;
+// 	rb.m_marsLatitude = lb.m_marsLatitude = marsLatitude - 1;
+// 	lb.m_marsLongitude = lt.m_marsLongitude = marsLongitude - 1;
+// 
+// 	// 左下0,0 -> 右上10,10
+// 	lt.m_earthLatitude = rt.m_earthLatitude = 10;
+// 	rt.m_earthLongitude = rb.m_earthLongitude = 10;
+// 	rb.m_earthLatitude = lb.m_earthLatitude = 0;
+// 	lb.m_earthLongitude = lt.m_earthLongitude = 0;
+// 
+// 	recordList.push_back( rb );
+// 	recordList.push_back( rt );
+// 	recordList.push_back( lb );
+// 	recordList.push_back( lt );
 
 	return recordList;
+}
+
+CCorrectionPointDatabase::TRecordList CCorrectionPointDatabase::GetEarthPointsAround( double earthLongitude, double earthLatitude, double distance )
+{
+	TRecordList pointsAround;
+
+	tstringstream ssSql;
+	ssSql.precision( 16 );
+	ssSql << _T( "SELECT * FROM " ) << DB_TABLE_NAME 
+		<< _T( " WHERE  " ) << DB_COL_EARTH_LONGITUDE << _T( ">= " ) << earthLongitude - distance
+		<< _T( " AND " ) << DB_COL_EARTH_LONGITUDE << _T( "<= " ) << earthLongitude + distance
+		<< _T( " AND " ) << DB_COL_EARTH_LATITUDE << _T( ">= " ) << earthLatitude - distance
+		<< _T( " AND " ) << DB_COL_EARTH_LATITUDE << _T( "<= " ) << earthLatitude + distance
+		//	<< _T( "LIMIT " ) << nCount 
+		<< _T( ";" );
+
+	sqlite3_stmt *stmt = 0;
+	const void *pzTail = 0;
+	tstring sqlCmd = ssSql.str();
+	int ret = sqlite3_prepare16_v2( m_pSqlite3,
+		sqlCmd.c_str(),
+		-1,
+		&stmt,
+		&pzTail );
+	Log() << "sql: " << endl << sqlCmd << endl;
+	if ( SQLITE_OK != ret )
+	{
+		Log() << "sqlite3_prepare16_v2 fail" << endl;
+	}
+	while( 1 )
+	{
+		ret = sqlite3_step( stmt );
+		if ( SQLITE_ROW != ret )
+		{
+			Log() << "sqlite3_step fail or end ret: " << ret << endl;
+			break;
+		}
+		// 读取.
+		// 地球经度 地球纬度 火星经度 火星纬度. 
+		TRecord tmp;
+		tmp.m_marsLongitude = sqlite3_column_double( stmt, 2 );
+		tmp.m_marsLatitude = sqlite3_column_double( stmt, 3 );
+		tmp.m_earthLongitude = sqlite3_column_double( stmt, 0 );
+		tmp.m_earthLatitude = sqlite3_column_double( stmt, 1 );
+		pointsAround.push_back( tmp );
+
+	}
+
+	ret = sqlite3_finalize( stmt );
+	if ( SQLITE_OK != ret )
+	{
+		Log() << "sqlite3_finalize fail!" << endl;
+	}
+
+	return pointsAround;
 }

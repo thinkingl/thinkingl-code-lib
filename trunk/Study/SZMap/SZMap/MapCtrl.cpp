@@ -402,10 +402,21 @@ void CMapCtrl::OnRButtonUp(UINT nFlags, CPoint point)
 	double earthLongitude, earthLatitude;
 	fixer.MarsToEarth( coord.GetLongitude(), coord.GetLatitude(), earthLongitude, earthLatitude );
 
+	// 校验.
+	double marsLongitudeTest, marsLatitudeTest;
+	fixer.EarthToMars( earthLongitude, earthLatitude, marsLongitudeTest, marsLatitudeTest );
+	double longitudeOffset = abs( marsLongitudeTest - coord.GetLongitude() );
+	double latitudeOffset = abs( marsLatitudeTest - coord.GetLatitude() );
+
+
+
 	CString strMsg;
-	strMsg.Format( _T( "mars latitude : %lf mars longitude : %lf Earth : %lf, %lf" ), 
+	strMsg.Format( _T( "mars latitude : %lf mars longitude : %lf Earth : %lf, %lf \n\
+			反向运算误差 : 经: %lf %d米 纬: %lf %d米" ), 
 		coord.GetLatitude(), coord.GetLongitude() ,
-		earthLatitude, earthLongitude
+		earthLatitude, earthLongitude,
+		longitudeOffset, (int)longitudeOffset * 40000*1000 / 360,
+		latitudeOffset, (int)latitudeOffset * 40000*1000 / 360
 		);
 
 	this->MessageBox( strMsg );
