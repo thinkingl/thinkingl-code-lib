@@ -144,6 +144,9 @@
     <ClInclude Include="FunctionView.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="GrayscaleDialog.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DigitalImageProcessing.cpp">
@@ -183,6 +186,9 @@
       <Filter>DIP</Filter>
     </ClCompile>
     <ClCompile Include="FunctionView.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="GrayscaleDialog.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
