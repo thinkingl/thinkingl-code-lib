@@ -134,6 +134,7 @@
     <ClInclude Include="DigitalImageProcessingDoc.h" />
     <ClInclude Include="DigitalImageProcessingView.h" />
     <ClInclude Include="FileView.h" />
+    <ClInclude Include="GrayscaleDialog.h" />
     <ClInclude Include="MainFrm.h" />
     <ClInclude Include="OutputWnd.h" />
     <ClInclude Include="PropertiesWnd.h" />
@@ -151,6 +152,7 @@
     <ClCompile Include="DigitalImageProcessingDoc.cpp" />
     <ClCompile Include="DigitalImageProcessingView.cpp" />
     <ClCompile Include="FileView.cpp" />
+    <ClCompile Include="GrayscaleDialog.cpp" />
     <ClCompile Include="MainFrm.cpp" />
     <ClCompile Include="OutputWnd.cpp" />
     <ClCompile Include="PropertiesWnd.cpp" />

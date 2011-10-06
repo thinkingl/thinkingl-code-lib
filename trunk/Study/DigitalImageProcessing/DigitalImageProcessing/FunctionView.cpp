@@ -1,9 +1,9 @@
 
 #include "stdafx.h"
 #include "MainFrm.h"
-#include "FunctionView.h"
 #include "Resource.h"
 #include "DigitalImageProcessing.h"
+#include "FunctionView.h"
 
 #include "portabledefine.h"
 
@@ -75,13 +75,6 @@ int CFunctionView::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	CRect rectDummy;
 	rectDummy.SetRectEmpty();
 
-// 	this->m_wndSplitter.Create( this, 2, 1, CSize(100,100), 0 );
-// 
-// 	m_wndSplitter.CreateView( 0, 0, m_wndFunctionView.GetRuntimeClass(), CSize( 300, 600 ), 0 );
-// 	m_wndSplitter.CreateView( 1, 0, m_wndFunctionView.GetRuntimeClass(), CSize( 0, 0 ), 0 );
-
-	return 0;
-
 	// 创建视图:
 	const DWORD dwViewStyle = WS_CHILD | WS_VISIBLE | TVS_HASLINES | TVS_LINESATROOT | TVS_HASBUTTONS | WS_CLIPSIBLINGS | WS_CLIPCHILDREN;
 
@@ -94,6 +87,9 @@ int CFunctionView::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	// 加载图像:
 	m_wndToolBar.Create(this, AFX_DEFAULT_TOOLBAR_STYLE, IDR_SORT);
 	m_wndToolBar.LoadToolBar(IDR_SORT, 0, 0, TRUE /* 已锁定*/);
+
+	m_dlgGrayscale.Create( CGrayscaleDialog::IDD, this );
+	m_dlgGrayscale.ShowWindow( SW_SHOW );
 
 	OnChangeVisualStyle();
 
@@ -226,8 +222,14 @@ void CFunctionView::AdjustLayout()
 
 	int cyTlb = m_wndToolBar.CalcFixedLayout(FALSE, TRUE).cy;
 
+	CRect rcFunDlg;
+	this->m_dlgGrayscale.GetWindowRect( rcFunDlg );
+	int cyFunDlg = rcFunDlg.Height();
+
 	m_wndToolBar.SetWindowPos(NULL, rectClient.left, rectClient.top, rectClient.Width(), cyTlb, SWP_NOACTIVATE | SWP_NOZORDER);
-	m_wndFunctionView.SetWindowPos(NULL, rectClient.left + 1, rectClient.top + cyTlb + 1, rectClient.Width() - 2, rectClient.Height() - cyTlb - 2, SWP_NOACTIVATE | SWP_NOZORDER);
+	m_dlgGrayscale.SetWindowPos( NULL, rectClient.left, rectClient.bottom - cyFunDlg, rectClient.Width(), cyFunDlg, SWP_NOACTIVATE | SWP_NOZORDER );
+
+	m_wndFunctionView.SetWindowPos(NULL, rectClient.left + 1, rectClient.top + cyTlb + 1, rectClient.Width() - 2, rectClient.Height() - cyTlb - cyFunDlg - 2, SWP_NOACTIVATE | SWP_NOZORDER);
 }
 
 BOOL CFunctionView::PreTranslateMessage(MSG* pMsg)

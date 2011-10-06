@@ -3,6 +3,8 @@
 
 #include "ViewTree.h"
 
+#include "GrayscaleDialog.h"
+
 class CClassToolBar : public CMFCToolBar
 {
 	virtual void OnUpdateCmdUI(CFrameWnd* /*pTarget*/, BOOL bDisableIfNoHndler)
@@ -30,7 +32,8 @@ protected:
 	UINT m_nCurrSort;
 
 	void FillClassView();
-	CSplitterWndEx m_wndSplitter;
+
+	CGrayscaleDialog m_dlgGrayscale;
 
 // ÖØÐ´
 public:
