@@ -34,6 +34,7 @@ protected:
 	CPropertiesToolBar m_wndToolBar;
 	CMFCPropertyGridCtrl m_wndPropList;
 
+	CMFCPropertyGridProperty *m_pPropFilePath;
 // й╣ож
 public:
 	virtual ~CPropertiesWnd();
