@@ -7,6 +7,9 @@
 #include "afxdialogex.h"
 
 #include "MainFrm.h"
+#include "dipcommon.h"
+#include "DigitalImageProcessingView.h"
+#include "DigitalImage.h"
 
 // CGrayscaleDialog 对话框
 
@@ -14,6 +17,7 @@ IMPLEMENT_DYNAMIC(CGrayscaleDialog, CDialogEx)
 
 CGrayscaleDialog::CGrayscaleDialog(CWnd* pParent /*=NULL*/)
 	: CDialogEx(CGrayscaleDialog::IDD, pParent)
+	, m_intensityLevel(8)
 {
 
 }
@@ -25,6 +29,8 @@ CGrayscaleDialog::~CGrayscaleDialog()
 void CGrayscaleDialog::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogEx::DoDataExchange(pDX);
+	DDX_Text(pDX, IDC_EDIT_INTENSITY_LEVEL, m_intensityLevel);
+	DDV_MinMaxInt(pDX, m_intensityLevel, 1, 8);
 }
 
 
@@ -41,12 +47,12 @@ END_MESSAGE_MAP()
 void CGrayscaleDialog::OnBnClickedApply()
 {
 	// TODO: 在此添加控件通知处理程序代码
-	CMainFrame *pMain = (CMainFrame*) AfxGetMainWnd();
-	CView* pAcView = pMain->GetActiveView();
-	CDocument *pDoc = pMain->GetActiveDocument();
-	CWnd *pWnd = pMain->GetActiveWindow();
-	CFrameWnd *pFrame = pMain->GetActiveFrame();
-	CView* pAcView2 = pFrame->GetActiveView();
-	CDocument *pDoc2 = pFrame->GetActiveDocument();
-	int sdfs = 3;
+	this->UpdateData( TRUE );
+	CDigitalImageProcessingView *pCurView = GetActiveDIPView();
+	if ( pCurView )
+	{
+		CDigitalImage *pDI = pCurView->StartDIP();
+		pDI->ToGrayscaleImage( this->m_intensityLevel );
+		pCurView->EndDIP();
+	}	
 }

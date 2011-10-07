@@ -21,4 +21,5 @@ protected:
 	DECLARE_MESSAGE_MAP()
 public:
 	afx_msg void OnBnClickedApply();
+	int m_intensityLevel;
 };

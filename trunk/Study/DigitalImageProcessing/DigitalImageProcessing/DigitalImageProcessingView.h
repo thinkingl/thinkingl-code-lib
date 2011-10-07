@@ -5,6 +5,7 @@
 #pragma once
 
 class CDigitalImage;
+class CDigitalImageProcessingDoc;
 
 class CDigitalImageProcessingView : public CScrollView 
 {
@@ -15,6 +16,12 @@ protected: // 仅从序列化创建
 // 特性
 public:
 	CDigitalImageProcessingDoc* GetDocument() const;
+
+	/** 开始图像处理. */
+	CDigitalImage *StartDIP();
+	/** 结束图像处理. */
+	void EndDIP();
+
 
 // 操作
 public:
@@ -39,6 +46,8 @@ public:
 protected:
 	/** 销毁图片绘制对象. */
 	void ReleaseImageDrawer();
+	/** 销毁图片处理对象. */
+	void ReleaseImage();
 private:
 	CDigitalImage *m_pImage;
 	CImage *m_pImageDrawer;

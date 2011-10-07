@@ -147,6 +147,9 @@
     <ClInclude Include="GrayscaleDialog.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="dipcommon.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DigitalImageProcessing.cpp">
@@ -189,6 +192,9 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="GrayscaleDialog.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="dipcommon.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
