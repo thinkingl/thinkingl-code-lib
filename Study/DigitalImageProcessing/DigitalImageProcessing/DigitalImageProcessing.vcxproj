@@ -127,6 +127,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ChildFrm.h" />
+    <ClInclude Include="dipcommon.h" />
     <ClInclude Include="FunctionView.h" />
     <ClInclude Include="DigitalImage.h" />
     <ClInclude Include="DigitalImageLoader.h" />
@@ -145,6 +146,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ChildFrm.cpp" />
+    <ClCompile Include="dipcommon.cpp" />
     <ClCompile Include="FunctionView.cpp" />
     <ClCompile Include="DigitalImage.cpp" />
     <ClCompile Include="DigitalImageLoader.cpp" />

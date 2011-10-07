@@ -43,6 +43,7 @@ CDigitalImageProcessingView::CDigitalImageProcessingView()
 CDigitalImageProcessingView::~CDigitalImageProcessingView()
 {
 	ReleaseImageDrawer();
+	ReleaseImage();
 }
 
 BOOL CDigitalImageProcessingView::PreCreateWindow(CREATESTRUCT& cs)
@@ -146,25 +147,7 @@ void CDigitalImageProcessingView::OnUpdate(CView* pSender, LPARAM /*lHint*/, COb
 	if (!pDoc)
 		return;
 
-	CDigitalImage *pImg = pDoc->CloneImage();
-	if ( pImg )
-	{
-		this->ReleaseImageDrawer();
 
-		this->m_pImage = pImg;
-		m_pImageDrawer = pImg->GetImageDrawer();
-
-		int width = m_pImageDrawer->GetWidth();
-		int height = m_pImageDrawer->GetHeight();
-
-		this->SetScrollSizes( MM_TEXT, CSize(width, height ) );
-	}	
-	else
-	{
-		CRect rcWnd;
-		this->GetWindowRect( rcWnd );
-		this->SetScaleToFitSize( rcWnd.Size() );
-	}
 	
 }
 
@@ -175,10 +158,14 @@ void CDigitalImageProcessingView::ReleaseImageDrawer()
 		delete m_pImageDrawer;
 		m_pImageDrawer = NULL;
 	}
+}
+
+void CDigitalImageProcessingView::ReleaseImage()
+{
 	if ( m_pImage )
 	{
 		delete m_pImage;
-		m_pImage = NULL;
+		m_pImage = 0;
 	}
 }
 
@@ -197,4 +184,54 @@ void CDigitalImageProcessingView::OnInitialUpdate()
 
 	
 	// TODO: 在此添加专用代码和/或调用基类
+	CDigitalImageProcessingDoc* pDoc = GetDocument();
+	ASSERT_VALID(pDoc);
+	if (!pDoc)
+		return;
+
+	CDigitalImage *pImg = pDoc->CloneImage();
+	if ( pImg )
+	{
+		this->ReleaseImageDrawer();
+		this->ReleaseImage();
+
+		this->m_pImage = pImg;
+		m_pImageDrawer = pImg->GetImageDrawer();
+
+		int width = m_pImage->GetWidth();
+		int height = m_pImage->GetHeight();
+
+		this->SetScrollSizes( MM_TEXT, CSize(width, height ) );
+	}	
+	else
+	{
+		CRect rcWnd;
+		this->GetWindowRect( rcWnd );
+		this->SetScaleToFitSize( rcWnd.Size() );
+	}
+}
+
+CDigitalImage *CDigitalImageProcessingView::StartDIP()
+{
+	return m_pImage;
+}
+
+void CDigitalImageProcessingView::EndDIP()
+{
+	ASSERT( m_pImage );
+	if ( this->m_pImage )
+	{
+		this->ReleaseImageDrawer();
+
+		m_pImageDrawer = m_pImage->GetImageDrawer();
+
+		int width = m_pImage->GetWidth();
+		int height = m_pImage->GetHeight();
+
+		this->SetScrollSizes( MM_TEXT, CSize(width, height ) );
+
+		// 重绘.
+		this->Invalidate();
+	}
+
 }

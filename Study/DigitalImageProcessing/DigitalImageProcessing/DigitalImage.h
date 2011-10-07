@@ -6,6 +6,13 @@
 class CDigitalImage
 {
 public:
+	/** 图片类型. */
+	enum EImageType
+	{
+		DIT_Grayscale,	// 灰度图.
+		DIT_RGB,		// RGB图.
+	};
+public:
 	CDigitalImage(void);
 	virtual ~CDigitalImage(void);
 
@@ -50,7 +57,7 @@ private:
 	
 
 private:
-	CImage m_image;
+//	CImage m_image;
 	tstring m_imagePath;
 
 	/** 数据. 
@@ -59,8 +66,17 @@ private:
 	typedef std::vector< uint32 > TImageDataBuf;
 	TImageDataBuf m_imageDataBuf; 
 
-	/** 图片数据的模式. */
+	/** 图片每像素的位数.
+	*	虽然存储固定为32位, 但其中的有效位数是这个值.
+	*/
 	int m_bitsPerPixel;
+
+	/** m_imageDataBuf中存放的图片类型. */
+	EImageType m_imageType;
+
+	/** 图片宽度高度. */
+	int m_width;
+	int m_height;
 };
 
 // end of the file
