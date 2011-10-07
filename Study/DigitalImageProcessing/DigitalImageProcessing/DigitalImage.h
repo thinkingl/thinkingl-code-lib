@@ -55,6 +55,13 @@ public:
 	void Release();
 private:
 	
+	/** 灰度换算. 
+	*	oldIntensity : 之前的灰度值.
+	*	oldGrayscaleLev :之前的灰度级数 1-8
+	*	newGrayscaleLev :新的灰度级数．
+	*	return : 新的灰度值.
+	*/
+	int IntensityTrans( int oldIntensity, int oldGrayscaleLev, int newGrayscaleLev )const;
 
 private:
 //	CImage m_image;
