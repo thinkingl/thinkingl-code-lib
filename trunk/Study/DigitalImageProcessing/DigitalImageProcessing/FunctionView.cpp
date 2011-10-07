@@ -134,10 +134,17 @@ void CFunctionView::FillClassView()
 	m_wndFunctionView.SetItemState(hRoot, TVIS_BOLD, TVIS_BOLD);
 
 	HTREEITEM hClass = m_wndFunctionView.InsertItem(_T("灰度图"), 1, 1, hRoot);
-	HTREEITEM hAvrRGB = m_wndFunctionView.InsertItem(_T("RGB平均"), 3, 3, hClass);
+
+	HTREEITEM hColorToGray = m_wndFunctionView.InsertItem( _T("彩色转黑白"), 1, 1, hClass );
+
+	HTREEITEM hAvrRGB = m_wndFunctionView.InsertItem(_T("RGB平均(HSI)"), 3, 3, hColorToGray);
+	m_wndFunctionView.SetItemData( hAvrRGB, DIP_Grayscale_AvrRGB );
+
+	HTREEITEM hGrayscaleLevel = m_wndFunctionView.InsertItem(_T("灰度调节"), 3, 3, hClass);
 	m_wndFunctionView.SetItemData( hAvrRGB, DIP_Grayscale_AvrRGB );
 
 	m_wndFunctionView.Expand(hRoot, TVE_EXPAND);
+
 
 // 	hClass = m_wndFunctionView.InsertItem(_T("CFakeApp"), 1, 1, hRoot);
 // 	m_wndFunctionView.InsertItem(_T("CFakeApp()"), 3, 3, hClass);

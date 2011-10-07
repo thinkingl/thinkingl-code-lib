@@ -92,7 +92,9 @@ CImage *CDigitalImage::GetImageDrawer() const
 			{
 				// int pixelIntensive = ( value << ( DrawerIntensiveLevel - m_bitsPerPixel ) );
 				// 当前的灰度分辨率肯定小于等于8.
-				int pixelIntensive = ( value * ((1<<DrawerIntensiveLevel)-1) / ((1<<m_bitsPerPixel)-1) );
+				int pixelIntensive = this->IntensityTrans( value, m_bitsPerPixel, DrawerIntensiveLevel );
+				
+
 				pixel = RGB( pixelIntensive, pixelIntensive, pixelIntensive );
 			}
 			pImg->SetPixel( w, h, pixel );
@@ -180,22 +182,25 @@ bool CDigitalImage::ToGrayscaleImage( int intensityLevels )
 
 			ASSERT( grayLevel <= 8 && grayLevel >= 1 );
 			// 当前灰度转换为目标灰度分辨率.
-
-			if ( intensityLevels > grayLevel )
-			{
-				// 目标分辨率大于当前分辨率.
-				grayValue = ( grayValue * ((1<<intensityLevels)-1) / ((1<<grayLevel)-1) );
-			}
-			else
-			{
-				// 目标分辨率小于或等于当前的分辨率.
-				grayValue >>= ( grayLevel - intensityLevels );
-			}			
-
+			grayValue = this->IntensityTrans( grayValue, grayLevel, intensityLevels );			
 			m_imageDataBuf[ h*this->GetWidth() + w ] = grayValue;
 		}
 	}
 	this->m_imageType = DIT_Grayscale;
 	this->m_bitsPerPixel = intensityLevels;
 	return true;
+}
+
+int CDigitalImage::IntensityTrans( int oldIntensity, int oldGrayscaleLev, int newGrayscaleLev ) const
+{
+	if ( newGrayscaleLev > oldGrayscaleLev )
+	{
+		int newIntensity = ( oldIntensity * ((1<<newGrayscaleLev)-1) / ((1<<oldGrayscaleLev)-1) );
+		return newIntensity;
+	}
+	else
+	{
+		return ( oldIntensity >> ( oldGrayscaleLev - newGrayscaleLev ) );
+	}
+	
 }
