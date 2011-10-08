@@ -5,6 +5,7 @@
 #include "Resource.h"
 #include "MainFrm.h"
 #include "DigitalImageProcessing.h"
+#include "DigitalImage.h"
 
 #ifdef _DEBUG
 #undef THIS_FILE
@@ -17,6 +18,11 @@ static char THIS_FILE[]=__FILE__;
 
 CPropertiesWnd::CPropertiesWnd()
 {
+	m_pPropFilePath = 0;
+	m_pPropFileLength = 0;
+	m_pPropImageType = 0;
+	m_pPropImageIntensiveLevel = 0;
+	m_pPropImageBPP = 0;
 }
 
 CPropertiesWnd::~CPropertiesWnd()
@@ -168,15 +174,32 @@ void CPropertiesWnd::InitPropList()
 
 	CMFCPropertyGridProperty* pGroupFile = new CMFCPropertyGridProperty(_T("文件"));
 
-	m_pPropFilePath = new CMFCPropertyGridProperty( _T( "文件路径" ), _T( "..." ), _T( "原始图片文件的完整路径" ) );
+	m_pPropFilePath = new CMFCPropertyGridProperty( _T( "路径" ), _T( "" ), _T( "原始图片文件的完整路径" ) );
 	m_pPropFilePath->AllowEdit( FALSE );
 	pGroupFile->AddSubItem( m_pPropFilePath );
-	
-	CMFCPropertyGridProperty* pGroup1 = new CMFCPropertyGridProperty(_T("外观"));
-	pGroup1->AddSubItem(new CMFCPropertyGridProperty(_T("三维外观"), (_variant_t) false, _T("指定窗口的字体不使用粗体，并且控件将使用三维边框")));
 
+	m_pPropFileLength = new CMFCPropertyGridProperty( _T( "长度" ), _T( "" ), _T( "原始图片文件的长度" ) );
+	m_pPropFileLength->AllowEdit( FALSE );
+	pGroupFile->AddSubItem( m_pPropFileLength );
+	
 	m_wndPropList.AddProperty( pGroupFile );
-	m_wndPropList.AddProperty( pGroup1 );
+
+
+	CMFCPropertyGridProperty* pGroupImage = new CMFCPropertyGridProperty(_T("图片"));
+
+	this->m_pPropImageType = new CMFCPropertyGridProperty( _T( "类型" ), _T( "" ), _T( "图片的类型 RGB 或 Gray " ) );
+	this->m_pPropImageType->AllowEdit( FALSE );
+	pGroupImage->AddSubItem( m_pPropImageType );
+
+	this->m_pPropImageIntensiveLevel = new CMFCPropertyGridProperty( _T( "灰度阶数" ), _T( "" ), _T( "图片灰度的阶数(1-8) RGB彩色图片指每个原色的灰度阶数." ) );
+	m_pPropImageIntensiveLevel->AllowEdit( FALSE );
+	pGroupImage->AddSubItem( m_pPropImageIntensiveLevel );
+
+	this->m_pPropImageBPP = new CMFCPropertyGridProperty( _T( "BPP" ), _T( "" ), _T( "Bits Per Pixel. 每像素占用字节数." ) );
+	m_pPropImageBPP->AllowEdit( FALSE );
+	pGroupImage->AddSubItem( m_pPropImageBPP );
+
+	m_wndPropList.AddProperty( pGroupImage );
 // 
 // 		CMFC
 // 	
@@ -348,4 +371,63 @@ void CPropertiesWnd::SetPropListFont()
 
 	m_wndPropList.SetFont(&m_fntPropList);
 	m_wndObjectCombo.SetFont(&m_fntPropList);
+}
+
+void CPropertiesWnd::UpdateProperties( CDigitalImage * pImg )
+{
+	ASSERT( pImg );
+
+	ASSERT( m_pPropFilePath );
+	if ( m_pPropFilePath )
+	{
+		tstring strPath = pImg->GetFilePath();
+		this->m_pPropFilePath->SetValue( strPath.c_str() );
+	}
+	
+	ASSERT( m_pPropFileLength );
+	if ( m_pPropFileLength )
+	{
+		int fileLength = pImg->GetFileLength();
+		tstringstream fl;
+		fl << fileLength;
+		this->m_pPropFileLength->SetValue( fl.str().c_str() );
+	}
+
+	ASSERT( m_pPropImageType );
+	if ( m_pPropImageType )
+	{
+		tstring imgTypeStr;
+		CDigitalImage::EImageType imgType = pImg->GetImageType();
+		switch( imgType )
+		{
+		case CDigitalImage::DIT_Gray:
+			imgTypeStr = _T( "Gray" );
+			break;
+		case CDigitalImage::DIT_RGB:
+			imgTypeStr = _T( "RGB" );
+		    break;
+		default:
+			imgTypeStr = _T( "Unknown" );
+		    break;
+		}
+		m_pPropImageType->SetValue( imgTypeStr.c_str() );
+	}
+
+	ASSERT( m_pPropImageIntensiveLevel );
+	if ( m_pPropImageIntensiveLevel )
+	{
+		int il = pImg->GetIntensityLevel();
+		tstringstream ssIl;
+		ssIl << il;
+		m_pPropImageIntensiveLevel->SetValue( ssIl.str().c_str() );
+	}
+
+	ASSERT( m_pPropImageBPP );
+	if ( m_pPropImageBPP )
+	{
+		int bpp = pImg->GetBitsPerPixel();
+		tstringstream ssBpp;
+		ssBpp << bpp;
+		m_pPropImageBPP->SetValue( ssBpp.str().c_str() );
+	}
 }

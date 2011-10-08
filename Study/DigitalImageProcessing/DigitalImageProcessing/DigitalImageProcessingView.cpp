@@ -11,6 +11,9 @@
 
 #include "DigitalImageProcessingDoc.h"
 #include "DigitalImageProcessingView.h"
+#include "PropertiesWnd.h"
+
+#include "dipcommon.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -234,4 +237,17 @@ void CDigitalImageProcessingView::EndDIP()
 		this->Invalidate();
 	}
 
+}
+
+void CDigitalImageProcessingView::OnActivateView(BOOL bActivate, CView* pActivateView, CView* pDeactiveView)
+{
+	// TODO: 在此添加专用代码和/或调用基类
+	CPropertiesWnd *propWnd = GetPropertyWnd();
+	ASSERT( propWnd );
+	if ( propWnd )
+	{
+		propWnd->UpdateProperties( this->m_pImage );
+	}
+
+	CScrollView::OnActivateView(bActivate, pActivateView, pDeactiveView);
 }

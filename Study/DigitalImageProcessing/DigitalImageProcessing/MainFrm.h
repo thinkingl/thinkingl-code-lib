@@ -19,7 +19,7 @@ public:
 
 // ²Ù×÷
 public:
-
+	CPropertiesWnd *GetPropertyWnd();
 // ÖØÐ´
 public:
 	virtual BOOL PreCreateWindow(CREATESTRUCT& cs);
@@ -56,6 +56,8 @@ protected:
 
 	BOOL CreateDockingWindows();
 	void SetDockingWindowIcons(BOOL bHiColorIcons);
+public:
+	afx_msg void OnActivate(UINT nState, CWnd* pWndOther, BOOL bMinimized);
 };
 
 

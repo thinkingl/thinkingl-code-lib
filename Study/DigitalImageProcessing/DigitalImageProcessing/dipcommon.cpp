@@ -25,4 +25,19 @@ CDigitalImageProcessingView *GetActiveDIPView()
 		
 	return pActiveView;
 }
+CPropertiesWnd *GetPropertyWnd()
+{
+	CMainFrame *pMain = dynamic_cast<CMainFrame*>( AfxGetMainWnd() );
+	ASSERT( pMain );
+	if ( pMain )
+	{
+		return pMain->GetPropertyWnd();
+	}
+	else
+	{
+		return 0;
+	}
+}
 #endif
+
+

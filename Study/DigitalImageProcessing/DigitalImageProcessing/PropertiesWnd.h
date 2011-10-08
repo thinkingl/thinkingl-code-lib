@@ -12,6 +12,8 @@ public:
 	virtual BOOL AllowShowOnList() const { return FALSE; }
 };
 
+class CDigitalImage;
+
 class CPropertiesWnd : public CDockablePane
 {
 // 构造
@@ -28,6 +30,10 @@ public:
 		m_wndPropList.SetGroupNameFullWidth(bSet);
 	}
 
+	/** 更新当前显示的属性. */
+	void UpdateProperties( CDigitalImage * pImg );
+
+
 protected:
 	CFont m_fntPropList;
 	CComboBox m_wndObjectCombo;
@@ -35,6 +41,13 @@ protected:
 	CMFCPropertyGridCtrl m_wndPropList;
 
 	CMFCPropertyGridProperty *m_pPropFilePath;
+	CMFCPropertyGridProperty *m_pPropFileLength;
+	/** 类型. rgb还是灰度 */
+	CMFCPropertyGridProperty *m_pPropImageType;
+	/** 灰度等级 1-8 */
+	CMFCPropertyGridProperty *m_pPropImageIntensiveLevel;
+	/** 每像素占用字节数. */
+	CMFCPropertyGridProperty *m_pPropImageBPP;
 // 实现
 public:
 	virtual ~CPropertiesWnd();
