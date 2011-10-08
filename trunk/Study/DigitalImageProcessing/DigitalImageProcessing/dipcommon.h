@@ -1,11 +1,15 @@
 #pragma once
 
+#include "portabledefine.h"
+
 #ifdef  WIN32
 
 class CDigitalImageProcessingView;
+class CPropertiesWnd;
 /** 获取当前的活动的图像视图. */
 CDigitalImageProcessingView *GetActiveDIPView();
-
+/** 获取属性窗口. */
+CPropertiesWnd *GetPropertyWnd();
 #endif
 
 #ifndef RGB

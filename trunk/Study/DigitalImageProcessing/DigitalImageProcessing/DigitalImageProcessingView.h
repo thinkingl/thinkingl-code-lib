@@ -62,6 +62,7 @@ protected:
 public:
 //	afx_msg void OnHScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar);
 	virtual void OnInitialUpdate();
+	virtual void OnActivateView(BOOL bActivate, CView* pActivateView, CView* pDeactiveView);
 };
 
 #ifndef _DEBUG  // DigitalImageProcessingView.cpp 中的调试版本

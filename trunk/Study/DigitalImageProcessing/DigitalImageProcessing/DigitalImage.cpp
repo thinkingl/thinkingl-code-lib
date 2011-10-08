@@ -1,5 +1,6 @@
 #include "DigitalImage.h"
 
+#include "common.h"
 
 CDigitalImage::CDigitalImage(void)
 {
@@ -88,7 +89,7 @@ CImage *CDigitalImage::GetImageDrawer() const
 				}
 				pixel = value;
 			}
-			else if( DIT_Grayscale == this->m_imageType )
+			else if( DIT_Gray == this->m_imageType )
 			{
 				// int pixelIntensive = ( value << ( DrawerIntensiveLevel - m_bitsPerPixel ) );
 				// 当前的灰度分辨率肯定小于等于8.
@@ -138,15 +139,7 @@ CDigitalImage *CDigitalImage::Clone() const
 	// 新加的成员变量必须也要加在这里!!!
 	CDigitalImage *pImg = new CDigitalImage();
 	*pImg = *this;
-// 
-// 	pImg->m_imagePath = this->m_imagePath;
-// //	pImg->m_image.Load( pImg->m_imagePath.c_str() );
-// 	pImg->m_bitsPerPixel = this->m_bitsPerPixel;
-// 	pImg->m_imageDataBuf = this->m_imageDataBuf;
-// 
-// 	pImg->m_imageType = this->m_imageType;
-// 	pImg->m_width = this->m_width;
-// 	pImg->m_height = this->m_height;
+
 	return pImg;
 }
 
@@ -174,7 +167,7 @@ bool CDigitalImage::ToGrayscaleImage( int intensityLevels )
 				// 如果是32, 那有一个通道是透明通道.				
 				grayLevel = min( grayLevel, 8 );				
 			}
-			else if( this->m_imageType == DIT_Grayscale )
+			else if( this->m_imageType == DIT_Gray )
 			{
 				grayValue = curValue;
 				grayLevel = m_bitsPerPixel;
@@ -186,7 +179,7 @@ bool CDigitalImage::ToGrayscaleImage( int intensityLevels )
 			m_imageDataBuf[ h*this->GetWidth() + w ] = grayValue;
 		}
 	}
-	this->m_imageType = DIT_Grayscale;
+	this->m_imageType = DIT_Gray;
 	this->m_bitsPerPixel = intensityLevels;
 	return true;
 }
@@ -204,3 +197,37 @@ int CDigitalImage::IntensityTrans( int oldIntensity, int oldGrayscaleLev, int ne
 	}
 	
 }
+
+tstring CDigitalImage::GetFilePath() const
+{
+	return this->m_imagePath;
+}
+
+int CDigitalImage::GetFileLength() const
+{
+	return CCommon::GetFileLength( m_imagePath );
+}
+
+int CDigitalImage::GetIntensityLevel() const
+{
+	int intensityLevel = 0;
+	switch( this->GetImageType() )
+	{
+	case DIT_Gray:
+		intensityLevel = m_bitsPerPixel;
+		break;
+	case DIT_RGB:
+		intensityLevel = m_bitsPerPixel / 3;
+		break;
+	default:
+		ASSERT( FALSE );
+		break;
+	}
+	return intensityLevel;
+}
+
+CDigitalImage::EImageType CDigitalImage::GetImageType()const
+{
+	return this->m_imageType;
+}
+

@@ -534,5 +534,14 @@ void CCommon::Sleep( int sleepMSec )
 {
 	::Sleep( sleepMSec );
 }
+
+uint64 CCommon::GetFileLength( ctstring filePath )
+{
+	CFileStatus fs;
+	BOOL bSuc = CFile::GetStatus( filePath.c_str(), fs );
+	ASSERT( bSuc );
+	return fs.m_size;
+}
+
 // end of file
 

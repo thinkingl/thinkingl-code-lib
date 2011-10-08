@@ -9,7 +9,7 @@ public:
 	/** 图片类型. */
 	enum EImageType
 	{
-		DIT_Grayscale,	// 灰度图.
+		DIT_Gray,	// 灰度图.
 		DIT_RGB,		// RGB图.
 	};
 public:
@@ -29,7 +29,7 @@ public:
 	int GetFileLength() const;
 
 	/** 获取图片格式. */
-	tstring GetImageType()const;
+	EImageType GetImageType()const;
 
 	/** 获取图片宽度 */
 	int GetWidth()const;
@@ -39,6 +39,9 @@ public:
 
 	/** 获取图片像素字节数. */
 	int GetBitsPerPixel() const;
+
+	/** 获取图片的灰度阶数. */
+	int GetIntensityLevel() const;
 	
 	/** 转换成灰度图片.
 	*	intensityLevels : 灰阶. 1-8. 

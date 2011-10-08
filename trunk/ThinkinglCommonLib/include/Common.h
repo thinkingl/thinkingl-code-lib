@@ -74,4 +74,8 @@ public:
 
 	/** 睡眠 单位毫秒.. */
 	static void Sleep( int sleepMSec );
+
+	/** 获取文件长度. */
+	static uint64 GetFileLength( ctstring filePath );
+
 };
