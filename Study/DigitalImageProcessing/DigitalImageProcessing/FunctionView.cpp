@@ -41,6 +41,7 @@ IMPLEMENT_SERIAL(CClassViewMenuButton, CMFCToolBarMenuButton, 1)
 CFunctionView::CFunctionView()
 {
 	m_nCurrSort = ID_SORTING_GROUPBYTYPE;
+	this->m_curFunction = DIP_Invalid;
 }
 
 CFunctionView::~CFunctionView()
@@ -88,8 +89,18 @@ int CFunctionView::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	m_wndToolBar.Create(this, AFX_DEFAULT_TOOLBAR_STYLE, IDR_SORT);
 	m_wndToolBar.LoadToolBar(IDR_SORT, 0, 0, TRUE /* 已锁定*/);
 
-	m_dlgGrayscale.Create( CGrayscaleDialog::IDD, this );
-	m_dlgGrayscale.ShowWindow( SW_SHOW );
+	// 创建所有的功能对话框. 并放入到 功能 -> 功能对话框 的映射表中.
+	m_dlgIntensityLevel.Create( CGrayscaleDialog::IDD, this );
+	m_dlgIntensityLevel.SetDIPFunction( DIP_IntensityLevels );
+	this->m_functionDlgTable[ DIP_IntensityLevels ] = &m_dlgIntensityLevel;
+
+	m_dlgRGB2GrayHSI.Create( CGrayscaleDialog::IDD, this );
+	m_dlgRGB2GrayHSI.SetDIPFunction( DIP_RGB2Gray_HSI );
+	this->m_functionDlgTable[ DIP_RGB2Gray_HSI ] = &m_dlgRGB2GrayHSI;
+
+	m_dlgRGB2GrayYUV.Create( CGrayscaleDialog::IDD, this );
+	m_dlgRGB2GrayYUV.SetDIPFunction( DIP_RGB2Gray_YUV );
+	this->m_functionDlgTable[ DIP_RGB2Gray_YUV ] = &m_dlgRGB2GrayYUV;
 
 	OnChangeVisualStyle();
 
@@ -133,15 +144,17 @@ void CFunctionView::FillClassView()
 	HTREEITEM hRoot = m_wndFunctionView.InsertItem(_T("功能"), 0, 0);
 	m_wndFunctionView.SetItemState(hRoot, TVIS_BOLD, TVIS_BOLD);
 
-	HTREEITEM hClass = m_wndFunctionView.InsertItem(_T("灰度图"), 1, 1, hRoot);
+	HTREEITEM hRGB2Gray = m_wndFunctionView.InsertItem(_T("RGB->Gray"), 2, 2, hRoot);
+	HTREEITEM hAvrRGB = m_wndFunctionView.InsertItem(_T("RGB平均(HSI)"), 3, 3, hRGB2Gray);
+	m_wndFunctionView.SetItemData( hAvrRGB, DIP_RGB2Gray_HSI );
 
-	HTREEITEM hColorToGray = m_wndFunctionView.InsertItem( _T("彩色转黑白"), 1, 1, hClass );
+	HTREEITEM hYUV = m_wndFunctionView.InsertItem(_T("YUV方式"), 3, 3, hRGB2Gray);
+	m_wndFunctionView.SetItemData( hYUV, DIP_RGB2Gray_YUV );
 
-	HTREEITEM hAvrRGB = m_wndFunctionView.InsertItem(_T("RGB平均(HSI)"), 3, 3, hColorToGray);
-	m_wndFunctionView.SetItemData( hAvrRGB, DIP_Grayscale_AvrRGB );
+	HTREEITEM hGrayFun = m_wndFunctionView.InsertItem(_T("灰度图"), 2, 2, hRoot);
 
-	HTREEITEM hGrayscaleLevel = m_wndFunctionView.InsertItem(_T("灰度调节"), 3, 3, hClass);
-	m_wndFunctionView.SetItemData( hAvrRGB, DIP_Grayscale_AvrRGB );
+	HTREEITEM hGrayscaleLevel = m_wndFunctionView.InsertItem(_T("灰度调节"), 3, 3, hGrayFun );
+	m_wndFunctionView.SetItemData( hGrayscaleLevel, DIP_IntensityLevels );
 
 	m_wndFunctionView.Expand(hRoot, TVE_EXPAND);
 
@@ -229,14 +242,33 @@ void CFunctionView::AdjustLayout()
 
 	int cyTlb = m_wndToolBar.CalcFixedLayout(FALSE, TRUE).cy;
 
+	CWnd *pCurFunWnd =  NULL;
+	for( TFunctionDlgTable::const_iterator it = m_functionDlgTable.begin(); it != m_functionDlgTable.end(); ++it )
+	{
+		if ( it->second && it->second->GetSafeHwnd() )
+		{
+			if ( it->first == this->m_curFunction )
+			{
+				pCurFunWnd = it->second;
+			}	
+			else
+			{
+				it->second->ShowWindow( SW_HIDE );
+			}
+		}		
+	}
+
 	CRect rcFunDlg;
-	this->m_dlgGrayscale.GetWindowRect( rcFunDlg );
-	int cyFunDlg = rcFunDlg.Height();
+	if ( pCurFunWnd )
+	{
+		pCurFunWnd->ShowWindow( SW_SHOW );
+		pCurFunWnd->GetWindowRect( rcFunDlg );
+		pCurFunWnd->SetWindowPos( NULL, rectClient.left, rectClient.bottom - rcFunDlg.Height(), rectClient.Width(), rcFunDlg.Height(), SWP_NOACTIVATE | SWP_NOZORDER );
+	}	
 
 	m_wndToolBar.SetWindowPos(NULL, rectClient.left, rectClient.top, rectClient.Width(), cyTlb, SWP_NOACTIVATE | SWP_NOZORDER);
-	m_dlgGrayscale.SetWindowPos( NULL, rectClient.left, rectClient.bottom - cyFunDlg, rectClient.Width(), cyFunDlg, SWP_NOACTIVATE | SWP_NOZORDER );
 
-	m_wndFunctionView.SetWindowPos(NULL, rectClient.left + 1, rectClient.top + cyTlb + 1, rectClient.Width() - 2, rectClient.Height() - cyTlb - cyFunDlg - 2, SWP_NOACTIVATE | SWP_NOZORDER);
+	m_wndFunctionView.SetWindowPos(NULL, rectClient.left + 1, rectClient.top + cyTlb + 1, rectClient.Width() - 2, rectClient.Height() - cyTlb - rcFunDlg.Height() - 2, SWP_NOACTIVATE | SWP_NOZORDER);
 }
 
 BOOL CFunctionView::PreTranslateMessage(MSG* pMsg)
@@ -376,17 +408,22 @@ BOOL CFunctionView::OnNotify(WPARAM wParam, LPARAM lParam, LRESULT* pResult)
 		if ( TVN_SELCHANGED == pNMHDR->code )
 		{
 			LPNMTREEVIEW pNMTreeView = reinterpret_cast<LPNMTREEVIEW>(pNMHDR);
-
 			int dipFunId = pNMTreeView->itemNew.lParam;
-			switch( dipFunId )
-			{
-			case DIP_Grayscale_AvrRGB:
+// 			switch( dipFunId )
+// 			{
+// 			case DIP_RGB2Gray_HSI:
+// 
+// 				break;
+// 			case DIP_RGB2Gray_YUV:
+// 				break;
+// 			default:
+// 				
+// 				break;
+// 			}
 
-				
+			this->m_curFunction = (EDIPFunction)dipFunId;
 
-				break;
-
-			}
+			this->AdjustLayout();
 		}
 	}
 

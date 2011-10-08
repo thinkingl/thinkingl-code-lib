@@ -128,6 +128,7 @@
   <ItemGroup>
     <ClInclude Include="ChildFrm.h" />
     <ClInclude Include="dipcommon.h" />
+    <ClInclude Include="dipconst.h" />
     <ClInclude Include="FunctionView.h" />
     <ClInclude Include="DigitalImage.h" />
     <ClInclude Include="DigitalImageLoader.h" />

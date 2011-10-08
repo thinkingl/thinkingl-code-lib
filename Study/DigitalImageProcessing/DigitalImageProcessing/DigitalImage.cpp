@@ -143,45 +143,14 @@ CDigitalImage *CDigitalImage::Clone() const
 	return pImg;
 }
 
-bool CDigitalImage::ToGrayscaleImage( int intensityLevels )
+bool CDigitalImage::ToGrayscaleImageHSI( int intensityLevels )
 {
-	if ( intensityLevels < 1 || intensityLevels > 8 )
-	{
-		TRACE( _T("ToGrayscale intensity level must between 1-8") );
-		return false;
-	}
+	return this->RGB2Gray( R2G_HSI, intensityLevels );	
+}
 
-	for( int h=0; h<this->GetHeight(); ++h )
-	{
-		for( int w=0; w<this->GetWidth(); ++w )
-		{
-			int curValue = m_imageDataBuf[ h*this->GetWidth() + w ];
-			int grayValue = 0;
-			int grayLevel = 0;
-			if ( this->m_imageType == DIT_RGB )
-			{
-				// RGB 灰度按照 HSI的方式转换 见书 P. 433
-				grayValue = ( GetRValue( curValue ) + GetGValue( curValue ) + GetBValue( curValue ) )/3;
-				// RGB模式时取单颜色的灰阶.
-				grayLevel = m_bitsPerPixel/3;
-				// 如果是32, 那有一个通道是透明通道.				
-				grayLevel = min( grayLevel, 8 );				
-			}
-			else if( this->m_imageType == DIT_Gray )
-			{
-				grayValue = curValue;
-				grayLevel = m_bitsPerPixel;
-			}
-
-			ASSERT( grayLevel <= 8 && grayLevel >= 1 );
-			// 当前灰度转换为目标灰度分辨率.
-			grayValue = this->IntensityTrans( grayValue, grayLevel, intensityLevels );			
-			m_imageDataBuf[ h*this->GetWidth() + w ] = grayValue;
-		}
-	}
-	this->m_imageType = DIT_Gray;
-	this->m_bitsPerPixel = intensityLevels;
-	return true;
+bool CDigitalImage::ToGrayscaleImageYUV( int intensityLevels )
+{
+	return this->RGB2Gray( R2G_YUV, intensityLevels );
 }
 
 int CDigitalImage::IntensityTrans( int oldIntensity, int oldGrayscaleLev, int newGrayscaleLev ) const
@@ -229,5 +198,58 @@ int CDigitalImage::GetIntensityLevel() const
 CDigitalImage::EImageType CDigitalImage::GetImageType()const
 {
 	return this->m_imageType;
+}
+
+bool CDigitalImage::RGB2Gray( ERGB2GrayMode mod, int intensityLevels ) 
+{
+	if ( intensityLevels < 1 || intensityLevels > 8 )
+	{
+		TRACE( _T("ToGrayscale intensity level must between 1-8") );
+		ASSERT( FALSE );
+		return false;
+	}
+
+	for( int h=0; h<this->GetHeight(); ++h )
+	{
+		for( int w=0; w<this->GetWidth(); ++w )
+		{
+			int curValue = m_imageDataBuf[ h*this->GetWidth() + w ];
+			int grayValue = 0;
+			int grayLevel = 0;
+			if ( this->m_imageType == DIT_RGB )
+			{
+				int R= GetRValue( curValue );
+				int G= GetGValue( curValue );
+				int B= GetBValue( curValue );
+				if ( R2G_HSI == mod )
+				{
+					// RGB 灰度按照 HSI的方式转换 见书 P. 433
+					grayValue = (  R+G+B )/3;
+				}
+				else
+				{
+					// YUV 的灰度加权不同. Y=0.212671*R + 0.715160*G + 0.072169*B
+					grayValue = 0.212671*R + 0.715160*G + 0.072169*B ;
+				}
+				// RGB模式时取单颜色的灰阶.
+				grayLevel = m_bitsPerPixel/3;
+				// 如果是32, 那有一个通道是透明通道.				
+				grayLevel = min( grayLevel, 8 );				
+			}
+			else if( this->m_imageType == DIT_Gray )
+			{
+				grayValue = curValue;
+				grayLevel = m_bitsPerPixel;
+			}
+
+			ASSERT( grayLevel <= 8 && grayLevel >= 1 );
+			// 当前灰度转换为目标灰度分辨率.
+			grayValue = this->IntensityTrans( grayValue, grayLevel, intensityLevels );			
+			m_imageDataBuf[ h*this->GetWidth() + w ] = grayValue;
+		}
+	}
+	this->m_imageType = DIT_Gray;
+	this->m_bitsPerPixel = intensityLevels;
+	return true;
 }
 
