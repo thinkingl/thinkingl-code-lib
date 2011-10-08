@@ -235,6 +235,14 @@ void CDigitalImageProcessingView::EndDIP()
 
 		// 重绘.
 		this->Invalidate();
+
+		// 通知 属性窗口更新属性.
+		CPropertiesWnd *propWnd = GetPropertyWnd();
+		ASSERT( propWnd );
+		if ( propWnd )
+		{
+			propWnd->UpdateProperties( this->m_pImage );
+		}
 	}
 
 }

@@ -43,10 +43,13 @@ public:
 	/** 获取图片的灰度阶数. */
 	int GetIntensityLevel() const;
 	
-	/** 转换成灰度图片.
+	/** 转换成灰度图片. 按照 HSI 方式 求RGB平均. 
 	*	intensityLevels : 灰阶. 1-8. 
 	*/
-	bool ToGrayscaleImage( int intensityLevels );
+	bool ToGrayscaleImageHSI( int intensityLevels );
+
+	/** 转换成灰度图片. 按照 YUV 方式 RGB有不同加权. */
+	bool ToGrayscaleImageYUV( int intensityLevels );
 
 	/** 克隆出一个一样的对象. */
 	CDigitalImage *Clone()const;
@@ -65,6 +68,14 @@ private:
 	*	return : 新的灰度值.
 	*/
 	int IntensityTrans( int oldIntensity, int oldGrayscaleLev, int newGrayscaleLev )const;
+
+	/** 转换为灰度. */
+	enum ERGB2GrayMode
+	{
+		R2G_HSI,
+		R2G_YUV,
+	};
+	bool RGB2Gray( ERGB2GrayMode mod, int intensityLevel );
 
 private:
 //	CImage m_image;

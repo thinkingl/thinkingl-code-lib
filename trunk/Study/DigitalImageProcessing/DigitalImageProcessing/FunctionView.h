@@ -1,9 +1,12 @@
 
 #pragma once
 
+#include "dipconst.h"
 #include "ViewTree.h"
 
 #include "GrayscaleDialog.h"
+#include <map>
+
 
 class CClassToolBar : public CMFCToolBar
 {
@@ -33,23 +36,30 @@ protected:
 
 	void FillClassView();
 
-	CGrayscaleDialog m_dlgGrayscale;
 
 // 重写
 public:
 	virtual BOOL PreTranslateMessage(MSG* pMsg);
 
 private:
-	enum EFunction
-	{
-		DIP_Grayscale_AvrRGB = 1000,
 
-	};
 
 	enum ECtrlId
 	{
 		ID_FunctionTree = 10,
 	};
+
+private:
+	CGrayscaleDialog m_dlgRGB2GrayHSI;
+	CGrayscaleDialog m_dlgRGB2GrayYUV;
+	CGrayscaleDialog m_dlgIntensityLevel;
+
+	/** 功能与对话框的表. */
+	typedef std::map< EDIPFunction, CWnd* > TFunctionDlgTable;
+	TFunctionDlgTable m_functionDlgTable;
+
+	/** 当前处理的功能. */
+	EDIPFunction m_curFunction;
 
 protected:
 	afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);
