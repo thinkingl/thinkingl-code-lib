@@ -102,6 +102,15 @@ int CFunctionView::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	m_dlgRGB2GrayYUV.SetDIPFunction( DIP_RGB2Gray_YUV );
 	this->m_functionDlgTable[ DIP_RGB2Gray_YUV ] = &m_dlgRGB2GrayYUV;
 
+	m_dlgImageNegative.Create( CImageNegativeDialog::IDD, this );
+	this->m_functionDlgTable[ DIP_IntensityNegitive ] = &m_dlgImageNegative;
+
+	m_dlgIntensityLogTransformation.Create( CIntensityLogTransformationDialog::IDD, this );
+	this->m_functionDlgTable[ DIP_IntensityLog ] = &m_dlgIntensityLogTransformation;
+
+	m_glgIntensityPowerTransformation.Create( CIntensityPowerTransformationDialog::IDD, this );
+	this->m_functionDlgTable[ DIP_IntensityPower ] = &m_glgIntensityPowerTransformation;
+
 	OnChangeVisualStyle();
 
 	m_wndToolBar.SetPaneStyle(m_wndToolBar.GetPaneStyle() | CBRS_TOOLTIPS | CBRS_FLYBY);
@@ -128,7 +137,7 @@ int CFunctionView::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	}
 
 	// 填入一些静态树视图数据(此处只需填入虚拟代码，而不是复杂的数据)
-	FillClassView();
+	FillDIPFunctionTree();
 
 	return 0;
 }
@@ -139,7 +148,7 @@ void CFunctionView::OnSize(UINT nType, int cx, int cy)
 	AdjustLayout();
 }
 
-void CFunctionView::FillClassView()
+void CFunctionView::FillDIPFunctionTree()
 {
 	HTREEITEM hRoot = m_wndFunctionView.InsertItem(_T("功能"), 0, 0);
 	m_wndFunctionView.SetItemState(hRoot, TVIS_BOLD, TVIS_BOLD);
@@ -151,10 +160,21 @@ void CFunctionView::FillClassView()
 	HTREEITEM hYUV = m_wndFunctionView.InsertItem(_T("YUV方式"), 3, 3, hRGB2Gray);
 	m_wndFunctionView.SetItemData( hYUV, DIP_RGB2Gray_YUV );
 
-	HTREEITEM hGrayFun = m_wndFunctionView.InsertItem(_T("灰度图"), 2, 2, hRoot);
+	HTREEITEM hIntensityFun = m_wndFunctionView.InsertItem(_T("3 Intensity Transformation"), 2, 2, hRoot);
 
-	HTREEITEM hGrayscaleLevel = m_wndFunctionView.InsertItem(_T("灰度调节"), 3, 3, hGrayFun );
+	HTREEITEM hGrayscaleLevel = m_wndFunctionView.InsertItem(_T("灰阶调节"), 3, 3, hIntensityFun );
 	m_wndFunctionView.SetItemData( hGrayscaleLevel, DIP_IntensityLevels );
+
+	HTREEITEM hNegitive = m_wndFunctionView.InsertItem(_T("3.2.1 Image Negitive"), 3, 3, hIntensityFun );
+	m_wndFunctionView.SetItemData( hNegitive, DIP_IntensityNegitive );
+	
+	HTREEITEM hLog = m_wndFunctionView.InsertItem(_T("3.2.2 Log Transformations"), 3, 3, hIntensityFun );
+	m_wndFunctionView.SetItemData( hLog, DIP_IntensityLog );
+
+	HTREEITEM hPower = m_wndFunctionView.InsertItem(_T("3.2.3 Power-Law Transformations"), 3, 3, hIntensityFun );
+	m_wndFunctionView.SetItemData( hPower, DIP_IntensityPower );
+
+
 
 	m_wndFunctionView.Expand(hRoot, TVE_EXPAND);
 

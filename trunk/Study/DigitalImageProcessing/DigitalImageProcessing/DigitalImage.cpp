@@ -4,7 +4,7 @@
 
 CDigitalImage::CDigitalImage(void)
 {
-	this->m_bitsPerPixel = 0;
+	this->m_intensityLevels = 0;
 	this->m_width = 0;
 	this->m_height = 0;
 }
@@ -44,7 +44,11 @@ bool CDigitalImage::Load( ctstring filePath )
 		}
 
 		// 保存没像素字节数.
-		this->m_bitsPerPixel = bpp;
+		// 这里先默认的认为载入的图片都是RGB表示的!
+		this->m_intensityLevels = bpp/3;
+		this->m_intensityLevels = min( 8, m_intensityLevels );	// 如果有透明通道的32bit图片, 亮度阶数仍然是8.
+
+
 		// 保存图片类型. 
 		// !暂时认为载入的图片都是RGB模式的图片.
 		this->m_imageType = DIT_RGB;
@@ -83,17 +87,21 @@ CImage *CDigitalImage::GetImageDrawer() const
 			int pixel = 0;
 			if ( DIT_RGB == this->m_imageType )
 			{
-				if ( this->m_bitsPerPixel != DrawerBPP )
-				{
-					ASSERT( FALSE );	// 暂时还不支持非24 bpp的RGB.
-				}
-				pixel = value;
+				int r= GetRValue( value );
+				int g= GetGValue( value );
+				int b= GetBValue( value );
+
+				// RGB模式时取单颜色的灰阶.
+				r = this->IntensityTrans( r, m_intensityLevels, DrawerIntensiveLevel );
+				g = this->IntensityTrans( g, m_intensityLevels, DrawerIntensiveLevel );
+				b = this->IntensityTrans( b, m_intensityLevels, DrawerIntensiveLevel );
+
+				pixel = RGB( r, g, b );
 			}
 			else if( DIT_Gray == this->m_imageType )
 			{
-				// int pixelIntensive = ( value << ( DrawerIntensiveLevel - m_bitsPerPixel ) );
 				// 当前的灰度分辨率肯定小于等于8.
-				int pixelIntensive = this->IntensityTrans( value, m_bitsPerPixel, DrawerIntensiveLevel );
+				int pixelIntensive = this->IntensityTrans( value, m_intensityLevels, DrawerIntensiveLevel );
 				
 
 				pixel = RGB( pixelIntensive, pixelIntensive, pixelIntensive );
@@ -107,7 +115,7 @@ CImage *CDigitalImage::GetImageDrawer() const
 void CDigitalImage::Release()
 {
 	m_imageDataBuf.clear();
-	m_bitsPerPixel = 0;
+	m_intensityLevels = 0;
 //	m_image.Destroy();
 	m_imagePath.clear();
 	this->m_width = 0;
@@ -126,7 +134,13 @@ int CDigitalImage::GetHeight() const
 
 int CDigitalImage::GetBitsPerPixel() const
 {
-	return m_bitsPerPixel;
+	int bpp = m_intensityLevels;
+	if ( DIT_RGB == this->GetImageType() )
+	{
+		bpp = m_intensityLevels * 3;	// RGB三原色. 忽略透明通道.
+	}
+
+	return bpp;
 }
 
 bool CDigitalImage::IsLoaded() const
@@ -179,20 +193,7 @@ int CDigitalImage::GetFileLength() const
 
 int CDigitalImage::GetIntensityLevel() const
 {
-	int intensityLevel = 0;
-	switch( this->GetImageType() )
-	{
-	case DIT_Gray:
-		intensityLevel = m_bitsPerPixel;
-		break;
-	case DIT_RGB:
-		intensityLevel = m_bitsPerPixel / 3;
-		break;
-	default:
-		ASSERT( FALSE );
-		break;
-	}
-	return intensityLevel;
+	return m_intensityLevels;
 }
 
 CDigitalImage::EImageType CDigitalImage::GetImageType()const
@@ -209,13 +210,18 @@ bool CDigitalImage::RGB2Gray( ERGB2GrayMode mod, int intensityLevels )
 		return false;
 	}
 
+	if ( DIT_Gray == this->GetImageType() )
+	{
+		TRACE( _T( "RGB2Gray : image is gray ! " ) );
+		return false;
+	}
+
 	for( int h=0; h<this->GetHeight(); ++h )
 	{
 		for( int w=0; w<this->GetWidth(); ++w )
 		{
 			int curValue = m_imageDataBuf[ h*this->GetWidth() + w ];
 			int grayValue = 0;
-			int grayLevel = 0;
 			if ( this->m_imageType == DIT_RGB )
 			{
 				int R= GetRValue( curValue );
@@ -230,26 +236,162 @@ bool CDigitalImage::RGB2Gray( ERGB2GrayMode mod, int intensityLevels )
 				{
 					// YUV 的灰度加权不同. Y=0.212671*R + 0.715160*G + 0.072169*B
 					grayValue = 0.212671*R + 0.715160*G + 0.072169*B ;
-				}
-				// RGB模式时取单颜色的灰阶.
-				grayLevel = m_bitsPerPixel/3;
-				// 如果是32, 那有一个通道是透明通道.				
-				grayLevel = min( grayLevel, 8 );				
+				}			
 			}
 			else if( this->m_imageType == DIT_Gray )
 			{
 				grayValue = curValue;
-				grayLevel = m_bitsPerPixel;
 			}
 
-			ASSERT( grayLevel <= 8 && grayLevel >= 1 );
 			// 当前灰度转换为目标灰度分辨率.
-			grayValue = this->IntensityTrans( grayValue, grayLevel, intensityLevels );			
+			grayValue = this->IntensityTrans( grayValue, m_intensityLevels, intensityLevels );			
 			m_imageDataBuf[ h*this->GetWidth() + w ] = grayValue;
 		}
 	}
 	this->m_imageType = DIT_Gray;
-	this->m_bitsPerPixel = intensityLevels;
+	this->m_intensityLevels = intensityLevels;
 	return true;
 }
 
+bool CDigitalImage::SetIntensityLevel( int intensityLevels )
+{
+	if ( intensityLevels < 1 || intensityLevels > 8 )
+	{
+		TRACE( _T("SetIntensityLevel intensity level must between 1-8") );
+		ASSERT( FALSE );
+		return false;
+	}
+	
+	for( int h=0; h<this->GetHeight(); ++h )
+	{
+		for( int w=0; w<this->GetWidth(); ++w )
+		{
+			int curValue = m_imageDataBuf[ h*this->GetWidth() + w ];
+			int pixelValue = 0;
+			if ( this->m_imageType == DIT_RGB )
+			{
+				int r= GetRValue( curValue );
+				int g= GetGValue( curValue );
+				int b= GetBValue( curValue );
+
+				r = this->IntensityTrans( r, m_intensityLevels, intensityLevels );
+				g = this->IntensityTrans( g, m_intensityLevels, intensityLevels );
+				b = this->IntensityTrans( b, m_intensityLevels, intensityLevels );
+
+				pixelValue = RGB( r, g, b );
+			}
+			else if( this->m_imageType == DIT_Gray )
+			{
+				pixelValue = curValue;
+
+				pixelValue = this->IntensityTrans( pixelValue, m_intensityLevels, intensityLevels );		
+			}
+
+			m_imageDataBuf[ h*this->GetWidth() + w ] = pixelValue;
+		}
+	}
+
+	// 修改每像素的字节数.
+	this->m_intensityLevels = intensityLevels;
+	return true;
+}
+
+bool CDigitalImage::ImageNegitive()
+{
+	// 公式: s = L-1-r 
+	int L = ( 1 << this->m_intensityLevels );
+
+	for( int h=0; h<this->GetHeight(); ++h )
+	{
+		for( int w=0; w<this->GetWidth(); ++w )
+		{
+			int curValue = m_imageDataBuf[ h*this->GetWidth() + w ];
+			int pixelValue = 0;
+			if ( this->m_imageType == DIT_RGB )
+			{
+				int r= GetRValue( curValue );
+				int g= GetGValue( curValue );
+				int b= GetBValue( curValue );
+
+				r = L-1-r;
+				g = L-1-g;
+				b = L-1-b;
+
+				pixelValue = RGB( r, g, b );
+			}
+			else if( this->m_imageType == DIT_Gray )
+			{
+				pixelValue = L-1-curValue;
+			}
+			m_imageDataBuf[ h*this->GetWidth() + w ] = pixelValue;
+		}
+	}
+	return true;
+}
+
+bool CDigitalImage::IntensityLogTransform( double c )
+{
+	//  s = c * Log( 1+r )
+	for( int h=0; h<this->GetHeight(); ++h )
+	{
+		for( int w=0; w<this->GetWidth(); ++w )
+		{
+			int curValue = m_imageDataBuf[ h*this->GetWidth() + w ];
+			int pixelValue = 0;
+			if ( this->m_imageType == DIT_RGB )
+			{
+				int r= GetRValue( curValue );
+				int g= GetGValue( curValue );
+				int b= GetBValue( curValue );
+
+				r = c * log( (double)1+r );
+				g = c * log( (double)1+g );
+				b = c * log( (double)1+b );
+
+				pixelValue = RGB( r, g, b );
+			}
+			else if( this->m_imageType == DIT_Gray )
+			{
+				pixelValue = c * log( (double)1+curValue );
+			}
+			m_imageDataBuf[ h*this->GetWidth() + w ] = pixelValue;
+		}
+	}
+	return true;
+}
+
+bool CDigitalImage::IntensityPowerTransform( double c, double v )
+{
+	//   s = c * r ^ v
+	int maxValue = ( 1 << m_intensityLevels )-1; 
+	for( int h=0; h<this->GetHeight(); ++h )
+	{
+		for( int w=0; w<this->GetWidth(); ++w )
+		{
+			int curValue = m_imageDataBuf[ h*this->GetWidth() + w ];
+			int pixelValue = 0;
+			if ( this->m_imageType == DIT_RGB )
+			{
+				int r= GetRValue( curValue );
+				int g= GetGValue( curValue );
+				int b= GetBValue( curValue );
+
+				r = c * pow( r, v );
+				g = c * pow( g, v );
+				b = c * pow( b, v );
+
+				r = min( maxValue, r );
+				g = min( maxValue, g );
+				b = min( maxValue, b );
+				pixelValue = RGB( r, g, b );
+			}
+			else if( this->m_imageType == DIT_Gray )
+			{
+				pixelValue = c * pow( curValue, v );				
+				pixelValue = min( maxValue, pixelValue );
+			}
+			m_imageDataBuf[ h*this->GetWidth() + w ] = pixelValue;
+		}
+	}
+	return true;
+}

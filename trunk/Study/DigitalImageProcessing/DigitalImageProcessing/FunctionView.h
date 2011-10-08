@@ -5,6 +5,9 @@
 #include "ViewTree.h"
 
 #include "GrayscaleDialog.h"
+#include "ImageNegativeDialog.h"
+#include "IntensityLogTransformationDialog.h"
+#include "IntensityPowerTransformationDialog.h"
 #include <map>
 
 
@@ -34,7 +37,7 @@ protected:
 	CImageList m_ClassViewImages;
 	UINT m_nCurrSort;
 
-	void FillClassView();
+	void FillDIPFunctionTree();
 
 
 // 重写
@@ -53,6 +56,10 @@ private:
 	CGrayscaleDialog m_dlgRGB2GrayHSI;
 	CGrayscaleDialog m_dlgRGB2GrayYUV;
 	CGrayscaleDialog m_dlgIntensityLevel;
+
+	CImageNegativeDialog m_dlgImageNegative;
+	CIntensityLogTransformationDialog m_dlgIntensityLogTransformation;
+	CIntensityPowerTransformationDialog m_glgIntensityPowerTransformation;
 
 	/** 功能与对话框的表. */
 	typedef std::map< EDIPFunction, CWnd* > TFunctionDlgTable;

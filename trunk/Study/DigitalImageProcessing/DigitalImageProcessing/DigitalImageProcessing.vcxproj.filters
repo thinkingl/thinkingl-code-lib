@@ -153,6 +153,15 @@
     <ClInclude Include="dipconst.h">
       <Filter>DIP</Filter>
     </ClInclude>
+    <ClInclude Include="ImageNegativeDialog.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="IntensityLogTransformationDialog.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="IntensityPowerTransformationDialog.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DigitalImageProcessing.cpp">
@@ -198,6 +207,15 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="dipcommon.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="ImageNegativeDialog.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="IntensityLogTransformationDialog.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="IntensityPowerTransformationDialog.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
