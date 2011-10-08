@@ -65,6 +65,8 @@ void CGrayscaleDialog::OnBnClickedApply()
 			pDI->ToGrayscaleImageYUV( this->m_intensityLevel );
 		    break;
 		case DIP_IntensityLevels:
+			pDI->SetIntensityLevel( m_intensityLevel );
+			break;
 		default:
 			ASSERT( FALSE );
 		    break;

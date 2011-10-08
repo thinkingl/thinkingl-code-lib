@@ -7,6 +7,9 @@ enum EDIPFunction
 	DIP_RGB2Gray_YUV,			// RGB转灰度图, YUV方式	
 
 	DIP_IntensityLevels,		// 修改亮度等级.
+	DIP_IntensityNegitive,		// 反转. s = L-1-r
+	DIP_IntensityLog,			// 取指. s = c * Log( 1+r )
+	DIP_IntensityPower,			// 幂值, Power-law (Gamma) Transformation. s = c * r^v 
 };
 
 // end of the file

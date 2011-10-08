@@ -137,6 +137,9 @@
     <ClInclude Include="DigitalImageProcessingView.h" />
     <ClInclude Include="FileView.h" />
     <ClInclude Include="GrayscaleDialog.h" />
+    <ClInclude Include="ImageNegativeDialog.h" />
+    <ClInclude Include="IntensityLogTransformationDialog.h" />
+    <ClInclude Include="IntensityPowerTransformationDialog.h" />
     <ClInclude Include="MainFrm.h" />
     <ClInclude Include="OutputWnd.h" />
     <ClInclude Include="PropertiesWnd.h" />
@@ -156,6 +159,9 @@
     <ClCompile Include="DigitalImageProcessingView.cpp" />
     <ClCompile Include="FileView.cpp" />
     <ClCompile Include="GrayscaleDialog.cpp" />
+    <ClCompile Include="ImageNegativeDialog.cpp" />
+    <ClCompile Include="IntensityLogTransformationDialog.cpp" />
+    <ClCompile Include="IntensityPowerTransformationDialog.cpp" />
     <ClCompile Include="MainFrm.cpp" />
     <ClCompile Include="OutputWnd.cpp" />
     <ClCompile Include="PropertiesWnd.cpp" />
