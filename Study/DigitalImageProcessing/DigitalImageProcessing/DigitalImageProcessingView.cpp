@@ -216,16 +216,26 @@ void CDigitalImageProcessingView::OnInitialUpdate()
 
 CDigitalImage *CDigitalImageProcessingView::StartDIP()
 {
-	return m_pImage;
+	ASSERT( m_pImage );
+	if ( m_pImage )
+	{
+		CDigitalImage *pImg = m_pImage->Clone();
+		return pImg;
+	}
+	
+	return 0;
 }
 
-void CDigitalImageProcessingView::EndDIP()
+void CDigitalImageProcessingView::EndDIP( CDigitalImage* pImg )
 {
 	ASSERT( m_pImage );
-	if ( this->m_pImage )
+	ASSERT( m_pImage != pImg );
+	if ( this->m_pImage && this->m_pImage != pImg )
 	{
+		this->ReleaseImage();
 		this->ReleaseImageDrawer();
 
+		this->m_pImage = pImg;
 		m_pImageDrawer = m_pImage->GetImageDrawer();
 
 		int width = m_pImage->GetWidth();
@@ -258,4 +268,37 @@ void CDigitalImageProcessingView::OnActivateView(BOOL bActivate, CView* pActivat
 	}
 
 	CScrollView::OnActivateView(bActivate, pActivateView, pDeactiveView);
+}
+
+void CDigitalImageProcessingView::DIPPreview( CDigitalImage* pImg )
+{
+	ASSERT( pImg );
+	if ( pImg )
+	{
+		this->ReleaseImageDrawer();
+
+		m_pImageDrawer = pImg->GetImageDrawer();
+
+		int width = pImg->GetWidth();
+		int height = pImg->GetHeight();
+
+		this->SetScrollSizes( MM_TEXT, CSize(width, height ) );
+
+		// 重绘.
+		this->Invalidate();
+
+		// 通知 属性窗口更新属性.
+		CPropertiesWnd *propWnd = GetPropertyWnd();
+		ASSERT( propWnd );
+		if ( propWnd )
+		{
+			propWnd->UpdateProperties( pImg );
+		}
+	}
+}
+
+void CDigitalImageProcessingView::CancelPreview()
+{
+	// 直接显示原始的图像.
+	this->DIPPreview( this->m_pImage );
 }

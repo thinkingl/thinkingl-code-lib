@@ -53,6 +53,6 @@ void CIntensityPowerTransformationDialog::OnBnClickedApply()
 
 		pDI->IntensityPowerTransform( this->m_const, this->m_v );
 
-		pCurView->EndDIP();
+		pCurView->EndDIP( pDI );
 	}	
 }

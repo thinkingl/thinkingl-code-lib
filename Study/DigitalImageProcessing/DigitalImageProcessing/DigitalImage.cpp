@@ -397,3 +397,33 @@ bool CDigitalImage::IntensityPowerTransform( double c, double v )
 	}
 	return true;
 }
+
+bool CDigitalImage::IntensityBitPlanesReconstruct( uint8 bitMask )
+{
+	for( int h=0; h<this->GetHeight(); ++h )
+	{
+		for( int w=0; w<this->GetWidth(); ++w )
+		{
+			int curValue = m_imageDataBuf[ h*this->GetWidth() + w ];
+			int pixelValue = 0;
+			if ( this->m_imageType == DIT_RGB )
+			{
+				int r= GetRValue( curValue );
+				int g= GetGValue( curValue );
+				int b= GetBValue( curValue );
+
+				r &= bitMask;
+				g &= bitMask;
+				b &= bitMask;
+								
+				pixelValue = RGB( r, g, b );
+			}
+			else if( this->m_imageType == DIT_Gray )
+			{
+				pixelValue = curValue & bitMask;
+			}
+			m_imageDataBuf[ h*this->GetWidth() + w ] = pixelValue;
+		}
+	}
+	return true;
+}

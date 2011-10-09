@@ -52,6 +52,6 @@ void CIntensityLogTransformationDialog::OnBnClickedApply()
 
 		pDI->IntensityLogTransform( this->m_logTransformationConstant );
 
-		pCurView->EndDIP();
+		pCurView->EndDIP( pDI );
 	}	
 }
