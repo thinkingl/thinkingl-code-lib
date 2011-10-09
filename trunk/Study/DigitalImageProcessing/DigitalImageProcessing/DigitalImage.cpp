@@ -188,7 +188,9 @@ tstring CDigitalImage::GetFilePath() const
 
 int CDigitalImage::GetFileLength() const
 {
-	return CCommon::GetFileLength( m_imagePath );
+	uint64 len = CCommon::GetFileLength( m_imagePath );
+	ASSERT( len < MAXINT32 );
+	return (int)len;
 }
 
 int CDigitalImage::GetIntensityLevel() const
@@ -235,7 +237,7 @@ bool CDigitalImage::RGB2Gray( ERGB2GrayMode mod, int intensityLevels )
 				else
 				{
 					// YUV 的灰度加权不同. Y=0.212671*R + 0.715160*G + 0.072169*B
-					grayValue = 0.212671*R + 0.715160*G + 0.072169*B ;
+					grayValue = (int)( 0.212671*R + 0.715160*G + 0.072169*B );
 				}			
 			}
 			else if( this->m_imageType == DIT_Gray )
@@ -344,15 +346,15 @@ bool CDigitalImage::IntensityLogTransform( double c )
 				int g= GetGValue( curValue );
 				int b= GetBValue( curValue );
 
-				r = c * log( (double)1+r );
-				g = c * log( (double)1+g );
-				b = c * log( (double)1+b );
+				r = (int)( c * log( (double)1+r ) );
+				g = (int)( c * log( (double)1+g ) );
+				b = (int)( c * log( (double)1+b ) );
 
 				pixelValue = RGB( r, g, b );
 			}
 			else if( this->m_imageType == DIT_Gray )
 			{
-				pixelValue = c * log( (double)1+curValue );
+				pixelValue = (int)( c * log( (double)1+curValue ) );
 			}
 			m_imageDataBuf[ h*this->GetWidth() + w ] = pixelValue;
 		}
@@ -376,9 +378,9 @@ bool CDigitalImage::IntensityPowerTransform( double c, double v )
 				int g= GetGValue( curValue );
 				int b= GetBValue( curValue );
 
-				r = c * pow( r, v );
-				g = c * pow( g, v );
-				b = c * pow( b, v );
+				r = (int)( c * pow( r, v ) );
+				g = (int)( c * pow( g, v ) );
+				b = (int)( c * pow( b, v ) );
 
 				r = min( maxValue, r );
 				g = min( maxValue, g );
@@ -387,7 +389,7 @@ bool CDigitalImage::IntensityPowerTransform( double c, double v )
 			}
 			else if( this->m_imageType == DIT_Gray )
 			{
-				pixelValue = c * pow( curValue, v );				
+				pixelValue = (int)( c * pow( curValue, v ) );				
 				pixelValue = min( maxValue, pixelValue );
 			}
 			m_imageDataBuf[ h*this->GetWidth() + w ] = pixelValue;
