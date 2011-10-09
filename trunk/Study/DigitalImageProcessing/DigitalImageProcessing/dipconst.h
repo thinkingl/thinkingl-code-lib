@@ -10,6 +10,7 @@ enum EDIPFunction
 	DIP_IntensityNegitive,		// 反转. s = L-1-r
 	DIP_IntensityLog,			// 取指. s = c * Log( 1+r )
 	DIP_IntensityPower,			// 幂值, Power-law (Gamma) Transformation. s = c * r^v 
+	DIP_IntensityBitsPlaneReconstruct,	// 位图的各位重构.
 };
 
 // end of the file

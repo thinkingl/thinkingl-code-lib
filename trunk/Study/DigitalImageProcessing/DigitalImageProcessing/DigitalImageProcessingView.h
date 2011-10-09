@@ -17,11 +17,22 @@ protected: // 仅从序列化创建
 public:
 	CDigitalImageProcessingDoc* GetDocument() const;
 
-	/** 开始图像处理. */
+	/** 开始图像处理. 
+	*	返回一个图形对象进行图像处理.
+	*	如果调用了 EndDIP, 使用者就不用delete 这个返回指针.
+	*	如果没有调用 EndDIP, 那么这个指针必须要由使用者 delete.
+	*/
 	CDigitalImage *StartDIP();
-	/** 结束图像处理. */
-	void EndDIP();
 
+	/** 结束图像处理. 
+	*	将处理结果保存并更新显示.
+	*/
+	void EndDIP( CDigitalImage* pImg );
+
+	/** 预览. 只显示. */
+	void DIPPreview( CDigitalImage* pImg );
+	/** 取消预览. 重新显示view自身的图像. */
+	void CancelPreview();
 
 // 操作
 public:

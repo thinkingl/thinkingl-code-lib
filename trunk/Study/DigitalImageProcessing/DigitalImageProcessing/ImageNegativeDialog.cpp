@@ -48,6 +48,6 @@ void CImageNegativeDialog::OnBnClickedApply()
 		
 		pDI->ImageNegitive();
 
-		pCurView->EndDIP();
+		pCurView->EndDIP( pDI );
 	}	
 }

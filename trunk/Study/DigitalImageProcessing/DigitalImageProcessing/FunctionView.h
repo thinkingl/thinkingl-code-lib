@@ -8,6 +8,7 @@
 #include "ImageNegativeDialog.h"
 #include "IntensityLogTransformationDialog.h"
 #include "IntensityPowerTransformationDialog.h"
+#include "IntensityBitplaneSlicingDialog.h"
 #include <map>
 
 
@@ -59,7 +60,8 @@ private:
 
 	CImageNegativeDialog m_dlgImageNegative;
 	CIntensityLogTransformationDialog m_dlgIntensityLogTransformation;
-	CIntensityPowerTransformationDialog m_glgIntensityPowerTransformation;
+	CIntensityPowerTransformationDialog m_dlgIntensityPowerTransformation;
+	CIntensityBitplaneSlicingDialog m_dlgIntensityBitplaneSlicing;
 
 	/** 功能与对话框的表. */
 	typedef std::map< EDIPFunction, CWnd* > TFunctionDlgTable;

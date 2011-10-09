@@ -72,6 +72,11 @@ public:
 	*/
 	bool IntensityPowerTransform( double c, double v );
 
+	/** Bit planes reconstruct 
+	*	P.141 
+	*/
+	bool IntensityBitPlanesReconstruct( uint8 bitMask );
+
 	/** 克隆出一个一样的对象. */
 	CDigitalImage *Clone()const;
 

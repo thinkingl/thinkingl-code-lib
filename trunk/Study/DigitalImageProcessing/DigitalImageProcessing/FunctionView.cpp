@@ -108,8 +108,11 @@ int CFunctionView::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	m_dlgIntensityLogTransformation.Create( CIntensityLogTransformationDialog::IDD, this );
 	this->m_functionDlgTable[ DIP_IntensityLog ] = &m_dlgIntensityLogTransformation;
 
-	m_glgIntensityPowerTransformation.Create( CIntensityPowerTransformationDialog::IDD, this );
-	this->m_functionDlgTable[ DIP_IntensityPower ] = &m_glgIntensityPowerTransformation;
+	m_dlgIntensityPowerTransformation.Create( CIntensityPowerTransformationDialog::IDD, this );
+	this->m_functionDlgTable[ DIP_IntensityPower ] = &m_dlgIntensityPowerTransformation;
+
+	m_dlgIntensityBitplaneSlicing.Create( CIntensityBitplaneSlicingDialog::IDD, this );
+	this->m_functionDlgTable[ DIP_IntensityBitsPlaneReconstruct ] = &m_dlgIntensityBitplaneSlicing;
 
 	OnChangeVisualStyle();
 
@@ -174,6 +177,8 @@ void CFunctionView::FillDIPFunctionTree()
 	HTREEITEM hPower = m_wndFunctionView.InsertItem(_T("3.2.3 Power-Law Transformations"), 3, 3, hIntensityFun );
 	m_wndFunctionView.SetItemData( hPower, DIP_IntensityPower );
 
+	HTREEITEM hBitReconstruct = m_wndFunctionView.InsertItem( _T("3.2.4 Bit planes reconstruct"), 3, 3, hIntensityFun );
+	m_wndFunctionView.SetItemData( hBitReconstruct, DIP_IntensityBitsPlaneReconstruct );
 
 	// 默认全部展开.
 	m_wndFunctionView.Expand(hRoot, TVE_EXPAND);
