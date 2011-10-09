@@ -175,8 +175,10 @@ void CFunctionView::FillDIPFunctionTree()
 	m_wndFunctionView.SetItemData( hPower, DIP_IntensityPower );
 
 
-
+	// 默认全部展开.
 	m_wndFunctionView.Expand(hRoot, TVE_EXPAND);
+	m_wndFunctionView.Expand( hRGB2Gray, TVE_EXPAND );
+	m_wndFunctionView.Expand( hIntensityFun, TVE_EXPAND );
 
 
 // 	hClass = m_wndFunctionView.InsertItem(_T("CFakeApp"), 1, 1, hRoot);
