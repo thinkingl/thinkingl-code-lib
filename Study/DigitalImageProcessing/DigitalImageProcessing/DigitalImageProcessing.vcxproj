@@ -140,6 +140,7 @@
     <ClInclude Include="DigitalImageProcessingView.h" />
     <ClInclude Include="FileView.h" />
     <ClInclude Include="GrayscaleDialog.h" />
+    <ClInclude Include="HistogramCtrl.h" />
     <ClInclude Include="ImageNegativeDialog.h" />
     <ClInclude Include="IntensityBitplaneSlicingDialog.h" />
     <ClInclude Include="IntensityLogTransformationDialog.h" />
@@ -150,6 +151,7 @@
     <ClInclude Include="Resource.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
+    <ClInclude Include="UnitTestDialog.h" />
     <ClInclude Include="ViewTree.h" />
   </ItemGroup>
   <ItemGroup>
@@ -163,6 +165,7 @@
     <ClCompile Include="DigitalImageProcessingView.cpp" />
     <ClCompile Include="FileView.cpp" />
     <ClCompile Include="GrayscaleDialog.cpp" />
+    <ClCompile Include="HistogramCtrl.cpp" />
     <ClCompile Include="ImageNegativeDialog.cpp" />
     <ClCompile Include="IntensityBitplaneSlicingDialog.cpp" />
     <ClCompile Include="IntensityLogTransformationDialog.cpp" />
@@ -174,6 +177,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="UnitTestDialog.cpp" />
     <ClCompile Include="ViewTree.cpp" />
   </ItemGroup>
   <ItemGroup>
