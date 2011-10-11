@@ -165,6 +165,12 @@
     <ClInclude Include="IntensityBitplaneSlicingDialog.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="HistogramCtrl.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="UnitTestDialog.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DigitalImageProcessing.cpp">
@@ -222,6 +228,12 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="IntensityBitplaneSlicingDialog.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="HistogramCtrl.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="UnitTestDialog.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

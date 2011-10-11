@@ -6,6 +6,7 @@
 #include "DigitalImageProcessing.h"
 
 #include "MainFrm.h"
+#include "UnitTestDialog.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -28,6 +29,7 @@ BEGIN_MESSAGE_MAP(CMainFrame, CMDIFrameWndEx)
 	ON_UPDATE_COMMAND_UI_RANGE(ID_VIEW_APPLOOK_WIN_2000, ID_VIEW_APPLOOK_WINDOWS_7, &CMainFrame::OnUpdateApplicationLook)
 	ON_WM_SETTINGCHANGE()
 	ON_WM_ACTIVATE()
+	ON_COMMAND(ID_MENU_UNITTEST, &CMainFrame::OnMenuUnittest)
 END_MESSAGE_MAP()
 
 static UINT indicators[] =
@@ -438,4 +440,11 @@ void CMainFrame::OnActivate(UINT nState, CWnd* pWndOther, BOOL bMinimized)
 CPropertiesWnd * CMainFrame::GetPropertyWnd()
 {
 	return &this->m_wndProperties;
+}
+
+void CMainFrame::OnMenuUnittest()
+{
+	// TODO: 在此添加命令处理程序代码
+	CUnitTestDialog dlg;
+	dlg.DoModal();
 }
