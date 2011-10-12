@@ -4,7 +4,7 @@
 #include "Log.h"
 
 // 搞到的数据的精度是 0.025 个经纬度.
-const double CORRECTION_POINTS_PRECISION = 0.025;
+const double CORRECTION_POINTS_PRECISION = 0.025 + 0.02;
 
 CChinaMapDeviationFix::CChinaMapDeviationFix()
 {
@@ -29,7 +29,7 @@ void CChinaMapDeviationFix::MarsToEarth( double marsLongitude, double marsLatitu
 		Log() << "MarsToEarth 周围没有找到足够的校正点!" << endl;
 		return;
 	}
-	ASSERT( pointsAround.size() == 4 );
+//	ASSERT( pointsAround.size() == 4 );
 
 	// 确定各个校正点的位置.
 	int lefttopIndex = -1;
@@ -74,7 +74,7 @@ void CChinaMapDeviationFix::MarsToEarth( double marsLongitude, double marsLatitu
 	// 双线性插值是三次线性插值. 只适用于校正点为矩形的情况下.
 	// 而我们的校正点的地球坐标不是矩形的, 所以不适用普通的双线性插值算法, 这里扩展了一下.
 	// 第一次算出的临时线性插值点的纬度由一次线性插值算出.
-	ASSERT( pointsAround.size() == 4 );
+//	ASSERT( pointsAround.size() == 4 );
 //	ASSERT( pointsAround[ lefttopIndex ].m_marsLongitude == pointsAround[ leftbottomIndex ].m_marsLongitude );
 //	ASSERT( pointsAround[ lefttopIndex ].m_marsLatitude == pointsAround[ righttopIndex ].m_marsLatitude );
 //	ASSERT( pointsAround[ rightbottomIndex].m_marsLongitude == pointsAround[ righttopIndex ].m_marsLongitude );
@@ -141,7 +141,7 @@ void CChinaMapDeviationFix::EarthToMars( double earthLongitude, double earthLati
 		Log() << "EarthToMars 周围没有找到足够的校正点!" << endl;
 		return;
 	}
-	ASSERT( pointsAround.size() == 4 );
+//	ASSERT( pointsAround.size() == 4 );
 
 	// 确定各个校正点的位置.
 	int lefttopIndex = -1;
@@ -186,7 +186,7 @@ void CChinaMapDeviationFix::EarthToMars( double earthLongitude, double earthLati
 	// 双线性插值是三次线性插值. 只适用于校正点为矩形的情况下.
 	// 而我们的校正点的地球坐标不是矩形的, 所以不适用普通的双线性插值算法, 这里扩展了一下.
 	// 第一次算出的临时线性插值点的纬度由一次线性插值算出.
-	ASSERT( pointsAround.size() == 4 );
+//	ASSERT( pointsAround.size() == 4 );
 
 	//////////////////////////////////////////////////////////////////////////
 	// 用双线性插值求地球坐标经度.
