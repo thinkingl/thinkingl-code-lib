@@ -171,6 +171,9 @@
     <ClInclude Include="UnitTestDialog.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="IntensityBitplaneSliceShowDialog.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DigitalImageProcessing.cpp">
@@ -234,6 +237,9 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="UnitTestDialog.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="IntensityBitplaneSliceShowDialog.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

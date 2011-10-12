@@ -77,6 +77,9 @@ public:
 	*/
 	bool IntensityBitPlanesReconstruct( uint8 bitMask );
 
+	/** 只保留一位, 转为1bit的黑白图. */
+	bool IntensityBitPlanesOneBit( int bitIndex );
+
 	/** 克隆出一个一样的对象. */
 	CDigitalImage *Clone()const;
 
