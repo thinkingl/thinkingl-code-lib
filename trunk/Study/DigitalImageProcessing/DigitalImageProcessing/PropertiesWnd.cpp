@@ -36,10 +36,10 @@ BEGIN_MESSAGE_MAP(CPropertiesWnd, CDockablePane)
 	ON_UPDATE_COMMAND_UI(ID_EXPAND_ALL, OnUpdateExpandAllProperties)
 	ON_COMMAND(ID_SORTPROPERTIES, OnSortProperties)
 	ON_UPDATE_COMMAND_UI(ID_SORTPROPERTIES, OnUpdateSortProperties)
-	ON_COMMAND(ID_PROPERTIES1, OnProperties1)
-	ON_UPDATE_COMMAND_UI(ID_PROPERTIES1, OnUpdateProperties1)
-	ON_COMMAND(ID_PROPERTIES2, OnProperties2)
-	ON_UPDATE_COMMAND_UI(ID_PROPERTIES2, OnUpdateProperties2)
+// 	ON_COMMAND(ID_PROPERTIES1, OnProperties1)
+// 	ON_UPDATE_COMMAND_UI(ID_PROPERTIES1, OnUpdateProperties1)
+// 	ON_COMMAND(ID_PROPERTIES2, OnProperties2)
+// 	ON_UPDATE_COMMAND_UI(ID_PROPERTIES2, OnUpdateProperties2)
 	ON_WM_SETFOCUS()
 	ON_WM_SETTINGCHANGE()
 END_MESSAGE_MAP()
@@ -57,7 +57,7 @@ void CPropertiesWnd::AdjustLayout()
 	CRect rectClient,rectCombo;
 	GetClientRect(rectClient);
 
-	m_wndObjectCombo.GetWindowRect(&rectCombo);
+//	m_wndObjectCombo.GetWindowRect(&rectCombo);
 
 	int cyCmb = rectCombo.Size().cy;
 	int cyTlb = 0;
@@ -68,7 +68,7 @@ void CPropertiesWnd::AdjustLayout()
 	}
 	
 
-	m_wndObjectCombo.SetWindowPos(NULL, rectClient.left, rectClient.top, rectClient.Width(), 200, SWP_NOACTIVATE | SWP_NOZORDER);
+//	m_wndObjectCombo.SetWindowPos(NULL, rectClient.left, rectClient.top, rectClient.Width(), 200, SWP_NOACTIVATE | SWP_NOZORDER);
 	
 	m_wndPropList.SetWindowPos(NULL, rectClient.left, rectClient.top + cyCmb + cyTlb, rectClient.Width(), rectClient.Height() -(cyCmb+cyTlb), SWP_NOACTIVATE | SWP_NOZORDER);
 }
@@ -84,15 +84,15 @@ int CPropertiesWnd::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	// 创建组合:
 	const DWORD dwViewStyle = WS_CHILD | WS_VISIBLE | CBS_DROPDOWNLIST | WS_BORDER | CBS_SORT | WS_CLIPSIBLINGS | WS_CLIPCHILDREN;
 
-	if (!m_wndObjectCombo.Create(dwViewStyle, rectDummy, this, 1))
-	{
-		TRACE0("未能创建属性组合 \n");
-		return -1;      // 未能创建
-	}
+// 	if (!m_wndObjectCombo.Create(dwViewStyle, rectDummy, this, 1))
+// 	{
+// 		TRACE0("未能创建属性组合 \n");
+// 		return -1;      // 未能创建
+// 	}
 
-	m_wndObjectCombo.AddString(_T("应用程序"));
-	m_wndObjectCombo.AddString(_T("属性窗口"));
-	m_wndObjectCombo.SetCurSel(0);
+// 	m_wndObjectCombo.AddString(_T("应用程序"));
+// 	m_wndObjectCombo.AddString(_T("属性窗口"));
+// 	m_wndObjectCombo.SetCurSel(0);
 
 	if (!m_wndPropList.Create(WS_VISIBLE | WS_CHILD, rectDummy, this, 2))
 	{
@@ -143,25 +143,25 @@ void CPropertiesWnd::OnUpdateSortProperties(CCmdUI* pCmdUI)
 	pCmdUI->SetCheck(m_wndPropList.IsAlphabeticMode());
 }
 
-void CPropertiesWnd::OnProperties1()
-{
-	// TODO: 在此处添加命令处理程序代码
-}
-
-void CPropertiesWnd::OnUpdateProperties1(CCmdUI* /*pCmdUI*/)
-{
-	// TODO: 在此处添加命令更新 UI 处理程序代码
-}
-
-void CPropertiesWnd::OnProperties2()
-{
-	// TODO: 在此处添加命令处理程序代码
-}
-
-void CPropertiesWnd::OnUpdateProperties2(CCmdUI* /*pCmdUI*/)
-{
-	// TODO: 在此处添加命令更新 UI 处理程序代码
-}
+// void CPropertiesWnd::OnProperties1()
+// {
+// 	// TODO: 在此处添加命令处理程序代码
+// }
+// 
+// void CPropertiesWnd::OnUpdateProperties1(CCmdUI* /*pCmdUI*/)
+// {
+// 	// TODO: 在此处添加命令更新 UI 处理程序代码
+// }
+// 
+// void CPropertiesWnd::OnProperties2()
+// {
+// 	// TODO: 在此处添加命令处理程序代码
+// }
+// 
+// void CPropertiesWnd::OnUpdateProperties2(CCmdUI* /*pCmdUI*/)
+// {
+// 	// TODO: 在此处添加命令更新 UI 处理程序代码
+// }
 
 void CPropertiesWnd::InitPropList()
 {
@@ -370,7 +370,7 @@ void CPropertiesWnd::SetPropListFont()
 	m_fntPropList.CreateFontIndirect(&lf);
 
 	m_wndPropList.SetFont(&m_fntPropList);
-	m_wndObjectCombo.SetFont(&m_fntPropList);
+//	m_wndObjectCombo.SetFont(&m_fntPropList);
 }
 
 void CPropertiesWnd::UpdateProperties( CDigitalImage * pImg )
