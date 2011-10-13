@@ -427,3 +427,37 @@ bool CDigitalImage::IntensityBitPlanesReconstruct( uint8 bitMask )
 	}
 	return true;
 }
+
+bool CDigitalImage::IntensityBitPlanesOneBit( int bitIndex )
+{
+	int bitMask = 1 << bitIndex;
+	for( int h=0; h<this->GetHeight(); ++h )
+	{
+		for( int w=0; w<this->GetWidth(); ++w )
+		{
+			int curValue = m_imageDataBuf[ h*this->GetWidth() + w ];
+			int pixelValue = 0;
+			if ( this->m_imageType == DIT_RGB )
+			{
+				int r= GetRValue( curValue );
+				int g= GetGValue( curValue );
+				int b= GetBValue( curValue );
+
+				r = ( ( r&bitMask ) == 0 ? 0 : 1 );
+				g = ( ( g&bitMask ) == 0 ? 0 : 1 );
+				g = ( ( g&bitMask ) == 0 ? 0 : 1 );
+				pixelValue = RGB( r, g, b );
+			}
+			else if( this->m_imageType == DIT_Gray )
+			{
+				pixelValue = ( ( curValue&bitMask ) == 0 ? 0:1 );
+			}
+			m_imageDataBuf[ h*this->GetWidth() + w ] = pixelValue;
+		}
+	}
+	
+	// 黑白双色. 只有0和1.
+	this->m_intensityLevels = 1;
+
+	return true;
+}

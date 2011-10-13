@@ -114,6 +114,7 @@ void CIntensityBitplaneSlicingDialog::OnBnClickedApply()
 		this->m_pImage->IntensityBitPlanesReconstruct( bitsMask );
 
 		pCurView->EndDIP( m_pImage );
+		m_pImage = 0;
 	}	
 }
 

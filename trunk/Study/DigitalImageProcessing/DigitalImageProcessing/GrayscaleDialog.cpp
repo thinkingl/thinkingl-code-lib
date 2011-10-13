@@ -73,6 +73,7 @@ void CGrayscaleDialog::OnBnClickedApply()
 		}
 		
 		pCurView->EndDIP( pDI );
+		pDI = 0;
 	}	
 }
 
