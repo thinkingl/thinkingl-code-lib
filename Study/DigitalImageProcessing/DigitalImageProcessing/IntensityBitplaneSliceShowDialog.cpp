@@ -50,60 +50,82 @@ END_MESSAGE_MAP()
 void CIntensityBitplaneSliceShowDialog::OnBnClickedRadioBit1()
 {
 	// TODO: 在此添加控件通知处理程序代码
+	this->TryShowOneBit( 0 );
 }
 
 
 void CIntensityBitplaneSliceShowDialog::OnBnClickedRadioBit2()
 {
 	// TODO: 在此添加控件通知处理程序代码
+	this->TryShowOneBit( 1 );
 }
 
 
 void CIntensityBitplaneSliceShowDialog::OnBnClickedRadioBit3()
 {
 	// TODO: 在此添加控件通知处理程序代码
+	this->TryShowOneBit( 2 );
 }
 
 
 void CIntensityBitplaneSliceShowDialog::OnBnClickedRadioBit4()
 {
 	// TODO: 在此添加控件通知处理程序代码
+	this->TryShowOneBit( 3 );
 }
 
 
 void CIntensityBitplaneSliceShowDialog::OnBnClickedRadioBit5()
 {
 	// TODO: 在此添加控件通知处理程序代码
+	this->TryShowOneBit( 4 );
 }
 
 
 void CIntensityBitplaneSliceShowDialog::OnBnClickedRadioBit6()
 {
 	// TODO: 在此添加控件通知处理程序代码
+	this->TryShowOneBit( 5 );
 }
 
 
 void CIntensityBitplaneSliceShowDialog::OnBnClickedRadioBit7()
 {
 	// TODO: 在此添加控件通知处理程序代码
+	this->TryShowOneBit( 6 );
 }
 
 
 void CIntensityBitplaneSliceShowDialog::OnBnClickedRadioBit8()
 {
 	// TODO: 在此添加控件通知处理程序代码
+	this->TryShowOneBit( 7 );
 }
 
 
 void CIntensityBitplaneSliceShowDialog::OnBnClickedApply()
 {
 	// TODO: 在此添加控件通知处理程序代码
+	if ( m_pImage )
+	{
+		CDigitalImageProcessingView *pCurView = GetActiveDIPView();
+		if ( pCurView )
+		{
+			pCurView->EndDIP( m_pImage );
+			m_pImage = 0;
+		}
+	}
 }
 
 
 void CIntensityBitplaneSliceShowDialog::OnBnClickedCancel()
 {
 	// TODO: 在此添加控件通知处理程序代码
+	CDigitalImageProcessingView *pCurView = GetActiveDIPView();
+	if ( pCurView )
+	{
+		pCurView->CancelPreview();
+	}
 }
 
 void CIntensityBitplaneSliceShowDialog::TryShowOneBit( int bit )

@@ -114,6 +114,9 @@ int CFunctionView::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	m_dlgIntensityBitplaneSlicing.Create( CIntensityBitplaneSlicingDialog::IDD, this );
 	this->m_functionDlgTable[ DIP_IntensityBitsPlaneReconstruct ] = &m_dlgIntensityBitplaneSlicing;
 
+	m_dlgIntensityBitplaneSlicShow.Create( CIntensityBitplaneSliceShowDialog::IDD, this );
+	this->m_functionDlgTable[ DIP_IntensityBitsPlaneShow ] = &m_dlgIntensityBitplaneSlicShow;
+
 	OnChangeVisualStyle();
 
 	m_wndToolBar.SetPaneStyle(m_wndToolBar.GetPaneStyle() | CBRS_TOOLTIPS | CBRS_FLYBY);
@@ -179,6 +182,9 @@ void CFunctionView::FillDIPFunctionTree()
 
 	HTREEITEM hBitReconstruct = m_wndFunctionView.InsertItem( _T("3.2.4 Bit planes reconstruct"), 3, 3, hIntensityFun );
 	m_wndFunctionView.SetItemData( hBitReconstruct, DIP_IntensityBitsPlaneReconstruct );
+
+	HTREEITEM hBitShow = m_wndFunctionView.InsertItem( _T("3.2.4 Bit planes show"), 3, 3, hIntensityFun );
+	m_wndFunctionView.SetItemData( hBitShow, DIP_IntensityBitsPlaneShow );
 
 	// 默认全部展开.
 	m_wndFunctionView.Expand(hRoot, TVE_EXPAND);
