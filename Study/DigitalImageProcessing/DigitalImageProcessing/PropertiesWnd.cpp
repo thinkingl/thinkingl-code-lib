@@ -6,6 +6,7 @@
 #include "MainFrm.h"
 #include "DigitalImageProcessing.h"
 #include "DigitalImage.h"
+#include "MFCPropertyGridDialogProperty.h"
 
 #ifdef _DEBUG
 #undef THIS_FILE
@@ -198,6 +199,10 @@ void CPropertiesWnd::InitPropList()
 	this->m_pPropImageBPP = new CMFCPropertyGridProperty( _T( "BPP" ), _T( "" ), _T( "Bits Per Pixel. 每像素占用字节数." ) );
 	m_pPropImageBPP->AllowEdit( FALSE );
 	pGroupImage->AddSubItem( m_pPropImageBPP );
+
+	this->m_pPropHistogram = new CMFCPropertyGridDialogProperty( _T("Histogram"), 0, 0, 0, _T("Histogram of the image. 图像的亮度直方图") );
+//	m_pPropHistogram->AllowEdit( FALSE );
+	pGroupImage->AddSubItem( m_pPropHistogram );
 
 	m_wndPropList.AddProperty( pGroupImage );
 // 
