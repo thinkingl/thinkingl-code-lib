@@ -1,6 +1,8 @@
 
 #pragma once
 
+class CMFCPropertyGridDialogProperty;
+
 class CPropertiesToolBar : public CMFCToolBar
 {
 public:
@@ -48,6 +50,8 @@ protected:
 	CMFCPropertyGridProperty *m_pPropImageIntensiveLevel;
 	/** 每像素占用字节数. */
 	CMFCPropertyGridProperty *m_pPropImageBPP;
+
+	CMFCPropertyGridDialogProperty *m_pPropHistogram;
 // 实现
 public:
 	virtual ~CPropertiesWnd();
