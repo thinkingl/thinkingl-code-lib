@@ -1,7 +1,10 @@
 
 #pragma once
 
+
+
 class CMFCPropertyGridDialogProperty;
+class CHistogramDialog;
 
 class CPropertiesToolBar : public CMFCToolBar
 {
@@ -52,6 +55,9 @@ protected:
 	CMFCPropertyGridProperty *m_pPropImageBPP;
 
 	CMFCPropertyGridDialogProperty *m_pPropHistogram;
+
+	/** 直方图对话框. */
+	CHistogramDialog *m_pHistogramDialog;;
 // 实现
 public:
 	virtual ~CPropertiesWnd();

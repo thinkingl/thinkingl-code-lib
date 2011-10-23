@@ -8,6 +8,8 @@
 #include "DigitalImage.h"
 #include "MFCPropertyGridDialogProperty.h"
 
+#include "HistogramDialog.h"
+
 #ifdef _DEBUG
 #undef THIS_FILE
 static char THIS_FILE[]=__FILE__;
@@ -24,6 +26,10 @@ CPropertiesWnd::CPropertiesWnd()
 	m_pPropImageType = 0;
 	m_pPropImageIntensiveLevel = 0;
 	m_pPropImageBPP = 0;
+
+	m_pPropHistogram = 0;
+	m_pHistogramDialog = 0;
+
 }
 
 CPropertiesWnd::~CPropertiesWnd()
@@ -200,148 +206,13 @@ void CPropertiesWnd::InitPropList()
 	m_pPropImageBPP->AllowEdit( FALSE );
 	pGroupImage->AddSubItem( m_pPropImageBPP );
 
-	this->m_pPropHistogram = new CMFCPropertyGridDialogProperty( _T("Histogram"), 0, 0, 0, _T("Histogram of the image. 图像的亮度直方图") );
-//	m_pPropHistogram->AllowEdit( FALSE );
+	m_pHistogramDialog = new CHistogramDialog();
+	this->m_pPropHistogram = new CMFCPropertyGridDialogProperty( _T("Histogram"), m_pHistogramDialog, CHistogramDialog::IDD, 
+		0, _T("Histogram of the image. 图像的亮度直方图") );
 	pGroupImage->AddSubItem( m_pPropHistogram );
 
 	m_wndPropList.AddProperty( pGroupImage );
 // 
-// 		CMFC
-// 	
-// 		dProperty* pProp = new CMFCPropertyGridProperty(_T("边框"), _T("对话框外框"), _T("其中之一:“无”、“细”、“可调整大小”或“对话框外框”"));
-// 		pProp->Ad
-// 		n(_T("无"));
-// 		pProp->Ad
-// 		n(_T("细"));
-// 		pProp->Ad
-// 		n(_T("可调整大小"));
-// 		pProp->Ad
-// 		n(_T("对话框外框"));
-// 		pProp->Al
-// 		t(FALSE);
-// 	
-// 		pGro
-// 	
-// 		Item(pProp);
-// 		pGroup1->
-// 		Item(new CMFCPropertyGridProperty(_T("标题"), (_variant_t) _T("关于"), _T("指定窗口标题栏中显示的文本")));
-// 	
-// 		m_wn
-// 	
-// 		ddProperty(pGroup1);
-// 	
-// 		CMFC
-// 	
-// 		dProperty* pSize = new CMFCPropertyGridProperty(_T("窗口大小"), 0, TRUE);
-// 	
-// 		pPro
-// 	
-// 		CPropertyGridProperty(_T("高度"), (_variant_t) 250l, _T("指定窗口的高度"));
-// 		pProp->En
-// 		inControl(TRUE, 50, 300);
-// 		pSize->Ad
-// 		em(pProp);
-// 	
-// 		pPro
-// 	
-// 		CPropertyGridProperty( _T("宽度"), (_variant_t) 150l, _T("指定窗口的宽度"));
-// 		pProp->En
-// 		inControl(TRUE, 50, 200);
-// 		pSize->Ad
-// 		em(pProp);
-// 	
-// 		m_wn
-// 	
-// 		ddProperty(pSize);
-// 	
-// 		CMFC
-// 	
-// 		dProperty* pGroup2 = new CMFCPropertyGridProperty(_T("字体"));
-// 	
-// 		LOGF
-// 	
-// 		 	CFont* fo
-// 		Font::FromHandle((HFONT) GetStockObject(DEFAULT_GUI_FONT));
-// 		font->Get
-// 		t(&lf);
-// 	
-// 		lstr
-// 	
-// 		ceName, _T("宋体, Arial"));
-// 	
-// 		pGro
-// 	
-// 		Item(new CMFCPropertyGridFontProperty(_T("字体"), lf, CF_EFFECTS | CF_SCREENFONTS, _T("指定窗口的默认字体")));
-// 		pGroup2->
-// 		Item(new CMFCPropertyGridProperty(_T("使用系统字体"), (_variant_t) true, _T("指定窗口使用“MS Shell Dlg”字体")));
-// 	
-// 		m_wn
-// 	
-// 		ddProperty(pGroup2);
-// 	
-// 		CMFC
-// 	
-// 		dProperty* pGroup3 = new CMFCPropertyGridProperty(_T("杂项"));
-// 		pProp = n
-// 		CPropertyGridProperty(_T("(名称)"), _T("应用程序"));
-// 		pProp->En
-// 		ALSE);
-// 		pGroup3->
-// 		Item(pProp);
-// 	
-// 		CMFC
-// 	
-// 		dColorProperty* pColorProp = new CMFCPropertyGridColorProperty(_T("窗口颜色"), RGB(210, 192, 254), NULL, _T("指定默认的窗口颜色"));
-// 		pColorPro
-// 		bleOtherButton(_T("其他..."));
-// 		pColorPro
-// 		bleAutomaticButton(_T("默认"), ::GetSysColor(COLOR_3DFACE));
-// 		pGroup3->
-// 		Item(pColorProp);
-// 	
-// 		stat
-// 	
-// 		HAR szFilter[] = _T("图标文件(*.ico)|*.ico|所有文件(*.*)|*.*||");
-// 		pGroup3->
-// 		Item(new CMFCPropertyGridFileProperty(_T("图标"), TRUE, _T(""), _T("ico"), 0, szFilter, _T("指定窗口图标")));
-// 	
-// 		pGro
-// 	
-// 		Item(new CMFCPropertyGridFileProperty(_T("文件夹"), _T("c:\\")));
-// 	
-// 		m_wn
-// 	
-// 		ddProperty(pGroup3);
-// 	
-// 		CMFC
-// 	
-// 		dProperty* pGroup4 = new CMFCPropertyGridProperty(_T("层次结构"));
-// 	
-// 		CMFC
-// 	
-// 		dProperty* pGroup41 = new CMFCPropertyGridProperty(_T("第一个子级"));
-// 		pGroup4->
-// 		Item(pGroup41);
-// 	
-// 		CMFC
-// 	
-// 		dProperty* pGroup411 = new CMFCPropertyGridProperty(_T("第二个子级"));
-// 		pGroup41-
-// 		bItem(pGroup411);
-// 	
-// 		pGro
-// 	
-// 		ubItem(new CMFCPropertyGridProperty(_T("项 1"), (_variant_t) _T("值 1"), _T("此为说明")));
-// 		pGroup411
-// 		ubItem(new CMFCPropertyGridProperty(_T("项 2"), (_variant_t) _T("值 2"), _T("此为说明")));
-// 		pGroup411
-// 		ubItem(new CMFCPropertyGridProperty(_T("项 3"), (_variant_t) _T("值 3"), _T("此为说明")));
-// 	
-// 		pGro
-// 	
-// 		(FALSE);
-// 		m_wndProp
-// 		ddProperty(pGroup4);
 }
 
 void CPropertiesWnd::OnSetFocus(CWnd* pOldWnd)
@@ -434,5 +305,14 @@ void CPropertiesWnd::UpdateProperties( CDigitalImage * pImg )
 		tstringstream ssBpp;
 		ssBpp << bpp;
 		m_pPropImageBPP->SetValue( ssBpp.str().c_str() );
+	}
+
+//	ASSERT( m_pHistogramDialog->GetSafeHwnd() );
+	ASSERT( m_pPropHistogram );
+	if ( m_pHistogramDialog )
+	{
+		CDigitalImage::THistogramData grayH, rh, gh, bh;
+		pImg->GetHistogramData( grayH, rh, gh, bh );
+		m_pHistogramDialog->SetHistoramData( grayH );
 	}
 }

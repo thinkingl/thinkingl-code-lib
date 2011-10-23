@@ -80,6 +80,10 @@ public:
 	/** 只保留一位, 转为1bit的黑白图. */
 	bool IntensityBitPlanesOneBit( int bitIndex );
 
+	/** 获取直方图的数据. */
+	typedef std::vector<int> THistogramData;
+	bool GetHistogramData( THistogramData& grayHistoram, THistogramData& rh, THistogramData& gh, THistogramData& bh ) const;
+
 	/** 克隆出一个一样的对象. */
 	CDigitalImage *Clone()const;
 

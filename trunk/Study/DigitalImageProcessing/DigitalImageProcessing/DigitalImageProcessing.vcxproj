@@ -141,6 +141,7 @@
     <ClInclude Include="FileView.h" />
     <ClInclude Include="GrayscaleDialog.h" />
     <ClInclude Include="HistogramCtrl.h" />
+    <ClInclude Include="HistogramDialog.h" />
     <ClInclude Include="ImageNegativeDialog.h" />
     <ClInclude Include="IntensityBitplaneSliceShowDialog.h" />
     <ClInclude Include="IntensityBitplaneSlicingDialog.h" />
@@ -168,6 +169,7 @@
     <ClCompile Include="FileView.cpp" />
     <ClCompile Include="GrayscaleDialog.cpp" />
     <ClCompile Include="HistogramCtrl.cpp" />
+    <ClCompile Include="HistogramDialog.cpp" />
     <ClCompile Include="ImageNegativeDialog.cpp" />
     <ClCompile Include="IntensityBitplaneSliceShowDialog.cpp" />
     <ClCompile Include="IntensityBitplaneSlicingDialog.cpp" />

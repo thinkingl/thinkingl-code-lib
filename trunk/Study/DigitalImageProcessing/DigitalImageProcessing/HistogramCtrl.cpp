@@ -41,6 +41,22 @@ void CHistogramCtrl::OnPaint()
 
 	dc.Rectangle( rcClient );
 
+	if ( m_histogramData.empty() )
+	{
+		return;
+	}
+
+	// 找出直方图中最大的值.
+	int maxHistogramDataValue = 0;
+	for ( size_t i=0; i<m_histogramData.size(); ++i )
+	{
+		if( m_histogramData[i] > maxHistogramDataValue )
+		{
+			maxHistogramDataValue = m_histogramData[i];
+		}
+	}
+	maxHistogramDataValue *= 1.5;
+
 	CRect rcHistogram = rcClient;
 
 	for ( int i=0; i<rcHistogram.Width(); ++i )
@@ -53,12 +69,12 @@ void CHistogramCtrl::OnPaint()
 		int endX = beginX;
 		
 		// 算出这个地方对应的数据序号.
-		int dataIndex = i * this->m_histogramData.size() / rcClient.Width();
+		size_t dataIndex = i * this->m_histogramData.size() / rcClient.Width();
 		int endY = 0;
 		if ( dataIndex >=0 && dataIndex < m_histogramData.size() )
 		{
 			// 算出数据值对应的图中的像素点数.
-			endY = rcHistogram.Height() - ( m_histogramData[ dataIndex ] * rcClient.Height() / m_maxDataValue );
+			endY = rcHistogram.Height() - ( m_histogramData[ dataIndex ] * rcClient.Height() / maxHistogramDataValue );
 		}
 		else
 		{
@@ -69,9 +85,12 @@ void CHistogramCtrl::OnPaint()
 	}
 }
 
-bool CHistogramCtrl::SetHistoramData( int maxDataValue, const THistogramData& data )
+bool CHistogramCtrl::SetHistoramData( const CDigitalImage::THistogramData& data )
 {
-	this->m_maxDataValue = maxDataValue;
 	this->m_histogramData = data ;
+	if ( this->GetSafeHwnd() )
+	{
+		this->Invalidate();
+	}
 	return true;
 }
