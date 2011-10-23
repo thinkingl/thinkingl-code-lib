@@ -461,3 +461,37 @@ bool CDigitalImage::IntensityBitPlanesOneBit( int bitIndex )
 
 	return true;
 }
+
+bool CDigitalImage::GetHistogramData( THistogramData& grayHistoram, THistogramData& rh, THistogramData& gh, THistogramData& bh )const
+{
+	int lvl = this->GetIntensityLevel();
+	int rs = 1 << lvl;
+
+	grayHistoram.resize( rs, 0 );
+	rh = gh = bh = grayHistoram;
+
+	for( int h=0; h<this->GetHeight(); ++h )
+	{
+		for( int w=0; w<this->GetWidth(); ++w )
+		{
+			int curValue = m_imageDataBuf[ h*this->GetWidth() + w ];			
+			if ( this->m_imageType == DIT_RGB )
+			{
+				int r= GetRValue( curValue );
+				int g= GetGValue( curValue );
+				int b= GetBValue( curValue );
+
+				rh[ r ] ++;
+				gh[ g ] ++;
+				bh[ b ] ++;
+
+				grayHistoram[ (r+g+b)/3 ] ++;
+			}
+			else if( this->m_imageType == DIT_Gray )
+			{
+				grayHistoram[ curValue ] ++;
+			}
+		}
+	}
+	return true;	
+}

@@ -12,7 +12,7 @@ CMFCPropertyGridDialogProperty::CMFCPropertyGridDialogProperty(const CString& st
 	this->m_dlgResourceId = dlgResourceId;
 	this->m_buttonText = lpszBtnText;
 
-	m_dwFlags = AFX_PROP_HAS_BUTTON;
+//	m_dwFlags = AFX_PROP_HAS_BUTTON;
 }
 
 
@@ -49,12 +49,7 @@ BOOL CMFCPropertyGridDialogProperty::OnClickValue( UINT uiMsg, CPoint point )
 
 	if ( m_pDlg && m_dlgResourceId )
 	{
-		if ( m_pDlg->GetSafeHwnd() )
-		{
-			// 窗口已经创建.
-
-		}
-		else
+		if ( m_pDlg->GetSafeHwnd() == NULL )
 		{
 			// 窗口还没有创建.
 			m_pDlg->Create( this->m_dlgResourceId , this->m_pWndList );
@@ -71,6 +66,22 @@ BOOL CMFCPropertyGridDialogProperty::OnEdit(LPPOINT lptClick)
 	ASSERT_VALID(m_pWndList);
 
 	// 创建.
+	if ( m_pDlg && m_dlgResourceId )
+	{
+		if ( m_pDlg->GetSafeHwnd() )
+		{
+			// 窗口已经创建.
+
+		}
+		else
+		{
+			// 窗口还没有创建.
+			m_pDlg->Create( this->m_dlgResourceId , this->m_pWndList );
+		}
+
+		this->m_pWndInPlace = m_pDlg;
+//		m_pDlg->ShowWindow( SW_SHOW );
+	}
 
 
 	return TRUE;
@@ -78,7 +89,7 @@ BOOL CMFCPropertyGridDialogProperty::OnEdit(LPPOINT lptClick)
 
 void CMFCPropertyGridDialogProperty::OnDrawValue(CDC* pDC, CRect rect)
 {
-	pDC->DrawText( _T("abc"), rect, 0 );
+	pDC->DrawText( _T("点击查看直方图"), rect, 0 );
 }
 //
 //void CMFCPropertyGridDialogProperty::SetDialog( CDialog *pDlg, DWORD dlgResourceId )

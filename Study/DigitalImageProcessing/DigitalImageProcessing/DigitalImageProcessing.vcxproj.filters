@@ -177,6 +177,9 @@
     <ClInclude Include="MFCPropertyGridDialogProperty.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="HistogramDialog.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DigitalImageProcessing.cpp">
@@ -246,6 +249,9 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="MFCPropertyGridDialogProperty.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="HistogramDialog.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

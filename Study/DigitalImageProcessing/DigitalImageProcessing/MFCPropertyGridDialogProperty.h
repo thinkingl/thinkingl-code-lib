@@ -3,6 +3,7 @@
 #include "stdafx.h"
 #include "afxpropertygridctrl.h"
 
+
 class CMFCPropertyGridDialogProperty :
 	public CMFCPropertyGridProperty
 {
