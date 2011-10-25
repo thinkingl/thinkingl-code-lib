@@ -180,6 +180,9 @@
     <ClInclude Include="HistogramDialog.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="HistogramEqualizationDialog.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DigitalImageProcessing.cpp">
@@ -252,6 +255,9 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="HistogramDialog.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="HistogramEqualizationDialog.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

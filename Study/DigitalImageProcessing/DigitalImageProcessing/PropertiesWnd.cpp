@@ -34,6 +34,11 @@ CPropertiesWnd::CPropertiesWnd()
 
 CPropertiesWnd::~CPropertiesWnd()
 {
+	if ( m_pHistogramDialog&& NULL == m_pHistogramDialog->GetSafeHwnd() )
+	{
+		delete m_pHistogramDialog;
+		m_pHistogramDialog = 0;
+	}
 }
 
 BEGIN_MESSAGE_MAP(CPropertiesWnd, CDockablePane)

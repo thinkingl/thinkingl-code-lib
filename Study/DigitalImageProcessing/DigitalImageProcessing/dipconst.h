@@ -12,6 +12,7 @@ enum EDIPFunction
 	DIP_IntensityPower,			// 幂值, Power-law (Gamma) Transformation. s = c * r^v 
 	DIP_IntensityBitsPlaneReconstruct,	// 位图的各位重构.
 	DIP_IntensityBitsPlaneShow,	// 位图的各位分拆显示.
+	DIP_IntensityHistogramEqualization,	// 直方图平衡.
 };
 
 // end of the file

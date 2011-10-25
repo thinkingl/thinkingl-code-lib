@@ -117,6 +117,9 @@ int CFunctionView::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	m_dlgIntensityBitplaneSlicShow.Create( CIntensityBitplaneSliceShowDialog::IDD, this );
 	this->m_functionDlgTable[ DIP_IntensityBitsPlaneShow ] = &m_dlgIntensityBitplaneSlicShow;
 
+	m_dlgHistogramEqualization.Create( CHistogramEqualizationDialog::IDD, this );
+	this->m_functionDlgTable[ DIP_IntensityHistogramEqualization ] = &m_dlgHistogramEqualization;
+
 	OnChangeVisualStyle();
 
 	m_wndToolBar.SetPaneStyle(m_wndToolBar.GetPaneStyle() | CBRS_TOOLTIPS | CBRS_FLYBY);
@@ -186,38 +189,14 @@ void CFunctionView::FillDIPFunctionTree()
 	HTREEITEM hBitShow = m_wndFunctionView.InsertItem( _T("3.2.4 Bit planes show"), 3, 3, hIntensityFun );
 	m_wndFunctionView.SetItemData( hBitShow, DIP_IntensityBitsPlaneShow );
 
+	HTREEITEM hHistogramEqualization = m_wndFunctionView.InsertItem( _T( "3.3.1 Histogram Equalization" ), 3, 3, hIntensityFun );
+	m_wndFunctionView.SetItemData( hHistogramEqualization, DIP_IntensityHistogramEqualization );
+
 	// 默认全部展开.
 	m_wndFunctionView.Expand(hRoot, TVE_EXPAND);
 	m_wndFunctionView.Expand( hRGB2Gray, TVE_EXPAND );
 	m_wndFunctionView.Expand( hIntensityFun, TVE_EXPAND );
-
-
-// 	hClass = m_wndFunctionView.InsertItem(_T("CFakeApp"), 1, 1, hRoot);
-// 	m_wndFunctionView.InsertItem(_T("CFakeApp()"), 3, 3, hClass);
-// 	m_wndFunctionView.InsertItem(_T("InitInstance()"), 3, 3, hClass);
-// 	m_wndFunctionView.InsertItem(_T("OnAppAbout()"), 3, 3, hClass);
-// 
-// 	hClass = m_wndFunctionView.InsertItem(_T("CFakeAppDoc"), 1, 1, hRoot);
-// 	m_wndFunctionView.InsertItem(_T("CFakeAppDoc()"), 4, 4, hClass);
-// 	m_wndFunctionView.InsertItem(_T("~CFakeAppDoc()"), 3, 3, hClass);
-// 	m_wndFunctionView.InsertItem(_T("OnNewDocument()"), 3, 3, hClass);
-// 
-// 	hClass = m_wndFunctionView.InsertItem(_T("CFakeAppView"), 1, 1, hRoot);
-// 	m_wndFunctionView.InsertItem(_T("CFakeAppView()"), 4, 4, hClass);
-// 	m_wndFunctionView.InsertItem(_T("~CFakeAppView()"), 3, 3, hClass);
-// 	m_wndFunctionView.InsertItem(_T("GetDocument()"), 3, 3, hClass);
-// 	m_wndFunctionView.Expand(hClass, TVE_EXPAND);
-// 
-// 	hClass = m_wndFunctionView.InsertItem(_T("CFakeAppFrame"), 1, 1, hRoot);
-// 	m_wndFunctionView.InsertItem(_T("CFakeAppFrame()"), 3, 3, hClass);
-// 	m_wndFunctionView.InsertItem(_T("~CFakeAppFrame()"), 3, 3, hClass);
-// 	m_wndFunctionView.InsertItem(_T("m_wndMenuBar"), 6, 6, hClass);
-// 	m_wndFunctionView.InsertItem(_T("m_wndToolBar"), 6, 6, hClass);
-// 	m_wndFunctionView.InsertItem(_T("m_wndStatusBar"), 6, 6, hClass);
-// 
-// 	hClass = m_wndFunctionView.InsertItem(_T("Globals"), 2, 2, hRoot);
-// 	m_wndFunctionView.InsertItem(_T("theFakeApp"), 5, 5, hClass);
-// 	m_wndFunctionView.Expand(hClass, TVE_EXPAND);
+	
 }
 
 void CFunctionView::OnContextMenu(CWnd* pWnd, CPoint point)

@@ -18,6 +18,7 @@ CMFCPropertyGridDialogProperty::CMFCPropertyGridDialogProperty(const CString& st
 
 CMFCPropertyGridDialogProperty::~CMFCPropertyGridDialogProperty(void)
 {
+
 }
 
 void CMFCPropertyGridDialogProperty::OnClickButton(CPoint /*point*/)

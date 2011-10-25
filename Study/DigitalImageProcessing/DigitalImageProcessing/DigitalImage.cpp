@@ -485,7 +485,7 @@ bool CDigitalImage::GetHistogramData( THistogramData& grayHistoram, THistogramDa
 				gh[ g ] ++;
 				bh[ b ] ++;
 
-				grayHistoram[ (r+g+b)/3 ] ++;
+				grayHistoram[ (double)(r+g+b)/3 + 0.5 ] ++;
 			}
 			else if( this->m_imageType == DIT_Gray )
 			{
@@ -494,4 +494,67 @@ bool CDigitalImage::GetHistogramData( THistogramData& grayHistoram, THistogramDa
 		}
 	}
 	return true;	
+}
+
+bool CDigitalImage::HistogramEqualization()
+{
+	// 先获取直方图数据.
+	THistogramData grayHistogram, rh, gh, bh;
+	this->GetHistogramData( grayHistogram, rh, gh, bh );
+	// 总像素.
+	int totalPixelNum = this->GetWidth() * this->GetHeight();
+	// 最大亮度.
+	int maxIntensity = grayHistogram.size() - 1;
+	// 积分.
+	for ( size_t i=1; i<grayHistogram.size(); ++i )
+	{
+		grayHistogram[i] += grayHistogram[i-1];
+	}
+
+	// 新的亮度表.
+	typedef std::vector<int> TIntArray;
+	TIntArray intensityTable(grayHistogram.size());
+	typedef std::vector<double> TDbArray;
+	TDbArray intensityRadioTable(grayHistogram.size() );
+	for ( size_t i=0; i<grayHistogram.size(); ++i )
+	{
+		intensityTable[i] = (int)( ((double)grayHistogram[i] * maxIntensity / totalPixelNum ) + 0.5 ) ;
+		intensityRadioTable[i] = (double)intensityTable[i] / max( 0.000001, i );
+	}
+
+	int aaaa = 0;
+	int bbbb = 0;
+	// 遍历所有像素.
+	for( int h=0; h<this->GetHeight(); ++h )
+	{
+		for( int w=0; w<this->GetWidth(); ++w )
+		{
+			int curValue = m_imageDataBuf[ h*this->GetWidth() + w ];	
+			int newValue = curValue;
+			if ( this->m_imageType == DIT_RGB )
+			{
+				int r= GetRValue( curValue );
+				int g= GetGValue( curValue );
+				int b= GetBValue( curValue );
+
+				int intensity = (double)( r+g+b ) / 3 + 0.5;
+				double radio = intensityRadioTable[ intensity ];
+
+				r = intensityTable[ r ];
+				g = intensityTable[ g ];
+				b = intensityTable[ b ];
+
+				newValue = RGB( r,g,b );	
+				
+				newValue = RGB( r*radio + 0.5, g*radio + 0.5, b*radio + 0.5 );
+			}
+			else if( this->m_imageType == DIT_Gray )
+			{
+				newValue = intensityTable[ curValue ];
+
+			}
+			m_imageDataBuf[  h*this->GetWidth() + w  ] = newValue;
+		}
+	}
+	return true;
 }
