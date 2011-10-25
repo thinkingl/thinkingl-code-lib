@@ -537,7 +537,7 @@ bool CDigitalImage::HistogramEqualization()
 				int g= GetGValue( curValue );
 				int b= GetBValue( curValue );
 
-				int intensity = (double)( r+g+b ) / 3 + 0.5;
+				int intensity = (int)((double)( r+g+b ) / 3 + 0.5);
 				double radio = intensityRadioTable[ intensity ];
 
 				r = intensityTable[ r ];

@@ -55,7 +55,7 @@ void CHistogramCtrl::OnPaint()
 			maxHistogramDataValue = m_histogramData[i];
 		}
 	}
-	maxHistogramDataValue *= 1.1;
+	maxHistogramDataValue = (int)( maxHistogramDataValue * 1.1 );
 
 	// 最大值不超过255.否则效果不太好.
 //	maxHistogramDataValue = min( maxHistogramDataValue, 255 );
