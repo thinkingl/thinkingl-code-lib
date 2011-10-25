@@ -84,6 +84,9 @@ public:
 	typedef std::vector<int> THistogramData;
 	bool GetHistogramData( THistogramData& grayHistoram, THistogramData& rh, THistogramData& gh, THistogramData& bh ) const;
 
+	/** 自动白平衡. */
+	bool HistogramEqualization();
+
 	/** 克隆出一个一样的对象. */
 	CDigitalImage *Clone()const;
 

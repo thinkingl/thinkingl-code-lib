@@ -30,6 +30,7 @@ void CHistogramDialog::DoDataExchange(CDataExchange* pDX)
 
 BEGIN_MESSAGE_MAP(CHistogramDialog, CDialogEx)
 	ON_WM_SIZE()
+	ON_WM_NCDESTROY()
 END_MESSAGE_MAP()
 
 
@@ -68,4 +69,13 @@ BOOL CHistogramDialog::OnInitDialog()
 
 	return TRUE;  // return TRUE unless you set the focus to a control
 	// 异常: OCX 属性页应返回 FALSE
+}
+
+
+void CHistogramDialog::OnNcDestroy()
+{
+	CDialogEx::OnNcDestroy();
+
+	// TODO: 在此处添加消息处理程序代码
+ 
 }
