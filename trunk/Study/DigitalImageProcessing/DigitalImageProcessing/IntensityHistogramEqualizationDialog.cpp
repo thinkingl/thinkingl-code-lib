@@ -3,43 +3,43 @@
 
 #include "stdafx.h"
 #include "DigitalImageProcessing.h"
-#include "HistogramEqualizationDialog.h"
+#include "IntensityHistogramEqualizationDialog.h"
 #include "afxdialogex.h"
 
 #include "dipcommon.h"
 #include "DigitalImage.h"
 #include "DigitalImageProcessingView.h"
-// CHistogramEqualizationDialog 对话框
+// CIntensityHistogramEqualizationDialog 对话框
 
-IMPLEMENT_DYNAMIC(CHistogramEqualizationDialog, CDialogEx)
+IMPLEMENT_DYNAMIC(CIntensityHistogramEqualizationDialog, CDialogEx)
 
-CHistogramEqualizationDialog::CHistogramEqualizationDialog(CWnd* pParent /*=NULL*/)
-	: CDialogEx(CHistogramEqualizationDialog::IDD, pParent)
+CIntensityHistogramEqualizationDialog::CIntensityHistogramEqualizationDialog(CWnd* pParent /*=NULL*/)
+	: CDialogEx(CIntensityHistogramEqualizationDialog::IDD, pParent)
 {
 	this->m_pImage = 0;
 }
 
-CHistogramEqualizationDialog::~CHistogramEqualizationDialog()
+CIntensityHistogramEqualizationDialog::~CIntensityHistogramEqualizationDialog()
 {
 }
 
-void CHistogramEqualizationDialog::DoDataExchange(CDataExchange* pDX)
+void CIntensityHistogramEqualizationDialog::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogEx::DoDataExchange(pDX);
 	DDX_Control(pDX, IDC_HISTOGRAM, m_histogramCtrl);
 }
 
 
-BEGIN_MESSAGE_MAP(CHistogramEqualizationDialog, CDialogEx)
+BEGIN_MESSAGE_MAP(CIntensityHistogramEqualizationDialog, CDialogEx)
 	ON_WM_SHOWWINDOW()
-	ON_BN_CLICKED(ID_APPLY, &CHistogramEqualizationDialog::OnBnClickedApply)
+	ON_BN_CLICKED(ID_APPLY, &CIntensityHistogramEqualizationDialog::OnBnClickedApply)
 END_MESSAGE_MAP()
 
 
-// CHistogramEqualizationDialog 消息处理程序
+// CIntensityHistogramEqualizationDialog 消息处理程序
 
 
-void CHistogramEqualizationDialog::OnShowWindow(BOOL bShow, UINT nStatus)
+void CIntensityHistogramEqualizationDialog::OnShowWindow(BOOL bShow, UINT nStatus)
 {
 	CDialogEx::OnShowWindow(bShow, nStatus);
 
@@ -63,7 +63,7 @@ void CHistogramEqualizationDialog::OnShowWindow(BOOL bShow, UINT nStatus)
 }
 
 
-void CHistogramEqualizationDialog::OnBnClickedApply()
+void CIntensityHistogramEqualizationDialog::OnBnClickedApply()
 {
 	// TODO: 在此添加控件通知处理程序代码
 	CDigitalImageProcessingView *pCurView = GetActiveDIPView();
@@ -73,6 +73,11 @@ void CHistogramEqualizationDialog::OnBnClickedApply()
 		{
 			CDigitalImage *pDI = pCurView->StartDIP();
 			m_pImage = pDI;
+		}
+
+		if ( CDigitalImage::DIT_RGB == m_pImage->GetImageType() )
+		{
+			this->MessageBox( _T( "对不起, 现在的这个直方图平衡算法对彩色图像效果很差." ) );
 		}
 
 		m_pImage->HistogramEqualization();

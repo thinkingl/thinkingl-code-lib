@@ -16,6 +16,9 @@
     <Filter Include="DIP">
       <UniqueIdentifier>{97e82e07-3bcf-45f2-91b8-5343084eeb95}</UniqueIdentifier>
     </Filter>
+    <Filter Include="功能控制面板">
+      <UniqueIdentifier>{18b36150-a038-4bfd-99e9-8b173d6badba}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="ReadMe.txt" />
@@ -153,25 +156,10 @@
     <ClInclude Include="dipconst.h">
       <Filter>DIP</Filter>
     </ClInclude>
-    <ClInclude Include="ImageNegativeDialog.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="IntensityLogTransformationDialog.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="IntensityPowerTransformationDialog.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="IntensityBitplaneSlicingDialog.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="HistogramCtrl.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="UnitTestDialog.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="IntensityBitplaneSliceShowDialog.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="MFCPropertyGridDialogProperty.h">
@@ -180,8 +168,23 @@
     <ClInclude Include="HistogramDialog.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="HistogramEqualizationDialog.h">
-      <Filter>头文件</Filter>
+    <ClInclude Include="IntensityHistogramEqualizationDialog.h">
+      <Filter>功能控制面板</Filter>
+    </ClInclude>
+    <ClInclude Include="IntensityPowerTransformationDialog.h">
+      <Filter>功能控制面板</Filter>
+    </ClInclude>
+    <ClInclude Include="ImageNegativeDialog.h">
+      <Filter>功能控制面板</Filter>
+    </ClInclude>
+    <ClInclude Include="IntensityBitplaneSliceShowDialog.h">
+      <Filter>功能控制面板</Filter>
+    </ClInclude>
+    <ClInclude Include="IntensityBitplaneSlicingDialog.h">
+      <Filter>功能控制面板</Filter>
+    </ClInclude>
+    <ClInclude Include="IntensityLogTransformationDialog.h">
+      <Filter>功能控制面板</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -230,25 +233,10 @@
     <ClCompile Include="dipcommon.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="ImageNegativeDialog.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="IntensityLogTransformationDialog.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="IntensityPowerTransformationDialog.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="IntensityBitplaneSlicingDialog.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="HistogramCtrl.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="UnitTestDialog.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="IntensityBitplaneSliceShowDialog.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="MFCPropertyGridDialogProperty.cpp">
@@ -257,8 +245,23 @@
     <ClCompile Include="HistogramDialog.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="HistogramEqualizationDialog.cpp">
-      <Filter>源文件</Filter>
+    <ClCompile Include="IntensityHistogramEqualizationDialog.cpp">
+      <Filter>功能控制面板</Filter>
+    </ClCompile>
+    <ClCompile Include="IntensityPowerTransformationDialog.cpp">
+      <Filter>功能控制面板</Filter>
+    </ClCompile>
+    <ClCompile Include="ImageNegativeDialog.cpp">
+      <Filter>功能控制面板</Filter>
+    </ClCompile>
+    <ClCompile Include="IntensityBitplaneSliceShowDialog.cpp">
+      <Filter>功能控制面板</Filter>
+    </ClCompile>
+    <ClCompile Include="IntensityBitplaneSlicingDialog.cpp">
+      <Filter>功能控制面板</Filter>
+    </ClCompile>
+    <ClCompile Include="IntensityLogTransformationDialog.cpp">
+      <Filter>功能控制面板</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

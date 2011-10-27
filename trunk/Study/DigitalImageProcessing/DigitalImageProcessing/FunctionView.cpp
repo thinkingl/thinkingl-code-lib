@@ -117,7 +117,7 @@ int CFunctionView::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	m_dlgIntensityBitplaneSlicShow.Create( CIntensityBitplaneSliceShowDialog::IDD, this );
 	this->m_functionDlgTable[ DIP_IntensityBitsPlaneShow ] = &m_dlgIntensityBitplaneSlicShow;
 
-	m_dlgHistogramEqualization.Create( CHistogramEqualizationDialog::IDD, this );
+	m_dlgHistogramEqualization.Create( CIntensityHistogramEqualizationDialog::IDD, this );
 	this->m_functionDlgTable[ DIP_IntensityHistogramEqualization ] = &m_dlgHistogramEqualization;
 
 	OnChangeVisualStyle();
