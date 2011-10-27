@@ -10,7 +10,7 @@
 #include "IntensityPowerTransformationDialog.h"
 #include "IntensityBitplaneSlicingDialog.h"
 #include "IntensityBitplaneSliceShowDialog.h"
-#include "HistogramEqualizationDialog.h"
+#include "IntensityHistogramEqualizationDialog.h"
 
 #include <map>
 
@@ -67,7 +67,7 @@ private:
 	CIntensityBitplaneSlicingDialog m_dlgIntensityBitplaneSlicing;
 	CIntensityBitplaneSliceShowDialog m_dlgIntensityBitplaneSlicShow;
 
-	CHistogramEqualizationDialog m_dlgHistogramEqualization;
+	CIntensityHistogramEqualizationDialog m_dlgHistogramEqualization;
 
 	/** 功能与对话框的表. */
 	typedef std::map< EDIPFunction, CWnd* > TFunctionDlgTable;

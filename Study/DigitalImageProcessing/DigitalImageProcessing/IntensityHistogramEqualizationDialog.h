@@ -3,16 +3,16 @@
 
 #include "HistogramCtrl.h"
 
-// CHistogramEqualizationDialog 对话框
+// CIntensityHistogramEqualizationDialog 对话框
 class CDigitalImage;
 
-class CHistogramEqualizationDialog : public CDialogEx
+class CIntensityHistogramEqualizationDialog : public CDialogEx
 {
-	DECLARE_DYNAMIC(CHistogramEqualizationDialog)
+	DECLARE_DYNAMIC(CIntensityHistogramEqualizationDialog)
 
 public:
-	CHistogramEqualizationDialog(CWnd* pParent = NULL);   // 标准构造函数
-	virtual ~CHistogramEqualizationDialog();
+	CIntensityHistogramEqualizationDialog(CWnd* pParent = NULL);   // 标准构造函数
+	virtual ~CIntensityHistogramEqualizationDialog();
 
 // 对话框数据
 	enum { IDD = IDD_DIALOG_FUNCTION_HISTOGRAM_EQUALIZATION };
