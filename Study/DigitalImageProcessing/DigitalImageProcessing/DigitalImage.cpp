@@ -34,24 +34,76 @@ bool CDigitalImage::Load( ctstring filePath )
 		
 		this->m_imageDataBuf.resize( width*height, 0 );
 
-		for ( int h=0; h<height; ++h )
-		{
-			for ( int w=0; w<width; ++w )
-			{
-				int value = m_image.GetPixel( w, h );
-				this->m_imageDataBuf[ h*width + w ] = value;
-			}
-		}
-
 		// 保存没像素字节数.
 		// 这里先默认的认为载入的图片都是RGB表示的!
-		this->m_intensityLevels = bpp/3;
-		this->m_intensityLevels = min( 8, m_intensityLevels );	// 如果有透明通道的32bit图片, 亮度阶数仍然是8.
+		// this->m_intensityLevels = bpp/3;
+		// this->m_intensityLevels = min( 8, m_intensityLevels );	// 如果有透明通道的32bit图片, 亮度阶数仍然是8.
+		switch( bpp )
+		{
+		case 8:
+			this->m_imageType = DIT_Gray;
+			this->m_intensityLevels = 8;
+			break;
+		case 24:
+		case 32:
+			this->m_imageType = DIT_RGB;
+			this->m_intensityLevels = 8;
+			break;
+		default:
+			assert( false );
+			this->m_imageType = DIT_RGB;
+			this->m_intensityLevels = 8;
+			break;
+		}
 
+		bool needNetSequnce2HostSequence = ( htonl( 1 ) != 1 ) ;
 
-		// 保存图片类型. 
-		// !暂时认为载入的图片都是RGB模式的图片.
-		this->m_imageType = DIT_RGB;
+		void *pData = m_image.GetBits();
+		for ( int h=0; h<height; ++h )
+		{
+			void* lineBeginPos = (char*)pData + ( h * pitch );
+			for ( int w=0; w<width; ++w )
+			{
+				unsigned int value = 0;
+				int bytePP = bpp / 8;
+
+				value = *(int*)( (char*)lineBeginPos + bytePP * w );
+				int sdfwdf =  ( ( 1 << bpp ) - 1 );
+				value &= ( ( (int)1 << bpp ) - 1 );	// 截取低bpp位.
+
+				// 图片中是网络序的, 需要转字节序..
+				if ( needNetSequnce2HostSequence )
+				{
+					unsigned int hostValue = 0;
+					for( int i=0; i<bytePP; ++i )
+					{
+						hostValue += *( ( unsigned char *)&value + i );
+						if( i<bytePP-1 )
+						{
+							hostValue <<= 8;
+						}
+					}
+					
+					value = hostValue;
+				}
+// 				int hValue = ntohl( value );
+// 
+// 				value = ( hValue >> (32-bpp) );	// 转序后需要再次位移....
+// 
+// 				int r= GetRValue( value );
+// 				int g= GetGValue( value );
+// 				int b= GetBValue( value );
+
+// 				int kk = m_image.GetPixel( w, h );
+// 
+// 				int kkr= GetRValue( kk );
+// 				int kkg= GetGValue( kk );
+// 				int kkb= GetBValue( kk );
+
+				this->m_imageDataBuf[ h*width + w ] = value;
+			}
+		}		
+	
 		// 保存宽度和高度.
 		this->m_width = width;
 		this->m_height = height;
@@ -73,14 +125,21 @@ CImage *CDigitalImage::GetImageDrawer() const
 	int height = this->GetHeight();
 	int bpp = this->GetBitsPerPixel();
 
-	// CImage 就是支持RGB的位图.
+	// CImage 就是支持RGB的位图. 我们用支持透明色的32bit..
 	const int DrawerIntensiveLevel = 8;
-	const int DrawerBPP = DrawerIntensiveLevel * 3;
+	const int DrawerBPP = DrawerIntensiveLevel * 4;
 	BOOL bOk = pImg->Create( width, height, DrawerBPP );
 	ASSERT( bOk );
 
+	void *pBits = pImg->GetBits();
+	int pitch = pImg->GetPitch();
+	int drawerBpp = pImg->GetBPP();
+	int bytePP = drawerBpp / 8;
+	bool needNetSequnce2HostSequence = ( htonl( 1 ) != 1 ) ;
+
 	for ( int h=0; h<height; ++h )
 	{
+		void *pLineBeginPos = (char*)pBits + h * pitch;
 		for ( int w=0; w<width; ++w )
 		{
 			int value = this->m_imageDataBuf[ h * width + w];
@@ -106,7 +165,19 @@ CImage *CDigitalImage::GetImageDrawer() const
 
 				pixel = RGB( pixelIntensive, pixelIntensive, pixelIntensive );
 			}
-			pImg->SetPixel( w, h, pixel );
+
+			// 图片里需要网络序的, 这里算法只能支持32bit图片.
+			assert( 32 == drawerBpp );
+			
+			// 加上透明色, 直接唯一, 透明度都是0.
+			pixel <<= 8;
+
+			if ( needNetSequnce2HostSequence )
+			{
+				pixel = htonl( pixel );
+			}
+
+			((unsigned int*)pLineBeginPos)[ w ] = /*htonl*/( pixel );
 		}
 	}
 	return pImg;
