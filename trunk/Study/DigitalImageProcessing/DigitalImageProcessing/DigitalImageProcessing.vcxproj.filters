@@ -19,6 +19,12 @@
     <Filter Include="功能控制面板">
       <UniqueIdentifier>{18b36150-a038-4bfd-99e9-8b173d6badba}</UniqueIdentifier>
     </Filter>
+    <Filter Include="images">
+      <UniqueIdentifier>{45358dda-d653-4f60-821b-40d3cbc71195}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="doc">
+      <UniqueIdentifier>{6470a1b9-34bd-459b-b6a8-522c6c4189f2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="ReadMe.txt" />
@@ -99,6 +105,27 @@
     </None>
     <None Include="res\Toolbar256.bmp">
       <Filter>资源文件</Filter>
+    </None>
+    <None Include="..\images\Fig1.jpg">
+      <Filter>images</Filter>
+    </None>
+    <None Include="..\images\Fig2.jpg">
+      <Filter>images</Filter>
+    </None>
+    <None Include="..\images\fig3.tif">
+      <Filter>images</Filter>
+    </None>
+    <None Include="..\images\Fig4.jpg">
+      <Filter>images</Filter>
+    </None>
+    <None Include="..\images\Fig5.jpg">
+      <Filter>images</Filter>
+    </None>
+    <None Include="..\images\Fig6.jpg">
+      <Filter>images</Filter>
+    </None>
+    <None Include="..\doc\DIPprojects2010.doc">
+      <Filter>doc</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>

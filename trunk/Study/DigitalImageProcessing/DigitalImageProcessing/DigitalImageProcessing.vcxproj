@@ -100,6 +100,13 @@
     </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <None Include="..\doc\DIPprojects2010.doc" />
+    <None Include="..\images\Fig1.jpg" />
+    <None Include="..\images\Fig2.jpg" />
+    <None Include="..\images\fig3.tif" />
+    <None Include="..\images\Fig4.jpg" />
+    <None Include="..\images\Fig5.jpg" />
+    <None Include="..\images\Fig6.jpg" />
     <None Include="ReadMe.txt" />
     <None Include="res\classview.bmp" />
     <None Include="res\classview_hc.bmp" />
