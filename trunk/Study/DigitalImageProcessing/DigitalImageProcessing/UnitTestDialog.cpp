@@ -5,7 +5,7 @@
 #include "DigitalImageProcessing.h"
 #include "UnitTestDialog.h"
 #include "afxdialogex.h"
-
+#include "matrix.h"
 
 // CUnitTestDialog 对话框
 
@@ -45,6 +45,27 @@ BOOL CUnitTestDialog::OnInitDialog()
 	hisData.push_back( 64 );
 
 	this->m_histogramCtrl.SetHistoramData( hisData );
+
+	CMatrix<int>::CMatrixDataList dataList;
+	dataList.push_back( 1 );
+	dataList.push_back( 0 );
+	dataList.push_back( 2 );
+	dataList.push_back( -1 );
+	dataList.push_back( 3 );
+	dataList.push_back( 1 );
+	CMatrix<int> m1( 3, 2, dataList );
+
+	CMatrix<int> m2( 2, 3, 0 );
+	m2.Value( 0, 0 ) = 3;
+	m2.Value( 1, 0 ) = 1;
+	m2.Value( 0, 1 ) = 2;
+	m2.Value( 1, 1 ) = 1;
+	m2.Value( 0, 2 ) = 1;
+	m2.Value( 1, 2 ) = 0;
+
+	CMatrix<int> result = m1 * m2;
+
+	result.Value( 10, 20 );
 
 	return TRUE;  // return TRUE unless you set the focus to a control
 	// 异常: OCX 属性页应返回 FALSE

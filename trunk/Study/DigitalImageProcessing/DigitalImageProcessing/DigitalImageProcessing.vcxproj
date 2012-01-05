@@ -157,6 +157,7 @@
     <ClInclude Include="IntensityLogTransformationDialog.h" />
     <ClInclude Include="IntensityPowerTransformationDialog.h" />
     <ClInclude Include="MainFrm.h" />
+    <ClInclude Include="Matrix.h" />
     <ClInclude Include="MFCPropertyGridDialogProperty.h" />
     <ClInclude Include="OutputWnd.h" />
     <ClInclude Include="PropertiesWnd.h" />
@@ -186,6 +187,7 @@
     <ClCompile Include="IntensityLogTransformationDialog.cpp" />
     <ClCompile Include="IntensityPowerTransformationDialog.cpp" />
     <ClCompile Include="MainFrm.cpp" />
+    <ClCompile Include="Matrix.cpp" />
     <ClCompile Include="MFCPropertyGridDialogProperty.cpp" />
     <ClCompile Include="OutputWnd.cpp" />
     <ClCompile Include="PropertiesWnd.cpp" />
