@@ -213,6 +213,9 @@
     <ClInclude Include="IntensityLogTransformationDialog.h">
       <Filter>功能控制面板</Filter>
     </ClInclude>
+    <ClInclude Include="Matrix.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DigitalImageProcessing.cpp">
@@ -289,6 +292,9 @@
     </ClCompile>
     <ClCompile Include="IntensityLogTransformationDialog.cpp">
       <Filter>功能控制面板</Filter>
+    </ClCompile>
+    <ClCompile Include="Matrix.cpp">
+      <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
