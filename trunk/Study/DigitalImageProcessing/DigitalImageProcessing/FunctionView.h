@@ -12,7 +12,7 @@
 #include "IntensityBitplaneSliceShowDialog.h"
 #include "IntensityHistogramEqualizationDialog.h"
 #include "SpatialRotationDialog.h"
-
+#include "SpatialTranslationDialog.h"
 
 #include <map>
 
@@ -72,6 +72,7 @@ private:
 	CIntensityHistogramEqualizationDialog m_dlgHistogramEqualization;
 
 	CSpatialRotationDialog m_dlgSpatialRotation;
+	CSpatialTranslationDialog m_dlgSpatialTranslation;
 
 	/** 功能与对话框的表. */
 	typedef std::map< EDIPFunction, CWnd* > TFunctionDlgTable;

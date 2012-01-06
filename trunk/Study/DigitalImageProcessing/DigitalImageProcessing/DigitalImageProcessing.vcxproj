@@ -51,7 +51,7 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
-      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PrecompiledHeader>Use</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -171,10 +171,16 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ChildFrm.cpp" />
-    <ClCompile Include="dipcommon.cpp" />
+    <ClCompile Include="dipcommon.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="FunctionView.cpp" />
-    <ClCompile Include="DigitalImage.cpp" />
-    <ClCompile Include="DigitalImageLoader.cpp" />
+    <ClCompile Include="DigitalImage.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="DigitalImageLoader.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="DigitalImageProcessing.cpp" />
     <ClCompile Include="DigitalImageProcessingDoc.cpp" />
     <ClCompile Include="DigitalImageProcessingView.cpp" />
@@ -189,8 +195,12 @@
     <ClCompile Include="IntensityLogTransformationDialog.cpp" />
     <ClCompile Include="IntensityPowerTransformationDialog.cpp" />
     <ClCompile Include="MainFrm.cpp" />
-    <ClCompile Include="Matrix.cpp" />
-    <ClCompile Include="MFCPropertyGridDialogProperty.cpp" />
+    <ClCompile Include="Matrix.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="MFCPropertyGridDialogProperty.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="OutputWnd.cpp" />
     <ClCompile Include="PropertiesWnd.cpp" />
     <ClCompile Include="SpatialRotationDialog.cpp" />
