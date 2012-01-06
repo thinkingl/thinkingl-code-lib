@@ -4,6 +4,7 @@
 *	Created by thinkingl@20120105.
 */
 #include <vector>
+#include <assert.h>
 
 template< typename _TypeOfMatrix>
 class CMatrix

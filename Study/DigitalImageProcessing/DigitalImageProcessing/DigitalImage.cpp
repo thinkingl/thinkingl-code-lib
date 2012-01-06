@@ -1,6 +1,8 @@
 #include "DigitalImage.h"
 
 #include "common.h"
+#include "Matrix.h"
+#include <assert.h>
 
 CDigitalImage::CDigitalImage(void)
 {
@@ -556,7 +558,7 @@ bool CDigitalImage::GetHistogramData( THistogramData& grayHistoram, THistogramDa
 				gh[ g ] ++;
 				bh[ b ] ++;
 
-				grayHistoram[ (double)(r+g+b)/3 + 0.5 ] ++;
+				grayHistoram[ int((double)(r+g+b)/3 + 0.5) ] ++;
 			}
 			else if( this->m_imageType == DIT_Gray )
 			{
@@ -628,4 +630,79 @@ bool CDigitalImage::HistogramEqualization()
 		}
 	}
 	return true;
+}
+
+void CDigitalImage::Rotate( double angle, int rotationX, int rotationY, EInterpolateType interpolateType )
+{
+	// 将角度从0-360转换为弧度.
+	angle = angle * 3.14159265 / 180;
+	// 课本 P.110
+	CMatrix<double> rotateMarix( 3, 3, 0 );
+	rotateMarix.Value( 0, 0 ) = cos( angle );
+	rotateMarix.Value( 1, 0 ) = sin( angle );
+	rotateMarix.Value( 0, 1 ) = -sin( angle );
+	rotateMarix.Value( 1, 1 ) = cos( angle );
+	rotateMarix.Value( 2, 2 ) = 1;
+
+	TImageDataBuf newImg( this->GetWidth() * this->GetHeight(), 0 );
+
+	// 确定新图片的像素点..
+	for ( int x = 0; x<this->GetWidth(); ++x )
+	{
+		for ( int y=0; y<this->GetHeight(); ++y )
+		{
+			// 先转换坐标原点.
+			x -= rotationX;
+			y -= rotationY;
+
+			CMatrix<double> originalCoordinateMatrix( 3, 1, 0 );
+			originalCoordinateMatrix.Value( 0, 0 ) = x;
+			originalCoordinateMatrix.Value( 1, 0 ) = y;
+			originalCoordinateMatrix.Value( 2, 0 ) = 1;
+
+			CMatrix<double> transformedCoord = originalCoordinateMatrix * rotateMarix;
+
+			// 最近的点, 四舍五入.
+			int xTrans = int( transformedCoord.Value( 0, 0 ) + 0.5 );
+			int yTrans = int( transformedCoord.Value( 1, 0 ) + 0.5 );
+
+			// 将坐标转换回来.
+			x += rotationX;
+			y += rotationY;
+
+			// 得到的新坐标也需要转换回来.
+			xTrans += rotationX;
+			yTrans += rotationY;
+
+			int indexTrans = yTrans * this->GetWidth() + xTrans;
+			if ( xTrans > 0 && xTrans < this->GetWidth() && yTrans > 0 && yTrans < this->GetHeight() )
+			{
+				newImg[ indexTrans ] = m_imageDataBuf[ y*this->GetWidth()+x ];
+			}			
+		}
+	}
+
+	m_imageDataBuf = newImg;
+}
+
+void CDigitalImage::Translate( int coordX, int coordY )
+{
+	TImageDataBuf newImg( this->GetWidth() * this->GetHeight(), 0 );
+
+	// 确定新图片的像素点..
+	for ( int x = 0; x<this->GetWidth(); ++x )
+	{
+		for ( int y=0; y<this->GetHeight(); ++y )
+		{
+			// 先转换坐标原点.			
+			int xTrans = x + coordX;
+			int yTrans = y + coordY;
+
+			int indexTrans = yTrans * this->GetWidth() + xTrans;
+			if ( xTrans > 0 && xTrans < this->GetWidth() && yTrans > 0 && yTrans < this->GetHeight() )
+			{
+				newImg[ indexTrans ] = m_imageDataBuf[ y*this->GetWidth()+x ];
+			}			
+		}
+	}
 }
