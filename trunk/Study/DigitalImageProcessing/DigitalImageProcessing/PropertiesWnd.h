@@ -54,6 +54,10 @@ protected:
 	/** 每像素占用字节数. */
 	CMFCPropertyGridProperty *m_pPropImageBPP;
 
+	/** 宽度和高度. */
+	CMFCPropertyGridProperty *m_pPropImageWidth;
+	CMFCPropertyGridProperty *m_pPropImageHeight;
+
 	CMFCPropertyGridDialogProperty *m_pPropHistogram;
 
 	/** 直方图对话框. */

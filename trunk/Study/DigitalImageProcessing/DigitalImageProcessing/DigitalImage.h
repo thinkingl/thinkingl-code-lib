@@ -12,6 +12,14 @@ public:
 		DIT_Gray,	// 灰度图.
 		DIT_RGB,		// RGB图.
 	};
+
+	/**	插值类型. */
+	enum EInterpolateType
+	{
+		InterpolateNearestNeighbor,	// 最近临近点插值.
+		InterpolateBilinear,		// 双线性插值.
+	};
+
 public:
 	CDigitalImage(void);
 	virtual ~CDigitalImage(void);
@@ -95,6 +103,13 @@ public:
 
 	/** 释放资源. */
 	void Release();
+
+	/** 顺时针旋转. */
+	void Rotate( double angle, int rotationX, int rotationY, EInterpolateType interpolateType );
+
+	/** 位移. */
+	void Translate( int coordX, int coordY );
+
 private:
 	
 	/** 灰度换算. 

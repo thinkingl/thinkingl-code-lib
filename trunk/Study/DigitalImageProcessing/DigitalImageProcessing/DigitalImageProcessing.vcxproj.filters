@@ -216,6 +216,12 @@
     <ClInclude Include="Matrix.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="SpatialRotationDialog.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="SpatialTranslationDialog.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DigitalImageProcessing.cpp">
@@ -294,6 +300,12 @@
       <Filter>功能控制面板</Filter>
     </ClCompile>
     <ClCompile Include="Matrix.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="SpatialRotationDialog.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="SpatialTranslationDialog.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

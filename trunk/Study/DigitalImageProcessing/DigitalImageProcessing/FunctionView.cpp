@@ -102,6 +102,9 @@ int CFunctionView::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	m_dlgRGB2GrayYUV.SetDIPFunction( DIP_RGB2Gray_YUV );
 	this->m_functionDlgTable[ DIP_RGB2Gray_YUV ] = &m_dlgRGB2GrayYUV;
 
+	m_dlgSpatialRotation.Create( CSpatialRotationDialog::IDD, this );
+	this->m_functionDlgTable[ DIP_Spatial_Rotation ] = &m_dlgSpatialRotation;
+
 	m_dlgImageNegative.Create( CImageNegativeDialog::IDD, this );
 	this->m_functionDlgTable[ DIP_IntensityNegitive ] = &m_dlgImageNegative;
 
@@ -119,6 +122,8 @@ int CFunctionView::OnCreate(LPCREATESTRUCT lpCreateStruct)
 
 	m_dlgHistogramEqualization.Create( CIntensityHistogramEqualizationDialog::IDD, this );
 	this->m_functionDlgTable[ DIP_IntensityHistogramEqualization ] = &m_dlgHistogramEqualization;
+
+	
 
 	OnChangeVisualStyle();
 
@@ -169,6 +174,18 @@ void CFunctionView::FillDIPFunctionTree()
 	HTREEITEM hYUV = m_wndFunctionView.InsertItem(_T("YUV方式"), 3, 3, hRGB2Gray);
 	m_wndFunctionView.SetItemData( hYUV, DIP_RGB2Gray_YUV );
 
+	// 图像空间操作.
+	HTREEITEM hSpatialOperatisons = m_wndFunctionView.InsertItem(_T("2.6.5 Spatial Operations"), 2, 2, hRoot);
+	HTREEITEM hRotation = m_wndFunctionView.InsertItem( _T( "Rotation" ), 3, 3, hSpatialOperatisons );
+	m_wndFunctionView.SetItemData( hRotation, DIP_Spatial_Rotation );
+
+	HTREEITEM hTranslation = m_wndFunctionView.InsertItem( _T( "Translation" ), 3, 3, hSpatialOperatisons );
+	m_wndFunctionView.SetItemData( hTranslation, DIP_Spatial_Translation );
+
+	HTREEITEM hScaling = m_wndFunctionView.InsertItem( _T( "Scaling" ), 3, 3, hSpatialOperatisons );
+	m_wndFunctionView.SetItemData( hScaling, DIP_Spatial_Scaling );
+
+	// 图像灰度转换.
 	HTREEITEM hIntensityFun = m_wndFunctionView.InsertItem(_T("3 Intensity Transformation"), 2, 2, hRoot);
 
 	HTREEITEM hGrayscaleLevel = m_wndFunctionView.InsertItem(_T("灰阶调节"), 3, 3, hIntensityFun );
@@ -191,6 +208,8 @@ void CFunctionView::FillDIPFunctionTree()
 
 	HTREEITEM hHistogramEqualization = m_wndFunctionView.InsertItem( _T( "3.3.1 Histogram Equalization" ), 3, 3, hIntensityFun );
 	m_wndFunctionView.SetItemData( hHistogramEqualization, DIP_IntensityHistogramEqualization );
+
+	
 
 	// 默认全部展开.
 	m_wndFunctionView.Expand(hRoot, TVE_EXPAND);

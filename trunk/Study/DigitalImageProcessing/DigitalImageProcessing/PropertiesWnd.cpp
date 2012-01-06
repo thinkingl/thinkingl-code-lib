@@ -203,6 +203,14 @@ void CPropertiesWnd::InitPropList()
 	this->m_pPropImageType->AllowEdit( FALSE );
 	pGroupImage->AddSubItem( m_pPropImageType );
 
+	this->m_pPropImageWidth = new CMFCPropertyGridProperty( _T( "width" ), _T( "" ), _T( "图片的像素宽度" ) );
+	this->m_pPropImageWidth->AllowEdit( FALSE );
+	pGroupImage->AddSubItem( m_pPropImageWidth );
+
+	this->m_pPropImageHeight = new CMFCPropertyGridProperty( _T( "height" ), _T( "" ), _T( "图片的像素高度" ) );
+	this->m_pPropImageHeight->AllowEdit( FALSE );
+	pGroupImage->AddSubItem( m_pPropImageHeight );
+
 	this->m_pPropImageIntensiveLevel = new CMFCPropertyGridProperty( _T( "灰度阶数" ), _T( "" ), _T( "图片灰度的阶数(1-8) RGB彩色图片指每个原色的灰度阶数." ) );
 	m_pPropImageIntensiveLevel->AllowEdit( FALSE );
 	pGroupImage->AddSubItem( m_pPropImageIntensiveLevel );
@@ -293,6 +301,17 @@ void CPropertiesWnd::UpdateProperties( CDigitalImage * pImg )
 		}
 		m_pPropImageType->SetValue( imgTypeStr.c_str() );
 	}
+
+	ASSERT( m_pPropImageWidth );
+	wstringstream ssWidth;
+	ssWidth << pImg->GetWidth();
+	m_pPropImageWidth->SetValue( ssWidth.str().c_str() );
+
+
+	ASSERT( m_pPropImageHeight );
+	wstringstream ssHeight;
+	ssHeight << pImg->GetHeight();
+	m_pPropImageHeight->SetValue( ssHeight.str().c_str() );
 
 	ASSERT( m_pPropImageIntensiveLevel );
 	if ( m_pPropImageIntensiveLevel )
