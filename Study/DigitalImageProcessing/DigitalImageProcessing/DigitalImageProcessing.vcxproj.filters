@@ -177,9 +177,6 @@
     <ClInclude Include="GrayscaleDialog.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="dipcommon.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="dipconst.h">
       <Filter>DIP</Filter>
     </ClInclude>
@@ -213,14 +210,17 @@
     <ClInclude Include="IntensityLogTransformationDialog.h">
       <Filter>功能控制面板</Filter>
     </ClInclude>
-    <ClInclude Include="Matrix.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="SpatialRotationDialog.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="SpatialTranslationDialog.h">
       <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Matrix.h">
+      <Filter>DIP</Filter>
+    </ClInclude>
+    <ClInclude Include="dipcommon.h">
+      <Filter>DIP</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -266,9 +266,6 @@
     <ClCompile Include="GrayscaleDialog.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="dipcommon.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="HistogramCtrl.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
@@ -299,14 +296,17 @@
     <ClCompile Include="IntensityLogTransformationDialog.cpp">
       <Filter>功能控制面板</Filter>
     </ClCompile>
-    <ClCompile Include="Matrix.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="SpatialRotationDialog.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="SpatialTranslationDialog.cpp">
       <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Matrix.cpp">
+      <Filter>DIP</Filter>
+    </ClCompile>
+    <ClCompile Include="dipcommon.cpp">
+      <Filter>DIP</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

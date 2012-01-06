@@ -105,6 +105,9 @@ int CFunctionView::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	m_dlgSpatialRotation.Create( CSpatialRotationDialog::IDD, this );
 	this->m_functionDlgTable[ DIP_Spatial_Rotation ] = &m_dlgSpatialRotation;
 
+	m_dlgSpatialTranslation.Create( CSpatialTranslationDialog::IDD, this );
+	this->m_functionDlgTable[ DIP_Spatial_Translation ] = &m_dlgSpatialTranslation;
+
 	m_dlgImageNegative.Create( CImageNegativeDialog::IDD, this );
 	this->m_functionDlgTable[ DIP_IntensityNegitive ] = &m_dlgImageNegative;
 

@@ -675,7 +675,7 @@ void CDigitalImage::Rotate( double angle, int rotationX, int rotationY, EInterpo
 			yTrans += rotationY;
 
 			int indexTrans = yTrans * this->GetWidth() + xTrans;
-			if ( xTrans > 0 && xTrans < this->GetWidth() && yTrans > 0 && yTrans < this->GetHeight() )
+			if ( xTrans >= 0 && xTrans < this->GetWidth() && yTrans >= 0 && yTrans < this->GetHeight() )
 			{
 				newImg[ indexTrans ] = m_imageDataBuf[ y*this->GetWidth()+x ];
 			}			
@@ -699,10 +699,12 @@ void CDigitalImage::Translate( int coordX, int coordY )
 			int yTrans = y + coordY;
 
 			int indexTrans = yTrans * this->GetWidth() + xTrans;
-			if ( xTrans > 0 && xTrans < this->GetWidth() && yTrans > 0 && yTrans < this->GetHeight() )
+			if ( xTrans >= 0 && xTrans < this->GetWidth() && yTrans >= 0 && yTrans < this->GetHeight() )
 			{
 				newImg[ indexTrans ] = m_imageDataBuf[ y*this->GetWidth()+x ];
 			}			
 		}
 	}
+
+	m_imageDataBuf = newImg;
 }
