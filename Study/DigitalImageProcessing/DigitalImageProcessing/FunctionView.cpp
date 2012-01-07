@@ -135,6 +135,11 @@ int CFunctionView::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	m_dlgNoiseAddSaltAndPepper.Create( CNoiseAddSaltAndPepperDialog::IDD, this );
 	this->m_functionDlgTable[ DIP_NoiseSaltAndPepper ] = &m_dlgNoiseAddSaltAndPepper;
 	
+	m_dlgNoiseSpatialMeanFilter.Create( CNoiseSpatialMeanFilterDialog::IDD, this );
+	this->m_functionDlgTable[ DIP_NoiseSpatialMeanFilter ] = &m_dlgNoiseSpatialMeanFilter;
+
+	m_dlgNoiseSpatialMedianFilter.Create( CSpatialMedianFilterDialog::IDD, this );
+	this->m_functionDlgTable[ DIP_NoiseSpatialMedianFilter ] = &m_dlgNoiseSpatialMedianFilter;
 
 	OnChangeVisualStyle();
 

@@ -743,7 +743,7 @@ void CDigitalImage::Translate( int coordX, int coordY )
 
 uint32& CDigitalImage::Pixel( int x, int y )
 {
-	return m_imageDataBuf[ x + GetHeight() * y ];
+	return m_imageDataBuf[ x + GetWidth() * y ];
 }
 
 void CDigitalImage::Scale( double multipleX, double multipleY, EInterpolateType interpolateType )
@@ -917,5 +917,92 @@ void CDigitalImage::AddSaltAndPepperNoise( int pixelNumPerSalt, int pixelNumPerP
 			value = pepper ? 0 : value;
 		}
 		m_imageDataBuf[i] = value;
+	}
+}
+
+void CDigitalImage::SpatialMeanFilter( int maskSize )
+{
+	CMatrix<int> meanMask( maskSize, maskSize, 0, 1 );
+	for ( int x=0; x<maskSize; ++x )
+	{
+		for( int y=0; y<maskSize; ++y )
+		{
+			meanMask.Value( x, y ) = 1;
+		}
+	}
+	this->SpatialFilter( meanMask );
+}
+
+void CDigitalImage::SpatialFilter( const CMatrix<int>& filterMask )
+{
+	assert( filterMask.GetWidth() == filterMask.GetHeight() );
+
+	int width = GetWidth();
+	int height = GetHeight();
+	int maskSize = filterMask.GetWidth();
+
+	for( int x=0; x<width; ++x )
+	{
+		for( int y=0; y<height; ++y )
+		{
+			//  在这一点上应用滤镜, 求滤镜范围内的均值.
+			int value = 0;
+			int multipleCount = 0;
+			for ( int filterX=0; filterX<maskSize; ++filterX )
+			{
+				for( int filterY=0; filterY<maskSize; ++filterY )
+				{
+					int imgX = x - maskSize/2 + filterX;
+					int imgY = y - maskSize/2 + filterY;
+					if( this->IsValidCoord( imgX, imgY, width, height ) )
+					{
+						int multiple = filterMask.Value( filterX, filterY );
+						value +=  multiple * this->Pixel( imgX, imgY );
+						multipleCount += multiple;
+					}
+				}
+			}
+
+			value /= multipleCount;
+			this->Pixel( x, y ) = value;
+		}
+	}
+}
+
+bool CDigitalImage::IsValidCoord( int x, int y, int width, int height )
+{
+	return ( x >= 0 && x < width && y >= 0 && y < height );
+}
+
+void CDigitalImage::SpatialMedianFilter( int maskSize )
+{
+	int width = GetWidth();
+	int height = GetHeight();
+
+	for( int x=0; x<width; ++x )
+	{
+		for( int y=0; y<height; ++y )
+		{
+			//  在这一点上应用滤镜, 求滤镜范围内的中值
+			
+			int pixelNum = 0;
+			TImageDataBuf sortBuf;
+			for ( int filterX=0; filterX<maskSize; ++filterX )
+			{
+				for( int filterY=0; filterY<maskSize; ++filterY )
+				{
+					int imgX = x - maskSize/2 + filterX;
+					int imgY = y - maskSize/2 + filterY;
+					if( this->IsValidCoord( imgX, imgY, width, height ) )
+					{
+						sortBuf.push_back( this->Pixel( imgX, imgY ) );
+					}
+				}
+			}
+
+			std::sort( sortBuf.begin(), sortBuf.end() );
+			int value = sortBuf[ sortBuf.size()/2 ];	// 中间值.
+			this->Pixel( x, y ) = value;
+		}
 	}
 }

@@ -138,6 +138,17 @@ public:
 	*/
 	void AddSaltAndPepperNoise( int pixelNumPerSalt, int pixelNumPerPepper );
 
+	/** 空间均值滤波. 
+	*	使用空间滤波器实现.
+	*/
+	void SpatialMeanFilter( int maskSize );
+
+	/**	空间滤波器. */
+	void SpatialFilter( const CMatrix<int>& filterMask );
+
+	/**	空间中值滤波 */
+	void SpatialMedianFilter( int maskSize );
+
 	/** 取一个坐标点处的像素值. */
 	uint32 Pixel( int x, int y ) const;
 	uint32& Pixel( int x, int y );
@@ -164,6 +175,9 @@ private:
 	*	g : 方差.
 	*/
 	double GaussianRandom(double u,double g /*,double *r*/ ) ;
+
+	/** 是否是一个正确的坐标. */
+	bool IsValidCoord( int x, int y, int width, int height );
 
 private:
 //	CImage m_image;
