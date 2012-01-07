@@ -129,6 +129,11 @@ int CFunctionView::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	m_dlgHistogramEqualization.Create( CIntensityHistogramEqualizationDialog::IDD, this );
 	this->m_functionDlgTable[ DIP_IntensityHistogramEqualization ] = &m_dlgHistogramEqualization;
 
+	m_dlgNoiseAddGaussian.Create( CNoiseAddGaussianDialog::IDD, this );
+	this->m_functionDlgTable[ DIP_NoiseGaussian ] = &m_dlgNoiseAddGaussian;
+
+	m_dlgNoiseAddSaltAndPepper.Create( CNoiseAddSaltAndPepperDialog::IDD, this );
+	this->m_functionDlgTable[ DIP_NoiseSaltAndPepper ] = &m_dlgNoiseAddSaltAndPepper;
 	
 
 	OnChangeVisualStyle();
@@ -215,13 +220,26 @@ void CFunctionView::FillDIPFunctionTree()
 	HTREEITEM hHistogramEqualization = m_wndFunctionView.InsertItem( _T( "3.3.1 Histogram Equalization" ), 3, 3, hIntensityFun );
 	m_wndFunctionView.SetItemData( hHistogramEqualization, DIP_IntensityHistogramEqualization );
 
-	
+	// 噪声.
+	HTREEITEM hNoise = m_wndFunctionView.InsertItem( _T( "Noise" ), 2, 2, hRoot );
+	HTREEITEM hAddGaussianNoise = m_wndFunctionView.InsertItem( _T( "Add Gaussian noise" ), 3, 3, hNoise );
+	m_wndFunctionView.SetItemData( hAddGaussianNoise, DIP_NoiseGaussian );
+
+	HTREEITEM hAddSaltAndPepperNoise = m_wndFunctionView.InsertItem( _T( "Add Salt and Pepper noise" ), 3, 3, hNoise );
+	m_wndFunctionView.SetItemData( hAddSaltAndPepperNoise, DIP_NoiseSaltAndPepper );
+
+	HTREEITEM hSpatianMeanFilter = m_wndFunctionView.InsertItem( _T( "Spatian mean filter" ), 3, 3, hNoise );
+	m_wndFunctionView.SetItemData( hSpatianMeanFilter, DIP_NoiseSpatialMeanFilter );
+
+	HTREEITEM hSpatianMedianFilter = m_wndFunctionView.InsertItem( _T( "Spatian median filter" ), 3, 3, hNoise );
+	m_wndFunctionView.SetItemData( hSpatianMedianFilter, DIP_NoiseSpatialMedianFilter );
 
 	// 默认全部展开.
 	m_wndFunctionView.Expand(hRoot, TVE_EXPAND);
 	m_wndFunctionView.Expand( hRGB2Gray, TVE_EXPAND );
 	m_wndFunctionView.Expand( hSpatialOperatisons, TVE_EXPAND );
 	m_wndFunctionView.Expand( hIntensityFun, TVE_EXPAND );
+	m_wndFunctionView.Expand( hNoise, TVE_EXPAND );
 	
 }
 

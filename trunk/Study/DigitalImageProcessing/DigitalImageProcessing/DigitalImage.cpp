@@ -838,3 +838,84 @@ void CDigitalImage::InverseAffineTransform( const CMatrix<double>& affineMatrix,
 	this->m_width = newWidth;
 	this->m_height = newHeight;
 }
+
+double CDigitalImage::GaussianRandom(double u,double g /*,double *r*/ ) 
+{
+	// 网上找的, 看不懂...
+	double r = rand();	
+	int i,m; 
+	double s,w,v,t; 
+	s=65536.0; w=2053.0; v=13849.0; 
+	t=0.0; 
+	for (i=1; i<=12; i++) 
+	{
+		r=(r)*w+v; m=(int)(r/s);
+		r=r-m*s; t=t+(r)/s; 
+	} 
+	t=u+g*(t-6.0); 
+	return(t); 
+}
+
+void CDigitalImage::AddGaussianNoise( double noiseMean, double noiseVariance )
+{	
+	for ( size_t i=0; i<m_imageDataBuf.size(); ++i )
+	{
+		int rs = (int)GaussianRandom( noiseMean, noiseVariance );
+
+		int maxCor = (1 << this->GetIntensityLevel()) - 1;
+		int value = m_imageDataBuf[i];
+		if ( DIT_Gray == this->GetImageType() )
+		{			
+			value += rs;
+			value = max( 0, value );						
+			value = min( maxCor, value );			
+		}
+		else if( DIT_RGB == this->GetImageType() )
+		{
+			int r= GetRValue( value );
+			int g= GetGValue( value );
+			int b= GetBValue( value );
+
+			r += rs;
+			g += rs;
+			b += rs;
+
+			r = max( 0, r );
+			g = max( 0, g );
+			b = max( 0, b );
+
+			r = min( maxCor, r );
+			g = min( maxCor, g );
+			b = min( maxCor, b );
+
+			value = RGB( r,g,b );
+		}
+		m_imageDataBuf[i] = value;
+	}
+}
+
+void CDigitalImage::AddSaltAndPepperNoise( int pixelNumPerSalt, int pixelNumPerPepper )
+{
+	for ( size_t i=0; i<m_imageDataBuf.size(); ++i )
+	{
+		int randomNum = rand();
+		bool salt = ( randomNum % ( pixelNumPerSalt-1 ) ) == 0;
+
+		randomNum = rand();
+		bool pepper = ( randomNum % ( pixelNumPerPepper-1 ) ) == 0;
+
+		int maxCor = (1 << this->GetIntensityLevel()) - 1;
+		uint32 value = m_imageDataBuf[i];
+		if ( DIT_Gray == this->GetImageType() )
+		{			
+			value = salt ? maxCor : value;
+			value = pepper ? 0 : value;
+		}
+		else if( DIT_RGB == this->GetImageType() )
+		{
+			value = salt ? RGB( maxCor, maxCor, maxCor ) : value;
+			value = pepper ? 0 : value;
+		}
+		m_imageDataBuf[i] = value;
+	}
+}

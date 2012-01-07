@@ -17,6 +17,12 @@ enum EDIPFunction
 	DIP_IntensityBitsPlaneReconstruct,	// 位图的各位重构.
 	DIP_IntensityBitsPlaneShow,	// 位图的各位分拆显示.
 	DIP_IntensityHistogramEqualization,	// 直方图平衡.
+
+	DIP_NoiseGaussian,			// 高斯噪声.
+	DIP_NoiseSaltAndPepper,		// 椒盐噪声.
+
+	DIP_NoiseSpatialMeanFilter,	// 空间均值滤波.
+	DIP_NoiseSpatialMedianFilter,	// 空间中值滤波.
 };
 
 // end of the file

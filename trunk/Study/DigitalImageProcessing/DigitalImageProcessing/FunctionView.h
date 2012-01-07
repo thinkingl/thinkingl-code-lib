@@ -14,6 +14,8 @@
 #include "SpatialRotationDialog.h"
 #include "SpatialTranslationDialog.h"
 #include "SpatialScalingDialog.h"
+#include "NoiseAddGaussianDialog.h"
+#include "NoiseAddSaltAndPepperDialog.h"
 
 #include <map>
 
@@ -76,9 +78,14 @@ private:
 	CSpatialTranslationDialog m_dlgSpatialTranslation;
 	CSpatialScalingDialog m_dlgSpatialScaling;
 
+	CNoiseAddGaussianDialog m_dlgNoiseAddGaussian;
+	CNoiseAddSaltAndPepperDialog m_dlgNoiseAddSaltAndPepper;
+
 	/** 功能与对话框的表. */
 	typedef std::map< EDIPFunction, CWnd* > TFunctionDlgTable;
 	TFunctionDlgTable m_functionDlgTable;
+
+	
 
 	/** 当前处理的功能. */
 	EDIPFunction m_curFunction;
