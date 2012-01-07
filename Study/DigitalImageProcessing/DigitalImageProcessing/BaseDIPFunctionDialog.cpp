@@ -45,7 +45,7 @@ void CBaseDIPFunctionDialog::ReleaseImage()
 	}
 }
 
-void CBaseDIPFunctionDialog::ResetPreview()
+void CBaseDIPFunctionDialog::CancelPreview()
 {
 	CDigitalImageProcessingView *pCurView = GetActiveDIPView();
 	if ( pCurView )
@@ -55,7 +55,7 @@ void CBaseDIPFunctionDialog::ResetPreview()
 	this->ReleaseImage();
 }
 
-void CBaseDIPFunctionDialog::Priview()
+void CBaseDIPFunctionDialog::Preview()
 {
 	CDigitalImageProcessingView *pCurView = GetActiveDIPView();
 	if ( pCurView )

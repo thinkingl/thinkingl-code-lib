@@ -29,8 +29,8 @@ void CSpatialScalingDialog::DoDataExchange(CDataExchange* pDX)
 	CBaseDIPFunctionDialog::DoDataExchange(pDX);
 	DDX_Text(pDX, IDC_EDIT_SCALE_X, m_scaleX);
 	DDX_Text(pDX, IDC_EDIT_SCALE_Y, m_scaleY);
-	DDV_MinMaxFloat(pDX, m_scaleX, 0.1, 5.0);
-	DDV_MinMaxFloat(pDX, m_scaleY, 0.1, 5.0);
+	DDV_MinMaxDouble(pDX, m_scaleX, 0.1, 5.0);
+	DDV_MinMaxDouble(pDX, m_scaleY, 0.1, 5.0);
 	DDX_Radio(pDX, IDC_RADIO_NEAREST_NEIGHBOR2, m_interpolateType);
 }
 
@@ -49,7 +49,7 @@ void CSpatialScalingDialog::OnBnClickedPreview()
 {
 	// TODO: 在此添加控件通知处理程序代码
 	this->UpdateData();
-	this->Priview();
+	this->Preview();
 }
 
 
@@ -57,7 +57,7 @@ void CSpatialScalingDialog::OnBnClickedCancel()
 {
 	// TODO: 在此添加控件通知处理程序代码
 	this->UpdateData();
-	this->ResetPreview();
+	this->CancelPreview();
 }
 
 

@@ -159,6 +159,8 @@
     <ClInclude Include="MainFrm.h" />
     <ClInclude Include="Matrix.h" />
     <ClInclude Include="MFCPropertyGridDialogProperty.h" />
+    <ClInclude Include="NoiseAddGaussianDialog.h" />
+    <ClInclude Include="NoiseAddSaltAndPepperDialog.h" />
     <ClInclude Include="OutputWnd.h" />
     <ClInclude Include="PropertiesWnd.h" />
     <ClInclude Include="Resource.h" />
@@ -203,6 +205,8 @@
     <ClCompile Include="MFCPropertyGridDialogProperty.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="NoiseAddGaussianDialog.cpp" />
+    <ClCompile Include="NoiseAddSaltAndPepperDialog.cpp" />
     <ClCompile Include="OutputWnd.cpp" />
     <ClCompile Include="PropertiesWnd.cpp" />
     <ClCompile Include="SpatialRotationDialog.cpp" />

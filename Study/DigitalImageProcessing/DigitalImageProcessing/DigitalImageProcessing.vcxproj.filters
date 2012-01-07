@@ -25,6 +25,9 @@
     <Filter Include="doc">
       <UniqueIdentifier>{6470a1b9-34bd-459b-b6a8-522c6c4189f2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="UI">
+      <UniqueIdentifier>{353b2a93-27c0-49e3-b581-e3bd5fedc9df}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="ReadMe.txt" />
@@ -171,9 +174,6 @@
     <ClInclude Include="DigitalImageLoader.h">
       <Filter>DIP</Filter>
     </ClInclude>
-    <ClInclude Include="FunctionView.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="GrayscaleDialog.h">
       <Filter>头文件</Filter>
     </ClInclude>
@@ -228,6 +228,15 @@
     <ClInclude Include="BaseDIPFunctionDialog.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="FunctionView.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="NoiseAddGaussianDialog.h">
+      <Filter>功能控制面板</Filter>
+    </ClInclude>
+    <ClInclude Include="NoiseAddSaltAndPepperDialog.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DigitalImageProcessing.cpp">
@@ -265,9 +274,6 @@
     </ClCompile>
     <ClCompile Include="DigitalImageLoader.cpp">
       <Filter>DIP</Filter>
-    </ClCompile>
-    <ClCompile Include="FunctionView.cpp">
-      <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="GrayscaleDialog.cpp">
       <Filter>源文件</Filter>
@@ -318,6 +324,15 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="BaseDIPFunctionDialog.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="FunctionView.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="NoiseAddGaussianDialog.cpp">
+      <Filter>功能控制面板</Filter>
+    </ClCompile>
+    <ClCompile Include="NoiseAddSaltAndPepperDialog.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

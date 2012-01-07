@@ -13,9 +13,9 @@ public:
 // 对话框数据
 	enum { IDD = IDD_BASEDIPFUNCTIONDIALOG };
 protected:
-	void Priview();
+	void Preview();
 	/**	重置预览. */
-	void ResetPreview();
+	void CancelPreview();
 	void Apply();
 
 	CDigitalImage *GetImage();
@@ -25,6 +25,7 @@ protected:
 // 	virtual void OnPriview( CDigitalImage* pImg );
 // 
 // 	virtual void OnApply( CDigitalImage *pImg );
+protected:
 	virtual void OnDIP( CDigitalImage *pImg ) = 0;
 private:
 	CDigitalImage *m_pImage;

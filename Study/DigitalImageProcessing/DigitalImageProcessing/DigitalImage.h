@@ -125,6 +125,19 @@ public:
 	void InverseAffineTransform( const CMatrix<double>& affineMatrix, EInterpolateType interpolateType
 		, int transformOriginX, int transformOriginY, int newWidth, int newHeight );
 
+
+	/** 增加高斯噪声.
+	*	noiseMean : 均值
+	*	noiseVariance :方差．
+	*/
+	void AddGaussianNoise( double noiseMean, double noiseVariance );
+
+	/** 增加椒盐噪声. 
+	*	pixelNumPerSalt : 多少个点一个盐噪声(白点)
+	*	pixelNumPerPepper : 多少个像素一个胡椒噪声(黑点)
+	*/
+	void AddSaltAndPepperNoise( int pixelNumPerSalt, int pixelNumPerPepper );
+
 	/** 取一个坐标点处的像素值. */
 	uint32 Pixel( int x, int y ) const;
 	uint32& Pixel( int x, int y );
@@ -145,6 +158,12 @@ private:
 		R2G_YUV,
 	};
 	bool RGB2Gray( ERGB2GrayMode mod, int intensityLevel );
+
+	/**	产生一个高斯随机数.
+	*	u : 均值
+	*	g : 方差.
+	*/
+	double GaussianRandom(double u,double g /*,double *r*/ ) ;
 
 private:
 //	CImage m_image;
