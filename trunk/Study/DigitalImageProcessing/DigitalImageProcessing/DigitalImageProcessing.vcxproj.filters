@@ -237,6 +237,12 @@
     <ClInclude Include="NoiseAddSaltAndPepperDialog.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="NoiseSpatialMeanFilterDialog.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="SpatialMedianFilterDialog.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DigitalImageProcessing.cpp">
@@ -333,6 +339,12 @@
       <Filter>功能控制面板</Filter>
     </ClCompile>
     <ClCompile Include="NoiseAddSaltAndPepperDialog.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="NoiseSpatialMeanFilterDialog.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="SpatialMedianFilterDialog.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

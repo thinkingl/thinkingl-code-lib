@@ -1,4 +1,5 @@
 #include "MFCPropertyGridDialogProperty.h"
+#include "stdafx.h"
 
 #define AFX_PROP_HAS_LIST 0x0001
 #define AFX_PROP_HAS_BUTTON 0x0002
