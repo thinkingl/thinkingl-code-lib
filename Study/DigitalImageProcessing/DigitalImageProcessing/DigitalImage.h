@@ -2,6 +2,7 @@
 
 #include "portabledefine.h"
 #include "stdafx.h"
+#include "Matrix.h"
 
 class CDigitalImage
 {
@@ -104,12 +105,29 @@ public:
 	/** 释放资源. */
 	void Release();
 
-	/** 顺时针旋转. */
+	/** 逆时针旋转(坐标系里的角度方向是逆时针.). */
 	void Rotate( double angle, int rotationX, int rotationY, EInterpolateType interpolateType );
 
 	/** 位移. */
 	void Translate( int coordX, int coordY );
 
+	/** 缩放. */
+	void Scale( double multipleX, double multipleY, EInterpolateType interpolateType );
+
+	/** Inversed Affine transform  逆仿射运算.
+	*	affineMatrix : 仿射的矩阵.
+	*	interpolateType :插值算法
+	*	transformOriginX :运算中的原点(比如旋转轴)
+	*	transformOriginY : 运算中的原点(比如旋转轴)
+	*	newWidth : 新图片保留的宽度.
+	*	newHeight: 新图片保留的高度.
+	*/
+	void InverseAffineTransform( const CMatrix<double>& affineMatrix, EInterpolateType interpolateType
+		, int transformOriginX, int transformOriginY, int newWidth, int newHeight );
+
+	/** 取一个坐标点处的像素值. */
+	uint32 Pixel( int x, int y ) const;
+	uint32& Pixel( int x, int y );
 private:
 	
 	/** 灰度换算. 

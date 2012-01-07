@@ -69,9 +69,7 @@ bool CDigitalImage::Load( ctstring filePath )
 				unsigned int value = 0;
 				int bytePP = bpp / 8;
 
-				value = *(int*)( (char*)lineBeginPos + bytePP * w );
-				int sdfwdf =  ( ( 1 << bpp ) - 1 );
-				value &= ( ( (int)1 << bpp ) - 1 );	// 截取低bpp位.
+				memcpy( &value, ( (char*)lineBeginPos + bytePP * w ), bytePP );		
 
 				// 图片中是网络序的, 需要转字节序..
 				if ( needNetSequnce2HostSequence )
@@ -637,48 +635,82 @@ void CDigitalImage::Rotate( double angle, int rotationX, int rotationY, EInterpo
 	// 将角度从0-360转换为弧度.
 	angle = angle * 3.14159265 / 180;
 	// 课本 P.110
-	CMatrix<double> rotateMarix( 3, 3, 0 );
+	CMatrix<double> rotateMarix( 3, 3, 0, 1 );
 	rotateMarix.Value( 0, 0 ) = cos( angle );
 	rotateMarix.Value( 1, 0 ) = sin( angle );
 	rotateMarix.Value( 0, 1 ) = -sin( angle );
 	rotateMarix.Value( 1, 1 ) = cos( angle );
 	rotateMarix.Value( 2, 2 ) = 1;
 
+	this->InverseAffineTransform( rotateMarix, interpolateType, rotationX, rotationY, GetWidth(), GetHeight() );
+	return;
+	// 用逆矩阵, 求 仿射 的逆运算. 
+	CMatrix<double> inverseRotateMatrix;
+	rotateMarix.GetInverse( inverseRotateMatrix );
+
 	TImageDataBuf newImg( this->GetWidth() * this->GetHeight(), 0 );
 
 	// 确定新图片的像素点..
-	for ( int x = 0; x<this->GetWidth(); ++x )
+	for ( int xInNewImg = 0; xInNewImg<this->GetWidth(); ++xInNewImg )
 	{
 		for ( int y=0; y<this->GetHeight(); ++y )
 		{
 			// 先转换坐标原点.
-			x -= rotationX;
-			y -= rotationY;
+			int transNewX = xInNewImg - rotationX;
+			int transNewY = y - rotationY;
 
-			CMatrix<double> originalCoordinateMatrix( 3, 1, 0 );
-			originalCoordinateMatrix.Value( 0, 0 ) = x;
-			originalCoordinateMatrix.Value( 1, 0 ) = y;
+			CMatrix<double> originalCoordinateMatrix( 3, 1, 0, 1 );
+			originalCoordinateMatrix.Value( 0, 0 ) = transNewX;
+			originalCoordinateMatrix.Value( 1, 0 ) = transNewY;
 			originalCoordinateMatrix.Value( 2, 0 ) = 1;
 
-			CMatrix<double> transformedCoord = originalCoordinateMatrix * rotateMarix;
+			CMatrix<double> transformedCoord = originalCoordinateMatrix * inverseRotateMatrix;
 
-			// 最近的点, 四舍五入.
-			int xTrans = int( transformedCoord.Value( 0, 0 ) + 0.5 );
-			int yTrans = int( transformedCoord.Value( 1, 0 ) + 0.5 );
+			// 精确的原始坐标点. 去掉旋转轴对坐标原点的偏移.
+			double transX = transformedCoord.Value( 0, 0 ) + rotationX;
+			double transY = transformedCoord.Value( 1, 0 ) + rotationY;
 
-			// 将坐标转换回来.
-			x += rotationX;
-			y += rotationY;
-
-			// 得到的新坐标也需要转换回来.
-			xTrans += rotationX;
-			yTrans += rotationY;
-
-			int indexTrans = yTrans * this->GetWidth() + xTrans;
-			if ( xTrans >= 0 && xTrans < this->GetWidth() && yTrans >= 0 && yTrans < this->GetHeight() )
+			// 采用不同的插值算法.
+			int xOriginal = -1;
+			int yOriginal = -1;
+			if ( CDigitalImage::InterpolateNearestNeighbor == interpolateType )
 			{
-				newImg[ indexTrans ] = m_imageDataBuf[ y*this->GetWidth()+x ];
-			}			
+				// 最近的点, 四舍五入.
+				xOriginal = int( transX + 0.5 );
+				yOriginal = int( transY + 0.5 );
+
+				int indexOriginal = yOriginal * this->GetWidth() + xOriginal;
+				if ( xOriginal >= 0 && xOriginal < this->GetWidth() && yOriginal >= 0 && yOriginal < this->GetHeight() )
+				{
+					newImg[ xInNewImg + y*GetWidth() ] = m_imageDataBuf[ indexOriginal ];
+				}	
+			}
+			else if( InterpolateBilinear == interpolateType )
+			{
+				// 双线性插值. http://en.wikipedia.org/wiki/Bilinear_interpolation
+				int xLess = (int)transX;
+				int yLess = (int)transY;
+								
+				if( xLess > 0 && xLess < GetWidth()-1 && yLess > 0 && yLess < GetHeight()-1 )
+				{
+					double topValueTmp = 0;
+					double bottomValueTmp = 0;
+					// 求上面的两个点 (xLess, yLess) 和 (xLess+1, yLess)之间的插值.
+					topValueTmp = this->Pixel( xLess, yLess ) * ( xLess + 1 - transX ) + this->Pixel( xLess + 1, yLess ) * ( transX - xLess );
+					// 求下面的两个点 (xLess, yLess+1) 和 ( xLess+1, yLess+1 )之间的插值.
+					bottomValueTmp = this->Pixel( xLess, yLess+1 ) * ( xLess + 1 - transX ) + this->Pixel( xLess + 1, yLess + 1 ) * ( transX - xLess );
+
+					// 将上面两个点之间插值.
+					double finalValue = topValueTmp * ( yLess + 1 - transY ) + bottomValueTmp * ( transY - yLess );
+
+					// 赋值.
+					newImg[ xInNewImg+y*GetWidth() ] = (int)(finalValue+0.5);
+				}
+
+				
+			}
+
+					
 		}
 	}
 
@@ -707,4 +739,102 @@ void CDigitalImage::Translate( int coordX, int coordY )
 	}
 
 	m_imageDataBuf = newImg;
+}
+
+uint32& CDigitalImage::Pixel( int x, int y )
+{
+	return m_imageDataBuf[ x + GetHeight() * y ];
+}
+
+void CDigitalImage::Scale( double multipleX, double multipleY, EInterpolateType interpolateType )
+{
+	// affine 
+	// 课本 P.110
+	CMatrix<double> scaleMarix( 3, 3, 0, 1 );
+	scaleMarix.Value( 0, 0 ) = (double)1/multipleX;	
+	scaleMarix.Value( 1, 1 ) = (double)1/multipleY;
+	scaleMarix.Value( 2, 2 ) = 1;
+
+	this->InverseAffineTransform( scaleMarix, interpolateType, 0, 0		//, GetWidth(), GetHeight() );
+		, (int)( GetWidth() * multipleX + 0.999 ), (int)( GetHeight() * multipleY + 0.999 ) );
+
+}
+
+void CDigitalImage::InverseAffineTransform( const CMatrix<double>& affineMatrix, EInterpolateType interpolateType
+	, int transformOriginX, int transformOriginY, int newWidth, int newHeight )
+{
+	// 用逆矩阵, 求 仿射 的逆运算. 
+	CMatrix<double> inverseAffineMatrix;
+	affineMatrix.GetInverse( inverseAffineMatrix );
+
+	TImageDataBuf newImg( newWidth * newHeight, 0 );
+
+	// 确定新图片的像素点..
+	for ( int xInNewImg = 0; xInNewImg<newWidth; ++xInNewImg )
+	{
+		for ( int yInNewImg=0; yInNewImg<newHeight; ++yInNewImg )
+		{
+			// 先转换坐标原点.
+			int transNewX = xInNewImg - transformOriginX;
+			int transNewY = yInNewImg - transformOriginY;
+
+			CMatrix<double> originalCoordinateMatrix( 3, 1, 0, 1 );
+			originalCoordinateMatrix.Value( 0, 0 ) = transNewX;
+			originalCoordinateMatrix.Value( 1, 0 ) = transNewY;
+			originalCoordinateMatrix.Value( 2, 0 ) = 1;
+
+			CMatrix<double> transformedCoord = originalCoordinateMatrix * affineMatrix;
+
+			// 精确的原始坐标点. 去掉旋转轴对坐标原点的偏移.
+			double transX = transformedCoord.Value( 0, 0 ) + transformOriginX;
+			double transY = transformedCoord.Value( 1, 0 ) + transformOriginY;
+
+			// 采用不同的插值算法.
+			int xOriginal = -1;
+			int yOriginal = -1;
+			if ( CDigitalImage::InterpolateNearestNeighbor == interpolateType )
+			{
+				// 最近的点, 四舍五入.
+				xOriginal = int( transX + 0.5 );
+				yOriginal = int( transY + 0.5 );
+
+				int indexOriginal = yOriginal * this->GetWidth() + xOriginal;
+				if ( xOriginal >= 0 && xOriginal < this->GetWidth() && yOriginal >= 0 && yOriginal < this->GetHeight() )
+				{
+					newImg[ xInNewImg + yInNewImg* newWidth ] = m_imageDataBuf[ indexOriginal ];
+				}	
+			}
+			else if( InterpolateBilinear == interpolateType )
+			{
+				// 双线性插值. http://en.wikipedia.org/wiki/Bilinear_interpolation
+				int xLess = (int)transX;
+				int yLess = (int)transY;
+
+				if( xLess > 0 && xLess < GetWidth()-1 && yLess > 0 && yLess < GetHeight()-1 )
+				{
+					double topValueTmp = 0;
+					double bottomValueTmp = 0;
+					// 求上面的两个点 (xLess, yLess) 和 (xLess+1, yLess)之间的插值.
+					topValueTmp = this->Pixel( xLess, yLess ) * ( xLess + 1 - transX ) + this->Pixel( xLess + 1, yLess ) * ( transX - xLess );
+					// 求下面的两个点 (xLess, yLess+1) 和 ( xLess+1, yLess+1 )之间的插值.
+					bottomValueTmp = this->Pixel( xLess, yLess+1 ) * ( xLess + 1 - transX ) + this->Pixel( xLess + 1, yLess + 1 ) * ( transX - xLess );
+
+					// 将上面两个点之间插值.
+					double finalValue = topValueTmp * ( yLess + 1 - transY ) + bottomValueTmp * ( transY - yLess );
+
+					// 赋值.
+					newImg[ xInNewImg+yInNewImg* newWidth ] = (int)(finalValue+0.5);
+				}
+
+
+			}
+
+
+		}
+	}
+
+	// 保存结果..
+	m_imageDataBuf = newImg;
+	this->m_width = newWidth;
+	this->m_height = newHeight;
 }

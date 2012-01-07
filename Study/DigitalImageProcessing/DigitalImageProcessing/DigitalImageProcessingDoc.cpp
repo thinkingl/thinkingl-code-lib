@@ -153,7 +153,7 @@ BOOL CDigitalImageProcessingDoc::OnOpenDocument(LPCTSTR lpszPathName)
 		AfxMessageBox( _T( "¼ÓÔØÍ¼Æ¬Ê§°Ü!" ) );
 		return FALSE;
 	}
-	
+
 	this->m_image.Load( lpszPathName );
 
 	return TRUE;

@@ -26,7 +26,7 @@ private:
 public:
 	afx_msg void OnBnClickedApply();
 	afx_msg void OnBnClickedRadioClockwise();
-	BOOL m_bUnClockWise;
+	int m_whichClockWiseChecked;
 	double m_rotationAngle;
 	int m_whichInterpolationFunction;
 	afx_msg void OnBnClickedPreview();

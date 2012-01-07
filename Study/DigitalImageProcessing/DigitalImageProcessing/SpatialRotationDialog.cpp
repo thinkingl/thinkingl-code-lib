@@ -15,7 +15,7 @@ IMPLEMENT_DYNAMIC(CSpatialRotationDialog, CDialogEx)
 
 CSpatialRotationDialog::CSpatialRotationDialog(CWnd* pParent /*=NULL*/)
 	: CDialogEx(CSpatialRotationDialog::IDD, pParent)
-	, m_bUnClockWise(FALSE)
+	, m_whichClockWiseChecked(0)
 	, m_rotationAngle(10)
 	, m_whichInterpolationFunction(0)
 	, m_pImage( 0 )
@@ -32,7 +32,7 @@ CSpatialRotationDialog::~CSpatialRotationDialog()
 void CSpatialRotationDialog::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogEx::DoDataExchange(pDX);
-	DDX_Radio(pDX, IDC_RADIO_CLOCKWISE, m_bUnClockWise);
+	DDX_Radio(pDX, IDC_RADIO_CLOCKWISE, m_whichClockWiseChecked);
 	DDX_Text(pDX, IDC_EDIT_ROTATION_ANGLE, m_rotationAngle);
 	DDX_Radio(pDX, IDC_RADIO_NEAREST_NEIGHBOR, m_whichInterpolationFunction);
 	DDX_Text(pDX, IDC_EDIT_X, m_rotationX);
@@ -58,7 +58,7 @@ void CSpatialRotationDialog::OnBnClickedApply()
 	this->UpdateData();
 
 
-	if ( m_bUnClockWise )
+	if ( 0 == m_whichClockWiseChecked )
 	{
 		m_rotationAngle = -m_rotationAngle;
 	}
@@ -99,7 +99,7 @@ void CSpatialRotationDialog::OnBnClickedPreview()
 {
 	// TODO: 在此添加控件通知处理程序代码
 	this->UpdateData();
-	if ( m_bUnClockWise )
+	if ( 0 == m_whichClockWiseChecked )
 	{
 		m_rotationAngle = -m_rotationAngle;
 	}
