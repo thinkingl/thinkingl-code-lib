@@ -13,6 +13,7 @@
 #include "IntensityHistogramEqualizationDialog.h"
 #include "SpatialRotationDialog.h"
 #include "SpatialTranslationDialog.h"
+#include "SpatialScalingDialog.h"
 
 #include <map>
 
@@ -73,6 +74,7 @@ private:
 
 	CSpatialRotationDialog m_dlgSpatialRotation;
 	CSpatialTranslationDialog m_dlgSpatialTranslation;
+	CSpatialScalingDialog m_dlgSpatialScaling;
 
 	/** 功能与对话框的表. */
 	typedef std::map< EDIPFunction, CWnd* > TFunctionDlgTable;

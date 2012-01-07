@@ -55,7 +55,7 @@ BOOL CUnitTestDialog::OnInitDialog()
 	dataList.push_back( 1 );
 	CMatrix<int> m1( 3, 2, dataList );
 
-	CMatrix<int> m2( 2, 3, 0 );
+	CMatrix<int> m2( 2, 3, 0, 1 );
 	m2.Value( 0, 0 ) = 3;
 	m2.Value( 1, 0 ) = 1;
 	m2.Value( 0, 1 ) = 2;
@@ -66,6 +66,22 @@ BOOL CUnitTestDialog::OnInitDialog()
 	CMatrix<int> result = m1 * m2;
 
 	result.Value( 10, 20 );
+
+
+	CMatrix<int>::CMatrixDataList dettestData;
+	dettestData.push_back( -2 );
+	dettestData.push_back( 2 );
+	dettestData.push_back( 3 );
+	dettestData.push_back( -1 );
+	dettestData.push_back( 1 );
+	dettestData.push_back( 3 );
+	dettestData.push_back( 2 );
+	dettestData.push_back( 0 );
+	dettestData.push_back( -1 );
+	CMatrix<int> dettestM( 3, 3, dettestData );
+	int det = 0;
+	dettestM.GetDeterminant( det );
+	assert( det == 6 );
 
 	return TRUE;  // return TRUE unless you set the focus to a control
 	// 异常: OCX 属性页应返回 FALSE

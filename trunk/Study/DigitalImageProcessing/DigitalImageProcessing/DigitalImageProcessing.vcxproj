@@ -55,7 +55,6 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -137,6 +136,7 @@
     <None Include="UserImages.bmp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="BaseDIPFunctionDialog.h" />
     <ClInclude Include="ChildFrm.h" />
     <ClInclude Include="dipcommon.h" />
     <ClInclude Include="dipconst.h" />
@@ -163,6 +163,7 @@
     <ClInclude Include="PropertiesWnd.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="SpatialRotationDialog.h" />
+    <ClInclude Include="SpatialScalingDialog.h" />
     <ClInclude Include="SpatialTranslationDialog.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
@@ -170,6 +171,7 @@
     <ClInclude Include="ViewTree.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="BaseDIPFunctionDialog.cpp" />
     <ClCompile Include="ChildFrm.cpp" />
     <ClCompile Include="dipcommon.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
@@ -204,6 +206,7 @@
     <ClCompile Include="OutputWnd.cpp" />
     <ClCompile Include="PropertiesWnd.cpp" />
     <ClCompile Include="SpatialRotationDialog.cpp" />
+    <ClCompile Include="SpatialScalingDialog.cpp" />
     <ClCompile Include="SpatialTranslationDialog.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

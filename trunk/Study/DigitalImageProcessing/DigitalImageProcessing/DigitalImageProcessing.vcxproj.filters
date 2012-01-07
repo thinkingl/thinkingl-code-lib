@@ -210,17 +210,23 @@
     <ClInclude Include="IntensityLogTransformationDialog.h">
       <Filter>功能控制面板</Filter>
     </ClInclude>
-    <ClInclude Include="SpatialRotationDialog.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="SpatialTranslationDialog.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="Matrix.h">
       <Filter>DIP</Filter>
     </ClInclude>
     <ClInclude Include="dipcommon.h">
       <Filter>DIP</Filter>
+    </ClInclude>
+    <ClInclude Include="SpatialTranslationDialog.h">
+      <Filter>功能控制面板</Filter>
+    </ClInclude>
+    <ClInclude Include="SpatialRotationDialog.h">
+      <Filter>功能控制面板</Filter>
+    </ClInclude>
+    <ClInclude Include="SpatialScalingDialog.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseDIPFunctionDialog.h">
+      <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -296,17 +302,23 @@
     <ClCompile Include="IntensityLogTransformationDialog.cpp">
       <Filter>功能控制面板</Filter>
     </ClCompile>
-    <ClCompile Include="SpatialRotationDialog.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="SpatialTranslationDialog.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="Matrix.cpp">
       <Filter>DIP</Filter>
     </ClCompile>
     <ClCompile Include="dipcommon.cpp">
       <Filter>DIP</Filter>
+    </ClCompile>
+    <ClCompile Include="SpatialTranslationDialog.cpp">
+      <Filter>功能控制面板</Filter>
+    </ClCompile>
+    <ClCompile Include="SpatialRotationDialog.cpp">
+      <Filter>功能控制面板</Filter>
+    </ClCompile>
+    <ClCompile Include="SpatialScalingDialog.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="BaseDIPFunctionDialog.cpp">
+      <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

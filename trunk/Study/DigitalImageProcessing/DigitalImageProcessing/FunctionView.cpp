@@ -108,6 +108,9 @@ int CFunctionView::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	m_dlgSpatialTranslation.Create( CSpatialTranslationDialog::IDD, this );
 	this->m_functionDlgTable[ DIP_Spatial_Translation ] = &m_dlgSpatialTranslation;
 
+	m_dlgSpatialScaling.Create( CSpatialScalingDialog::IDD, this );
+	this->m_functionDlgTable[ DIP_Spatial_Scaling ] = &m_dlgSpatialScaling;
+
 	m_dlgImageNegative.Create( CImageNegativeDialog::IDD, this );
 	this->m_functionDlgTable[ DIP_IntensityNegitive ] = &m_dlgImageNegative;
 
@@ -217,6 +220,7 @@ void CFunctionView::FillDIPFunctionTree()
 	// 默认全部展开.
 	m_wndFunctionView.Expand(hRoot, TVE_EXPAND);
 	m_wndFunctionView.Expand( hRGB2Gray, TVE_EXPAND );
+	m_wndFunctionView.Expand( hSpatialOperatisons, TVE_EXPAND );
 	m_wndFunctionView.Expand( hIntensityFun, TVE_EXPAND );
 	
 }
