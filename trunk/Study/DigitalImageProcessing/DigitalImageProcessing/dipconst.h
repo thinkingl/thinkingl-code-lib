@@ -23,7 +23,11 @@ enum EDIPFunction
 
 	DIP_NoiseSpatialMeanFilter,	// 空间均值滤波.
 	DIP_NoiseSpatialMedianFilter,	// 空间中值滤波.
+
+	DIP_FrequencyFourierTransform,	// 傅立叶变换.
 };
 
+// 常数π
+#define PI 3.1415926535
 // end of the file
 

@@ -1,6 +1,6 @@
 #pragma once
 
-class CDigitalImage;
+#include "DigitalImage.h"
 // CBaseDIPFunctionDialog ¶Ô»°¿ò
 class CBaseDIPFunctionDialog : public CDialogEx
 {

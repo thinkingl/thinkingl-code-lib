@@ -141,6 +141,9 @@ int CFunctionView::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	m_dlgNoiseSpatialMedianFilter.Create( CSpatialMedianFilterDialog::IDD, this );
 	this->m_functionDlgTable[ DIP_NoiseSpatialMedianFilter ] = &m_dlgNoiseSpatialMedianFilter;
 
+	m_dlgFrequencyFourierTransform.Create( CFrequencyFourierTransformDialog::IDD, this );
+	this->m_functionDlgTable[ DIP_FrequencyFourierTransform ] = &m_dlgFrequencyFourierTransform;
+
 	OnChangeVisualStyle();
 
 	m_wndToolBar.SetPaneStyle(m_wndToolBar.GetPaneStyle() | CBRS_TOOLTIPS | CBRS_FLYBY);
@@ -239,12 +242,18 @@ void CFunctionView::FillDIPFunctionTree()
 	HTREEITEM hSpatianMedianFilter = m_wndFunctionView.InsertItem( _T( "Spatian median filter" ), 3, 3, hNoise );
 	m_wndFunctionView.SetItemData( hSpatianMedianFilter, DIP_NoiseSpatialMedianFilter );
 
+	// 频域
+	HTREEITEM hFrequencyDomain = m_wndFunctionView.InsertItem( _T( "4 Filtering in the Frequency Domain" ), 2, 2, hRoot );
+	HTREEITEM hFourierTransform = m_wndFunctionView.InsertItem( _T( "Fourier Transform" ), 3, 3, hFrequencyDomain );
+	m_wndFunctionView.SetItemData( hFourierTransform, DIP_FrequencyFourierTransform );
+
 	// 默认全部展开.
 	m_wndFunctionView.Expand(hRoot, TVE_EXPAND);
 	m_wndFunctionView.Expand( hRGB2Gray, TVE_EXPAND );
 	m_wndFunctionView.Expand( hSpatialOperatisons, TVE_EXPAND );
 	m_wndFunctionView.Expand( hIntensityFun, TVE_EXPAND );
 	m_wndFunctionView.Expand( hNoise, TVE_EXPAND );
+	m_wndFunctionView.Expand( hFrequencyDomain, TVE_EXPAND );
 	
 }
 

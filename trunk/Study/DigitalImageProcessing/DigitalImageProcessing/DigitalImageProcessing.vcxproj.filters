@@ -243,6 +243,9 @@
     <ClInclude Include="SpatialMedianFilterDialog.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="FrequencyFourierTransformDialog.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DigitalImageProcessing.cpp">
@@ -345,6 +348,9 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="SpatialMedianFilterDialog.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="FrequencyFourierTransformDialog.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

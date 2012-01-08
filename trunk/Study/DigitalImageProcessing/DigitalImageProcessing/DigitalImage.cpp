@@ -3,6 +3,8 @@
 #include "common.h"
 #include "Matrix.h"
 #include <assert.h>
+#include <complex>
+#include "dipconst.h"
 
 CDigitalImage::CDigitalImage(void)
 {
@@ -633,7 +635,7 @@ bool CDigitalImage::HistogramEqualization()
 void CDigitalImage::Rotate( double angle, int rotationX, int rotationY, EInterpolateType interpolateType )
 {
 	// 将角度从0-360转换为弧度.
-	angle = angle * 3.14159265 / 180;
+	angle = angle * PI / 180;
 	// 课本 P.110
 	CMatrix<double> rotateMarix( 3, 3, 0, 1 );
 	rotateMarix.Value( 0, 0 ) = cos( angle );
@@ -947,6 +949,9 @@ void CDigitalImage::SpatialFilter( const CMatrix<int>& filterMask )
 		{
 			//  在这一点上应用滤镜, 求滤镜范围内的均值.
 			int value = 0;
+			int red = 0;
+			int green = 0;
+			int blue = 0;
 			int multipleCount = 0;
 			for ( int filterX=0; filterX<maskSize; ++filterX )
 			{
@@ -957,13 +962,36 @@ void CDigitalImage::SpatialFilter( const CMatrix<int>& filterMask )
 					if( this->IsValidCoord( imgX, imgY, width, height ) )
 					{
 						int multiple = filterMask.Value( filterX, filterY );
-						value +=  multiple * this->Pixel( imgX, imgY );
+
+						if ( DIT_Gray == GetImageType() )
+						{
+							value +=  multiple * this->Pixel( imgX, imgY );
+						}
+						else if( DIT_RGB == GetImageType() )
+						{							
+							red += multiple * GetRValue( this->Pixel( imgX, imgY ) );
+							green += multiple * GetGValue( this->Pixel( imgX, imgY ) );
+							blue += multiple * GetBValue( this->Pixel( imgX, imgY ) );
+						}
+						
 						multipleCount += multiple;
 					}
 				}
 			}
 
-			value /= multipleCount;
+			if ( DIT_Gray == GetImageType() )
+			{
+				value /= multipleCount;		// 灰度图直接处理.
+			}
+			else if( DIT_RGB == GetImageType() )
+			{						
+				// 彩色图分别针对每种色彩进行处理.
+				red /= multipleCount;
+				green /= multipleCount;
+				blue /= multipleCount;
+				value = RGB( red, green, blue );
+			}
+			
 			this->Pixel( x, y ) = value;
 		}
 	}
@@ -1005,4 +1033,435 @@ void CDigitalImage::SpatialMedianFilter( int maskSize )
 			this->Pixel( x, y ) = value;
 		}
 	}
+}
+
+void FFT2( complex<double> * TD, complex<double> * FD, int w, int wp, int h, int hp, int r, bool centerTransform )
+{
+// 	for( long i = 0; i < h; i++)
+// 	{
+// 		// 对y方向进行快速付立叶变换
+// 		FFT(&TD[w * i], &FD[w * i], wp);
+// 	}
+// 
+// 	// 保存变换结果
+// 	for( long i = 0; i < h; i++)
+// 	{
+// 		for( long j = 0; j < w; j++)
+// 		{
+// 			TD[i + h * j] = FD[j + w * i];
+// 		}
+// 	}
+// 
+// 	for( long i = 0; i < w; i++)
+// 	{
+// 		// 对x方向进行快速付立叶变换
+// 		FFT(&TD[i * h], &FD[i * h], hp);
+// 	}
+// 
+// 	for( long i = 0; i < h; i++)			// 行
+// 	{		
+// 		for( long j = 0; j < w; j++)		// 列
+// 		{
+// 			// 计算频谱
+// 			double dTemp = sqrt(FD[j * h + i].real() * FD[j * h + i].real() + 
+// 				FD[j * h + i].imag() * FD[j * h + i].imag()) / 100;
+// 			if (dTemp > 255)
+// 			{
+// 				dTemp = 255;
+// 			}
+// 
+// 			// 象素的指针，此处不直接取i和j，是为了将变换后的原点移到中心
+// 			// lpSrc = (unsigned char*)lpDIBBits + lLineBytes * (lHeight-1-i) + j;
+// 			int x = j;
+// 			int y = i;
+// 			if( centerTransform )
+// 			{
+// 				x = (j<w/2 ? j+w/2 : j-w/2);
+// 				y = ( height - 1 - (i<h/2 ? i+h/2 : i-h/2));
+// 			}
+// 			// 更新源图像
+// 			// this->Pixel( x,y ) = dTemp;
+// 		}
+// 	}
+}
+
+void CDigitalImage::FourierTransform( bool centerTransform )
+{
+	int width = GetWidth();
+	int height = GetHeight();
+
+	// 赋初值
+	long w = 1;	// 进行付立叶变换的宽度（2的整数次方）	
+	int wp = 0;
+	
+
+	// 计算进行付立叶变换的宽度和高度（2的整数次方）
+	while( w * 2 <= width )
+	{
+		w *= 2;
+		wp++;
+	}	
+
+	long h = 1;	// 进行付立叶变换的高度（2的整数次方）	
+	int hp = 0;
+	while(h * 2 <= height )
+	{
+		h *= 2;
+		hp++;
+	}
+
+	
+	TCoplexDoubleList TD( w*h );
+	TCoplexDoubleList FD( w*h );
+
+	TCoplexDoubleList TDRed( w*h );
+	TCoplexDoubleList TDGreen( w*h );
+	TCoplexDoubleList TDBlue( w*h );
+
+	TCoplexDoubleList FDRed( w*h );
+	TCoplexDoubleList FDGreen( w*h );
+	TCoplexDoubleList FDBlue( w*h );
+
+	for( long i = 0; i < h; i++)			// 行
+	{		
+		for( long j = 0; j < w; j++)		// 列
+		{
+			// 给时域赋值, 傅立叶变换是针对
+			if( DIT_Gray == GetImageType() )
+			{
+				TD[j + w * i] = complex<double>( this->Pixel( j, i ), 0);
+			}
+			else
+			{
+				TDRed[j + w * i] = complex<double>( GetRValue( this->Pixel( j, i ) ), 0);
+				TDGreen[j + w * i] = complex<double>( GetGValue( this->Pixel( j, i ) ), 0);
+				TDBlue[j + w * i] = complex<double>( GetBValue( this->Pixel( j, i ) ), 0);
+			}
+		}
+	}
+
+	for( long i = 0; i < h; i++)
+	{
+		// 对y方向进行快速付立叶变换
+		if( DIT_Gray == GetImageType() )
+		{
+			FFT(&TD[w * i], &FD[w * i], wp);
+		}
+		else
+		{
+			FFT(&TDRed[w * i], &FDRed[w * i], wp);
+			FFT(&TDGreen[w * i], &FDGreen[w * i], wp);
+			FFT(&TDBlue[w * i], &FDBlue[w * i], wp);
+		}
+	}
+
+	// 保存变换结果
+	for( long i = 0; i < h; i++)
+	{
+		for( long j = 0; j < w; j++)
+		{			
+			TD[i + h * j] = FD[j + w * i];
+			TDRed[i + h * j] = FDRed[j + w * i];
+			TDGreen[i + h * j] = FDGreen[j + w * i];
+			TDBlue[i + h * j] = FDBlue[j + w * i];
+		}
+	}
+
+	for( long i = 0; i < w; i++)
+	{
+		// 对x方向进行快速付立叶变换		
+		if( DIT_Gray == GetImageType() )
+		{
+			FFT(&TD[i * h], &FD[i * h], hp);
+		}
+		else
+		{
+			FFT(&TDRed[i * h], &FDRed[i * h], wp);
+			FFT(&TDGreen[i * h], &FDGreen[i * h], wp);
+			FFT(&TDBlue[i * h], &FDBlue[i * h], wp);
+		}
+	}
+
+	// 将傅立叶变换保存.
+	this->m_fourierData = FD;
+	this->m_fourierDataRed = FDRed;
+	this->m_fourierDataGreen = FDGreen;
+	this->m_fourierDataBlue = FDBlue;
+
+
+	for( long i = 0; i < h; i++)			// 行
+	{		
+		for( long j = 0; j < w; j++)		// 列
+		{
+			// 计算频谱
+			double dTemp = sqrt(FD[j * h + i].real() * FD[j * h + i].real() + 
+				FD[j * h + i].imag() * FD[j * h + i].imag()) / 100;
+			if (dTemp > 255)
+			{
+				dTemp = 255;
+			}
+
+			double dTempRed = sqrt(FDRed[j * h + i].real() * FDRed[j * h + i].real() + 
+				FDRed[j * h + i].imag() * FDRed[j * h + i].imag()) / 100;
+			if (dTempRed > 255)
+			{
+				dTempRed = 255;
+			}
+
+			double dTempGreen = sqrt(FDGreen[j * h + i].real() * FDGreen[j * h + i].real() + 
+				FDGreen[j * h + i].imag() * FDGreen[j * h + i].imag()) / 100;
+			if (dTempGreen > 255)
+			{
+				dTempGreen = 255;
+			}
+
+			double dTempBlue = sqrt(FDBlue[j * h + i].real() * FDBlue[j * h + i].real() + 
+				FDBlue[j * h + i].imag() * FDBlue[j * h + i].imag()) / 100;
+			if (dTempBlue > 255)
+			{
+				dTempBlue = 255;
+			}
+			// 象素的指针，此处不直接取i和j，是为了将变换后的原点移到中心
+			// lpSrc = (unsigned char*)lpDIBBits + lLineBytes * (lHeight-1-i) + j;
+			int x = j;
+			int y = i;
+			if( centerTransform )
+			{
+				x = (j<w/2 ? j+w/2 : j-w/2);
+				y = ( height - 1 - (i<h/2 ? i+h/2 : i-h/2));
+			}
+			// 更新源图像
+			if( DIT_Gray == GetImageType() )
+			{
+				this->Pixel( x,y ) = (int)dTemp;
+			}
+			else
+			{
+				this->Pixel( x,y ) = RGB( dTempRed, dTempGreen, dTempBlue );
+			}
+			
+		}
+	}
+
+}
+
+/*************************************************************************
+ * 函数名称：
+ *   FFT()
+ * 参数:
+ *   complex<double> * TD	- 指向时域数组的指针
+ *   complex<double> * FD	- 指向频域数组的指针
+ *   r						－2的幂数，即迭代次数
+ * 返回值:
+ *   无。
+ * 说明:
+ *   该函数用来实现快速付立叶变换。
+ ************************************************************************/
+VOID CDigitalImage::FFT(complex<double> * TD, complex<double> * FD, int r)
+{	
+	LONG	count;				// 付立叶变换点数	
+	int		i,j,k;				// 循环变量
+	int		bfsize,p;	
+	double	angle;				// 角度	
+	complex<double> *W,*X1,*X2,*X;
+	
+	count = 1 << r;				// 计算付立叶变换点数
+	
+	// 分配运算所需存储器
+	W  = new complex<double>[count / 2];
+	X1 = new complex<double>[count];
+	X2 = new complex<double>[count];
+	
+	// 计算加权系数
+	for(i = 0; i < count / 2; i++)
+	{
+		angle = -i * PI * 2 / count;
+		W[i] = complex<double> (cos(angle), sin(angle));
+	}
+	
+	// 将时域点写入X1
+	memcpy(X1, TD, sizeof(complex<double>) * count);
+	
+	// 采用蝶形算法进行快速付立叶变换
+	for(k = 0; k < r; k++)
+	{
+		for(j = 0; j < 1 << k; j++)
+		{
+			bfsize = 1 << (r-k);
+			for(i = 0; i < bfsize / 2; i++)
+			{
+				p = j * bfsize;
+				X2[i + p] = X1[i + p] + X1[i + p + bfsize / 2];
+				X2[i + p + bfsize / 2] = (X1[i + p] - X1[i + p + bfsize / 2]) 
+					* W[i * (1<<k)];
+			}
+		}
+		X  = X1;
+		X1 = X2;
+		X2 = X;
+	}
+	
+	// 重新排序
+	for(j = 0; j < count; j++)
+	{
+		p = 0;
+		for(i = 0; i < r; i++)
+		{
+			if (j&(1<<i))
+			{
+				p+=1<<(r-i-1);
+			}
+		}
+		FD[j]=X1[p];
+	}
+	
+	delete W;
+	delete X1;
+	delete X2;
+}
+
+void CDigitalImage::InverseFourierTransform(  )
+{
+	if ( m_fourierData.empty() )
+	{
+		assert( false );
+		return;
+	}
+
+	// 现在算法只能支持没有被裁减的图片.
+	assert( this->GetWidth() * this->GetHeight() == m_fourierData.size() );
+
+	long h = GetHeight();
+	long w = GetWidth();
+
+	int hp = 0;
+	
+	while( ( h >> hp ) != 1 )
+	{
+		hp ++;
+	}
+
+	int wp = 0;
+	while( ( w >> wp ) != 1 )
+	{
+		wp ++;
+	}
+
+	TCoplexDoubleList& TD = m_fourierData;
+	TCoplexDoubleList& TDRed = m_fourierDataRed;
+	TCoplexDoubleList& TDGreen = m_fourierDataGreen;
+	TCoplexDoubleList& TDBlue = m_fourierDataBlue;
+
+	TCoplexDoubleList FD( w*h );
+	TCoplexDoubleList FDRed( w*h );
+	TCoplexDoubleList FDGreen( w*h );
+	TCoplexDoubleList FDBlue( w*h );
+
+	for( long i = 0; i < w; i++)
+	{
+		// 对x方向进行快速付立叶变换		
+		if( DIT_Gray == GetImageType() )
+		{
+			IFFT(&TD[i * h], &FD[i * h], hp);
+		}
+		else
+		{
+			IFFT(&TDRed[i * h], &FDRed[i * h], wp);
+			IFFT(&TDGreen[i * h], &FDGreen[i * h], wp);
+			IFFT(&TDBlue[i * h], &FDBlue[i * h], wp);
+		}
+	}
+	
+
+	// 保存变换结果
+	for( long i = 0; i < h; i++)
+	{
+		for( long j = 0; j < w; j++)
+		{			
+			TD[i + h * j] = FD[j + w * i];
+			TDRed[i + h * j] = FDRed[j + w * i];
+			TDGreen[i + h * j] = FDGreen[j + w * i];
+			TDBlue[i + h * j] = FDBlue[j + w * i];
+		}
+	}
+
+	for( long i = 0; i < h; i++)
+	{
+		// 对y方向进行快速付立叶变换
+		if( DIT_Gray == GetImageType() )
+		{
+			IFFT(&TD[w * i], &FD[w * i], wp);
+		}
+		else
+		{
+			IFFT(&TDRed[w * i], &FDRed[w * i], wp);
+			IFFT(&TDGreen[w * i], &FDGreen[w * i], wp);
+			IFFT(&TDBlue[w * i], &FDBlue[w * i], wp);
+		}
+	}
+
+	// 将最后得到的数据恢复到图片上.
+	for( long i = 0; i < h; i++)			// 行
+	{		
+		for( long j = 0; j < w; j++)		// 列
+		{
+			int value = (int)FD[j + w * i].real();
+			value = max( 0, value );
+			value = min( 255, value );
+
+			int r = (int)FDRed[ j+w*i ].real();
+			int g = (int)FDGreen[ j+w*i ].real();
+			int b = (int)FDBlue[ j+w*i ].real();
+						
+			// 给时域赋值, 傅立叶变换是针对
+			if( DIT_Gray == GetImageType() )
+			{
+				
+				this->Pixel( j, i ) = value;				
+			}
+			else
+			{
+				this->Pixel( j, i ) = RGB( r,g,b );
+			}
+		}
+	}
+}
+
+/*************************************************************************
+ * 函数名称：
+ *   IFFT()
+ * 参数:
+ *   complex<double> * FD	- 指向频域值的指针
+ *   complex<double> * TD	- 指向时域值的指针
+ *   r						－2的幂数
+ * 返回值:
+ *   无。
+ * 说明:
+ *   该函数用来实现快速付立叶反变换。
+ ************************************************************************/
+VOID CDigitalImage::IFFT(complex<double> * FD, complex<double> * TD, int r)
+{	
+	LONG	count;					// 付立叶变换点数	
+	int		i;						// 循环变量	
+	complex<double> *X;	
+	
+	count = 1 << r;					// 计算付立叶变换点数
+	X = new complex<double>[count];	// 分配运算所需存储器
+	memcpy(X, FD, sizeof(complex<double>) * count);	// 将频域点写入X
+	
+	// 求共轭
+	for(i = 0; i < count; i++)
+	{
+		X[i] = complex<double> (X[i].real(), -X[i].imag());
+	}
+	
+	FFT(X, TD, r);					// 调用快速付立叶变换
+	
+	// 求时域点的共轭
+	for(i = 0; i < count; i++)
+	{
+		TD[i] = complex<double> (TD[i].real() / count, -TD[i].imag() / count);
+	}
+	
+	delete X;
 }
