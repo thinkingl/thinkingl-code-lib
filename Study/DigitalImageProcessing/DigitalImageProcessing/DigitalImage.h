@@ -3,6 +3,7 @@
 #include "portabledefine.h"
 #include "stdafx.h"
 #include "Matrix.h"
+#include <complex>
 
 class CDigitalImage
 {
@@ -149,6 +150,12 @@ public:
 	/**	空间中值滤波 */
 	void SpatialMedianFilter( int maskSize );
 
+	/** 转换为傅立叶变换图像. */
+	void FourierTransform( bool centerTransform );
+
+	/** 傅立叶反变换 */
+	void InverseFourierTransform( );
+
 	/** 取一个坐标点处的像素值. */
 	uint32 Pixel( int x, int y ) const;
 	uint32& Pixel( int x, int y );
@@ -176,8 +183,18 @@ private:
 	*/
 	double GaussianRandom(double u,double g /*,double *r*/ ) ;
 
+	
+
 	/** 是否是一个正确的坐标. */
 	bool IsValidCoord( int x, int y, int width, int height );
+
+	// 图像正交变换函数
+	VOID FFT(complex<double> * TD, complex<double> * FD, int r);
+	VOID IFFT(complex<double> * FD, complex<double> * TD, int r);
+	VOID DCT(double *f, double *F, int power);
+	VOID IDCT(double *F, double *f, int power);
+	VOID WALSH(double *f, double *F, int r);
+	VOID IWALSH(double *F, double *f, int r);
 
 private:
 //	CImage m_image;
@@ -200,6 +217,13 @@ private:
 	/** 图片宽度高度. */
 	int m_width;
 	int m_height;
+
+	/** 傅立叶变换结果. */
+	typedef std::vector< complex<double> > TCoplexDoubleList;
+	TCoplexDoubleList m_fourierData;
+	TCoplexDoubleList m_fourierDataRed;
+	TCoplexDoubleList m_fourierDataGreen;
+	TCoplexDoubleList m_fourierDataBlue;
 };
 
 // end of the file

@@ -18,6 +18,8 @@
 #include "NoiseAddSaltAndPepperDialog.h"
 #include "NoiseSpatialMeanFilterDialog.h"
 #include "SpatialMedianFilterDialog.h"
+#include "FrequencyFourierTransformDialog.h"
+
 
 #include <map>
 
@@ -84,6 +86,8 @@ private:
 	CNoiseAddSaltAndPepperDialog m_dlgNoiseAddSaltAndPepper;
 	CNoiseSpatialMeanFilterDialog m_dlgNoiseSpatialMeanFilter;
 	CSpatialMedianFilterDialog m_dlgNoiseSpatialMedianFilter;
+
+	CFrequencyFourierTransformDialog m_dlgFrequencyFourierTransform;
 
 	/** 功能与对话框的表. */
 	typedef std::map< EDIPFunction, CWnd* > TFunctionDlgTable;
