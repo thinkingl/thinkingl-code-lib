@@ -244,7 +244,10 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="FrequencyFourierTransformDialog.h">
-      <Filter>头文件</Filter>
+      <Filter>功能控制面板</Filter>
+    </ClInclude>
+    <ClInclude Include="CompressionDCTDialog.h">
+      <Filter>功能控制面板</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -351,7 +354,10 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="FrequencyFourierTransformDialog.cpp">
-      <Filter>源文件</Filter>
+      <Filter>功能控制面板</Filter>
+    </ClCompile>
+    <ClCompile Include="CompressionDCTDialog.cpp">
+      <Filter>功能控制面板</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

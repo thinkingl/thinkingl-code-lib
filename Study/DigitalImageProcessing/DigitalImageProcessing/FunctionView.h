@@ -19,7 +19,7 @@
 #include "NoiseSpatialMeanFilterDialog.h"
 #include "SpatialMedianFilterDialog.h"
 #include "FrequencyFourierTransformDialog.h"
-
+#include "CompressionDCTDialog.h"
 
 #include <map>
 
@@ -88,6 +88,8 @@ private:
 	CSpatialMedianFilterDialog m_dlgNoiseSpatialMedianFilter;
 
 	CFrequencyFourierTransformDialog m_dlgFrequencyFourierTransform;
+
+	CCompressionDCTDialog m_dlgCompressionDCT;
 
 	/** 功能与对话框的表. */
 	typedef std::map< EDIPFunction, CWnd* > TFunctionDlgTable;

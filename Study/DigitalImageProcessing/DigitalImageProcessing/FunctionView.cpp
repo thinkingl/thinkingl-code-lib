@@ -144,6 +144,9 @@ int CFunctionView::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	m_dlgFrequencyFourierTransform.Create( CFrequencyFourierTransformDialog::IDD, this );
 	this->m_functionDlgTable[ DIP_FrequencyFourierTransform ] = &m_dlgFrequencyFourierTransform;
 
+	m_dlgCompressionDCT.Create( CCompressionDCTDialog::IDD, this );
+	this->m_functionDlgTable[ DIP_Compression_DCT ] = &m_dlgCompressionDCT;
+
 	OnChangeVisualStyle();
 
 	m_wndToolBar.SetPaneStyle(m_wndToolBar.GetPaneStyle() | CBRS_TOOLTIPS | CBRS_FLYBY);
@@ -246,6 +249,11 @@ void CFunctionView::FillDIPFunctionTree()
 	HTREEITEM hFrequencyDomain = m_wndFunctionView.InsertItem( _T( "4 Filtering in the Frequency Domain" ), 2, 2, hRoot );
 	HTREEITEM hFourierTransform = m_wndFunctionView.InsertItem( _T( "Fourier Transform" ), 3, 3, hFrequencyDomain );
 	m_wndFunctionView.SetItemData( hFourierTransform, DIP_FrequencyFourierTransform );
+
+	// 图像压缩
+	HTREEITEM hImageCompression = m_wndFunctionView.InsertItem( _T( "Image compression" ), 2, 2, hRoot );
+	HTREEITEM hDCT = m_wndFunctionView.InsertItem( _T( "DCT" ), 3, 3, hImageCompression );
+	m_wndFunctionView.SetItemData( hDCT, DIP_Compression_DCT );
 
 	// 默认全部展开.
 	m_wndFunctionView.Expand(hRoot, TVE_EXPAND);

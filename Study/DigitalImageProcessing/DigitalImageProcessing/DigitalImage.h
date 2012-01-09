@@ -156,6 +156,12 @@ public:
 	/** 傅立叶反变换 */
 	void InverseFourierTransform( );
 
+	/** 离散余弦变换 */
+	void DiscreteCosineTransform();
+
+	/**	离散余弦反变换 */
+	void InverseDiscreteCosineTransform( double compressionRate = 0 );
+
 	/** 取一个坐标点处的像素值. */
 	uint32 Pixel( int x, int y ) const;
 	uint32& Pixel( int x, int y );
@@ -224,6 +230,10 @@ private:
 	TCoplexDoubleList m_fourierDataRed;
 	TCoplexDoubleList m_fourierDataGreen;
 	TCoplexDoubleList m_fourierDataBlue;
+
+	/**	DCT 离散余弦转换结果. */
+	typedef std::vector<double> TDoubleVector;
+	TDoubleVector m_DCTData;
 };
 
 // end of the file

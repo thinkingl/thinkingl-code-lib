@@ -1465,3 +1465,261 @@ VOID CDigitalImage::IFFT(complex<double> * FD, complex<double> * TD, int r)
 	
 	delete X;
 }
+
+void CDigitalImage::DiscreteCosineTransform()
+{
+	int wdith = GetWidth();
+	int height = GetHeight();
+
+	// 赋初值
+	long w = 1;
+	long h = 1;
+	long wp = 0;
+	long hp = 0;
+
+	// 计算进行离散余弦变换的宽度和高度（2的整数次方）
+	while(w * 2 <= wdith)
+	{
+		w *= 2;
+		wp++;
+	}
+
+	while(h * 2 <= height)
+	{
+		h *= 2;
+		hp++;
+	}
+
+	TDoubleVector f( w*h );
+	TDoubleVector F( w*h );
+
+	for( int i = 0; i < h; i++)			// 行
+	{		
+		for( int j = 0; j < w; j++)		// 列
+		{
+			// 指向DIB第i行，第j个象素的指针
+			// 给时域赋值
+			f[j + i * w] = this->Pixel( j, i );
+		}
+	}
+
+	for(int i = 0; i < h; i++)
+	{
+		// 对y方向进行离散余弦变换
+		DCT(&f[w * i], &F[w * i], wp);
+	}
+
+	// 保存计算结果
+	for(int i = 0; i < h; i++)
+	{
+		for(int j = 0; j < w; j++)
+		{
+			f[j * h + i] = F[j + w * i];
+		}
+	}
+
+	for(int j = 0; j < w; j++)
+	{
+		// 对x方向进行离散余弦变换
+		DCT(&f[j * h], &F[j * h], hp);
+	}	
+
+	// 保存. 反变换的时候好变回去.
+	m_DCTData = F;
+
+	for(int i = 0; i < h; i++)			// 行
+	{		
+		for(int j = 0; j < w; j++)		// 列
+		{
+			double dTemp = fabs(F[j*h+i]);	// 计算频谱
+
+			// 判断是否超过255
+			if (dTemp > 255)
+			{
+				dTemp = 255;
+			}
+
+			// 更新源图像
+			this->Pixel( j,i ) = (int)dTemp;
+		}
+	}
+}
+
+/*************************************************************************
+ * 函数名称：
+ *   DCT()
+ * 参数:
+ *   double * f				- 指向时域值的指针
+ *   double * F				- 指向频域值的指针
+ *   r						－2的幂数
+ * 返回值:
+ *   无。
+ * 说明:
+ *   该函数用来实现快速离散余弦变换。该函数利用2N点的快速付立叶变换
+ * 来实现离散余弦变换。
+ ************************************************************************/
+VOID CDigitalImage::DCT(double *f, double *F, int r)
+{	
+	LONG	count;			// 离散余弦变换点数	
+	int		i;				// 循环变量	
+	double	dTemp;	
+	complex<double> *X;
+		
+	count = 1<<r;			// 计算离散余弦变换点数	
+
+	X = new complex<double>[count*2];	
+	memset(X, 0, sizeof(complex<double>) * count * 2);	// 赋初值为0
+	
+	// 将时域点写入数组X
+	for(i=0;i<count;i++)
+	{
+		X[i] = complex<double> (f[i], 0);
+	}
+		
+	FFT(X,X,r+1);				// 调用快速付立叶变换		
+	dTemp = (double)1/sqrt((double)count);		// 调整系数		
+	F[0] = X[0].real() * dTemp;	// 求F[0]	
+	dTemp *= sqrt((double)2);
+	
+	// 求F[u]	
+	for(i = 1; i < count; i++)
+	{
+		F[i]=(X[i].real() * cos(i*PI/(count*2)) + X[i].imag() * 
+			sin(i*PI/(count*2))) * dTemp;
+	}
+	
+	delete X;
+}
+
+void CDigitalImage::InverseDiscreteCosineTransform( double compressionRate /* = 0 */ )
+{
+	if ( m_DCTData.empty() )
+	{
+		assert( false );
+		return;
+	}
+
+	// 现在算法只能支持没有被裁减的图片.
+	assert( this->GetWidth() * this->GetHeight() == m_DCTData.size() );
+
+	long h = GetHeight();
+	long w = GetWidth();
+
+	int hp = 0;
+
+	while( ( h >> hp ) != 1 )
+	{
+		hp ++;
+	}
+
+	int wp = 0;
+	while( ( w >> wp ) != 1 )
+	{
+		wp ++;
+	}
+
+	TDoubleVector f = m_DCTData;
+	TDoubleVector F( w*h );
+
+	compressionRate = sqrt( compressionRate );
+	// 根据压缩率来处理f中的数据.
+	int leftW = ( w * compressionRate );
+	int leftH = ( h * compressionRate );
+	for( int i=leftH; i<h; ++i )
+	{
+		for( int j=0; j<w; ++j )
+		{
+			f[ j*h+i ] = 0;
+		}
+	}
+	for( int i=0; i<h; ++i )
+	{
+		for( int j=leftW; j<w; ++j )
+		{
+			f[ j*h+i ] = 0;
+		}
+	}
+
+
+
+
+	for(int i = 0; i < h; i++)
+	{
+		// 对y方向进行离散余弦变换
+		IDCT(&f[w * i], &F[w * i], wp);
+	}
+
+	// 保存计算结果
+	for(int i = 0; i < h; i++)
+	{
+		for(int j = 0; j < w; j++)
+		{
+			f[j * h + i] = F[j + w * i];
+		}
+	}
+
+	for(int j = 0; j < w; j++)
+	{
+		// 对x方向进行离散余弦变换
+		IDCT(&f[j * h], &F[j * h], hp);
+	}	
+
+	// 设置到图片上.
+	for( int i = 0; i < h; i++)			// 行
+	{		
+		for( int j = 0; j < w; j++)		// 列
+		{
+			int value = (int)F[ j + w*i ];
+			value = max( 0, value );
+			value = min( 255, value );
+			// 给时域赋值
+			this->Pixel( j, i ) = value;
+		}
+	}
+}
+
+/*************************************************************************
+ * 函数名称：
+ *   IDCT()
+ * 参数:
+ *   double * F				- 指向频域值的指针
+ *   double * f				- 指向时域值的指针
+ *   r						－2的幂数
+ * 返回值:
+ *   无。
+ * 说明:
+ *   该函数用来实现快速离散余弦反变换。该函数也利用2N点的快速付立叶变换
+ * 来实现离散余弦反变换。
+ ************************************************************************/
+VOID CDigitalImage::IDCT(double *F, double *f, int r)
+{
+	LONG	count;			// 离散余弦反变换点数
+	int		i;				// 循环变量
+	double	dTemp, d0;	
+	complex<double> *X;
+		
+	count = 1<<r;			// 计算离散余弦变换点数
+
+	X = new complex<double>[count*2];	
+	memset(X, 0, sizeof(complex<double>) * count * 2);	// 赋初值为0
+	
+	// 将频域变换后点写入数组X
+	for(i=0;i<count;i++)
+	{
+		X[i] = complex<double> (F[i] * cos(i*PI/(count*2)), F[i] * 
+			sin(i*PI/(count*2)));
+	}
+	
+	IFFT(X,X,r+1);		// 调用快速付立叶反变换
+	
+	// 调整系数
+	dTemp = sqrt(2.0/count);
+	d0 = (sqrt(1.0/count) - dTemp) * F[0];
+	
+	for(i = 0; i < count; i++)
+	{
+		f[i] = d0 + X[i].real()* dTemp * 2 * count;
+	}
+	
+	delete X;
+}
