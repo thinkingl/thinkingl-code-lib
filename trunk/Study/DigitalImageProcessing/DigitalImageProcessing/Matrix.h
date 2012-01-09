@@ -32,6 +32,8 @@ public:
 
 	inline CMatrix& operator = ( const CMatrix& another );
 	inline CMatrix operator *( const CMatrix& another ) const;
+
+	_TypeOfMatrix* operator[]( int rowIndex );
 	//friend ;
 
 	/**	ÇóÄæ¾ØÕó. 
@@ -135,6 +137,12 @@ CMatrix<_TypeOfMatrix> CMatrix<_TypeOfMatrix>::operator *( const CMatrix<_TypeOf
 		}
 	}
 	return newMatrix;
+}
+
+template< typename _TypeOfMatrix>
+_TypeOfMatrix* CMatrix<_TypeOfMatrix>::operator[]( int rowIndex )
+{
+	return &m_matrixData[ GetWidth() * rowIndex ];
 }
 
 template< typename _TypeOfMatrix>

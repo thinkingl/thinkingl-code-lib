@@ -162,6 +162,15 @@ public:
 	/**	离散余弦反变换 */
 	void InverseDiscreteCosineTransform( double compressionRate = 0 );
 
+	/**	Sobel 边界检测 */
+	void SobelEdgeDetect();
+
+	/**	Roberts 边界检测. */
+	void RobertsEdgeDetect();
+
+	/**	Prewitt */
+	void PrewittEdgeDetect();
+
 	/** 取一个坐标点处的像素值. */
 	uint32 Pixel( int x, int y ) const;
 	uint32& Pixel( int x, int y );

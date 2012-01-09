@@ -141,6 +141,7 @@
     <ClInclude Include="CompressionDCTDialog.h" />
     <ClInclude Include="dipcommon.h" />
     <ClInclude Include="dipconst.h" />
+    <ClInclude Include="EdgeDetectionDialog.h" />
     <ClInclude Include="FrequencyFourierTransformDialog.h" />
     <ClInclude Include="FunctionView.h" />
     <ClInclude Include="DigitalImage.h" />
@@ -184,6 +185,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="EdgeDetectionDialog.cpp" />
     <ClCompile Include="FrequencyFourierTransformDialog.cpp" />
     <ClCompile Include="FunctionView.cpp" />
     <ClCompile Include="DigitalImage.cpp">

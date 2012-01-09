@@ -1621,24 +1621,26 @@ void CDigitalImage::InverseDiscreteCosineTransform( double compressionRate /* = 
 	TDoubleVector f = m_DCTData;
 	TDoubleVector F( w*h );
 
-	compressionRate = sqrt( compressionRate );
-	// 根据压缩率来处理f中的数据.
-	int leftW = ( w * compressionRate );
-	int leftH = ( h * compressionRate );
-	for( int i=leftH; i<h; ++i )
+	// 根据压缩率来处理f中的数据. 截取离散余弦变换的左上部分的三角形.
+	// 三角形之外的部分都填0.
+	double areaAll = w * h;
+	double triangleSideLen = sqrt( areaAll * compressionRate * 2 );
+	if ( triangleSideLen <= w )	// 如果面积超过了一半, 就不压缩了.
 	{
-		for( int j=0; j<w; ++j )
+		for( int y=0; y<h; ++y )
 		{
-			f[ j*h+i ] = 0;
+			for( int x=0; x<h; ++x )
+			{
+				double curTriangleWidth = triangleSideLen - y;
+				double curTriangleHeight = triangleSideLen - x;	// 等腰直角三角形.
+				if( x > curTriangleWidth || y > curTriangleHeight )
+				{
+					f[ x + y*w ] = 0;
+				}
+			}
 		}
 	}
-	for( int i=0; i<h; ++i )
-	{
-		for( int j=leftW; j<w; ++j )
-		{
-			f[ j*h+i ] = 0;
-		}
-	}
+	
 
 
 
@@ -1723,3 +1725,250 @@ VOID CDigitalImage::IDCT(double *F, double *f, int r)
 	
 	delete X;
 }
+
+/*
+ *  sobel_edge:  Converts the BW image in an Edged image.
+ *  Inputs: 
+ *      (image *) Org Black and White image struct.
+ *		(image *) The Edge Detected image struct.
+ *
+ *  Returns:
+ *      int: 0 is successful run. -1 is a bad malloc.
+ *
+ *  How this algorithm works:
+ *      http://www.pages.drexel.edu/~weg22/edge.html
+ */
+void  CDigitalImage::SobelEdgeDetect( )
+{
+	#define NDIMS           2       //X * Y
+	typedef unsigned char   uint8;
+
+	typedef struct image{
+		uint8	*im;
+		int     dims[NDIMS];
+	}image;
+
+	image inImg, edgeImage;
+	inImg.dims[0] = GetWidth();
+	inImg.dims[1] = GetHeight();
+
+	typedef std::vector<uint8> TImgDataBuf;
+	TImgDataBuf imgData( GetWidth()*GetHeight() );
+	for( int y=0; y<GetHeight(); ++y )
+	{
+		for( int x=0; x<GetWidth(); ++x )
+		{
+			imgData[ x + y*GetWidth() ] = (uint8)this->Pixel( x, y );
+		}
+	}
+	inImg.im = imgData.data();
+
+	image *bw_im = &inImg;
+	image *ed_im = &edgeImage;
+
+    int     X, Y, I, J, elements, im_offset, mask_offset;
+    long sumX = 0;
+	long sumY = 0;
+	long SUM = 0;
+    int     x_mask[]={-1,-2,-1,
+                       0, 0, 0,
+                       1, 2, 1};
+    int     y_mask[]={ 1, 0,-1,
+                       2, 0,-2,
+                       1, 0,-1};    
+    
+    elements = bw_im->dims[0] * bw_im->dims[1];
+	ed_im->dims[0] = bw_im->dims[0];
+	ed_im->dims[1] = bw_im->dims[1];
+
+	TImgDataBuf edgeImgDataBuf( ed_im->dims[0] * ed_im->dims[1], 0 );
+    ed_im->im = edgeImgDataBuf.data();
+	
+     // Convolution starts here
+    for(Y=0; Y<ed_im->dims[1]; Y++)  {
+        for(X=0; X<ed_im->dims[0]; X++)  {
+            // image boundaries 
+            if( Y==0 || Y==ed_im->dims[1]-1){ /*rows*/
+                SUM = 0;
+            } else if( X==0 || X==ed_im->dims[0]-1) { /*cols*/
+                SUM = 0;
+            // Convolution starts here
+            } else {
+                sumX = 0; sumY = 0; SUM = 0;
+                // X&Y GRADIENT APPROXIMATION
+                for(I=-1; I<=1; I++)  {
+                    for(J=-1; J<=1; J++)  {
+                        im_offset = (Y+J)*ed_im->dims[0] + (X+I);
+                        mask_offset = (I+1)+((J+1)*3);
+						sumX += (int)
+                            (*(bw_im->im+im_offset)) * 
+                            x_mask[mask_offset];
+                        sumY += (int)
+                            (*(bw_im->im+im_offset)) * 
+                            y_mask[mask_offset];
+                    }
+                }
+             }
+             SUM = labs(sumX) + labs(sumY);
+			 if(SUM > 255)	SUM = 255;
+			 else if(SUM < 0)	SUM = 0;
+            *(ed_im->im+Y*ed_im->dims[0]+X) = 255 - (uint8) SUM;  
+
+			this->Pixel( X, Y ) = 255 - (uint8) SUM;
+	     
+        }
+    }
+   
+}
+
+void  CDigitalImage::PrewittEdgeDetect( )
+{
+#define NDIMS           2       //X * Y
+	typedef unsigned char   uint8;
+
+	typedef struct image{
+		uint8	*im;
+		int     dims[NDIMS];
+	}image;
+
+	image inImg, edgeImage;
+	inImg.dims[0] = GetWidth();
+	inImg.dims[1] = GetHeight();
+
+	typedef std::vector<uint8> TImgDataBuf;
+	TImgDataBuf imgData( GetWidth()*GetHeight() );
+	for( int y=0; y<GetHeight(); ++y )
+	{
+		for( int x=0; x<GetWidth(); ++x )
+		{
+			imgData[ x + y*GetWidth() ] = (uint8)this->Pixel( x, y );
+		}
+	}
+	inImg.im = imgData.data();
+
+	image *bw_im = &inImg;
+	image *ed_im = &edgeImage;
+
+	int     X, Y, I, J, elements, im_offset, mask_offset;
+	long sumX = 0;
+	long sumY = 0;
+	long SUM = 0;
+	int     x_mask[]
+		={	-1,-1,-1,
+			0, 0, 0,
+			1, 1, 1};
+	int     y_mask[]={ 
+		1, 0,-1,
+		1, 0,-1,
+		1, 0,-1};    
+
+	elements = bw_im->dims[0] * bw_im->dims[1];
+	ed_im->dims[0] = bw_im->dims[0];
+	ed_im->dims[1] = bw_im->dims[1];
+
+	TImgDataBuf edgeImgDataBuf( ed_im->dims[0] * ed_im->dims[1], 0 );
+	ed_im->im = edgeImgDataBuf.data();
+
+	// Convolution starts here
+	for(Y=0; Y<ed_im->dims[1]; Y++)  {
+		for(X=0; X<ed_im->dims[0]; X++)  {
+			// image boundaries 
+			if( Y==0 || Y==ed_im->dims[1]-1){ /*rows*/
+				SUM = 0;
+			} else if( X==0 || X==ed_im->dims[0]-1) { /*cols*/
+				SUM = 0;
+				// Convolution starts here
+			} else {
+				sumX = 0; sumY = 0; SUM = 0;
+				// X&Y GRADIENT APPROXIMATION
+				for(I=-1; I<=1; I++)  {
+					for(J=-1; J<=1; J++)  {
+						im_offset = (Y+J)*ed_im->dims[0] + (X+I);
+						mask_offset = (I+1)+((J+1)*3);
+						sumX += (int)
+							(*(bw_im->im+im_offset)) * 
+							x_mask[mask_offset];
+						sumY += (int)
+							(*(bw_im->im+im_offset)) * 
+							y_mask[mask_offset];
+					}
+				}
+			}
+			SUM = labs(sumX) + labs(sumY);
+			if(SUM > 255)	SUM = 255;
+			else if(SUM < 0)	SUM = 0;
+			*(ed_im->im+Y*ed_im->dims[0]+X) = 255 - (uint8) SUM;  
+
+			this->Pixel( X, Y ) = 255 - (uint8) SUM;
+
+		}
+	}
+
+}
+
+void CDigitalImage::RobertsEdgeDetect()
+{
+	int width = GetWidth();
+	int height = GetHeight();
+
+	CMatrix<unsigned char> xc( width, height, 0, 1 );
+	for( int i=0; i<height; ++i )
+	{
+		for( int j=0; j<width; ++j )
+		{
+			xc.Value( j, i ) = this->Pixel( j, i );
+		}
+	}
+
+	int nrows = height;
+	int ncols = width;
+	int thresh = 0;
+	int thresh2 = 0;
+
+	CMatrix<float> row( ncols, nrows, 0, 1 );
+	CMatrix<float> col( ncols, nrows, 0, 1 );
+	CMatrix<float> theta( ncols+2, nrows+2, 0, 1 );
+	CMatrix<float> y( ncols+2, nrows+2, 0, 1 );
+	CMatrix<unsigned char> edgemap( width, height, 0, 1 );
+
+
+
+// 	if( row == NULL || col == NULL || theta == NULL || y == NULL || edgemap == NULL)
+// 		error(" Allocation error of matrices in Robet's sub-function\n");
+	for( int i = 0; i < nrows; i++)
+	{
+		for( int j = 0; j < ncols; j++)
+		{
+			double xcij = ( i<1 || j<1 ) ? 0 : xc[i-1][j-1];
+			double xci = ( i < 1 ) ? 0 : xc[i-1][j];
+			double xcj = (j<1) ? 0 : xc[i][j-1];
+			row[i][j]= (float)(xc[i][j] - xcij )/sqrt( (double)2 );
+			col[i][j]= (float)( xci - xcj )/sqrt( (double)2 );
+
+
+			y[i][j] = row[i][j]*row[i][j]+ col[i][j]*col[i][j];
+			theta[i][j]= atan2(col[i][j],row[i][j]);
+		}
+	}
+	
+	/* DO THE THRESHOLDING TO COMPUTE THE EDGE PIXELS */
+	for( int i=0;i<nrows;i++)
+	{
+		for( int j=0;j<ncols;j++)
+		{
+			if(y[i][j] >= 255 )
+			{
+				edgemap[i][j] = 255;
+//				edgepoints++;
+			}
+			else if( edgemap[i][j] < 0 )
+			{
+				edgemap[i][j] =0;
+			}
+
+			// 反转
+			this->Pixel( j, i ) = 255 - edgemap[i][j];
+		}
+	}
+}
+
