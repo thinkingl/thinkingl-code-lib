@@ -25,6 +25,8 @@ enum EDIPFunction
 	DIP_NoiseSpatialMedianFilter,	// 空间中值滤波.
 
 	DIP_FrequencyFourierTransform,	// 傅立叶变换.
+
+	DIP_Compression_DCT,			// 图像压缩, 离散余弦转换.
 };
 
 // 常数π

@@ -46,7 +46,7 @@ CDigitalImageProcessingApp::CDigitalImageProcessingApp()
 
 	// TODO: 将以下应用程序 ID 字符串替换为唯一的 ID 字符串；建议的字符串格式
 	//为 CompanyName.ProductName.SubProduct.VersionInformation
-	SetAppID(_T("DigitalImageProcessing.AppID.001"));
+	SetAppID(_T("1110332040-李之兴.DigitalImageProcessing.DIP.001"));
 
 	// TODO: 在此处添加构造代码，
 	// 将所有重要的初始化放置在 InitInstance 中

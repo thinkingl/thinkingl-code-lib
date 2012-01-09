@@ -65,6 +65,22 @@ void CFrequencyFourierTransformDialog::OnBnClickedApply()
 
 void CFrequencyFourierTransformDialog::OnDIP( CDigitalImage *pImg )
 {
+	bool isPowerOf2 = false;
+	for( int i=1; i<13; ++i )
+	{
+		if( (1<<i) == pImg->GetWidth() )
+		{
+			isPowerOf2 = true;
+			break;
+		}
+	}
+
+	if( pImg->GetWidth() != pImg->GetHeight() 
+		|| !isPowerOf2 )
+	{
+		MessageBox( _T( "Sorry, 因为算法简陋, 只能支持长宽相等并且是2的幂次的图片." ) );
+		return;
+	}
 	if( 0 == m_fourierTransformOrInverseFourierTransform )
 	{
 		pImg->FourierTransform( TRUE == this->m_centerTheTransform );
