@@ -147,6 +147,9 @@ int CFunctionView::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	m_dlgCompressionDCT.Create( CCompressionDCTDialog::IDD, this );
 	this->m_functionDlgTable[ DIP_Compression_DCT ] = &m_dlgCompressionDCT;
 
+	m_dlgEdgeDetect.Create( CEdgeDetectionDialog::IDD, this );
+	this->m_functionDlgTable[ DIP_EdgeDetection ] = &m_dlgEdgeDetect;
+
 	OnChangeVisualStyle();
 
 	m_wndToolBar.SetPaneStyle(m_wndToolBar.GetPaneStyle() | CBRS_TOOLTIPS | CBRS_FLYBY);
@@ -255,6 +258,16 @@ void CFunctionView::FillDIPFunctionTree()
 	HTREEITEM hDCT = m_wndFunctionView.InsertItem( _T( "DCT" ), 3, 3, hImageCompression );
 	m_wndFunctionView.SetItemData( hDCT, DIP_Compression_DCT );
 
+	// 图像修复
+	HTREEITEM hImageRestoration = m_wndFunctionView.InsertItem( _T( "Image Restoration" ), 2, 2, hRoot );
+	HTREEITEM hRestorationProblem = m_wndFunctionView.InsertItem( _T( "作业题目" ), 3, 3, hImageRestoration );
+	m_wndFunctionView.SetItemData( hRestorationProblem, DIP_Restoration_Problem );
+
+	// 图像边界检测
+	HTREEITEM hImageEdgeDetection = m_wndFunctionView.InsertItem( _T( "Image Edge Detection" ), 2, 2, hRoot );
+	HTREEITEM hEdgeDetection = m_wndFunctionView.InsertItem( _T( "Edge Detection Algorithms" ), 3, 3, hImageEdgeDetection );
+	m_wndFunctionView.SetItemData( hEdgeDetection, DIP_EdgeDetection );
+
 	// 默认全部展开.
 	m_wndFunctionView.Expand(hRoot, TVE_EXPAND);
 	m_wndFunctionView.Expand( hRGB2Gray, TVE_EXPAND );
@@ -262,6 +275,9 @@ void CFunctionView::FillDIPFunctionTree()
 	m_wndFunctionView.Expand( hIntensityFun, TVE_EXPAND );
 	m_wndFunctionView.Expand( hNoise, TVE_EXPAND );
 	m_wndFunctionView.Expand( hFrequencyDomain, TVE_EXPAND );
+	m_wndFunctionView.Expand( hImageCompression, TVE_EXPAND );
+	m_wndFunctionView.Expand( hImageRestoration, TVE_EXPAND );
+	m_wndFunctionView.Expand( hImageEdgeDetection, TVE_EXPAND );
 	
 }
 

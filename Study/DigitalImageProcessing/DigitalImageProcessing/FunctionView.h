@@ -20,6 +20,7 @@
 #include "SpatialMedianFilterDialog.h"
 #include "FrequencyFourierTransformDialog.h"
 #include "CompressionDCTDialog.h"
+#include "EdgeDetectionDialog.h"
 
 #include <map>
 
@@ -90,6 +91,8 @@ private:
 	CFrequencyFourierTransformDialog m_dlgFrequencyFourierTransform;
 
 	CCompressionDCTDialog m_dlgCompressionDCT;
+
+	CEdgeDetectionDialog m_dlgEdgeDetect;
 
 	/** 功能与对话框的表. */
 	typedef std::map< EDIPFunction, CWnd* > TFunctionDlgTable;

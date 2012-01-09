@@ -249,6 +249,9 @@
     <ClInclude Include="CompressionDCTDialog.h">
       <Filter>功能控制面板</Filter>
     </ClInclude>
+    <ClInclude Include="EdgeDetectionDialog.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DigitalImageProcessing.cpp">
@@ -358,6 +361,9 @@
     </ClCompile>
     <ClCompile Include="CompressionDCTDialog.cpp">
       <Filter>功能控制面板</Filter>
+    </ClCompile>
+    <ClCompile Include="EdgeDetectionDialog.cpp">
+      <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
