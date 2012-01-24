@@ -123,6 +123,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ThePerfectStall", "ThePerfe
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "JobProcessing", "JobProcessing\JobProcessing.vcxproj", "{9831BE75-C91D-4074-A427-9438BD6710E8}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Cowcycles", "Cowcycles\Cowcycles.vcxproj", "{CD730A54-70BE-4D51-B8DE-38740002C014}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -591,6 +593,16 @@ Global
 		{9831BE75-C91D-4074-A427-9438BD6710E8}.Release|Mixed Platforms.Build.0 = Release|Win32
 		{9831BE75-C91D-4074-A427-9438BD6710E8}.Release|Win32.ActiveCfg = Release|Win32
 		{9831BE75-C91D-4074-A427-9438BD6710E8}.Release|Win32.Build.0 = Release|Win32
+		{CD730A54-70BE-4D51-B8DE-38740002C014}.Debug|Any CPU.ActiveCfg = Debug|Win32
+		{CD730A54-70BE-4D51-B8DE-38740002C014}.Debug|Mixed Platforms.ActiveCfg = Debug|Win32
+		{CD730A54-70BE-4D51-B8DE-38740002C014}.Debug|Mixed Platforms.Build.0 = Debug|Win32
+		{CD730A54-70BE-4D51-B8DE-38740002C014}.Debug|Win32.ActiveCfg = Debug|Win32
+		{CD730A54-70BE-4D51-B8DE-38740002C014}.Debug|Win32.Build.0 = Debug|Win32
+		{CD730A54-70BE-4D51-B8DE-38740002C014}.Release|Any CPU.ActiveCfg = Release|Win32
+		{CD730A54-70BE-4D51-B8DE-38740002C014}.Release|Mixed Platforms.ActiveCfg = Release|Win32
+		{CD730A54-70BE-4D51-B8DE-38740002C014}.Release|Mixed Platforms.Build.0 = Release|Win32
+		{CD730A54-70BE-4D51-B8DE-38740002C014}.Release|Win32.ActiveCfg = Release|Win32
+		{CD730A54-70BE-4D51-B8DE-38740002C014}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -641,5 +653,6 @@ Global
 		{E3DC88AC-99DE-4DB0-9486-3A3BCC6E7612} = {8D81B0D9-E9CA-4DEA-B28E-C3724D6A3424}
 		{2938D4A4-4AFC-46AC-95AD-30E3E5993768} = {8D81B0D9-E9CA-4DEA-B28E-C3724D6A3424}
 		{9831BE75-C91D-4074-A427-9438BD6710E8} = {8D81B0D9-E9CA-4DEA-B28E-C3724D6A3424}
+		{CD730A54-70BE-4D51-B8DE-38740002C014} = {8D81B0D9-E9CA-4DEA-B28E-C3724D6A3424}
 	EndGlobalSection
 EndGlobal
