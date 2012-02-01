@@ -51,7 +51,7 @@ int _tmain(int argc, TCHAR* argv[], TCHAR* envp[])
 
 			HKEY hKey;
 			bool bSucc = true;
-			if (ERROR_SUCCESS != RegCreateKey(HKEY_CLASSES_ROOT, _T("Interface\\{7FC8EFD9-88F1-4B46-A09D-17EBCA3EFBA7}\\ProxyStubClsid32"), &hKey))
+			if (ERROR_SUCCESS != RegCreateKey(HKEY_CLASSES_ROOT, _T("Interface\\{73A03986-42CA-4801-B4FC-21E84DF177BA}\\ProxyStubClsid32"), &hKey))
 			{
 				std::wcout<<_T("Registry Open Failed!")<<std::endl;
 				system("pause");
