@@ -22,7 +22,7 @@ bool TryBindPort( int bindPort )
 	struct sockaddr_in my_addr;
 	struct sockaddr_in their_addr;
 	int sin_size;
-	//建立TCP套接口
+	//建立套接口
 	if((sockfd = socket(AF_INET, SOCK_DGRAM,0))==-1)
 	{
 		printf("create socket error");
