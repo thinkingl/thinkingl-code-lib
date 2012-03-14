@@ -1,0 +1,20 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "socketstudy", "socketstudy\socketstudy.vcxproj", "{CE3FD435-13F7-4EB6-B7E5-5BC39DDD1A52}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{CE3FD435-13F7-4EB6-B7E5-5BC39DDD1A52}.Debug|Win32.ActiveCfg = Debug|Win32
+		{CE3FD435-13F7-4EB6-B7E5-5BC39DDD1A52}.Debug|Win32.Build.0 = Debug|Win32
+		{CE3FD435-13F7-4EB6-B7E5-5BC39DDD1A52}.Release|Win32.ActiveCfg = Release|Win32
+		{CE3FD435-13F7-4EB6-B7E5-5BC39DDD1A52}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
