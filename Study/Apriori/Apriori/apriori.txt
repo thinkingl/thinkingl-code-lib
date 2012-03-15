@@ -1,0 +1,7 @@
+60
+80
+T100: { M O N K E Y }
+T200: { D O N K E Y }
+T300: { M A K E }
+T400: { M U C K Y }
+T500: { C O O K I E }
