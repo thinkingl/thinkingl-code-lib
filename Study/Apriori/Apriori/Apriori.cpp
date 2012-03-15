@@ -31,8 +31,8 @@ typedef std::vector< CTransaction > CTransactionSet;
 
 // 候选项集合。
 // key: 项集合， value: 计数
-typedef std::map< CItemSet, int > CCandidateItemTable;
-typedef std::vector< CCandidateItemTable > CCandidateItemTableList;
+typedef std::map< CItemSet, int > CItemSetCountTable;
+typedef std::vector< CItemSetCountTable > CCandidateItemTableList;
 
 // 频繁项目集合。
 typedef std::set<CItemSet> CFreqItemSet;
@@ -48,7 +48,7 @@ ostream& operator << ( ostream& oss, const CItemSet& itemset )
 }
 
 // 生成候选集
-void CandidateGen( const CFreqItemSet& freqItemSet,  const CTransactionSet& transSet, CCandidateItemTable& candidateSet )
+void CandidateGen( const CFreqItemSet& freqItemSet,  const CTransactionSet& transSet, CItemSetCountTable& candidateSet )
 {
 	candidateSet.clear();
 
@@ -97,13 +97,13 @@ void CandidateGen( const CFreqItemSet& freqItemSet,  const CTransactionSet& tran
 }
 
 // Candidate Itemset 转换为 Frequency ItemSet, 要求必须大于最小支持度 minSup。
-void Candidate2Freq( const CCandidateItemTable& candidateTable, float minSup,  int transactionCount, CFreqItemSet& freqSet, CCandidateItemTableList& allCanList )
+void Candidate2Freq( const CItemSetCountTable& candidateTable, float minSup,  int transactionCount, CFreqItemSet& freqSet, CCandidateItemTableList& allCanList )
 {
 	freqSet.clear();
 
-	CCandidateItemTable validCandi;
+	CItemSetCountTable validCandi;
 
-	for ( CCandidateItemTable::const_iterator itCan = candidateTable.begin(); itCan != candidateTable.end(); ++itCan )
+	for ( CItemSetCountTable::const_iterator itCan = candidateTable.begin(); itCan != candidateTable.end(); ++itCan )
 	{
 		// 计算支持。
 		float sup = float(itCan->second) / transactionCount;
@@ -126,7 +126,7 @@ void Candidate2Freq( const CCandidateItemTable& candidateTable, float minSup,  i
 void Apriori( const CTransactionSet& transSet, float minSup, float minConf, CCandidateItemTableList& allCanList )
 {
 	// 根据初始的单项频繁项目集生成候选项集集合。
-	CCandidateItemTable candidateSet;
+	CItemSetCountTable candidateSet;
 	// 进行初始的Candidate计数。
 	for ( size_t i=0; i<transSet.size(); ++i )
 	{
@@ -155,7 +155,7 @@ void Apriori( const CTransactionSet& transSet, float minSup, float minConf, CCan
 			const CTransaction& trans = transSet[ transIndex ];
 
 			// 看每个候选集项是否在数据中，如果在就计数。
-			for ( CCandidateItemTable::iterator itCan = candidateSet.begin(); itCan != candidateSet.end(); ++itCan )
+			for ( CItemSetCountTable::iterator itCan = candidateSet.begin(); itCan != candidateSet.end(); ++itCan )
 			{
 				// 每个小项是否在数据中。
 				bool isInclude = std::includes( trans.begin(), trans.end(), itCan->first.begin(), itCan->first.end() );
@@ -172,7 +172,24 @@ void Apriori( const CTransactionSet& transSet, float minSup, float minConf, CCan
 	}
 }
 
+void GenRules( const CItemSetCountTable& allFrequencyTable, const CTransactionSet allTrans )
+{
+	// 初始化第一轮的数据。
+	
+	for ( CItemSetCountTable::const_iterator cIt = allFrequencyTable.begin(); cIt != allFrequencyTable.end(); ++cIt )
+	{
 
+	}
+
+	CFreqItemSet allfrq;
+	CCandidateItemTableList noUse;
+	Candidate2Freq( allFrequencyTable, 0, allTrans.size(), allfrq, noUse );
+
+	// 困了， 下面这些乱写的。。。
+	CItemSetCountTable h;	//书上叫H， 我也不知道该起什么名字更好。
+	CandidateGen( allfrq, allTrans, h );
+
+}
 
 int main(int argc, char* argv[])
 {
@@ -262,14 +279,48 @@ int main(int argc, char* argv[])
 	cout << "所有的频繁项目集以及支持度信息：" << endl << endl;
 	for ( size_t i=0; i<allCanTableList.size(); ++i )
 	{
-		for ( CCandidateItemTable::iterator itCan = allCanTableList[i].begin(); itCan!=allCanTableList[i].end(); ++itCan )
+		for ( CItemSetCountTable::iterator itCan = allCanTableList[i].begin(); itCan!=allCanTableList[i].end(); ++itCan )
 		{
 			// 打印输出。
 			cout << itCan->first << " cout: " << itCan->second << "\t Sup: " << float(itCan->second)/transSet.size() << endl;
 		}
 	}
 	
+
 	// 生成关联规则。
+	CItemSetCountTable allCanTalbe;
+	for ( size_t i=0; i<allCanTableList.size(); ++i )
+	{
+		allCanTalbe.insert(allCanTableList[i].begin(), allCanTableList[i].end() );
+	}
+
+// 	for ( size_t i=0; i<allCanTableList.size(); ++i )
+// 	{
+// 		for ( CCandidateItemTable::iterator itCan = allCanTableList[i].begin(); itCan!=allCanTableList[i].end(); ++itCan )
+// 		{
+// 			const CItemSet& frqItemSet = itCan->first;
+// 			for ( CItemSet::const_iterator cItItem1 = frqItemSet.begin(); cItItem1 != frqItemSet.end(); ++cItItem1 )
+// 			{
+// 				for ( CItemSet::const_iterator cItItem2 = frqItemSet.begin(); cItItem2 != frqItemSet.end(); ++cItItem2 )
+// 				{
+// 					const CItem& item1 = *cItItem1;
+// 					const CItem& item2 = *cItItem2;
+// 					if ( item1 == item2 )
+// 					{
+// 						continue;	// 关联规则当然必须是不一样的。
+// 					}
+// 					else
+// 					{
+// 						// 计算置信度。
+// 						float conf = 
+// 					}
+// 				}
+// 			}
+// 			
+// 			// 打印输出。
+// 			cout << itCan->first << " cout: " << itCan->second << "\t Sup: " << float(itCan->second)/transSet.size() << endl;
+// 		}
+// 	}
 
 	system( "pause" );
 
