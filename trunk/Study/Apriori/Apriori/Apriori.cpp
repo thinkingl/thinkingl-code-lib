@@ -172,22 +172,105 @@ void Apriori( const CTransactionSet& transSet, float minSup, float minConf, CCan
 	}
 }
 
-void GenRules( const CItemSetCountTable& allFrequencyTable, const CTransactionSet allTrans )
+typedef std::pair< CItemSet, CItemSet > CRule;
+struct CRuleInfo
 {
-	// 初始化第一轮的数据。
-	
-	for ( CItemSetCountTable::const_iterator cIt = allFrequencyTable.begin(); cIt != allFrequencyTable.end(); ++cIt )
-	{
+	CRule rule;	// 关联规则。
+	float conf;		// 置信度。
+	CRuleInfo() : conf( 0 )
+	{}
 
+	bool operator<( const CRuleInfo& another ) const
+	{
+		return this->rule < another.rule;
+	}
+};
+typedef std::set< CRuleInfo > CRuleInfoList;
+
+/** 书上的算法看起来太烦人了， 一点也没有程序员的风格， 我有更好更简单更直接的想法。。。。 */
+void GenRules( const CItemSetCountTable& allFrequencyTable, CRuleInfoList& ruleList, float minConf )
+{
+	// 初始化， 后项为0的关联规则。
+	CRuleInfoList curRuleList;
+	for ( CItemSetCountTable::const_iterator itCan = allFrequencyTable.begin(); itCan!=allFrequencyTable.end(); ++itCan )
+	{
+		// 打印输出。
+		CRuleInfo ruleInfo;
+		ruleInfo.rule = CRule( itCan->first, CItemSet() );
+		curRuleList.insert( ruleInfo );
 	}
 
-	CFreqItemSet allfrq;
-	CCandidateItemTableList noUse;
-	Candidate2Freq( allFrequencyTable, 0, allTrans.size(), allfrq, noUse );
+	// 一直到它为空为止！
+	while ( !curRuleList.empty() )
+	{
+		// 当前的关联规则后项为 k 个元素， 我们依靠它去寻找后项为 k+1 的元素。
+		// 根据关联规则的性质， 如果关联规则后项是k个元素的集合， 那么这k个元素的子集作为新的后项的关联规则一定成立（置信度合格）。
+		// 反之， 我们只需要在合格的 后项是 k 个元素的所有关联规则中去生成后项是 k+1个元素的新关联规则。
+		
+		// 下一轮的Rule List。
+		CRuleInfoList nextCurRuleList;
 
-	// 困了， 下面这些乱写的。。。
-	CItemSetCountTable h;	//书上叫H， 我也不知道该起什么名字更好。
-	CandidateGen( allfrq, allTrans, h );
+		for ( CRuleInfoList::const_iterator cItCurRuleList = curRuleList.begin(); cItCurRuleList != curRuleList.end(); ++cItCurRuleList )
+		{
+			// 将这个关联规则项拆成多个， 分别将前面集合的一个元素分别移到后面。
+			// 前面的条件不能为空。。
+			const CRuleInfo& curRule = *cItCurRuleList;
+			const CItemSet& firstItemSet = curRule.rule.first;
+			for ( CItemSet::const_iterator cItItem = firstItemSet.begin(); cItItem != firstItemSet.end(); ++cItItem )
+			{
+				CRule newRule = curRule.rule;
+				newRule.first.erase( *cItItem );
+				newRule.second.insert( *cItItem );
+
+				// 新规则是否合格。 前项条件不为空。 置信度符合要求。
+				if ( newRule.first.empty() )
+				{
+					continue;
+				}
+
+				// 置信度计算， 等于合集的count 除以 前项条件的count。				
+				CItemSet unionSet;
+				set_union( newRule.first.begin(), newRule.first.end(), newRule.second.begin(), newRule.second.end(), inserter( unionSet, unionSet.begin() ) );
+				int unionCount = 0;
+				CItemSetCountTable::const_iterator cItCountTable = allFrequencyTable.find( unionSet );
+				if ( cItCountTable != allFrequencyTable.end() )
+				{
+					unionCount = cItCountTable->second;
+				}
+
+				int firstCount = 0;
+				cItCountTable = allFrequencyTable.find( newRule.first );
+				if ( cItCountTable != allFrequencyTable.end() )
+				{
+					firstCount = cItCountTable->second;
+				}
+
+				if ( firstCount == 0 )
+				{
+					continue;
+				}
+
+				float conf =   float(unionCount) / firstCount;
+				if ( conf < minConf )
+				{
+					continue;
+				}
+
+				// 真金不怕火炼， 最终修成正果。
+				CRuleInfo newRuleInfo;
+				newRuleInfo.rule = newRule;
+				newRuleInfo.conf = conf;
+
+				nextCurRuleList.insert( newRuleInfo );
+
+				ruleList.insert( newRuleInfo );
+							
+			}
+		}
+
+		// 下一轮。
+		curRuleList = nextCurRuleList;
+	}
 
 }
 
@@ -276,7 +359,7 @@ int main(int argc, char* argv[])
 	CCandidateItemTableList allCanTableList;
 	Apriori( transSet, float(minSup)/100, float(minConf)/100, allCanTableList );
 
-	cout << "所有的频繁项目集以及支持度信息：" << endl << endl;
+	cout << "支持度大于 " << minSup << "% 的频繁项目集以及支持度信息：" << endl << endl;
 	for ( size_t i=0; i<allCanTableList.size(); ++i )
 	{
 		for ( CItemSetCountTable::iterator itCan = allCanTableList[i].begin(); itCan!=allCanTableList[i].end(); ++itCan )
@@ -293,34 +376,16 @@ int main(int argc, char* argv[])
 	{
 		allCanTalbe.insert(allCanTableList[i].begin(), allCanTableList[i].end() );
 	}
+	CRuleInfoList allRules;
+	GenRules( allCanTalbe, allRules, float( minConf ) / 100 );
 
-// 	for ( size_t i=0; i<allCanTableList.size(); ++i )
-// 	{
-// 		for ( CCandidateItemTable::iterator itCan = allCanTableList[i].begin(); itCan!=allCanTableList[i].end(); ++itCan )
-// 		{
-// 			const CItemSet& frqItemSet = itCan->first;
-// 			for ( CItemSet::const_iterator cItItem1 = frqItemSet.begin(); cItItem1 != frqItemSet.end(); ++cItItem1 )
-// 			{
-// 				for ( CItemSet::const_iterator cItItem2 = frqItemSet.begin(); cItItem2 != frqItemSet.end(); ++cItItem2 )
-// 				{
-// 					const CItem& item1 = *cItItem1;
-// 					const CItem& item2 = *cItItem2;
-// 					if ( item1 == item2 )
-// 					{
-// 						continue;	// 关联规则当然必须是不一样的。
-// 					}
-// 					else
-// 					{
-// 						// 计算置信度。
-// 						float conf = 
-// 					}
-// 				}
-// 			}
-// 			
-// 			// 打印输出。
-// 			cout << itCan->first << " cout: " << itCan->second << "\t Sup: " << float(itCan->second)/transSet.size() << endl;
-// 		}
-// 	}
+	cout << std::endl << std::endl << "开始挖掘其中的置信度大于 " << minConf << "% 的关联规则" << std::endl << std::endl;
+	for ( CRuleInfoList::const_iterator cItRule = allRules.begin(); cItRule != allRules.end(); ++cItRule)
+	{
+		const CRuleInfo& ruleInfo = *cItRule;
+		cout << "{ " << ruleInfo.rule.first << " } --> { " << ruleInfo.rule.second << " } \t conf: " << ruleInfo.conf << std::endl;
+	}
+	
 
 	system( "pause" );
 
