@@ -1,8 +1,8 @@
-// 
-// ÊµÏÖAprioriËã·¨
-// Ñ§ºÅ£º 1110332040
-// ĞÕÃû£º ÀîÖ®ĞË
-// email£º thinkingl@thinkingl.com
+ï»¿// 
+// å®ç°Aprioriç®—æ³•
+// å­¦å·ï¼š 1110332040
+// å§“åï¼š æä¹‹å…´
+// emailï¼š thinkingl@thinkingl.com
 // blog: http://www.thinkingl.com
 // 
 
@@ -17,24 +17,24 @@
 
 using namespace std;
 
-// ÔªËØ¡£
+// å…ƒç´ ã€‚
 typedef std::string CItem;
 
-// ÔªËØ¼¯ºÏ¡£
+// å…ƒç´ é›†åˆã€‚
 typedef std::set< CItem > CItemSet;
 
-// ÊÂÎñ
+// äº‹åŠ¡
 typedef CItemSet CTransaction;
 
-// ÊÂÎñ¼¯
+// äº‹åŠ¡é›†
 typedef std::vector< CTransaction > CTransactionSet;
 
-// ºòÑ¡Ïî¼¯ºÏ¡£
-// key: Ïî¼¯ºÏ£¬ value: ¼ÆÊı
+// å€™é€‰é¡¹é›†åˆã€‚
+// key: é¡¹é›†åˆï¼Œ value: è®¡æ•°
 typedef std::map< CItemSet, int > CItemSetCountTable;
 typedef std::vector< CItemSetCountTable > CCandidateItemTableList;
 
-// Æµ·±ÏîÄ¿¼¯ºÏ¡£
+// é¢‘ç¹é¡¹ç›®é›†åˆã€‚
 typedef std::set<CItemSet> CFreqItemSet;
 
 ostream& operator << ( ostream& oss, const CItemSet& itemset )
@@ -47,14 +47,14 @@ ostream& operator << ( ostream& oss, const CItemSet& itemset )
 	return oss;
 }
 
-// Éú³ÉºòÑ¡¼¯
+// ç”Ÿæˆå€™é€‰é›†
 void CandidateGen( const CFreqItemSet& freqItemSet,  const CTransactionSet& transSet, CItemSetCountTable& candidateSet )
 {
 	candidateSet.clear();
 
-	// ºÏ²¢³öºòÑ¡Ïî¡£
-	// ÊéÉÏµÄºÏ²¢Ëã·¨µÄÏë·¨ºÜ¹Å¹Ö£¬ ÓÃ´úÂëÊµÏÖºÜÂé·³£¬ ÎÒÕâÀïÖ±½ÓºÏ²¢³ÉÒ»¸öºòÑ¡Ïî£¬ È»ºóÖ»±£Áô ÏîÊı·ûºÏÒªÇóµÄºòÑ¡Ïî¡£
-	// ÆäÊµÊéÉÏµÄ¹Å¹ÖÏë·¨²¢²»ÄÜ¼õÉÙËã·¨Ê±¼äºÍ¿Õ¼ä¸´ÔÓ¶È¡£	
+	// åˆå¹¶å‡ºå€™é€‰é¡¹ã€‚
+	// ä¹¦ä¸Šçš„åˆå¹¶ç®—æ³•çš„æƒ³æ³•å¾ˆå¤æ€ªï¼Œ ç”¨ä»£ç å®ç°å¾ˆéº»çƒ¦ï¼Œ æˆ‘è¿™é‡Œç›´æ¥åˆå¹¶æˆä¸€ä¸ªå€™é€‰é¡¹ï¼Œ ç„¶ååªä¿ç•™ é¡¹æ•°ç¬¦åˆè¦æ±‚çš„å€™é€‰é¡¹ã€‚
+	// å…¶å®ä¹¦ä¸Šçš„å¤æ€ªæƒ³æ³•å¹¶ä¸èƒ½å‡å°‘ç®—æ³•æ—¶é—´å’Œç©ºé—´å¤æ‚åº¦ã€‚	
 	for ( CFreqItemSet::const_iterator cIt1 = freqItemSet.begin(); cIt1 != freqItemSet.end(); ++cIt1 )
 	{
 		for ( CFreqItemSet::const_iterator cIt2 = freqItemSet.begin(); cIt2 != freqItemSet.end(); ++cIt2 )
@@ -64,26 +64,26 @@ void CandidateGen( const CFreqItemSet& freqItemSet,  const CTransactionSet& tran
 			CItemSet candidate;
 			set_union( cIt1->begin(), cIt1->end(), cIt2->begin(), cIt2->end(), std::inserter( candidate,  candidate.begin() ) );
 
-			// ºÏ²¢³öµÄcandidateÏîÊıÓ¦¸Ã±ÈfrequencyÏîÊı¶à1.
+			// åˆå¹¶å‡ºçš„candidateé¡¹æ•°åº”è¯¥æ¯”frequencyé¡¹æ•°å¤š1.
 			if ( candidate.size() == freqItemNum + 1 )
 			{
-				// °´ÕÕÊéÉÏµÄËµ·¨£¬ ÕâÀïÒª½øĞĞ¼ôÖ¦¡£
-				// candidate ÀïËùÓĞµÄk-1×Ó¼¯ ¶¼±ØĞëÔÚ Æµ·±ÏîÄ¿¼¯ºÏÖĞ¡£
-				// °¤¸öÉ¾µôÒ»¸öÔªËØ¾ÍÊÇËùÓĞk-1×Ó¼¯
+				// æŒ‰ç…§ä¹¦ä¸Šçš„è¯´æ³•ï¼Œ è¿™é‡Œè¦è¿›è¡Œå‰ªæã€‚
+				// candidate é‡Œæ‰€æœ‰çš„k-1å­é›† éƒ½å¿…é¡»åœ¨ é¢‘ç¹é¡¹ç›®é›†åˆä¸­ã€‚
+				// æŒ¨ä¸ªåˆ æ‰ä¸€ä¸ªå…ƒç´ å°±æ˜¯æ‰€æœ‰k-1å­é›†
 				bool isSubset = true;
 				CItemSet subSet = candidate;
 				for ( CItemSet::iterator itDel = candidate.begin(); itDel != candidate.end(); ++itDel )
 				{
-					subSet.erase( *itDel );	// É¾³ı£¬»ñµÃ×Ó¼¯¡£
+					subSet.erase( *itDel );	// åˆ é™¤ï¼Œè·å¾—å­é›†ã€‚
 
 					if ( freqItemSet.find( subSet ) == freqItemSet.end() )
 					{
-						// Ã»ÕÒµ½£¬ ¼ôÖ¦¡£
+						// æ²¡æ‰¾åˆ°ï¼Œ å‰ªæã€‚
 						isSubset = false;
 						break;
 					}
 
-					subSet.insert( *itDel );	// ÖØĞÂÌí¼Ó½øÀ´¡£
+					subSet.insert( *itDel );	// é‡æ–°æ·»åŠ è¿›æ¥ã€‚
 				}
 
 				if ( isSubset )
@@ -96,7 +96,7 @@ void CandidateGen( const CFreqItemSet& freqItemSet,  const CTransactionSet& tran
 	}
 }
 
-// Candidate Itemset ×ª»»Îª Frequency ItemSet, ÒªÇó±ØĞë´óÓÚ×îĞ¡Ö§³Ö¶È minSup¡£
+// Candidate Itemset è½¬æ¢ä¸º Frequency ItemSet, è¦æ±‚å¿…é¡»å¤§äºæœ€å°æ”¯æŒåº¦ minSupã€‚
 void Candidate2Freq( const CItemSetCountTable& candidateTable, float minSup,  int transactionCount, CFreqItemSet& freqSet, CCandidateItemTableList& allCanList )
 {
 	freqSet.clear();
@@ -105,7 +105,7 @@ void Candidate2Freq( const CItemSetCountTable& candidateTable, float minSup,  in
 
 	for ( CItemSetCountTable::const_iterator itCan = candidateTable.begin(); itCan != candidateTable.end(); ++itCan )
 	{
-		// ¼ÆËãÖ§³Ö¡£
+		// è®¡ç®—æ”¯æŒã€‚
 		float sup = float(itCan->second) / transactionCount;
 		if ( sup < minSup )
 		{
@@ -122,12 +122,12 @@ void Candidate2Freq( const CItemSetCountTable& candidateTable, float minSup,  in
 	allCanList.push_back( validCandi );
 }
 
-// Apriori Ëã·¨ Ö÷º¯Êı¡£
+// Apriori ç®—æ³• ä¸»å‡½æ•°ã€‚
 void Apriori( const CTransactionSet& transSet, float minSup, float minConf, CCandidateItemTableList& allCanList )
 {
-	// ¸ù¾İ³õÊ¼µÄµ¥ÏîÆµ·±ÏîÄ¿¼¯Éú³ÉºòÑ¡Ïî¼¯¼¯ºÏ¡£
+	// æ ¹æ®åˆå§‹çš„å•é¡¹é¢‘ç¹é¡¹ç›®é›†ç”Ÿæˆå€™é€‰é¡¹é›†é›†åˆã€‚
 	CItemSetCountTable candidateSet;
-	// ½øĞĞ³õÊ¼µÄCandidate¼ÆÊı¡£
+	// è¿›è¡Œåˆå§‹çš„Candidateè®¡æ•°ã€‚
 	for ( size_t i=0; i<transSet.size(); ++i )
 	{
 		const CTransaction& tran = transSet[i];
@@ -139,25 +139,25 @@ void Apriori( const CTransactionSet& transSet, float minSup, float minConf, CCan
 		}
 	}
 
-	// ½«Êı¾İ¿âtransaction¼¯ºÏ×ª»»Îª³õÊ¼µÄµ¥ÏîÆµ·±ÏîÄ¿¼¯¡£
+	// å°†æ•°æ®åº“transactioné›†åˆè½¬æ¢ä¸ºåˆå§‹çš„å•é¡¹é¢‘ç¹é¡¹ç›®é›†ã€‚
 	CFreqItemSet freqSet;
 	Candidate2Freq( candidateSet, minSup, transSet.size(), freqSet, allCanList );
 	
 	for ( int i=2; !freqSet.empty(); ++i )
 	{	
 		// F(k-1) -> Ck 
-		// ÓÉµ±Ç°¼¶±ğµÄÆµ·±ÏîÄ¿¼¯»ñÈ¡ÏÂÒ»¼¶µÄºòÑ¡Ïî¼¯¡£
+		// ç”±å½“å‰çº§åˆ«çš„é¢‘ç¹é¡¹ç›®é›†è·å–ä¸‹ä¸€çº§çš„å€™é€‰é¡¹é›†ã€‚
 		CandidateGen( freqSet, transSet, candidateSet );
 
-		// ±éÀúËùÓĞµÄÊı¾İÊÂÎñ£¬ ¶ÔCandidate½øĞĞ¼ÆÊı¡£
+		// éå†æ‰€æœ‰çš„æ•°æ®äº‹åŠ¡ï¼Œ å¯¹Candidateè¿›è¡Œè®¡æ•°ã€‚
 		for ( size_t transIndex=0; transIndex<transSet.size(); ++transIndex )
 		{
 			const CTransaction& trans = transSet[ transIndex ];
 
-			// ¿´Ã¿¸öºòÑ¡¼¯ÏîÊÇ·ñÔÚÊı¾İÖĞ£¬Èç¹ûÔÚ¾Í¼ÆÊı¡£
+			// çœ‹æ¯ä¸ªå€™é€‰é›†é¡¹æ˜¯å¦åœ¨æ•°æ®ä¸­ï¼Œå¦‚æœåœ¨å°±è®¡æ•°ã€‚
 			for ( CItemSetCountTable::iterator itCan = candidateSet.begin(); itCan != candidateSet.end(); ++itCan )
 			{
-				// Ã¿¸öĞ¡ÏîÊÇ·ñÔÚÊı¾İÖĞ¡£
+				// æ¯ä¸ªå°é¡¹æ˜¯å¦åœ¨æ•°æ®ä¸­ã€‚
 				bool isInclude = std::includes( trans.begin(), trans.end(), itCan->first.begin(), itCan->first.end() );
 				if ( isInclude )
 				{
@@ -166,8 +166,8 @@ void Apriori( const CTransactionSet& transSet, float minSup, float minConf, CCan
 			}
 		}
 
-		// ½«Âú×ãÌõ¼şµÄCandidate×ª»»ÎªFrequence¡£
-		// ÒªÂú×ãÖ§³Ö¼ÆÊı´óÓÚÉè¶¨ÖµminSup¡£
+		// å°†æ»¡è¶³æ¡ä»¶çš„Candidateè½¬æ¢ä¸ºFrequenceã€‚
+		// è¦æ»¡è¶³æ”¯æŒè®¡æ•°å¤§äºè®¾å®šå€¼minSupã€‚
 		Candidate2Freq( candidateSet, minSup, transSet.size(), freqSet, allCanList );
 	}
 }
@@ -175,8 +175,8 @@ void Apriori( const CTransactionSet& transSet, float minSup, float minConf, CCan
 typedef std::pair< CItemSet, CItemSet > CRule;
 struct CRuleInfo
 {
-	CRule rule;	// ¹ØÁª¹æÔò¡£
-	float conf;		// ÖÃĞÅ¶È¡£
+	CRule rule;	// å…³è”è§„åˆ™ã€‚
+	float conf;		// ç½®ä¿¡åº¦ã€‚
 	CRuleInfo() : conf( 0 )
 	{}
 
@@ -187,33 +187,33 @@ struct CRuleInfo
 };
 typedef std::set< CRuleInfo > CRuleInfoList;
 
-/** ÊéÉÏµÄËã·¨¿´ÆğÀ´Ì«·³ÈËÁË£¬ Ò»µãÒ²Ã»ÓĞ³ÌĞòÔ±µÄ·ç¸ñ£¬ ÎÒÓĞ¸üºÃ¸ü¼òµ¥¸üÖ±½ÓµÄÏë·¨¡£¡£¡£¡£ */
+/** ä¹¦ä¸Šçš„ç®—æ³•çœ‹èµ·æ¥å¤ªçƒ¦äººäº†ï¼Œ ä¸€ç‚¹ä¹Ÿæ²¡æœ‰ç¨‹åºå‘˜çš„é£æ ¼ï¼Œ æˆ‘æœ‰æ›´å¥½æ›´ç®€å•æ›´ç›´æ¥çš„æƒ³æ³•ã€‚ã€‚ã€‚ã€‚ */
 void GenRules( const CItemSetCountTable& allFrequencyTable, CRuleInfoList& ruleList, float minConf )
 {
-	// ³õÊ¼»¯£¬ ºóÏîÎª0µÄ¹ØÁª¹æÔò¡£
+	// åˆå§‹åŒ–ï¼Œ åé¡¹ä¸º0çš„å…³è”è§„åˆ™ã€‚
 	CRuleInfoList curRuleList;
 	for ( CItemSetCountTable::const_iterator itCan = allFrequencyTable.begin(); itCan!=allFrequencyTable.end(); ++itCan )
 	{
-		// ´òÓ¡Êä³ö¡£
+		// æ‰“å°è¾“å‡ºã€‚
 		CRuleInfo ruleInfo;
 		ruleInfo.rule = CRule( itCan->first, CItemSet() );
 		curRuleList.insert( ruleInfo );
 	}
 
-	// Ò»Ö±µ½ËüÎª¿ÕÎªÖ¹£¡
+	// ä¸€ç›´åˆ°å®ƒä¸ºç©ºä¸ºæ­¢ï¼
 	while ( !curRuleList.empty() )
 	{
-		// µ±Ç°µÄ¹ØÁª¹æÔòºóÏîÎª k ¸öÔªËØ£¬ ÎÒÃÇÒÀ¿¿ËüÈ¥Ñ°ÕÒºóÏîÎª k+1 µÄÔªËØ¡£
-		// ¸ù¾İ¹ØÁª¹æÔòµÄĞÔÖÊ£¬ Èç¹û¹ØÁª¹æÔòºóÏîÊÇk¸öÔªËØµÄ¼¯ºÏ£¬ ÄÇÃ´Õâk¸öÔªËØµÄ×Ó¼¯×÷ÎªĞÂµÄºóÏîµÄ¹ØÁª¹æÔòÒ»¶¨³ÉÁ¢£¨ÖÃĞÅ¶ÈºÏ¸ñ£©¡£
-		// ·´Ö®£¬ ÎÒÃÇÖ»ĞèÒªÔÚºÏ¸ñµÄ ºóÏîÊÇ k ¸öÔªËØµÄËùÓĞ¹ØÁª¹æÔòÖĞÈ¥Éú³ÉºóÏîÊÇ k+1¸öÔªËØµÄĞÂ¹ØÁª¹æÔò¡£
+		// å½“å‰çš„å…³è”è§„åˆ™åé¡¹ä¸º k ä¸ªå…ƒç´ ï¼Œ æˆ‘ä»¬ä¾é å®ƒå»å¯»æ‰¾åé¡¹ä¸º k+1 çš„å…ƒç´ ã€‚
+		// æ ¹æ®å…³è”è§„åˆ™çš„æ€§è´¨ï¼Œ å¦‚æœå…³è”è§„åˆ™åé¡¹æ˜¯kä¸ªå…ƒç´ çš„é›†åˆï¼Œ é‚£ä¹ˆè¿™kä¸ªå…ƒç´ çš„å­é›†ä½œä¸ºæ–°çš„åé¡¹çš„å…³è”è§„åˆ™ä¸€å®šæˆç«‹ï¼ˆç½®ä¿¡åº¦åˆæ ¼ï¼‰ã€‚
+		// åä¹‹ï¼Œ æˆ‘ä»¬åªéœ€è¦åœ¨åˆæ ¼çš„ åé¡¹æ˜¯ k ä¸ªå…ƒç´ çš„æ‰€æœ‰å…³è”è§„åˆ™ä¸­å»ç”Ÿæˆåé¡¹æ˜¯ k+1ä¸ªå…ƒç´ çš„æ–°å…³è”è§„åˆ™ã€‚
 		
-		// ÏÂÒ»ÂÖµÄRule List¡£
+		// ä¸‹ä¸€è½®çš„Rule Listã€‚
 		CRuleInfoList nextCurRuleList;
 
 		for ( CRuleInfoList::const_iterator cItCurRuleList = curRuleList.begin(); cItCurRuleList != curRuleList.end(); ++cItCurRuleList )
 		{
-			// ½«Õâ¸ö¹ØÁª¹æÔòÏî²ğ³É¶à¸ö£¬ ·Ö±ğ½«Ç°Ãæ¼¯ºÏµÄÒ»¸öÔªËØ·Ö±ğÒÆµ½ºóÃæ¡£
-			// Ç°ÃæµÄÌõ¼ş²»ÄÜÎª¿Õ¡£¡£
+			// å°†è¿™ä¸ªå…³è”è§„åˆ™é¡¹æ‹†æˆå¤šä¸ªï¼Œ åˆ†åˆ«å°†å‰é¢é›†åˆçš„ä¸€ä¸ªå…ƒç´ åˆ†åˆ«ç§»åˆ°åé¢ã€‚
+			// å‰é¢çš„æ¡ä»¶ä¸èƒ½ä¸ºç©ºã€‚ã€‚
 			const CRuleInfo& curRule = *cItCurRuleList;
 			const CItemSet& firstItemSet = curRule.rule.first;
 			for ( CItemSet::const_iterator cItItem = firstItemSet.begin(); cItItem != firstItemSet.end(); ++cItItem )
@@ -222,13 +222,13 @@ void GenRules( const CItemSetCountTable& allFrequencyTable, CRuleInfoList& ruleL
 				newRule.first.erase( *cItItem );
 				newRule.second.insert( *cItItem );
 
-				// ĞÂ¹æÔòÊÇ·ñºÏ¸ñ¡£ Ç°ÏîÌõ¼ş²»Îª¿Õ¡£ ÖÃĞÅ¶È·ûºÏÒªÇó¡£
+				// æ–°è§„åˆ™æ˜¯å¦åˆæ ¼ã€‚ å‰é¡¹æ¡ä»¶ä¸ä¸ºç©ºã€‚ ç½®ä¿¡åº¦ç¬¦åˆè¦æ±‚ã€‚
 				if ( newRule.first.empty() )
 				{
 					continue;
 				}
 
-				// ÖÃĞÅ¶È¼ÆËã£¬ µÈÓÚºÏ¼¯µÄcount ³ıÒÔ Ç°ÏîÌõ¼şµÄcount¡£				
+				// ç½®ä¿¡åº¦è®¡ç®—ï¼Œ ç­‰äºåˆé›†çš„count é™¤ä»¥ å‰é¡¹æ¡ä»¶çš„countã€‚				
 				CItemSet unionSet;
 				set_union( newRule.first.begin(), newRule.first.end(), newRule.second.begin(), newRule.second.end(), inserter( unionSet, unionSet.begin() ) );
 				int unionCount = 0;
@@ -256,7 +256,7 @@ void GenRules( const CItemSetCountTable& allFrequencyTable, CRuleInfoList& ruleL
 					continue;
 				}
 
-				// Õæ½ğ²»ÅÂ»ğÁ¶£¬ ×îÖÕĞŞ³ÉÕı¹û¡£
+				// çœŸé‡‘ä¸æ€•ç«ç‚¼ï¼Œ æœ€ç»ˆä¿®æˆæ­£æœã€‚
 				CRuleInfo newRuleInfo;
 				newRuleInfo.rule = newRule;
 				newRuleInfo.conf = conf;
@@ -268,7 +268,7 @@ void GenRules( const CItemSetCountTable& allFrequencyTable, CRuleInfoList& ruleL
 			}
 		}
 
-		// ÏÂÒ»ÂÖ¡£
+		// ä¸‹ä¸€è½®ã€‚
 		curRuleList = nextCurRuleList;
 	}
 
@@ -277,18 +277,18 @@ void GenRules( const CItemSetCountTable& allFrequencyTable, CRuleInfoList& ruleL
 int main(int argc, char* argv[])
 {
 	cout << "Web mining homework!************" << endl;
-	cout << "Ñ§ºÅ£º 1110332040" << endl;
-	cout << "ĞÕÃû£º ÀîÖ®ĞË" << endl;
-	cout << "email£º thinkingl@thinkingl.com" << endl;
+	cout << "å­¦å·ï¼š 1110332040" << endl;
+	cout << "å§“åï¼š æä¹‹å…´" << endl;
+	cout << "emailï¼š thinkingl@thinkingl.com" << endl;
 	cout << "http://www.thinkingl.com" << endl;
-	cout << "ÓÃ·¨£º apriori [Êı¾İÊäÈëÎÄ¼şÃû]" << endl;
-	cout << "[Êı¾İÊäÈëÎÄ¼şÃû]Îª¿ÕÊ¹ÓÃ Ä¬ÈÏÎÄ¼şÃû apriori.txt" << endl;
+	cout << "ç”¨æ³•ï¼š apriori [æ•°æ®è¾“å…¥æ–‡ä»¶å]" << endl;
+	cout << "[æ•°æ®è¾“å…¥æ–‡ä»¶å]ä¸ºç©ºä½¿ç”¨ é»˜è®¤æ–‡ä»¶å apriori.txt" << endl;
 	cout << endl;
-	cout << "ÎÄ¼ş¸ñÊ½£º" << endl;
-	cout << "60  <------×îĞ¡Ö§³Ö¶È60%" << endl;
-	cout << "80  <------×îĞ¡ÖÃĞÅ¶È80%" << endl;
-	cout << "T100: { M O N K E Y }   <--------- ÒªÍÚ¾òµÄItem±ØĞëÓÃ { } À¨ÆğÀ´£¬ ²¢ÇÒÁ½±ß±ØĞëÓÃ ¿Õ¸ñ ¼ä¸ô¿ª¡£{} ÍâµÄ×Ö·û¶¼ÊÇ´ò½´ÓÍµÄ£¬Ö»ÆğĞŞÊÎ×÷ÓÃ¡£" << endl;
-	cout << "Item ¿ÉÒÔÊÇ²»´ø ¿Õ¸ñ»ò{}  µÄÈÎÒâ×Ö·û´®¡£" << endl;
+	cout << "æ–‡ä»¶æ ¼å¼ï¼š" << endl;
+	cout << "60  <------æœ€å°æ”¯æŒåº¦60%" << endl;
+	cout << "80  <------æœ€å°ç½®ä¿¡åº¦80%" << endl;
+	cout << "T100: { M O N K E Y }   <--------- è¦æŒ–æ˜çš„Itemå¿…é¡»ç”¨ { } æ‹¬èµ·æ¥ï¼Œ å¹¶ä¸”ä¸¤è¾¹å¿…é¡»ç”¨ ç©ºæ ¼ é—´éš”å¼€ã€‚{} å¤–çš„å­—ç¬¦éƒ½æ˜¯æ‰“é…±æ²¹çš„ï¼Œåªèµ·ä¿®é¥°ä½œç”¨ã€‚" << endl;
+	cout << "Item å¯ä»¥æ˜¯ä¸å¸¦ ç©ºæ ¼æˆ–{}  çš„ä»»æ„å­—ç¬¦ä¸²ã€‚" << endl;
 	cout << endl << endl;
 
 	string inFileName;
@@ -305,24 +305,24 @@ int main(int argc, char* argv[])
 	ifstream inFile( inFileName );
 	if ( !inFile )
 	{
-		cout << "´ò¿ªÊäÈëÎÄ¼şÊ§°Ü¡£ ÎÄ¼şÃû£º " << inFileName;
+		cout << "æ‰“å¼€è¾“å…¥æ–‡ä»¶å¤±è´¥ã€‚ æ–‡ä»¶åï¼š " << inFileName;
 	}
 
 	ofstream outFile( "apriori_result.txt" );
 
-	// ¶ÁÈ¡×îĞ¡Ö§³Ö¶ÈºÍ×îĞ¡ÖÃĞÅ¶È¡£
+	// è¯»å–æœ€å°æ”¯æŒåº¦å’Œæœ€å°ç½®ä¿¡åº¦ã€‚
 	int minSup, minConf;
 	inFile >> minSup >> minConf;
 
 
-	// ¶ÁÈ¡ÊÂÎñ¼¯¡£
-	// ¼ò»¯£¬ ÓÃÊı¾İ½á¹¹´ú±íÊı¾İ¿â£¬ ÓÃ STL µÄset£¬ Âú×ã Apriori Ëã·¨¶Ô×ÖµäĞòµÄÒªÇó¡£¡£
+	// è¯»å–äº‹åŠ¡é›†ã€‚
+	// ç®€åŒ–ï¼Œ ç”¨æ•°æ®ç»“æ„ä»£è¡¨æ•°æ®åº“ï¼Œ ç”¨ STL çš„setï¼Œ æ»¡è¶³ Apriori ç®—æ³•å¯¹å­—å…¸åºçš„è¦æ±‚ã€‚ã€‚
 	CTransactionSet transSet;
 	while( inFile )
 	{
 		CTransaction tran;
-		// ¶ÁÈ¡Ò»¸öÊÂÎñ¡£
-		bool tranBegin = false;	// ÊÇ·ñ¿ªÊ¼ÁËÊÂÎñ¡£
+		// è¯»å–ä¸€ä¸ªäº‹åŠ¡ã€‚
+		bool tranBegin = false;	// æ˜¯å¦å¼€å§‹äº†äº‹åŠ¡ã€‚
 		while( inFile )
 		{
 			string item;
@@ -331,7 +331,7 @@ int main(int argc, char* argv[])
 			{
 				if ( item == "}" )
 				{
-					// ÊÂÎñ½áÊø
+					// äº‹åŠ¡ç»“æŸ
 					break;
 				}
 				else
@@ -354,23 +354,23 @@ int main(int argc, char* argv[])
 		}		
 	}
 
-	// µ÷ÓÃËã·¨, µÃµ½ËùÓĞµÄÆµ·±ÏîÄ¿¼¯¡£
+	// è°ƒç”¨ç®—æ³•, å¾—åˆ°æ‰€æœ‰çš„é¢‘ç¹é¡¹ç›®é›†ã€‚
 	
 	CCandidateItemTableList allCanTableList;
 	Apriori( transSet, float(minSup)/100, float(minConf)/100, allCanTableList );
 
-	cout << "Ö§³Ö¶È´óÓÚ " << minSup << "% µÄÆµ·±ÏîÄ¿¼¯ÒÔ¼°Ö§³Ö¶ÈĞÅÏ¢£º" << endl << endl;
+	cout << "æ”¯æŒåº¦å¤§äº " << minSup << "% çš„é¢‘ç¹é¡¹ç›®é›†ä»¥åŠæ”¯æŒåº¦ä¿¡æ¯ï¼š" << endl << endl;
 	for ( size_t i=0; i<allCanTableList.size(); ++i )
 	{
 		for ( CItemSetCountTable::iterator itCan = allCanTableList[i].begin(); itCan!=allCanTableList[i].end(); ++itCan )
 		{
-			// ´òÓ¡Êä³ö¡£
+			// æ‰“å°è¾“å‡ºã€‚
 			cout << itCan->first << " cout: " << itCan->second << "\t Sup: " << float(itCan->second)/transSet.size() << endl;
 		}
 	}
 	
 
-	// Éú³É¹ØÁª¹æÔò¡£
+	// ç”Ÿæˆå…³è”è§„åˆ™ã€‚
 	CItemSetCountTable allCanTalbe;
 	for ( size_t i=0; i<allCanTableList.size(); ++i )
 	{
@@ -379,7 +379,7 @@ int main(int argc, char* argv[])
 	CRuleInfoList allRules;
 	GenRules( allCanTalbe, allRules, float( minConf ) / 100 );
 
-	cout << std::endl << std::endl << "¿ªÊ¼ÍÚ¾òÆäÖĞµÄÖÃĞÅ¶È´óÓÚ " << minConf << "% µÄ¹ØÁª¹æÔò" << std::endl << std::endl;
+	cout << std::endl << std::endl << "å¼€å§‹æŒ–æ˜å…¶ä¸­çš„ç½®ä¿¡åº¦å¤§äº " << minConf << "% çš„å…³è”è§„åˆ™" << std::endl << std::endl;
 	for ( CRuleInfoList::const_iterator cItRule = allRules.begin(); cItRule != allRules.end(); ++cItRule)
 	{
 		const CRuleInfo& ruleInfo = *cItRule;
