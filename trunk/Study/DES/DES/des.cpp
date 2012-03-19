@@ -1,6 +1,6 @@
-/** ±ê×¼µÄDES¼ÓÃÜËã·¨
-*	ÊÇÑ§Ï°ĞÔÖÊ£¬ Á¦Çó´úÂë×îÇå³şÒ×¶®£¬ ²»×·ÇóĞ§ÂÊ¡£
-*	¶¨Òå ÓÒ±ßÎªµÍÎ»£¬ ×ó±ßÎª¸ßÎ»¡£
+ï»¿/** æ ‡å‡†çš„DESåŠ å¯†ç®—æ³•
+*	æ˜¯å­¦ä¹ æ€§è´¨ï¼Œ åŠ›æ±‚ä»£ç æœ€æ¸…æ¥šæ˜“æ‡‚ï¼Œ ç¬¦åˆæ ‡å‡†ï¼Œæ­£ç¡®æ— è¯¯ï¼Œ ä¸è¿½æ±‚æ•ˆç‡ã€‚
+*	å®šä¹‰ å³è¾¹ä¸ºä½ä½ï¼Œ å·¦è¾¹ä¸ºé«˜ä½ï¼Œ å’Œè®¡ç®—æœºä¸­çš„æ•°å­—äºŒè¿›åˆ¶ä¿æŒä¸€è‡´ã€‚
 *	+by thinkingl@20120317
 *	thinkingl@thinkingl.com
 */
@@ -34,14 +34,14 @@ typedef unsigned long long u64;
 #endif
 typedef unsigned long u32;
 
-// DES ÊÇ·Ö×é¼ÓÃÜËã·¨£¬ Ã¿´Î´¦Àí64bit, 8¸ö×Ö½Ú¡£
+// DES æ˜¯åˆ†ç»„åŠ å¯†ç®—æ³•ï¼Œ æ¯æ¬¡å¤„ç†64bit, 8ä¸ªå­—èŠ‚ã€‚
 const int DES_BIT_SIZE = 64;
 const int DES_BUF_SIZE = 8;
 
 /** Initial Permutation (IP) 
-*	³õÊ¼ÖÃ»»±í IP
-*	ÊÇÓĞ¹æÂÉµÄ£¬ ½«Ë³Ğò´òÂÒ£¬ Å¼ÊıÎ»ÔÚ×ó°ë±ß£¬ ÆæÊıÎ»ÔÚÓÒ°ë±ß¡£
-*	Õâ¸ö±íÆäÊµ²¢Ã»ÓĞÃÜÂëÑ§ÉÏµÄÒâÒå¡£
+*	åˆå§‹ç½®æ¢è¡¨ IP
+*	æ˜¯æœ‰è§„å¾‹çš„ï¼Œ å°†é¡ºåºæ‰“ä¹±ï¼Œ å¶æ•°ä½åœ¨å·¦åŠè¾¹ï¼Œ å¥‡æ•°ä½åœ¨å³åŠè¾¹ã€‚
+*	è¿™ä¸ªè¡¨å…¶å®å¹¶æ²¡æœ‰å¯†ç å­¦ä¸Šçš„æ„ä¹‰ã€‚
 */
 const char DES_TABLE_IP[]    
 = { 
@@ -55,7 +55,7 @@ const char DES_TABLE_IP[]
 	63, 55, 47, 39, 31, 23, 15,  7 
 };
 
-// Inverse Initial Permutation (IP-1) Äæ³õÊ¼±ä»»±í£¬ ÊÇ³õÊ¼ÖÃ»»µÄÄæ±ä»»¡£ 
+// Inverse Initial Permutation (IP-1) é€†åˆå§‹å˜æ¢è¡¨ï¼Œ æ˜¯åˆå§‹ç½®æ¢çš„é€†å˜æ¢ã€‚ 
 const char DES_TABLE_FP[] =
 {	
 	40,  8, 48, 16, 56, 24, 64, 32,
@@ -68,7 +68,7 @@ const char DES_TABLE_FP[] =
 	33,  1, 41,  9, 49, 17, 57, 25
 };
 
-//  Expansion Permutation  À©Õ¹ÖÃ»»±í£¬ ½«32bitÀ©Õ¹µ½48bit¡£
+//  Expansion Permutation  æ‰©å±•ç½®æ¢è¡¨ï¼Œ å°†32bitæ‰©å±•åˆ°48bitã€‚
 const char DES_TABLE_EP[] =
 {	
 	32,  1,  2,  3,  4,  5, 4,  5,
@@ -101,20 +101,20 @@ const char DES_TABLE_PC2[] =
 	41, 52, 31, 37, 47, 55, 30, 40,
 	51, 45, 33, 48, 44, 49, 39, 56,
 	34, 53, 46, 42, 50, 36, 29, 32
-// ¾¹È»ºÍÊéÉÏµÄ²»Ò»Ñù£¡£¡
+// ç«Ÿç„¶å’Œä¹¦ä¸Šçš„ä¸ä¸€æ ·ï¼ï¼
 // 	45, 56, 35, 41, 51, 59, 34, 44,
 // 	55, 49, 37, 52, 48, 53, 43, 60,
 // 	38, 57, 50, 46, 54, 40, 33, 36
 };
 
-// Left Shifts table. Ã¿Ò»ÂÖµÄDES¶¼¸ù¾İÕâ¸ö×óÒÆÃÜÔ¿¡£
+// Left Shifts table. æ¯ä¸€è½®çš„DESéƒ½æ ¹æ®è¿™ä¸ªå·¦ç§»å¯†é’¥ã€‚
 const char DES_TABLE_LS[] =
 {	
 	1, 1, 2, 2, 2, 2, 2, 2,
 	1, 2, 2, 2, 2, 2, 2, 1
 };
 
-// ×óÒÆÒ»²½¡£	ÒòÎª·¢ÏÖÓÃ << µÄ»°»áÊÜµ½×Ö½ÚĞòµÄÓ°Ïì£¬ ËùÒÔÖ±½ÓÓÃÖÃ»»½â¾ö¡£
+// å·¦ç§»ä¸€æ­¥ã€‚	å› ä¸ºå‘ç°ç”¨ << çš„è¯ä¼šå—åˆ°å­—èŠ‚åºçš„å½±å“ï¼Œ æ‰€ä»¥ç›´æ¥ç”¨ç½®æ¢è§£å†³ã€‚
 const char DES_TABLE_LS1[] =
 {	 
 	2,  3,  4,  5,  6,  7,  8,  9,
@@ -123,7 +123,7 @@ const char DES_TABLE_LS1[] =
 	26, 27, 28, 1,  0,  0,  0,  0
 };
 
-// ×óÒÆÁ½²½¡£
+// å·¦ç§»ä¸¤æ­¥ã€‚
 const char DES_TABLE_LS2[] =
 {	
 	3,  4,  5,  6,  7,  8,  9, 10,
@@ -132,13 +132,13 @@ const char DES_TABLE_LS2[] =
 	27, 28,  1,  2,  0,  0,  0,  0
 };
 
-// ×óÒÆ±í¡£
+// å·¦ç§»è¡¨ã€‚
 // const char* DES_TABLE_LS_TABLE[] =
 // {
 // 	DES_TABLE_LS1, DES_TABLE_LS2
 // };
 
-// DES µÄºËĞÄ£¬ 8¸ö S-Box
+// DES çš„æ ¸å¿ƒï¼Œ 8ä¸ª S-Box
 const char DES_TABLE_SBOX_1[] =
 {	14,  4, 13,  1,  2, 15, 11,  8,  3, 10,  6, 12,  5,  9,  0,  7,
 0, 15,  7,  4, 14,  2, 13,  1, 10,  6, 12, 11,  9,  5,  3,  8,
@@ -189,6 +189,15 @@ const char DES_TABLE_SBOX_8[] =
 
 const char *DES_TABLE_SBOX[] = { DES_TABLE_SBOX_1, DES_TABLE_SBOX_2, DES_TABLE_SBOX_3, DES_TABLE_SBOX_4, DES_TABLE_SBOX_5, DES_TABLE_SBOX_6, DES_TABLE_SBOX_7, DES_TABLE_SBOX_8};
 
+// Sç›’å­é€‰æ‹©å–å€¼åšå®Œåçš„ç½®æ¢Pã€‚
+const char DES_TABLE_P[] =
+{	
+	16,  7, 20, 21, 29, 12, 28, 17,
+	1, 15, 23, 26,  5, 18, 31, 10,
+	2,  8, 24, 14, 32, 27,  3,  9,
+	19, 13, 30,  6, 22, 11,  4, 25
+};
+
 typedef std::vector< unsigned char > CDESBuf;
 
 typedef std::bitset<DES_BIT_SIZE> CDESBuf64;
@@ -212,45 +221,25 @@ void Permutation( _BitSetBuf& desBuf, const char* permutationTable )
 	}
 }
 
-// ³õÊ¼ÖÃ»»¡£
+// åˆå§‹ç½®æ¢ã€‚
 void IP( CDESBuf64& desBuf )
 {
 	Permutation( desBuf, DES_TABLE_IP );
 }
-// Äæ³õÊ¼ÖÃ»»¡£
+// é€†åˆå§‹ç½®æ¢ã€‚
 void FP( CDESBuf64& desBuf )
 {
 	Permutation( desBuf, DES_TABLE_FP );
 }
 
 // F Feistel Function
-// ¸ù¾İS-Box£¬ Êä³ö32bitµÄ¼ÓÃÜÊı¾İ¡£
-void Feistel( const CDESBuf48& xoredBuf, CDESBuf32& cipherTextBuf )
-{
-	// ¸ù¾İXORµÄ½á¹ûÀ´Ñ¡ÔñS-BoxÖĞµÄÖµ¡£
-	// Ò»¹²8¸öS-Box£¬·Ö±ğ¶ÔÓ¦ÓÚXORÖĞµÄ8¸ö6bit¡£ XOR ÖĞÃ¿6bit È·¶¨Ò»¸öS-BoxÖĞµÄÈ¡Öµ¡£
-	// 6bitÖĞ£¬ µÚÒ»bitºÍ×îºóÒ»¸öbit ÁªºÏ×é³ÉµÄÊı×ÖÈ·ÈÏ S-Box ÖĞµÄĞĞºÅ¡££¨ 0-3 £¬ S-BoxÒ»¹²ËÄĞĞ£©
-	// ÖĞ¼ä4bit È·¶¨ S-BoxÖĞµÄÁĞºÅ¡££¨ 0-15£¬ S-BoxÒ»¹²16ÁĞ £©
-	// ĞĞºÅºÍÁĞºÅ¶ÔÓ¦µÄ S-Box ÖĞµÄÊıÖµ£¬ ×ª»»Îª 4bit Êı¾İ £¨ 0- 15×ªÎª2½øÖÆ£©¡£
-	// 8¸öS-Box£¬ È¡³ö 8 ¸ö 4bit À´£¬ Æ´³É32bit µÄÃÜÎÄ¡£
-	cipherTextBuf.reset();
-	for( int i=0; i<8; ++i )
-	{
-		int begin = i * 6;
-		int end = begin + 5;
-		int sboxIndex = xoredBuf[ begin ] * 2 + xoredBuf[ end ];
-		int sboxValue = DES_TABLE_SBOX[ i ][ sboxIndex ];
-		
-		// ½« S-BoxÖĞÈ¡³öÀ´µÄÊıÖµ×ª»»Îª2½øÖÆ£¬ ¸ßµÍÎ»Ë³ĞòÔÚÕâÀïºÜÌÖÑá¡£¡£
-		for ( size_t k=0; k<4; ++k )
-		{
-			cipherTextBuf[ i*4 + k ] = ( (1<<(3-k))&sboxValue );
-		}
-		//cout << "cipher: " << cipherTextBuf << endl;
-	}
-}
+// æ ¹æ®S-Boxï¼Œ è¾“å‡º32bitçš„åŠ å¯†æ•°æ®ã€‚
+// void Feistel( const CDESBuf48& xoredBuf, CDESBuf32& cipherTextBuf )
+// {
+// 	
+// }
 
-// À©Õ¹ÖÃ»»¡£½«32bit²¹×ãµ½48bit¡£
+// æ‰©å±•ç½®æ¢ã€‚å°†32bitè¡¥è¶³åˆ°48bitã€‚
 void PermutationExpansion( const CDESBuf32& buf32, CDESBuf48& buf48 )
 {
 	for ( size_t i=0; i<buf48.size(); ++i )
@@ -259,62 +248,105 @@ void PermutationExpansion( const CDESBuf32& buf32, CDESBuf48& buf48 )
 	}
 }
 
-// Ã¿Ò»ÂÖµÄDES¡£
+void SBoxChoice( const CDESBuf48& xoredKey, CDESBuf32& sboxOut )
+{
+	// æ ¹æ®XORçš„ç»“æœæ¥é€‰æ‹©S-Boxä¸­çš„å€¼ã€‚
+	// ä¸€å…±8ä¸ªS-Boxï¼Œåˆ†åˆ«å¯¹åº”äºXORä¸­çš„8ä¸ª6bitã€‚ XOR ä¸­æ¯6bit ç¡®å®šä¸€ä¸ªS-Boxä¸­çš„å–å€¼ã€‚
+	// 6bitä¸­ï¼Œ ç¬¬ä¸€bitå’Œæœ€åä¸€ä¸ªbit è”åˆç»„æˆçš„æ•°å­—ç¡®è®¤ S-Box ä¸­çš„è¡Œå·ã€‚ï¼ˆ 0-3 ï¼Œ S-Boxä¸€å…±å››è¡Œï¼‰
+	// ä¸­é—´4bit ç¡®å®š S-Boxä¸­çš„åˆ—å·ã€‚ï¼ˆ 0-15ï¼Œ S-Boxä¸€å…±16åˆ— ï¼‰
+	// è¡Œå·å’Œåˆ—å·å¯¹åº”çš„ S-Box ä¸­çš„æ•°å€¼ï¼Œ è½¬æ¢ä¸º 4bit æ•°æ® ï¼ˆ 0- 15è½¬ä¸º2è¿›åˆ¶ï¼‰ã€‚
+	// 8ä¸ªS-Boxï¼Œ å–å‡º 8 ä¸ª 4bit æ¥ï¼Œ æ‹¼æˆ32bit çš„å¯†æ–‡ã€‚
+	for( int i=0; i<8; ++i )
+	{
+		int begin = i * 6;
+		int end = begin + 5;
+		int sboxIndex = xoredKey[ begin ] * 2 + xoredKey[ end ];
+		int sboxValue = DES_TABLE_SBOX[ i ][ sboxIndex ];
+
+		// å°† S-Boxä¸­å–å‡ºæ¥çš„æ•°å€¼è½¬æ¢ä¸º2è¿›åˆ¶ï¼Œ é«˜ä½ä½é¡ºåºåœ¨è¿™é‡Œå¾ˆè®¨åŒã€‚ã€‚
+		for ( size_t k=0; k<4; ++k )
+		{
+			sboxOut[ i*4 + k ] = ( 0 != ( (1<<(3-k))&sboxValue ) );
+		}
+		//cout << "cipher: " << cipherTextBuf << endl;
+	}
+}
+
+// æ¯ä¸€è½®çš„DESã€‚
 void DESRound( int roundNum, CDESBuf32& left, CDESBuf32& right, const CDESBuf48& roundKey )
 {	
-	// ÓÃÀ©Õ¹ÖÃ»»£¬ ½«ÓÒ°ë±ßÀ©Õ¹µ½48×Ö½Ú¡£ 
+	// ç”¨æ‰©å±•ç½®æ¢ï¼Œ å°†å³åŠè¾¹æ‰©å±•åˆ°48å­—èŠ‚ã€‚ 
 	CDESBuf48 eRight;
 	PermutationExpansion( right, eRight );
 
-	cout << "my left: " << roundNum << ": " <<  left << endl;
-	cout << "my right: " << roundNum << ": " << eRight << endl;
+// 	cout << endl << "******************round " << roundNum << " *****************************" << endl;
+// 	cout << "my left: " <<  left << endl;
+// 	cout << "my right: " << eRight << endl;
 		
-	// ½«±¾ÂÖÃÜÔ¿ºÍÓÒ°ë±ßÒì»ò¡£
+	// å°†æœ¬è½®å¯†é’¥å’Œå³åŠè¾¹å¼‚æˆ–ã€‚
 	CDESBuf48 xored = roundKey ^ eRight;
 
-	// µ÷ÓÃFº¯Êı£¬ ÓÃS-boxÒıÈë·ÇÏßĞÔ¼ÓÃÜ¡£
-	// ÒòÎªDESÖĞÃ¿´Î×óÓÒ¶¼Òª»¥»»£¬ ÕâÀï¾ÍÖ±½Ó½»»»ÁË£¬ °ÑÃ»ÓĞ±ä»¯µÄ×ó°ë²¿·İ¸´ÖÆ¸øÓÒ±ß¡£ ¼ÓÃÜºóµÄ²¿·Ö¸ø×ó±ß¡£¡£
-	right = left;
-	Feistel( xored, left );
+	// ç”¨S-boxå¼•å…¥éçº¿æ€§åŠ å¯†ã€‚
+	CDESBuf32 exp;
+	SBoxChoice( xored, exp );
+
+//	cout << "my exp: " << exp << endl;
+
+	// è¿›è¡ŒPç½®æ¢ã€‚
+	Permutation( exp, DES_TABLE_P );
+
+//	cout << "exp after P: " <<exp << endl;
+
+	// å’Œå·¦è¾¹è¿›è¡Œå¼‚æˆ–ï¼ˆXORï¼‰ç»“æœä½œä¸ºä¸‹ä¸€è½®çš„å³è¾¹å€¼ã€‚
+	exp ^= left;
+
+	// å› ä¸ºDESä¸­æ¯æ¬¡å·¦å³éƒ½è¦äº’æ¢ã€‚
+	left = right;
+	right = exp;	
+
+// 	cout << "left result : " << left << endl;
+// 	cout << "right result: " << right << endl;
+// 
+// 	cout << "******************************round end**********" << endl;
 }
 
-// PC1 ÖÃ»»¡£ ´Ó64bitµÄkeyÖĞ·Ö³öÕæÕıÊ¹ÓÃµÄ56bit¡£
+// PC1 ç½®æ¢ã€‚ ä»64bitçš„keyä¸­åˆ†å‡ºçœŸæ­£ä½¿ç”¨çš„56bitã€‚
 void KeyPC1( const CDESBuf64& key, CDESBuf28& leftKey, CDESBuf28& rightKey )
 {
 	for ( size_t i=0; i<leftKey.size(); ++i )
 	{
-		// ÓÒ±ßÎªµÍÎ»
+		// å³è¾¹ä¸ºä½ä½
 		rightKey[i] = key[ DES_TABLE_PC1[i] - 1 ];
 
-		// ×ó±ßÎª¸ßÎ»¡£
+		// å·¦è¾¹ä¸ºé«˜ä½ã€‚
 		leftKey[i] = key[ DES_TABLE_PC1[ i+leftKey.size() ] - 1 ];
 	}
 }
 
-//  °Ñ16ÂÖµÄKeyÈ«²¿Çó³öÀ´¡£ ÒòÎª½âÂëµÄÊ±ºòÒªµ¹ĞòÊ¹ÓÃ¡£
-void KeyGeneration( const CDESBuf64& key, CDESRoundKeyList& keyList )
+//  æŠŠ16è½®çš„Keyå…¨éƒ¨æ±‚å‡ºæ¥ã€‚ å› ä¸ºè§£ç çš„æ—¶å€™è¦å€’åºä½¿ç”¨ã€‚
+void KeyGeneration( const CDESBuf64& key, int desRound, CDESRoundKeyList& keyList )
 {
 	keyList.clear();
 
-	// ÇóµÃ³õÊ¼µÄ×óÓÒKey¡£
+	// æ±‚å¾—åˆå§‹çš„å·¦å³Keyã€‚
 	CDESBuf28 leftKey, rightKey;
 	KeyPC1( key, leftKey, rightKey );
 
-	for ( int i=0; i<16; ++i )
+	for ( int i=0; i< desRound; ++i )
 	{
-		// ¸ù¾İ×óÒÆÖÃ»»±íÑ­»·×óÒÆÃÜÔ¿¡£
+		// æ ¹æ®å·¦ç§»ç½®æ¢è¡¨å¾ªç¯å·¦ç§»å¯†é’¥ã€‚
 // 		const char* desTableLS = DES_TABLE_LS_TABLE[ DES_TABLE_LS[ i ] - 1 ];
 // 		Permutation( leftKey, desTableLS );
 // 		Permutation( rightKey, desTableLS );
 		leftKey <<= DES_TABLE_LS[ i ];
 		rightKey <<= DES_TABLE_LS[ i ];
 
-		// ÓÃPC2 ÖÃ»»±íÉú³É±¾ÂÖµÄÃÜÔ¿¡£
+		// ç”¨PC2 ç½®æ¢è¡¨ç”Ÿæˆæœ¬è½®çš„å¯†é’¥ã€‚
 		CDESBuf48 roundKey;
 		for ( size_t r=0; r<roundKey.size(); ++r )
 		{
 			int index = DES_TABLE_PC2[r] - 1;
-			if ( index < rightKey.size() )
+			if ( (size_t)index < rightKey.size() )
 			{
 				roundKey[r] = rightKey[ index ];
 			}
@@ -324,21 +356,23 @@ void KeyGeneration( const CDESBuf64& key, CDESRoundKeyList& keyList )
 			}		
 		}
 
-		cout << "my key_" << i << ": " << roundKey << endl;
+//		cout << "my key_" << i << ": " << roundKey << endl;
 		keyList.push_back( roundKey );
 	}
 }
 
 
-
-void DES64( const CDESBuf64& in, const CDESRoundKeyList& keyList, CDESBuf64& out )
+/** åŠ å¯†ä¸€ä¸ª64bitçš„block
+*	int desRound : ä¸ºäº†è°ƒè¯•å’Œå­¦ä¹ ï¼Œ æ§åˆ¶DESçš„åŠ å¯†è½®æ•°ã€‚å› ä¸ºè½®æ•°ä½äº†å®¹æ˜“è¿½è¸ªã€‚
+*/
+void DES64( const CDESBuf64& in, const CDESRoundKeyList& keyList, int desRound, CDESBuf64& out )
 {
 	out = in;
 
-	// ½øĞĞ³õÊ¼ÖÃ»»¡£
+	// è¿›è¡Œåˆå§‹ç½®æ¢ã€‚
 	IP( out );
 	
-	// ·ÖÎª×óÓÒÁ½²¿·Ö£¬ ¸÷32bit¡£
+	// åˆ†ä¸ºå·¦å³ä¸¤éƒ¨åˆ†ï¼Œ å„32bitã€‚
 	CDESBuf32 left, right, left2, right2;
 	for( size_t i=0; i<left.size(); ++i )
 	{
@@ -346,37 +380,42 @@ void DES64( const CDESBuf64& in, const CDESRoundKeyList& keyList, CDESBuf64& out
 		left[i] = out[i+left.size()];
 	}
 
-	cout << "my left: " << left << endl;
-	cout << "my right: " << right << endl;
+// 	cout << "my left: " << left << endl;
+// 	cout << "my right: " << right << endl;
 
-#if 0	// ÕâÑù²ğ·ÖÇ£³¶µ½Ö÷»ú×Ö½ÚĞò£¬ ²»¿ÆÑ§£¡¡£
+#if 0	// è¿™æ ·æ‹†åˆ†ç‰µæ‰¯åˆ°ä¸»æœºå­—èŠ‚åºï¼Œ ä¸ç§‘å­¦ï¼ã€‚
 	left2 = CDESBuf32( static_cast<int>( desBuf.to_ullong() ) );
 	right2 = CDESBuf32( static_cast<int>( ( desBuf >> 32 ).to_ullong() ));
 	bool kkk = left2 == left;
 	bool ww = right2 == right;
 #endif
 
-	// 16ÂÖµÄ±ä»»¡£
-	for ( int i=0; i<16; ++i )
+	// 16è½®çš„å˜æ¢ã€‚
+	for ( int i=0; i<desRound; ++i )
 	{
 		DESRound( i, left, right, keyList[i] );
 	}
 
-	// ºÏ²¢×óÓÒ¡£
+	// æœ€åå·¦å³å‘¼å”¤ä¸€æ¬¡ï¼Œ è¿™æ ·åŠ å¯†å’Œè§£å¯†çš„è¿‡ç¨‹å°±ä¸€æ ·äº†ã€‚
+	CDESBuf32 swapBuf = left;
+	left = right;
+	right = swapBuf;
+
+	// åˆå¹¶å·¦å³ã€‚
 	for( size_t i=0; i<left.size(); ++i )
 	{
 		out[i] = right[i];
 		out[ i+left.size() ] = left[i];
 	}
 
-	// ×îºóÔÙ½øĞĞÒ»´ÎÄæ³õÊ¼ÖÃ»»¡£ ÊÇ³õÊ¼ÖÃ»»µÄÄæ±ä»»¡£
+	// æœ€åå†è¿›è¡Œä¸€æ¬¡é€†åˆå§‹ç½®æ¢ã€‚ æ˜¯åˆå§‹ç½®æ¢çš„é€†å˜æ¢ã€‚
 	FP( out );
 }
 
 
-// DES ¼ÓÃÜ£¬ ÒªÇó Ã÷ÎÄ³¤¶È±ØĞëÊÇ8µÄ±¶Êı£¨64bit£©£¬ ´æ·ÅÃÜÎÄµÄ pEncBuf ³¤¶È±ØĞë´óÓÚµÈÓÚ Ô­ÎÄ³¤¶È¡£
-// key ±ØĞëÊÇ64bit ³¤¶È¡£
-bool DES( const void* pPlainText, int plainTextLen, const void* pKey, void *pCipherTextBuf, bool denc )
+// DES åŠ å¯†ï¼Œ è¦æ±‚ æ˜æ–‡é•¿åº¦å¿…é¡»æ˜¯8çš„å€æ•°ï¼ˆ64bitï¼‰ï¼Œ å­˜æ”¾å¯†æ–‡çš„ pEncBuf é•¿åº¦å¿…é¡»å¤§äºç­‰äº åŸæ–‡é•¿åº¦ã€‚
+// key å¿…é¡»æ˜¯64bit é•¿åº¦ã€‚
+bool DES( const void* pPlainText, int plainTextLen, const void* pKey,  int desRound, void *pCipherTextBuf, bool denc )
 {
 	if ( plainTextLen % 8 != 0 )
 	{
@@ -385,18 +424,20 @@ bool DES( const void* pPlainText, int plainTextLen, const void* pKey, void *pCip
 
 	CDESBuf64 key( *reinterpret_cast<const u64*>( pKey ) );
 
+	const u64 *p64Block = reinterpret_cast<const u64*>(pPlainText);
 	for ( int i=0; i*DES_BUF_SIZE<plainTextLen; ++i )
 	{		
-		CDESBuf64 tmpIn( *reinterpret_cast<const u64*>(pPlainText) );
+		
+		CDESBuf64 tmpIn( p64Block[i] );
 		CDESBuf64 tmpOut;
 
 		CDESRoundKeyList keyList;
-		KeyGeneration( key, keyList );
+		KeyGeneration( key, desRound, keyList );
 
 		
 		if ( denc )
 		{
-			// Èç¹ûÊÇ½âÃÜ£¬ ĞèÒª½«ÃÜÔ¿Ë³Ğòµßµ¹¹ıÀ´¡£
+			// å¦‚æœæ˜¯è§£å¯†ï¼Œ éœ€è¦å°†å¯†é’¥é¡ºåºé¢ å€’è¿‡æ¥ã€‚
 			CDESRoundKeyList rKeyList;
 			for ( CDESRoundKeyList::reverse_iterator rIt = keyList.rbegin(); rIt != keyList.rend(); ++rIt )
 			{
@@ -405,16 +446,16 @@ bool DES( const void* pPlainText, int plainTextLen, const void* pKey, void *pCip
 			keyList = rKeyList;
 		}
 		
-		DES64( tmpIn, keyList, tmpOut );
-		u64 result = tmpOut.to_ullong();	// ×ª³É64bitÊı×Ö£¬ ÕıºÃ¡£¡£
+		DES64( tmpIn, keyList, desRound, tmpOut );
+		u64 result = tmpOut.to_ullong();	// è½¬æˆ64bitæ•°å­—ï¼Œ æ­£å¥½ã€‚ã€‚
 		memcpy(  reinterpret_cast<unsigned char*>( pCipherTextBuf)  + i*DES_BUF_SIZE, &result, DES_BUF_SIZE );
 	}
 	return true;
 }
 
-// ¶Ô×Ö·û´®½øĞĞ¼ÓÃÜ¡£ Èç¹û²»ÊÇ8µÄ±¶Êı£¬ ×Ô¶¯²¹0.
-// Èç¹ûÃÜÔ¿³¤¶È²»ÊÇ8£¬ ÄÇÃ´×Ô¶¯²¹0 µ½8. ³¬¹ı8µÄ³¤¶È»á±»ºöÂÔ¡£
-void DES( CDESBuf& plainText, CDESBuf& key, CDESBuf& cipherTextBuf, bool denc )
+// å¯¹å­—ç¬¦ä¸²è¿›è¡ŒåŠ å¯†ã€‚ å¦‚æœä¸æ˜¯8çš„å€æ•°ï¼Œ è‡ªåŠ¨è¡¥0.
+// å¦‚æœå¯†é’¥é•¿åº¦ä¸æ˜¯8ï¼Œ é‚£ä¹ˆè‡ªåŠ¨è¡¥0 åˆ°8. è¶…è¿‡8çš„é•¿åº¦ä¼šè¢«å¿½ç•¥ã€‚
+void DES( CDESBuf& plainText, CDESBuf& key, int desRound, CDESBuf& cipherTextBuf, bool denc )
 {
 	if ( plainText.size() % DES_BUF_SIZE != 0 )
 	{
@@ -429,34 +470,10 @@ void DES( CDESBuf& plainText, CDESBuf& key, CDESBuf& cipherTextBuf, bool denc )
 
 	cipherTextBuf.clear();
 	cipherTextBuf.resize( plainText.size() );
-	DES( plainText.data(), plainText.size(), key.data(), cipherTextBuf.data(), denc );
+	DES( plainText.data(), plainText.size(), key.data(), desRound, cipherTextBuf.data(), denc );
 }
 
-void Hex2BitBuf( const string& hexStr, CDESBuf64& buf )
-{
-	for ( size_t i=0; i<hexStr.size(); i++ )
-	{
-		unsigned char v = hexStr[i] >= 'a' ? hexStr[i]-( 'a' - 10 ) : hexStr[i]-'0';
-		CDESBuf4 tmp( v );
-		for ( size_t k=0; k<tmp.size(); ++k )
-		{
-			buf[ i * 4 + k ] = tmp[3-k];
-		}
-	}
-	
-	cout << buf << endl;
-}
 
-void Hex2BitBuf( const string& hexStr, CDESBuf& buf )
-{
-	CDESBuf64 tmp;
-	Hex2BitBuf( hexStr, tmp );
-	buf.resize( 8 );
-	u64 v = tmp.to_ullong();
-	memcpy( buf.data(), &v, sizeof( v ) );
-}
-
-void des(char *out, const char *in, size_t len, const char *key, int action, int mode);
 int main()
 {
 	// test.
@@ -464,42 +481,33 @@ int main()
 	u64 kkkkk = 1;
 	CDESBuf64 kkk( kkkkk );
 	
-	string plainText = "Hello";
+	string plainText = "Hello DES!!!!!";
 	
 	string key = "It's a sicret!";
 
 	CDESBuf plainTextBuf;
 	plainTextBuf.assign( plainText.begin(), plainText.end() );
 
-
-	string hexPlain = "02468aceeca86420";
-	string hexKey = "0f1571c947d9e869";
-
-	CDESBuf keyBuf;
-	//Hex2BitBuf( hexPlain, plainTextBuf );
-	Hex2BitBuf( hexKey, keyBuf );
-
-	plainTextBuf.resize( 8 );
-
-	*( u64* )plainTextBuf.data() = 1;
-	*( u64* )keyBuf.data() = 1;
-
-	
-	unsigned char szBuf[16] = {0};
-	des( (char*)szBuf, (char*)plainTextBuf.data(), plainTextBuf.size(), (char*)keyBuf.data(), 0, 0 );
-
-	
+	CDESBuf keyTextBuf;
+	keyTextBuf.assign( key.begin(), key.end() );
 
 	CDESBuf cipherText;
-	DES( plainTextBuf, keyBuf, cipherText, false );
+	DES( plainTextBuf, keyTextBuf, 16, cipherText, false );
 
 //	char *encStr = cipherText.data();
 
 	char szBack[16] = {0};
-	des( szBack, (char*)szBuf, 8, (char*)keyBuf.data(), 1, 0 );
+	//des( szBack, (char*)szBuf, 8, (char*)keyBuf.data(), 1, 0 );
 
 	CDESBuf DecPlain;
-	DES( cipherText, keyBuf, DecPlain, true );
+	DES( cipherText, keyTextBuf, 16, DecPlain, true );
+	string newPlain = reinterpret_cast<char*>( DecPlain.data() );
+
+	bool isOk = ( newPlain == plainText );
+	if ( !isOk )
+	{
+		cout << "é ï¼Œ è¿˜ä¸è¡Œï¼" << endl;
+	}
 
 	system( "pause" );
 	return 0;
