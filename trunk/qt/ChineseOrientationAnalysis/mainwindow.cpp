@@ -14,7 +14,10 @@ MainWindow::MainWindow(QWidget *parent) :
     m_trainTextFileListModel = new QStandardItemModel ();
     ui->trainTextFileListView->setModel( m_trainTextFileListModel );
 
-    this->InitTrainFileList();
+	this->connect( ui->pushButtonExplorer, SIGNAL( clicked() ), this, SLOT( OnExplorerDir() ) );
+	this->connect( ui->pushButtonUpdate, SIGNAL( clicked() ), this, SLOT( OnUpdate() ) );
+
+	this->OnUpdate();
 }
 
 MainWindow::~MainWindow()
@@ -22,12 +25,13 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-void MainWindow::on_pushButton_clicked()
+void MainWindow::OnExplorerDir()
 {
-    QString fileName = QFileDialog::getOpenFileName(this,tr("打开文件"), "", tr("*.*"));
+    QString fileName = QFileDialog::getExistingDirectory(this,tr("打开训练文本所在目录"));
 
-     QStandardItem* item1    = new QStandardItem(fileName);
-     m_trainTextFileListModel->appendRow( item1 );
+    ui->labelTrainningFileDir->setText( fileName );
+
+	this->OnUpdate();
 
  //    ICTCLAS_Init();
   // m_trainTextFileList += fileName;
@@ -49,8 +53,17 @@ void MainWindow::on_pushButton_clicked()
 //    62        }
 }
 
-void MainWindow::InitTrainFileList()
+void MainWindow::OnUpdate()
 {
-    const int fileNum = 100;
+	this->m_trainTextFileListModel->clear();
 
+	QString curDirPath = ui->labelTrainningFileDir->text();
+    QDir dir( curDirPath );
+	QFileInfoList trainningFileInfoList = dir.entryInfoList( QStringList( tr( "*.txt" ) ), QDir::Files );
+	foreach( const QFileInfo& fileInfo, trainningFileInfoList )
+	{
+		QStandardItem* item1    = new QStandardItem( fileInfo.absoluteFilePath() );
+		m_trainTextFileListModel->appendRow( item1 );
+	}
 }
+
