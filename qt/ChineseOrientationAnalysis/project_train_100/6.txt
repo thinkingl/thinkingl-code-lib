@@ -1,0 +1,4 @@
+
+　　通过一付立体声耳机，MultiMobile就可以实现全部的电话功能，由于电话簿是存储在机器内部phone book manager软件里的，所以我们通过触控屏幕就可以进行选取了。
+　　与现在见到的一般手机不同，，MultiMobile还支持GPRS网络，可以直接接入因特网，另外你还可以一方面通过机器内部的WAP浏览器浏览WAP网站，另一方面则通过Pocket PC系统内置的IE浏览器浏览普通HTTP网站。
+　　除此以外，Pocket PC系统内置的软件MultiMobile全部都有了，包括Pocket Word、Pocket Excel,、Outlook、媒体播放器以及计算器等等，可以毫不夸张的说，MultiMobile不愧为两大领域巨头的爱情结晶，可以算得上是目前为止功能最强的智能移动电话了。

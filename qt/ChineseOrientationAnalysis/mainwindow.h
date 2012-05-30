@@ -17,10 +17,10 @@ public:
     ~MainWindow();
 
 private slots:
-    void on_pushButton_clicked();
+    void OnExplorerDir();
+	void OnUpdate();
 
-private:
-    void InitTrainFileList();
+
 private:
     Ui::MainWindow *ui;
 private:

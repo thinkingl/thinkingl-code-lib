@@ -45,6 +45,9 @@
       <Extensions>cpp;moc</Extensions>
       <SourceControlFiles>False</SourceControlFiles>
     </Filter>
+    <Filter Include="project_train_100">
+      <UniqueIdentifier>{cdb88a0a-b554-4029-8c43-ae6a8cd25a42}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -74,5 +77,307 @@
     <ClInclude Include="GeneratedFiles\ui_mainwindow.h">
       <Filter>Generated Files</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="project_train_100\1.txt">
+      <Filter>project_train_100</Filter>
+    </None>
+    <None Include="project_train_100\2.txt">
+      <Filter>project_train_100</Filter>
+    </None>
+    <None Include="project_train_100\3.txt">
+      <Filter>project_train_100</Filter>
+    </None>
+    <None Include="project_train_100\4.txt">
+      <Filter>project_train_100</Filter>
+    </None>
+    <None Include="project_train_100\5.txt">
+      <Filter>project_train_100</Filter>
+    </None>
+    <None Include="project_train_100\6.txt">
+      <Filter>project_train_100</Filter>
+    </None>
+    <None Include="project_train_100\7.txt">
+      <Filter>project_train_100</Filter>
+    </None>
+    <None Include="project_train_100\8.txt">
+      <Filter>project_train_100</Filter>
+    </None>
+    <None Include="project_train_100\9.txt">
+      <Filter>project_train_100</Filter>
+    </None>
+    <None Include="project_train_100\10.txt">
+      <Filter>project_train_100</Filter>
+    </None>
+    <None Include="project_train_100\11.txt">
+      <Filter>project_train_100</Filter>
+    </None>
+    <None Include="project_train_100\12.txt">
+      <Filter>project_train_100</Filter>
+    </None>
+    <None Include="project_train_100\13.txt">
+      <Filter>project_train_100</Filter>
+    </None>
+    <None Include="project_train_100\14.txt">
+      <Filter>project_train_100</Filter>
+    </None>
+    <None Include="project_train_100\15.txt">
+      <Filter>project_train_100</Filter>
+    </None>
+    <None Include="project_train_100\16.txt">
+      <Filter>project_train_100</Filter>
+    </None>
+    <None Include="project_train_100\17.txt">
+      <Filter>project_train_100</Filter>
+    </None>
+    <None Include="project_train_100\18.txt">
+      <Filter>project_train_100</Filter>
+    </None>
+    <None Include="project_train_100\19.txt">
+      <Filter>project_train_100</Filter>
+    </None>
+    <None Include="project_train_100\20.txt">
+      <Filter>project_train_100</Filter>
+    </None>
+    <None Include="project_train_100\21.txt">
+      <Filter>project_train_100</Filter>
+    </None>
+    <None Include="project_train_100\22.txt">
+      <Filter>project_train_100</Filter>
+    </None>
+    <None Include="project_train_100\23.txt">
+      <Filter>project_train_100</Filter>
+    </None>
+    <None Include="project_train_100\24.txt">
+      <Filter>project_train_100</Filter>
+    </None>
+    <None Include="project_train_100\25.txt">
+      <Filter>project_train_100</Filter>
+    </None>
+    <None Include="project_train_100\26.txt">
+      <Filter>project_train_100</Filter>
+    </None>
+    <None Include="project_train_100\27.txt">
+      <Filter>project_train_100</Filter>
+    </None>
+    <None Include="project_train_100\28.txt">
+      <Filter>project_train_100</Filter>
+    </None>
+    <None Include="project_train_100\29.txt">
+      <Filter>project_train_100</Filter>
+    </None>
+    <None Include="project_train_100\30.txt">
+      <Filter>project_train_100</Filter>
+    </None>
+    <None Include="project_train_100\31.txt">
+      <Filter>project_train_100</Filter>
+    </None>
+    <None Include="project_train_100\32.txt">
+      <Filter>project_train_100</Filter>
+    </None>
+    <None Include="project_train_100\33.txt">
+      <Filter>project_train_100</Filter>
+    </None>
+    <None Include="project_train_100\34.txt">
+      <Filter>project_train_100</Filter>
+    </None>
+    <None Include="project_train_100\35.txt">
+      <Filter>project_train_100</Filter>
+    </None>
+    <None Include="project_train_100\36.txt">
+      <Filter>project_train_100</Filter>
+    </None>
+    <None Include="project_train_100\37.txt">
+      <Filter>project_train_100</Filter>
+    </None>
+    <None Include="project_train_100\38.txt">
+      <Filter>project_train_100</Filter>
+    </None>
+    <None Include="project_train_100\39.txt">
+      <Filter>project_train_100</Filter>
+    </None>
+    <None Include="project_train_100\40.txt">
+      <Filter>project_train_100</Filter>
+    </None>
+    <None Include="project_train_100\41.txt">
+      <Filter>project_train_100</Filter>
+    </None>
+    <None Include="project_train_100\42.txt">
+      <Filter>project_train_100</Filter>
+    </None>
+    <None Include="project_train_100\43.txt">
+      <Filter>project_train_100</Filter>
+    </None>
+    <None Include="project_train_100\44.txt">
+      <Filter>project_train_100</Filter>
+    </None>
+    <None Include="project_train_100\45.txt">
+      <Filter>project_train_100</Filter>
+    </None>
+    <None Include="project_train_100\46.txt">
+      <Filter>project_train_100</Filter>
+    </None>
+    <None Include="project_train_100\47.txt">
+      <Filter>project_train_100</Filter>
+    </None>
+    <None Include="project_train_100\48.txt">
+      <Filter>project_train_100</Filter>
+    </None>
+    <None Include="project_train_100\49.txt">
+      <Filter>project_train_100</Filter>
+    </None>
+    <None Include="project_train_100\50.txt">
+      <Filter>project_train_100</Filter>
+    </None>
+    <None Include="project_train_100\51.txt">
+      <Filter>project_train_100</Filter>
+    </None>
+    <None Include="project_train_100\52.txt">
+      <Filter>project_train_100</Filter>
+    </None>
+    <None Include="project_train_100\53.txt">
+      <Filter>project_train_100</Filter>
+    </None>
+    <None Include="project_train_100\54.txt">
+      <Filter>project_train_100</Filter>
+    </None>
+    <None Include="project_train_100\55.txt">
+      <Filter>project_train_100</Filter>
+    </None>
+    <None Include="project_train_100\56.txt">
+      <Filter>project_train_100</Filter>
+    </None>
+    <None Include="project_train_100\57.txt">
+      <Filter>project_train_100</Filter>
+    </None>
+    <None Include="project_train_100\58.txt">
+      <Filter>project_train_100</Filter>
+    </None>
+    <None Include="project_train_100\59.txt">
+      <Filter>project_train_100</Filter>
+    </None>
+    <None Include="project_train_100\60.txt">
+      <Filter>project_train_100</Filter>
+    </None>
+    <None Include="project_train_100\61.txt">
+      <Filter>project_train_100</Filter>
+    </None>
+    <None Include="project_train_100\62.txt">
+      <Filter>project_train_100</Filter>
+    </None>
+    <None Include="project_train_100\63.txt">
+      <Filter>project_train_100</Filter>
+    </None>
+    <None Include="project_train_100\64.txt">
+      <Filter>project_train_100</Filter>
+    </None>
+    <None Include="project_train_100\65.txt">
+      <Filter>project_train_100</Filter>
+    </None>
+    <None Include="project_train_100\66.txt">
+      <Filter>project_train_100</Filter>
+    </None>
+    <None Include="project_train_100\67.txt">
+      <Filter>project_train_100</Filter>
+    </None>
+    <None Include="project_train_100\68.txt">
+      <Filter>project_train_100</Filter>
+    </None>
+    <None Include="project_train_100\69.txt">
+      <Filter>project_train_100</Filter>
+    </None>
+    <None Include="project_train_100\70.txt">
+      <Filter>project_train_100</Filter>
+    </None>
+    <None Include="project_train_100\71.txt">
+      <Filter>project_train_100</Filter>
+    </None>
+    <None Include="project_train_100\72.txt">
+      <Filter>project_train_100</Filter>
+    </None>
+    <None Include="project_train_100\73.txt">
+      <Filter>project_train_100</Filter>
+    </None>
+    <None Include="project_train_100\74.txt">
+      <Filter>project_train_100</Filter>
+    </None>
+    <None Include="project_train_100\75.txt">
+      <Filter>project_train_100</Filter>
+    </None>
+    <None Include="project_train_100\76.txt">
+      <Filter>project_train_100</Filter>
+    </None>
+    <None Include="project_train_100\77.txt">
+      <Filter>project_train_100</Filter>
+    </None>
+    <None Include="project_train_100\78.txt">
+      <Filter>project_train_100</Filter>
+    </None>
+    <None Include="project_train_100\79.txt">
+      <Filter>project_train_100</Filter>
+    </None>
+    <None Include="project_train_100\80.txt">
+      <Filter>project_train_100</Filter>
+    </None>
+    <None Include="project_train_100\81.txt">
+      <Filter>project_train_100</Filter>
+    </None>
+    <None Include="project_train_100\82.txt">
+      <Filter>project_train_100</Filter>
+    </None>
+    <None Include="project_train_100\83.txt">
+      <Filter>project_train_100</Filter>
+    </None>
+    <None Include="project_train_100\84.txt">
+      <Filter>project_train_100</Filter>
+    </None>
+    <None Include="project_train_100\85.txt">
+      <Filter>project_train_100</Filter>
+    </None>
+    <None Include="project_train_100\86.txt">
+      <Filter>project_train_100</Filter>
+    </None>
+    <None Include="project_train_100\87.txt">
+      <Filter>project_train_100</Filter>
+    </None>
+    <None Include="project_train_100\88.txt">
+      <Filter>project_train_100</Filter>
+    </None>
+    <None Include="project_train_100\89.txt">
+      <Filter>project_train_100</Filter>
+    </None>
+    <None Include="project_train_100\90.txt">
+      <Filter>project_train_100</Filter>
+    </None>
+    <None Include="project_train_100\91.txt">
+      <Filter>project_train_100</Filter>
+    </None>
+    <None Include="project_train_100\92.txt">
+      <Filter>project_train_100</Filter>
+    </None>
+    <None Include="project_train_100\93.txt">
+      <Filter>project_train_100</Filter>
+    </None>
+    <None Include="project_train_100\94.txt">
+      <Filter>project_train_100</Filter>
+    </None>
+    <None Include="project_train_100\95.txt">
+      <Filter>project_train_100</Filter>
+    </None>
+    <None Include="project_train_100\96.txt">
+      <Filter>project_train_100</Filter>
+    </None>
+    <None Include="project_train_100\97.txt">
+      <Filter>project_train_100</Filter>
+    </None>
+    <None Include="project_train_100\98.txt">
+      <Filter>project_train_100</Filter>
+    </None>
+    <None Include="project_train_100\99.txt">
+      <Filter>project_train_100</Filter>
+    </None>
+    <None Include="project_train_100\100.txt">
+      <Filter>project_train_100</Filter>
+    </None>
   </ItemGroup>
 </Project>
