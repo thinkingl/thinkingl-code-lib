@@ -48,6 +48,9 @@
     <Filter Include="project_train_100">
       <UniqueIdentifier>{cdb88a0a-b554-4029-8c43-ae6a8cd25a42}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ICTCLAS50">
+      <UniqueIdentifier>{99735286-7734-49e3-8f02-3dc387610d26}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -76,6 +79,9 @@
   <ItemGroup>
     <ClInclude Include="GeneratedFiles\ui_mainwindow.h">
       <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="libs_win32\ICTCLAS50.h">
+      <Filter>ICTCLAS50</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -379,5 +385,19 @@
     <None Include="project_train_100\100.txt">
       <Filter>project_train_100</Filter>
     </None>
+    <None Include="Configure.xml">
+      <Filter>ICTCLAS50</Filter>
+    </None>
+    <None Include="ICTCLAS50.dll">
+      <Filter>ICTCLAS50</Filter>
+    </None>
+    <None Include="user.lic">
+      <Filter>ICTCLAS50</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Library Include="libs_win32\ICTCLAS50.lib">
+      <Filter>ICTCLAS50</Filter>
+    </Library>
   </ItemGroup>
 </Project>
