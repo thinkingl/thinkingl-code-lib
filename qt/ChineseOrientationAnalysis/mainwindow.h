@@ -19,7 +19,9 @@ public:
 private slots:
     void OnExplorerDir();
 	void OnUpdate();
-
+	void OnParse();
+private:
+	void ICTCLASInit();
 
 private:
     Ui::MainWindow *ui;
