@@ -1,0 +1,5 @@
+<RCC>
+  <qresource prefix="main">
+    <file>ret.rcc</file>
+  </qresource>
+</RCC>
