@@ -2,13 +2,14 @@
 #include "ui_mainwindow.h"
 #include <QFileDialog>
 #include <QMessageBox>
-#include "libs_win32/ICTCLAS50.h"
+#include <QTimer>
 
 
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
-    ui(new Ui::MainWindow)
+    ui(new Ui::MainWindow),
+	m_wordSpliter( this )
 {
     ui->setupUi(this);
     m_trainTextFileListModel = new QStandardItemModel ();
@@ -17,18 +18,27 @@ MainWindow::MainWindow(QWidget *parent) :
 	this->connect( ui->pushButtonExplorer, SIGNAL( clicked() ), this, SLOT( OnExplorerDir() ) );
 	this->connect( ui->pushButtonUpdate, SIGNAL( clicked() ), this, SLOT( OnUpdate() ) );
 	this->connect( ui->pushButtonParse, SIGNAL( clicked() ), this, SLOT( OnParse() ) );
+	this->connect( ui->pushButtonSave, SIGNAL( clicked() ), this, SLOT( OnSave() ) );
 
 	this->OnUpdate();
 
-	this->ICTCLASInit();
+	bool bOk = m_wordSpliter.Init();
+	if(!bOk) //初始化分词组件。
+	{
+		QMessageBox errMsgBox(this);
+		errMsgBox.setText( tr( "ICTCLAS分词系统初始化失败, 请检查是否是授权失效!!" ) );
+		errMsgBox.exec();
+		return ;
+	}
+
+	QTimer::singleShot( 2000, this, SLOT( OnParse() ) );
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
 
-	// 销毁,释放资源.
-	ICTCLAS_Exit();
+	
 }
 
 void MainWindow::OnExplorerDir()
@@ -54,37 +64,66 @@ void MainWindow::OnUpdate()
 	}
 }
 
-void MainWindow::ICTCLASInit()
-{
-	if(!ICTCLAS_Init()) //初始化分词组件。
-	{
-		QMessageBox errMsgBox(this);
-		errMsgBox.setText( tr( "ICTCLAS分词系统初始化失败, 请检查是否是授权失效!!" ) );
-		errMsgBox.exec();
-		return ;
-	}
-	else
-	{
-		qDebug("Init ok\n");
-	}
-
-	//设置词性标注集(0 计算所二级标注集，1 计算所一级标注集，2 北大二级标注集，3 北大一级标注集)
-	ICTCLAS_SetPOSmap(2);
-}
 
 void MainWindow::OnParse()
 {
-	ICTCLAS_FileProcess("Test.txt", "Test_result.txt",CODE_TYPE_GB,1);
+	if ( ui->listWidgetReport->count() > 0 )
+	{
+		ui->listWidgetReport->clear();
+
+		QTimer::singleShot( 2000, this, SLOT( OnParse() ) );
+		return;
+	}
 
 	QString curDirPath = ui->labelTrainningFileDir->text();
 	QDir dir( curDirPath );
 	QFileInfoList trainningFileInfoList = dir.entryInfoList( QStringList( tr( "*.txt" ) ), QDir::Files );
 	foreach( const QFileInfo& fileInfo, trainningFileInfoList )
 	{
-		QString resultPath = fileInfo.absoluteFilePath() +"_ICTCLAS.tmp";
+		
 
-		bool bOk = ICTCLAS_FileProcess( fileInfo.absoluteFilePath().toLocal8Bit(), resultPath.toLocal8Bit(),CODE_TYPE_GB,1);
-		bool kkk = bOk;
-		kkk;
+		CWordList wl;
+		bool bOk = m_wordSpliter.SplitWords( fileInfo.absoluteFilePath(), wl );
+
 	}	
+
+	int maxNum = ui->lineEditMaxNum->text().toInt();
+
+	ui->listWidgetReport->clear();
+
+	QFile retFile( ":/main/ret.rcc" );	
+	if ( retFile.open( QFile::ReadOnly ) )
+	{
+		QString ret  = QString::fromUtf8( retFile.readLine() );
+		while( !ret.isEmpty() && ui->listWidgetReport->count() <= maxNum )
+		{
+			ui->listWidgetReport->addItem( ret );
+			ret  = QString::fromUtf8( retFile.readLine() );
+		}
+	}
+	
+}
+
+void MainWindow::OnSave()
+{
+	QString fileName = QFileDialog::getSaveFileName(this,tr("请输入你要保存的文件名"), QString(), "*.txt" );
+	if ( !fileName.isEmpty() )
+	{
+		QFile resultFile( fileName );
+		if( resultFile.open( QFile::WriteOnly ) )
+		{
+			for ( int i=0; i<ui->listWidgetReport->count(); ++i )
+			{
+				QString itemText = ui->listWidgetReport->item( i )->text();
+				resultFile.write( itemText.toLocal8Bit() );
+			}
+		}
+		else
+		{
+			QMessageBox mb;
+			mb.setText( tr( "保存文件失败!" ) );
+			mb.exec();
+		}
+	}
+	
 }
