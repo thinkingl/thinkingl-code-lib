@@ -1,0 +1,320 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="源文件">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="头文件">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="资源文件">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx</Extensions>
+    </Filter>
+    <Filter Include="GameLib">
+      <UniqueIdentifier>{4fbfc380-c54c-4ad3-b4a8-b7278c5925f1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="配置文件">
+      <UniqueIdentifier>{e3b3a078-57e6-450d-9812-fb5ab0f99784}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="md2">
+      <UniqueIdentifier>{fb054429-6e78-465e-9d9f-7b3ed8c6924a}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Control.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="CustomKeyIniSet.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="include\DirectInput.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="FrameWork.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="GLShow.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="InputReader.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Map.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="ModelManager.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="MyMathArithmetic.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="OpenGLWindow.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Role.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="TextureManager.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Timer.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="ViewStatusManage.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="VisualServerTemp.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Win32Input.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="WorldModel.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="include\bmp.cpp">
+      <Filter>GameLib</Filter>
+    </ClCompile>
+    <ClCompile Include="include\iniset.cpp">
+      <Filter>GameLib</Filter>
+    </ClCompile>
+    <ClCompile Include="include\md2.cpp">
+      <Filter>GameLib</Filter>
+    </ClCompile>
+    <ClCompile Include="include\pcx.cpp">
+      <Filter>GameLib</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Control.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="CustomKeyIniSet.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\DirectInput.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="GLShow.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="InputReader.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Map.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="ModelManager.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="MyMathArithmetic.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="OpenGLWindow.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Role.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="stdafx.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="TextureManager.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Timer.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="ViewStatusManage.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="VisualServerTemp.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Win32Input.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="WorldModel.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\anorms.h">
+      <Filter>GameLib</Filter>
+    </ClInclude>
+    <ClInclude Include="include\anormtab.h">
+      <Filter>GameLib</Filter>
+    </ClInclude>
+    <ClInclude Include="include\bmp.h">
+      <Filter>GameLib</Filter>
+    </ClInclude>
+    <ClInclude Include="include\iniset.h">
+      <Filter>GameLib</Filter>
+    </ClInclude>
+    <ClInclude Include="include\md2.h">
+      <Filter>GameLib</Filter>
+    </ClInclude>
+    <ClInclude Include="include\pcx.h">
+      <Filter>GameLib</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ini\Customkey.ini">
+      <Filter>配置文件</Filter>
+    </None>
+    <None Include="ini\map.ini">
+      <Filter>配置文件</Filter>
+    </None>
+    <None Include="ini\scene.ini">
+      <Filter>配置文件</Filter>
+    </None>
+    <None Include="ini\setup.ini">
+      <Filter>配置文件</Filter>
+    </None>
+    <None Include="ini\texture.ini">
+      <Filter>配置文件</Filter>
+    </None>
+    <None Include="data\coolBoy.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="data\Star.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="data\MD2\role.pcx">
+      <Filter>md2</Filter>
+    </None>
+    <None Include="data\MD2\tris.MD2">
+      <Filter>md2</Filter>
+    </None>
+    <None Include="data\MD2\weapon.MD2">
+      <Filter>md2</Filter>
+    </None>
+    <None Include="data\MD2\weapon.PCX">
+      <Filter>md2</Filter>
+    </None>
+    <None Include="data\sound\1065675029.mid">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="data\sound\run.wav">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="data\sound\-run.wav">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="data\sound\Shot.wav">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="data\sound\Shot_low.wav">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="data\images\ground_0.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="data\images\ground_1.BMP">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="data\images\ground_2.BMP">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="data\images\ground_3.BMP">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="data\images\ground_4.BMP">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="data\images\ground_5.BMP">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="data\images\sky_0_BACK.BMP">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="data\images\sky_0_front.BMP">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="data\images\sky_0_left.BMP">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="data\images\sky_0_RIGHT.BMP">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="data\images\sky_0_TOP.BMP">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="data\images\sky_1_BACK.BMP">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="data\images\sky_1_FRONT.BMP">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="data\images\sky_1_LEFT.BMP">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="data\images\sky_1_RIGHT.BMP">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="data\images\sky_1_Top.BMP">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="data\images\sky_2_BACK.BMP">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="data\images\sky_2_FRONT.BMP">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="data\images\sky_2_LEFT.BMP">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="data\images\sky_2_RIGHT.BMP">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="data\images\sky_2_TOP.BMP">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="data\images\sky_3_BACK.BMP">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="data\images\sky_3_FRONT.BMP">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="data\images\sky_3_LEFT.BMP">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="data\images\sky_3_RIGHT.BMP">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="data\images\sky_3_TOP.BMP">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="data\images\sky_4_BACK.BMP">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="data\images\sky_4_FRONT.BMP">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="data\images\sky_4_LEFT.BMP">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="data\images\sky_4_RIGHT.BMP">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="data\images\sky_4_TOP.BMP">
+      <Filter>资源文件</Filter>
+    </None>
+  </ItemGroup>
+</Project>
