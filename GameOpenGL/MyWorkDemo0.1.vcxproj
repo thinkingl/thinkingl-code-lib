@@ -1,0 +1,199 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{5320CFF0-EFB8-4E52-97F6-16EAD94D8000}</ProjectGuid>
+    <RootNamespace>MyWorkDemo01</RootNamespace>
+    <Keyword>ManagedCProj</Keyword>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <CLRSupport>OldSyntax</CLRSupport>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <CLRSupport>OldSyntax</CLRSupport>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC71.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC71.props" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(Configuration)\</IntDir>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</LinkIncremental>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(Configuration)\</IntDir>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</LinkIncremental>
+    <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" />
+    <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" />
+    <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
+    <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>false</MinimalRebuild>
+      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+    </ClCompile>
+    <Link>
+      <OutputFile>$(OutDir)$(ProjectName).exe</OutputFile>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AssemblyDebug>true</AssemblyDebug>
+      <OptimizeReferences>
+      </OptimizeReferences>
+      <EnableCOMDATFolding>
+      </EnableCOMDATFolding>
+      <AdditionalLibraryDirectories>D:\Microsoft SDKs\Microsoft DirectX SDK %28March 2009%29\Lib\x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <PreprocessorDefinitions>WIN32;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>false</MinimalRebuild>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+    </ClCompile>
+    <Link>
+      <OutputFile>$(OutDir)$(ProjectName).exe</OutputFile>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>D:\Microsoft SDKs\Microsoft DirectX SDK %28March 2009%29\Lib\x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="Control.cpp" />
+    <ClCompile Include="CustomKeyIniSet.cpp" />
+    <ClCompile Include="include\DirectInput.cpp" />
+    <ClCompile Include="FrameWork.cpp" />
+    <ClCompile Include="GLShow.cpp" />
+    <ClCompile Include="InputReader.cpp" />
+    <ClCompile Include="Map.cpp" />
+    <ClCompile Include="ModelManager.cpp" />
+    <ClCompile Include="MyMathArithmetic.cpp" />
+    <ClCompile Include="Objects.cpp" />
+    <ClCompile Include="OpenGLWindow.cpp" />
+    <ClCompile Include="Role.cpp" />
+    <ClCompile Include="Scene.cpp" />
+    <ClCompile Include="stdafx.cpp" />
+    <ClCompile Include="TextureManager.cpp" />
+    <ClCompile Include="Timer.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="ViewStatusManage.cpp" />
+    <ClCompile Include="VisualServerTemp.cpp" />
+    <ClCompile Include="Win32Input.cpp" />
+    <ClCompile Include="WorldModel.cpp" />
+    <ClCompile Include="include\bmp.cpp" />
+    <ClCompile Include="include\iniset.cpp" />
+    <ClCompile Include="include\md2.cpp" />
+    <ClCompile Include="include\pcx.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Control.h" />
+    <ClInclude Include="CustomKeyIniSet.h" />
+    <ClInclude Include="include\DirectInput.h" />
+    <ClInclude Include="GLShow.h" />
+    <ClInclude Include="InputReader.h" />
+    <ClInclude Include="Map.h" />
+    <ClInclude Include="ModelManager.h" />
+    <ClInclude Include="MyMathArithmetic.h" />
+    <ClInclude Include="Objects.h" />
+    <ClInclude Include="OpenGLWindow.h" />
+    <ClInclude Include="Role.h" />
+    <ClInclude Include="Scene.h" />
+    <ClInclude Include="stdafx.h" />
+    <ClInclude Include="TextureManager.h" />
+    <ClInclude Include="Timer.h" />
+    <ClInclude Include="ViewStatusManage.h" />
+    <ClInclude Include="VisualServerTemp.h" />
+    <ClInclude Include="Win32Input.h" />
+    <ClInclude Include="WorldModel.h" />
+    <ClInclude Include="include\anorms.h" />
+    <ClInclude Include="include\anormtab.h" />
+    <ClInclude Include="include\bmp.h" />
+    <ClInclude Include="include\iniset.h" />
+    <ClInclude Include="include\md2.h" />
+    <ClInclude Include="include\pcx.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="data\coolBoy.bmp" />
+    <None Include="data\images\ground_0.bmp" />
+    <None Include="data\images\ground_1.BMP" />
+    <None Include="data\images\ground_2.BMP" />
+    <None Include="data\images\ground_3.BMP" />
+    <None Include="data\images\ground_4.BMP" />
+    <None Include="data\images\ground_5.BMP" />
+    <None Include="data\images\sky_0_BACK.BMP" />
+    <None Include="data\images\sky_0_front.BMP" />
+    <None Include="data\images\sky_0_left.BMP" />
+    <None Include="data\images\sky_0_RIGHT.BMP" />
+    <None Include="data\images\sky_0_TOP.BMP" />
+    <None Include="data\images\sky_1_BACK.BMP" />
+    <None Include="data\images\sky_1_FRONT.BMP" />
+    <None Include="data\images\sky_1_LEFT.BMP" />
+    <None Include="data\images\sky_1_RIGHT.BMP" />
+    <None Include="data\images\sky_1_Top.BMP" />
+    <None Include="data\images\sky_2_BACK.BMP" />
+    <None Include="data\images\sky_2_FRONT.BMP" />
+    <None Include="data\images\sky_2_LEFT.BMP" />
+    <None Include="data\images\sky_2_RIGHT.BMP" />
+    <None Include="data\images\sky_2_TOP.BMP" />
+    <None Include="data\images\sky_3_BACK.BMP" />
+    <None Include="data\images\sky_3_FRONT.BMP" />
+    <None Include="data\images\sky_3_LEFT.BMP" />
+    <None Include="data\images\sky_3_RIGHT.BMP" />
+    <None Include="data\images\sky_3_TOP.BMP" />
+    <None Include="data\images\sky_4_BACK.BMP" />
+    <None Include="data\images\sky_4_FRONT.BMP" />
+    <None Include="data\images\sky_4_LEFT.BMP" />
+    <None Include="data\images\sky_4_RIGHT.BMP" />
+    <None Include="data\images\sky_4_TOP.BMP" />
+    <None Include="data\MD2\role.pcx" />
+    <None Include="data\MD2\tris.MD2" />
+    <None Include="data\MD2\weapon.MD2" />
+    <None Include="data\MD2\weapon.PCX" />
+    <None Include="data\sound\-run.wav" />
+    <None Include="data\sound\1065675029.mid" />
+    <None Include="data\sound\run.wav" />
+    <None Include="data\sound\Shot.wav" />
+    <None Include="data\sound\Shot_low.wav" />
+    <None Include="data\Star.bmp" />
+    <None Include="ini\Customkey.ini" />
+    <None Include="ini\map.ini" />
+    <None Include="ini\scene.ini" />
+    <None Include="ini\setup.ini" />
+    <None Include="ini\texture.ini" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
