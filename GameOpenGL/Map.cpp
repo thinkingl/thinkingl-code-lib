@@ -103,6 +103,30 @@ bool Map::CreateNewMap( int id  ,float x , float y , float z ,int mapWidth, int 
 // 载入地图.
 bool Map::LoadMapFromFile( char *FileName)
 {
+	stMap *map = new stMap;
+	map->mapId = 1;
+	map->width = 200;
+	map->height = 200;
+	map->xExcursion = -100;
+	map->yExcursion = 0;
+	map->zExcursion = -100;
+
+
+	map->cell = new stCell[ map->width * map->height ];
+	for ( int w=0; w<map->width; ++w )
+	{
+		for ( int h=0; h<map->height; ++h )
+		{
+			map->cell[ w*map->height + h ].block = false;
+			map->cell[ w*map->height + h ].height = 0;
+			map->cell[ w*map->height + h ].GroundPic = rand() % 5;
+		}
+	}
+	// 将地图加入列表.
+	PushMap( map );
+	
+	return true;
+#if 0
 	// 打开地图文件.
 	FILE *fp;
 
@@ -147,6 +171,7 @@ bool Map::LoadMapFromFile( char *FileName)
 	PushMap( map );
 
 	return true;
+#endif
 }
 
 // 保存指定id的地图到文件.
@@ -221,7 +246,7 @@ bool Map::GetCell(int id, int x, int y, stCell *cell)
 	{
 		return 0;	// 超过地图的范围.
 	}
-	*cell = map->cell[y* map->width + map->height];
+	*cell = map->cell[y* map->width + x];
 	return true;
 }
 

@@ -99,6 +99,9 @@
     <ClCompile Include="include\pcx.cpp">
       <Filter>GameLib</Filter>
     </ClCompile>
+    <ClCompile Include="ScriptParse.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Control.h">
@@ -174,6 +177,9 @@
       <Filter>GameLib</Filter>
     </ClInclude>
     <ClInclude Include="IShowObject.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="ScriptParse.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
@@ -318,6 +324,9 @@
     </None>
     <None Include="data\Star.bmp">
       <Filter>资源图片模型文件\图片</Filter>
+    </None>
+    <None Include="ini\run.txt">
+      <Filter>资源图片模型文件</Filter>
     </None>
   </ItemGroup>
 </Project>

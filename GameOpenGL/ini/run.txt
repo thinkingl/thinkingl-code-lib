@@ -1,0 +1,78 @@
+
+
+turnleft 100
+turnleft 100
+turnleft 100
+turnleft 100
+turnleft 100
+turnleft 100
+turnleft 100
+turnleft 100
+turnleft 100
+turnleft 100
+turnleft 100
+turnleft 100
+turnleft 100
+
+wait 2000
+
+turnright 100
+turnright 100
+turnright 100
+turnright 100
+turnright 100
+turnright 100
+turnright 100
+turnright 100
+turnright 100
+turnright 100
+turnright 100
+turnright 100
+turnright 100
+turnright 100
+turnright 100
+turnright 100
+turnright 100
+turnright 100
+turnright 100
+turnright 100
+turnright 100
+turnright 100
+turnright 100
+turnright 100
+turnright 100
+turnright 100
+turnright 100
+turnright 100
+turnright 100
+
+turndown 100
+turndown 100
+turndown 100
+turndown 100
+turndown 100
+turndown 100
+
+sound 10 .\data\sound\tongzhimenhao.wav
+mainsalut 2000
+
+wait 1000
+sound 10 .\data\sound\shouzhanghao.wav
+othersalut 2000
+
+wait 1000
+sound 10 .\data\sound\tongzhixinku.wav
+mainsalut 2000
+
+wait 2000
+sound 10 .\data\sound\weirenminbi.wav
+othersalut 2000
+
+fire 1000
+
+otherdie 1000 2
+
+
+sound 10 .\data\sound\zouhuo.wav 
+
+exit 0

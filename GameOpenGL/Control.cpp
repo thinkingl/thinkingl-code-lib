@@ -27,6 +27,11 @@ int * Control::GetOrderList( )
 	nOrderList[0] = 0;		// 命令的数目初始化为0;
 	for( int i = 0 ; i < CMD_NUM ; i++)
 	{		
+		if ( m_nCmdDictionary[i] == 0 )
+		{
+			continue;
+		}
+
 		//  由命令号,查询命令翻译数组,获得命令快捷键,然后分析快捷键是否被按下.
 		//  其中命令快捷键的存储方式采用 CHotKeyCtl::GetHotKey()const 的返回值的格式: 在低16位中,低8位是虚拟键值,高8位是功能键标志位.
 		if( m_inputReader.IsKeyDown( LOBYTE(LOWORD( m_nCmdDictionary[i] )) , HIBYTE( LOWORD( m_nCmdDictionary[i]))))

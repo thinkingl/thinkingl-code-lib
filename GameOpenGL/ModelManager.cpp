@@ -47,6 +47,10 @@ int ModelManager::Init()
 	LoadModel( 2, "tris2");
 	SetAnimType( 2 , STAND );
 	ScaleModel( 2 , 0.050f );
+
+	LoadModel( 3, "tris2");
+	SetAnimType( 3 , STAND );
+	ScaleModel( 3 , 0.050f );
 	
 //	m_numOfModels = 3;
 	return 0;	
