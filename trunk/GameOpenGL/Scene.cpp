@@ -7,7 +7,7 @@
 #include "ModelManager.h"
 
 
-const float CELL_BORDER = 0.5f;		// 地图的网格在显示的时候的大小.
+const float CELL_BORDER = 1.0f;		// 地图的网格在显示的时候的大小.
 
 Scene::Scene(void)
 {
@@ -117,6 +117,7 @@ int Scene::LoadScene(void)
 
 	// 画天空
 	DrawSky( 1, 3,6,3,6);
+	//DrawSky( 1, 3, 1, 1, 1 );
 
 	////开启雾效果 
 	//GLfloat color[4] = {0.70f, 0.76f, 0.74f, 0.10f};
@@ -176,6 +177,8 @@ void Scene::DrawSky(int mapId ,int a,int wi,int he,int le)
 	skyWidth = mapWidth * wi * CELL_BORDER;
 	skyHeight = mapWidth * he *CELL_BORDER;
 	skyLength = mapHeight * le * CELL_BORDER;
+
+
 	float x = xOffset + mapWidth *CELL_BORDER/2 - skyWidth /2;
 	float y = yOffset - skyHeight * CELL_BORDER/a;
 	float z = zOffset + mapHeight * CELL_BORDER/2 - skyLength/2;

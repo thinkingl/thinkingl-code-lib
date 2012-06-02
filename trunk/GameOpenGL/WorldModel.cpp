@@ -95,14 +95,30 @@ bool CWorldModel::Init()
 
 	// 防止重新分配内存造成崩溃.
 	m_roleList.reserve( 1000 );
+		
 
-	stRoleState initSt;
-	initSt.vAbsolutePos = Vector3f( -5.0f ,0.0f ,-0.0f );
-	initSt.vDirection = Vector3f( 1.0f , 0.0f ,0.0f );
-	initSt.fSpeed = 0.03f;
-	CRole another;
-	another.Init( initSt, 2 );
-	m_roleList.push_back( another );
+	for ( int i=0; i<5; ++i )
+	{
+		for ( int k=0; k<5; ++k )
+		{
+			stRoleState initSt;
+			initSt.vAbsolutePos = Vector3f( 5.0f + i * 2.0f ,0.0f , k*2.0f - 4.0f );
+			initSt.vDirection = Vector3f( -1.0f , 0.0f ,0.0f );
+			initSt.fSpeed = 0.03f;
+			CRole another;
+
+			if ( k == 2 )
+			{
+				another.Init( initSt, 3 );
+			}
+			else
+			{
+				another.Init( initSt, 2 );
+			}
+			
+			m_roleList.push_back( another );
+		}		
+	}
 
 	return 0;
 }
@@ -166,4 +182,26 @@ CRolePointList CWorldModel::GetAllRole()
 CRole* CWorldModel::GetMainRole()
 {
 	return &m_mainRole;
+}
+
+void CWorldModel::MainSalut( int time )
+{
+	m_mainRole.DoAct( SALUTE, time );
+}
+
+void CWorldModel::OtherSalut( int time )
+{
+	for ( size_t i=0; i<m_roleList.size(); ++i )
+	{
+		m_roleList[i].DoAct( SALUTE, time );
+	}
+}
+
+void CWorldModel::OtherDie( int roleId )
+{
+	for ( size_t i=0; i<m_roleList.size(); ++i )
+	{
+		m_roleList[i].DoAct( CROUCH_STAND );
+	}
+	//m_roleList[ roleId ].DoAct( DEATH_FALLBACK );
 }

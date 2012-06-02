@@ -90,6 +90,16 @@ BOOL COpenGL::SetupPixelFormat(HDC hDC)	  // ¼ì²â°²×°OpenGL
 	glEnable(GL_LIGHT1);
 	glEnable(GL_LIGHTING);
 
+// 	GLuint	fogMode[]= { GL_EXP, GL_EXP2, GL_LINEAR };	// Storage For Three Types Of Fog
+// 	GLfloat	fogColor[4] = {0.5f,0.5f,0.5f,1.0f};		// Fog Color
+// 	glFogi(GL_FOG_MODE, fogMode[0]);			// Fog Mode
+// 	glFogfv(GL_FOG_COLOR, fogColor);					// Set Fog Color
+// 	glFogf(GL_FOG_DENSITY, 0.05f);						// How Dense Will The Fog Be
+// 	glHint(GL_FOG_HINT, GL_DONT_CARE);					// Fog Hint Value
+// 	glFogf(GL_FOG_START, 1.0f);							// Fog Start Depth
+// 	glFogf(GL_FOG_END, 5.0f);							// Fog End Depth
+// 	glEnable(GL_FOG);									// Enables GL_FOG
+
 	glColor4f(1.0f,1.0f,1.0f,0.5f);
 	glBlendFunc(GL_SRC_ALPHA , GL_ONE);
 

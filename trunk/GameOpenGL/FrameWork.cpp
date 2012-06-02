@@ -11,6 +11,7 @@
 
 #include "map.h"
 #include "TextureManager.h"
+#include "ScriptParse.h"
 
 //////////////////////////////////////////////////////////
 #define IDT_TIMERDRAW  1			//定时器序号1.为屏幕刷新时间定时.
@@ -44,11 +45,14 @@ HWND	hWnd=NULL;	// 保存 Windows 分配给程序的窗口句柄
 bool	bExiting = FALSE;	//标识现在是否正在退出程序.
 bool	bActive = TRUE;	//标识现在窗口是否是激活状态.
 
+CScriptParse g_scriptParser;
+bool g_bRunScript = false;		// 是否执行脚本.
 
 // 一些函数的声明.
 void ExitGameLoop(void);// 退出函数声明.
 void WINAPI TimerProc (UINT wTimerID, UINT msg,DWORD dwUser,DWORD dwl,DWORD dw2);// 多媒体定时器回调函数声明.
-void CarryOut( int * cmdQueue );	// 执行用户的命令.
+void CarryOut( const COrderList& );	// 执行用户的命令.
+void RunScript( const COrderList& orderList );
 
 // 游戏的主循环函数,包含了程序的消息循环.
 
@@ -175,7 +179,29 @@ void WINAPI	TimerProc (UINT wTimerID, UINT msg,DWORD dwUser,DWORD dwl,DWORD dw2)
 	if(bActive)
 		{
 			gameControl.Update();
-			CarryOut( gameControl.GetOrderList());	// 执行用户输入的命令.
+
+			if( g_bRunScript )
+			{				
+				COrderList ol = g_scriptParser.GetOrderList( GetTickCount() );
+				RunScript( ol );
+			}
+			else
+			{
+				COrderList orList;
+				int * CmdQueue = gameControl.GetOrderList();
+				int cmdNum = CmdQueue[0];
+				for ( int i=0; i<cmdNum; ++i )
+				{
+					COrder or;
+					or.m_cmd = (EOrderCmd)CmdQueue[ i+1 ];
+
+					orList.push_back( or );
+				}
+				CarryOut( orList );	// 执行用户输入的命令.
+			}
+			
+
+
 //			worldModel.UpdateRoleDirector( gameControl.GetMouseRelMoveX() , gameControl.GetMouseRelMoveY() );
 
 			worldModel.UpdateViewDirection( gameControl.GetMouseRelMoveX() , gameControl.GetMouseRelMoveY () );
@@ -204,11 +230,11 @@ void ExitGameLoop(void)
 
 
 //  执行用户命令.
-void CarryOut( int * CmdQueue )
+void CarryOut( const COrderList& orderList )
 {
-	for ( ;(*CmdQueue) > 0;(*CmdQueue) -- )
+	for ( size_t i=0; i<orderList.size(); ++i )
 	{
-		switch ( *(CmdQueue + *CmdQueue) )
+		switch ( orderList[i].m_cmd )
 		{
 			case CMD_EXIT:
 				ExitGameLoop();
@@ -238,7 +264,49 @@ void CarryOut( int * CmdQueue )
 			case CMD_FIRE:
 				worldModel.Fire();
 				break;
+
+			case CMD_RunScript:
+				g_bRunScript = !g_bRunScript;
+				if( !g_bRunScript )
+				{
+					g_scriptParser.Reset();
+				}
+				break;
+
+			case CMD_MainSalut:
+				worldModel.MainSalut( orderList[i].m_time );
+				break;
+			case CMD_OtherSalut:
+				worldModel.OtherSalut( orderList[i].m_time );
+				break;
+			case CMD_TurnLeft:
+				worldModel.UpdateViewDirection( -100, 0 );
+				break;
+			case CMD_TurnRight:
+				worldModel.UpdateViewDirection( 100, 0 );
+				break;
+			case CMD_TurnUp:
+				worldModel.UpdateViewDirection( 0, -100 );
+				break;
+			case CMD_TurnDown:
+				worldModel.UpdateViewDirection( 0, 100 );
+				break;
+			case CMD_OtherDie:
+				worldModel.OtherDie( atoi( orderList[i].m_param.c_str() ) );
+				break;
+
 		}
 		
+	}
+}
+
+// 运行脚本.
+void RunScript( const COrderList& orderList )
+{
+	for ( size_t i=0; i<orderList.size(); ++i )
+	{
+		const COrder& order = orderList[i];
+
+		CarryOut( orderList );
 	}
 }

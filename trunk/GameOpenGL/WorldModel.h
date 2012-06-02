@@ -88,6 +88,9 @@ public:
 	// 让人物随便做点什么小动作.
 	void RoleDosomeAction();
 
+	void MainSalut( int time );
+	void OtherSalut( int time );
+	void OtherDie( int roleId );
 	// 更新现在角色的方向.
 	//void UpdateRoleDirector(int xMoved , int yMoved);
 

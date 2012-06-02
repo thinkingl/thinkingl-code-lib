@@ -21,8 +21,19 @@ enum EOrderCmd
 	CMD_JUMP,
 	CMD_FIRE,	// 开枪.
 
+	CMD_RunScript,
+	CMD_MainSalut,	// 主角军礼.
+	CMD_OtherSalut,	// 其他人军礼.
+	CMD_TurnLeft,		// 向左转
+	CMD_TurnRight,	// 向右转.
+	CMD_TurnUp,		// 向上转, 视野向下
+	CMD_TurnDown,	// 向下转.
+	CMD_OtherDie,		// 群众演员挂了.
+
 	CMD_NUM,	// 命令总数.
 };
+
+
 
 
 #include "stdafx.h"
