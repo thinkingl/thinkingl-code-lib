@@ -9,18 +9,24 @@
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
       <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
     </Filter>
-    <Filter Include="资源文件">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx</Extensions>
-    </Filter>
     <Filter Include="GameLib">
       <UniqueIdentifier>{4fbfc380-c54c-4ad3-b4a8-b7278c5925f1}</UniqueIdentifier>
     </Filter>
     <Filter Include="配置文件">
       <UniqueIdentifier>{e3b3a078-57e6-450d-9812-fb5ab0f99784}</UniqueIdentifier>
     </Filter>
-    <Filter Include="md2">
+    <Filter Include="资源图片模型文件">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx</Extensions>
+    </Filter>
+    <Filter Include="资源图片模型文件\md2">
       <UniqueIdentifier>{fb054429-6e78-465e-9d9f-7b3ed8c6924a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="资源图片模型文件\声音">
+      <UniqueIdentifier>{85419e92-0f16-4b0a-9caf-acecdf1a2503}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="资源图片模型文件\图片">
+      <UniqueIdentifier>{06c71b75-c8c5-4acc-a047-5d8d853c792e}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -173,6 +179,9 @@
     <ClInclude Include="include\pcx.h">
       <Filter>GameLib</Filter>
     </ClInclude>
+    <ClInclude Include="IShowObject.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="ini\Customkey.ini">
@@ -190,131 +199,131 @@
     <None Include="ini\texture.ini">
       <Filter>配置文件</Filter>
     </None>
-    <None Include="data\coolBoy.bmp">
-      <Filter>资源文件</Filter>
-    </None>
-    <None Include="data\Star.bmp">
-      <Filter>资源文件</Filter>
-    </None>
     <None Include="data\MD2\role.pcx">
-      <Filter>md2</Filter>
+      <Filter>资源图片模型文件\md2</Filter>
     </None>
     <None Include="data\MD2\tris.MD2">
-      <Filter>md2</Filter>
+      <Filter>资源图片模型文件\md2</Filter>
     </None>
     <None Include="data\MD2\weapon.MD2">
-      <Filter>md2</Filter>
+      <Filter>资源图片模型文件\md2</Filter>
     </None>
     <None Include="data\MD2\weapon.PCX">
-      <Filter>md2</Filter>
-    </None>
-    <None Include="data\sound\1065675029.mid">
-      <Filter>资源文件</Filter>
-    </None>
-    <None Include="data\sound\run.wav">
-      <Filter>资源文件</Filter>
+      <Filter>资源图片模型文件\md2</Filter>
     </None>
     <None Include="data\sound\-run.wav">
-      <Filter>资源文件</Filter>
+      <Filter>资源图片模型文件\声音</Filter>
     </None>
-    <None Include="data\sound\Shot.wav">
-      <Filter>资源文件</Filter>
+    <None Include="data\sound\1065675029.mid">
+      <Filter>资源图片模型文件\声音</Filter>
     </None>
-    <None Include="data\sound\Shot_low.wav">
-      <Filter>资源文件</Filter>
-    </None>
-    <None Include="data\images\ground_0.bmp">
-      <Filter>资源文件</Filter>
-    </None>
-    <None Include="data\images\ground_1.BMP">
-      <Filter>资源文件</Filter>
-    </None>
-    <None Include="data\images\ground_2.BMP">
-      <Filter>资源文件</Filter>
-    </None>
-    <None Include="data\images\ground_3.BMP">
-      <Filter>资源文件</Filter>
-    </None>
-    <None Include="data\images\ground_4.BMP">
-      <Filter>资源文件</Filter>
+    <None Include="data\coolBoy.bmp">
+      <Filter>资源图片模型文件\图片</Filter>
     </None>
     <None Include="data\images\ground_5.BMP">
-      <Filter>资源文件</Filter>
+      <Filter>资源图片模型文件\图片</Filter>
+    </None>
+    <None Include="data\images\ground_0.bmp">
+      <Filter>资源图片模型文件\图片</Filter>
+    </None>
+    <None Include="data\images\ground_1.BMP">
+      <Filter>资源图片模型文件\图片</Filter>
+    </None>
+    <None Include="data\images\ground_2.BMP">
+      <Filter>资源图片模型文件\图片</Filter>
+    </None>
+    <None Include="data\images\ground_3.BMP">
+      <Filter>资源图片模型文件\图片</Filter>
+    </None>
+    <None Include="data\images\ground_4.BMP">
+      <Filter>资源图片模型文件\图片</Filter>
+    </None>
+    <None Include="data\sound\run.wav">
+      <Filter>资源图片模型文件\声音</Filter>
+    </None>
+    <None Include="data\sound\Shot_low.wav">
+      <Filter>资源图片模型文件\声音</Filter>
+    </None>
+    <None Include="data\sound\Shot.wav">
+      <Filter>资源图片模型文件\声音</Filter>
     </None>
     <None Include="data\images\sky_0_BACK.BMP">
-      <Filter>资源文件</Filter>
-    </None>
-    <None Include="data\images\sky_0_front.BMP">
-      <Filter>资源文件</Filter>
-    </None>
-    <None Include="data\images\sky_0_left.BMP">
-      <Filter>资源文件</Filter>
-    </None>
-    <None Include="data\images\sky_0_RIGHT.BMP">
-      <Filter>资源文件</Filter>
-    </None>
-    <None Include="data\images\sky_0_TOP.BMP">
-      <Filter>资源文件</Filter>
-    </None>
-    <None Include="data\images\sky_1_BACK.BMP">
-      <Filter>资源文件</Filter>
-    </None>
-    <None Include="data\images\sky_1_FRONT.BMP">
-      <Filter>资源文件</Filter>
-    </None>
-    <None Include="data\images\sky_1_LEFT.BMP">
-      <Filter>资源文件</Filter>
-    </None>
-    <None Include="data\images\sky_1_RIGHT.BMP">
-      <Filter>资源文件</Filter>
-    </None>
-    <None Include="data\images\sky_1_Top.BMP">
-      <Filter>资源文件</Filter>
-    </None>
-    <None Include="data\images\sky_2_BACK.BMP">
-      <Filter>资源文件</Filter>
-    </None>
-    <None Include="data\images\sky_2_FRONT.BMP">
-      <Filter>资源文件</Filter>
-    </None>
-    <None Include="data\images\sky_2_LEFT.BMP">
-      <Filter>资源文件</Filter>
-    </None>
-    <None Include="data\images\sky_2_RIGHT.BMP">
-      <Filter>资源文件</Filter>
-    </None>
-    <None Include="data\images\sky_2_TOP.BMP">
-      <Filter>资源文件</Filter>
-    </None>
-    <None Include="data\images\sky_3_BACK.BMP">
-      <Filter>资源文件</Filter>
-    </None>
-    <None Include="data\images\sky_3_FRONT.BMP">
-      <Filter>资源文件</Filter>
-    </None>
-    <None Include="data\images\sky_3_LEFT.BMP">
-      <Filter>资源文件</Filter>
-    </None>
-    <None Include="data\images\sky_3_RIGHT.BMP">
-      <Filter>资源文件</Filter>
-    </None>
-    <None Include="data\images\sky_3_TOP.BMP">
-      <Filter>资源文件</Filter>
-    </None>
-    <None Include="data\images\sky_4_BACK.BMP">
-      <Filter>资源文件</Filter>
-    </None>
-    <None Include="data\images\sky_4_FRONT.BMP">
-      <Filter>资源文件</Filter>
-    </None>
-    <None Include="data\images\sky_4_LEFT.BMP">
-      <Filter>资源文件</Filter>
-    </None>
-    <None Include="data\images\sky_4_RIGHT.BMP">
-      <Filter>资源文件</Filter>
+      <Filter>资源图片模型文件\图片</Filter>
     </None>
     <None Include="data\images\sky_4_TOP.BMP">
-      <Filter>资源文件</Filter>
+      <Filter>资源图片模型文件\图片</Filter>
+    </None>
+    <None Include="data\images\sky_0_front.BMP">
+      <Filter>资源图片模型文件\图片</Filter>
+    </None>
+    <None Include="data\images\sky_0_left.BMP">
+      <Filter>资源图片模型文件\图片</Filter>
+    </None>
+    <None Include="data\images\sky_0_RIGHT.BMP">
+      <Filter>资源图片模型文件\图片</Filter>
+    </None>
+    <None Include="data\images\sky_0_TOP.BMP">
+      <Filter>资源图片模型文件\图片</Filter>
+    </None>
+    <None Include="data\images\sky_1_BACK.BMP">
+      <Filter>资源图片模型文件\图片</Filter>
+    </None>
+    <None Include="data\images\sky_1_FRONT.BMP">
+      <Filter>资源图片模型文件\图片</Filter>
+    </None>
+    <None Include="data\images\sky_1_LEFT.BMP">
+      <Filter>资源图片模型文件\图片</Filter>
+    </None>
+    <None Include="data\images\sky_1_RIGHT.BMP">
+      <Filter>资源图片模型文件\图片</Filter>
+    </None>
+    <None Include="data\images\sky_1_Top.BMP">
+      <Filter>资源图片模型文件\图片</Filter>
+    </None>
+    <None Include="data\images\sky_2_BACK.BMP">
+      <Filter>资源图片模型文件\图片</Filter>
+    </None>
+    <None Include="data\images\sky_2_FRONT.BMP">
+      <Filter>资源图片模型文件\图片</Filter>
+    </None>
+    <None Include="data\images\sky_2_LEFT.BMP">
+      <Filter>资源图片模型文件\图片</Filter>
+    </None>
+    <None Include="data\images\sky_2_RIGHT.BMP">
+      <Filter>资源图片模型文件\图片</Filter>
+    </None>
+    <None Include="data\images\sky_2_TOP.BMP">
+      <Filter>资源图片模型文件\图片</Filter>
+    </None>
+    <None Include="data\images\sky_3_BACK.BMP">
+      <Filter>资源图片模型文件\图片</Filter>
+    </None>
+    <None Include="data\images\sky_3_FRONT.BMP">
+      <Filter>资源图片模型文件\图片</Filter>
+    </None>
+    <None Include="data\images\sky_3_LEFT.BMP">
+      <Filter>资源图片模型文件\图片</Filter>
+    </None>
+    <None Include="data\images\sky_3_RIGHT.BMP">
+      <Filter>资源图片模型文件\图片</Filter>
+    </None>
+    <None Include="data\images\sky_3_TOP.BMP">
+      <Filter>资源图片模型文件\图片</Filter>
+    </None>
+    <None Include="data\images\sky_4_BACK.BMP">
+      <Filter>资源图片模型文件\图片</Filter>
+    </None>
+    <None Include="data\images\sky_4_FRONT.BMP">
+      <Filter>资源图片模型文件\图片</Filter>
+    </None>
+    <None Include="data\images\sky_4_LEFT.BMP">
+      <Filter>资源图片模型文件\图片</Filter>
+    </None>
+    <None Include="data\images\sky_4_RIGHT.BMP">
+      <Filter>资源图片模型文件\图片</Filter>
+    </None>
+    <None Include="data\Star.bmp">
+      <Filter>资源图片模型文件\图片</Filter>
     </None>
   </ItemGroup>
 </Project>

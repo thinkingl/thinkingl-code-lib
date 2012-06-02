@@ -7,65 +7,63 @@
 
 
 
-WorldModel::WorldModel(void)
+CWorldModel::CWorldModel(void)
 {
 //	m_visualServer = new VisualServerTemp();	//  先暂时定义一个临时的服务器类对象.
-	// 获得角色实例的指针.
-	pRole = CRole::GetInstance();
-
+	// 获得角色实例的指针.	
 }
 
-WorldModel::~WorldModel(void)
+CWorldModel::~CWorldModel(void)
 {
 }
 
 
 // 向前走一步.
-void WorldModel::Forward(void)
+void CWorldModel::Forward(void)
 {
 	PlaySound("data\\sound\\run.wav",NULL,SND_ASYNC | SND_NOSTOP);//|SND_LOOP);
 
-	pRole->Walk( MoveDirector::Forward );
+	m_mainRole.Walk( MoveDirector::Forward );
 	//roleMoveStatus.vPos = roleMoveStatus.vPos + roleMoveStatus.vMoveDirector * roleMoveStatus.fSpeed ;
 }
 
 // 向后走一步.
-void WorldModel::Back(void)
+void CWorldModel::Back(void)
 {
 	PlaySound("data\\sound\\run.wav",NULL,SND_ASYNC | SND_NOSTOP);
 
-	pRole->Walk( MoveDirector::Back );
+	m_mainRole.Walk( MoveDirector::Back );
 	//roleMoveStatus.vPos = roleMoveStatus.vPos - roleMoveStatus.vMoveDirector * roleMoveStatus.fSpeed ;
 }
 
 // 向左一步.
-void WorldModel::Left(void)
+void CWorldModel::Left(void)
 {
 	PlaySound("data\\sound\\run.wav",NULL,SND_ASYNC | SND_NOSTOP);
 
 
-	pRole->Walk( MoveDirector::Left );
+	m_mainRole.Walk( MoveDirector::Left );
 	//Vector3f yAxis = Vector3f( 0.0f , 1.0f ,0.0f );
 	//Vector3f croosAxis = Normalize( Cross( roleMoveStatus.vMoveDirector , yAxis) );
 	//roleMoveStatus.vPos = roleMoveStatus.vPos - croosAxis * roleMoveStatus.fSpeed ;
 }
 
 // 向右一步.
-void WorldModel::Right(void)
+void CWorldModel::Right(void)
 {
 	PlaySound("data\\sound\\run.wav",NULL,SND_ASYNC | SND_NOSTOP);
 
 
-	pRole->Walk( MoveDirector::Right );
+	m_mainRole.Walk( MoveDirector::Right );
 	//Vector3f yAxis = Vector3f( 0.0f , 1.0f ,0.0f );
 	//Vector3f croosAxis = Normalize( Cross( roleMoveStatus.vMoveDirector , yAxis) );
 	//roleMoveStatus.vPos = roleMoveStatus.vPos + croosAxis * roleMoveStatus.fSpeed ;
 }
 
-void WorldModel::RoleDosomeAction()
+void CWorldModel::RoleDosomeAction()
 {
 	static int action = ATTACK;
-	pRole->DoAct( action, 2000 );
+	m_mainRole.DoAct( action, 2000 );
 	action ++;
 
 	if ( action > BOOM )
@@ -74,20 +72,20 @@ void WorldModel::RoleDosomeAction()
 	}
 }
 
-void WorldModel::Jump()
+void CWorldModel::Jump()
 {
 	PlaySound("data\\sound\\run.wav",NULL,SND_ASYNC | SND_NOSTOP);
-	pRole->DoAct( JUMP, 500 );
+	m_mainRole.DoAct( JUMP, 500 );
 }
 
-void WorldModel::Fire()
+void CWorldModel::Fire()
 {
 	PlaySound("data\\sound\\Shot_low.wav",NULL,SND_ASYNC );
-	pRole->DoAct( ATTACK, 500 );
+	m_mainRole.DoAct( ATTACK, 500 );
 }
 
 // 初始化
-bool WorldModel::Init()
+bool CWorldModel::Init()
 {
 
 	//roleMoveStatus.fSpeed = 0.05f;
@@ -99,7 +97,7 @@ bool WorldModel::Init()
 
 //
 //将向量vRot绕轴v旋转angle角度 
-bool WorldModel::RotateV( Vector3f &vRot, Vector3f v,float angle)
+bool CWorldModel::RotateV( Vector3f &vRot, Vector3f v,float angle)
 {
 
 	vRot = Cross( vRot , v ) * sin(angle) + vRot * cos(angle);
@@ -108,7 +106,7 @@ bool WorldModel::RotateV( Vector3f &vRot, Vector3f v,float angle)
 }
 
 // 更新现在角色的方向.
-//void WorldModel::UpdateRoleDirector(int xMoved , int yMoved)
+//void CWorldModel::UpdateRoleDirector(int xMoved , int yMoved)
 //{
 //	
 //		// 利用向量乘法解决。
@@ -128,10 +126,26 @@ bool WorldModel::RotateV( Vector3f &vRot, Vector3f v,float angle)
 //}
 
 // 更新角色信息
-//bool WorldModel::UpdateRoleState()
+//bool CWorldModel::UpdateRoleState()
 //{
 //	CRole::GetInstance()->SetRolePos( roleMoveStatus.vPos );
 //	CRole::GetInstance()->SetRoleDirector( roleMoveStatus.vRoleDirector);
 //	return true;
 //}
 
+bool CWorldModel::UpdateViewDirection( int xMoved , int yMoved )
+{
+	return this->m_mainRole.UpdateDirection( xMoved, yMoved );
+}
+
+CRolePointList CWorldModel::GetAllRole()
+{
+	CRolePointList allRole;
+	allRole.push_back( &m_mainRole );
+	return allRole;
+}
+
+CRole* CWorldModel::GetMainRole()
+{
+	return &m_mainRole;
+}

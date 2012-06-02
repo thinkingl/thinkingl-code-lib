@@ -123,6 +123,7 @@
     <ClInclude Include="include\DirectInput.h" />
     <ClInclude Include="GLShow.h" />
     <ClInclude Include="InputReader.h" />
+    <ClInclude Include="IShowObject.h" />
     <ClInclude Include="Map.h" />
     <ClInclude Include="ModelManager.h" />
     <ClInclude Include="MyMathArithmetic.h" />

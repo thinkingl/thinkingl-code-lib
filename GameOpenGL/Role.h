@@ -9,6 +9,7 @@
 #include "ModelManager.h"
 
 #include "timer.h"
+#include "IShowObject.h"
 
 //const unsigned int FORWARD = 0;
 //const unsigned int BACK = 1;
@@ -92,21 +93,24 @@ struct stRoleState{
 
 
 
-class CRole
+class CRole : public IShowObject
 {
 
 public:
 	CRole(void);
 
 	// singleton functions
-	static CRole	*GetInstance();
-
-
-	static void	FreeInstance();
+// 	static CRole	*GetInstance();
+// 
+// 
+// 	static void	FreeInstance();
 
 
 public:
 	~CRole(void);
+
+public:
+	virtual void Show();
 public:
 	bool Init();			// 初始化英雄状态。
 	
@@ -120,7 +124,7 @@ public:
 
 	bool SetRoleDirector( Vector3f roleDir );
 
-	bool Show();
+	
 
 	// 向指定方向走一步.
 	bool Walk( enum MoveDirector dir);
@@ -140,7 +144,7 @@ private:
 	void ResetStopActionTimer( int autoStopMSec );
 	void KillStopActionTimer();
 private:
-	static CRole *m_singleton;
+//	static CRole *m_singleton;
 
 	UINT m_stopActionTimerId;
 //	ModelManager * pModelManager;	//	模型管理对象指针.
@@ -156,4 +160,6 @@ private:
 //	int m_doing;
 
 };
+
+typedef std::vector< CRole* > CRolePointList;
 

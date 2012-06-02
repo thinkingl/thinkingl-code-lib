@@ -1,4 +1,4 @@
-///WorldModel.h//////////////////
+///CWorldModel.h//////////////////
 ///WorldModel类的头文件./////
 ///李之兴///
 ////这个类目的是实现一个世界的抽象模型.
@@ -35,11 +35,11 @@
 
 
 
-class WorldModel
+class CWorldModel
 {
 public:
-	WorldModel(void);
-	~WorldModel(void);
+	CWorldModel(void);
+	~CWorldModel(void);
 
 
 private:
@@ -51,12 +51,21 @@ private:
 	bool RotateV( Vector3f &vRot, Vector3f v,float angle);
 
 	// 角色
-	CRole *pRole;
+	CRole m_mainRole;
+
+public:
+	// 显示绘制所有的人物. 临时这样处理, 放在这里并不合理.
+	CRolePointList GetAllRole();
+
+	CRole * GetMainRole();
 
 public:
 
 	// 初始化
 	bool Init();
+
+	bool UpdateViewDirection( int xMoved , int yMoved );
+
 	// 向前走一步.
 	void Forward(void);
 	// 向后走一步.

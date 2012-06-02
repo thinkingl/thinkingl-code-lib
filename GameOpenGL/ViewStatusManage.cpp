@@ -7,7 +7,8 @@
 
 #define constSetupFile  "ini\\setup.ini"
 
-Camera::Camera(void)
+Camera::Camera( CRole* pMainRole )
+	:m_pMainRole( pMainRole )
 {
 	//////////////进行视点的状态初始化,完成后,视点在0点,望向屏幕里(Z轴负方向),屏幕正上方与视点正上方重合.
 	viewStatus.viewAt = Vector3f( 0.0f , HERO_HEIGHT , 0.0f );
@@ -59,8 +60,7 @@ VIEWSTATUS Camera::GetViewStatus(void)
 // 更新摄像机位置和角度。
 bool Camera::Update()
 {
-	CRole * pRole;
-	pRole = CRole::GetInstance();
+	CRole * pRole = m_pMainRole;
 	switch ( viewModal )	// Check the view modal .
 	{	
 		

@@ -5,7 +5,7 @@
 const float ROTATE_SPEED = 0.001f;
 const int constTimeToRun = 500;
 
-CRole *CRole::m_singleton = 0;
+//CRole *CRole::m_singleton = 0;
 
 CRole::CRole(void)
 {
@@ -46,25 +46,25 @@ stRoleState CRole::GetRoleState()
 	
 }
 
-CRole *CRole::GetInstance()
-{
-	if( m_singleton == 0 )
-		m_singleton = new CRole;
-
-	return ((CRole *)m_singleton);
-}
-
-void CRole::FreeInstance()
-{
-	if( m_singleton != 0 )
-	{
-		delete m_singleton;
-		m_singleton = 0;
-	}
-}
+// CRole *CRole::GetInstance()
+// {
+// 	if( m_singleton == 0 )
+// 		m_singleton = new CRole;
+// 
+// 	return ((CRole *)m_singleton);
+// }
+// 
+// void CRole::FreeInstance()
+// {
+// 	if( m_singleton != 0 )
+// 	{
+// 		delete m_singleton;
+// 		m_singleton = 0;
+// 	}
+// }
 
 // 显示角色
-bool CRole::Show()
+void CRole::Show()
 {
 	glPushMatrix();
 
@@ -73,7 +73,6 @@ bool CRole::Show()
 	glRotatef( 180/3.1416 * atan2( roleState.vDirection.z , roleState.vDirection.x ) - 90.0f  , 0.0f , -1.0f ,0.0f );
 	ModelManager::GetInstance()->Show( 0 );
 	glPopMatrix();
-	return 0;
 }
 
 // 设置角色位置和方向

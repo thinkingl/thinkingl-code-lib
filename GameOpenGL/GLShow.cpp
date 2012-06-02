@@ -1,9 +1,9 @@
-// OpenGL.cpp: implementation of the OpenGL class.
+// COpenGL.cpp: implementation of the COpenGL class.
 //程序设计：李之兴
 
 //////////////////////////////////////////////////////////////////////
 //#include "stdafx.h"
-//#include "OpenGL.h"
+//#include "COpenGL.h"
 //////////////////////////////////////////////////////////////////////
 #include "stdafx.h"
 //#include "Objects.h"
@@ -17,7 +17,7 @@ extern HWND	hWnd;
 
 
 
-OpenGL::OpenGL()
+COpenGL::COpenGL()
 {
 	// 初始化变量.
 	LightAmbient[0] = LightAmbient[1] = LightAmbient[2] = LightAmbient[3] =  0.5f ;		//Ambient light values.
@@ -25,11 +25,11 @@ OpenGL::OpenGL()
 	LightPosition[2] = 1.0f  ;		//Light position.
 	LightPosition[0] = LightPosition[1] = LightPosition[3] = 0.0f;
 }
-OpenGL::~OpenGL()
+COpenGL::~COpenGL()
 {
 	CleanUp();
 }
-BOOL OpenGL::SetupPixelFormat(HDC hDC)	  // 检测安装OpenGL
+BOOL COpenGL::SetupPixelFormat(HDC hDC)	  // 检测安装OpenGL
 {	
 	int nPixelFormat;					  // 象素点格式
 
@@ -101,7 +101,7 @@ BOOL OpenGL::SetupPixelFormat(HDC hDC)	  // 检测安装OpenGL
 		
 	return TRUE;
 }
-void OpenGL::Resize( )
+void COpenGL::Resize( )
 {
 	RECT rectClient;
    GetClientRect( m_hWnd , & rectClient );	//获得当前窗口的客户区大小。
@@ -121,7 +121,7 @@ void OpenGL::Resize( )
 	glLoadIdentity();									// 重置当前指定的矩阵为单位矩阵
 
 }
-void OpenGL::Render()								// OpenGL图形处理
+void COpenGL::Render()								// OpenGL图形处理
 {	
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);		   // 设置刷新背景色
 	glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);// 刷新背景
@@ -135,7 +135,7 @@ void OpenGL::Render()								// OpenGL图形处理
 
 
 }
-void OpenGL::CleanUp()//清除OpenGL
+void COpenGL::CleanUp()//清除OpenGL
 {
 	 wglMakeCurrent(m_hDC, NULL);                       //清除OpenGL
 	 wglDeleteContext(m_hRC);                           //清除OpenGL
@@ -143,14 +143,20 @@ void OpenGL::CleanUp()//清除OpenGL
 
 }
 
-void OpenGL::Show(void)
+void COpenGL::Show(void)
 {
+	for ( size_t i=0; i<m_showObjectList.size(); ++i )
+	{
+		m_showObjectList[i]->Show();
+	}
 	m_scene.DrawTheScene();			// 画出场景
-	CRole::GetInstance()->Show();	// 画出角色
+
+	
+
 	m_object.Box1();				// 测试箱子...............
 }
 
-//void OpenGL::LightContrl(bool order)
+//void COpenGL::LightContrl(bool order)
 //{
 //	if(order)
 //	{////////order =1 ,open the light.
@@ -161,7 +167,7 @@ void OpenGL::Show(void)
 //		glDisable(GL_LIGHTING);
 //	}
 //}
-void OpenGL::ChangeFilter(void)
+void COpenGL::ChangeFilter(void)
 {
 	m_object.filter++;
 	if(m_object.filter > 2)
@@ -172,7 +178,7 @@ void OpenGL::ChangeFilter(void)
 
 
 	// OpenGL的初始化。绑定设备。
-BOOL OpenGL::Init(HWND hWnd)
+BOOL COpenGL::Init(HWND hWnd)
 {
 	m_hWnd = hWnd;
 	m_hDC = GetDC( hWnd );
@@ -183,7 +189,7 @@ BOOL OpenGL::Init(HWND hWnd)
 }
 
 //初始化OpenGL的设置。
-bool OpenGL::InitOpenGL(void)
+bool COpenGL::InitOpenGL(void)
 {
 	   
     glClearColor(0.3f, 0.3f, 0.3f, 1.0f);			
@@ -194,5 +200,10 @@ bool OpenGL::InitOpenGL(void)
 	glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
 
 		
-    return true;
+	return true;
+}
+
+void COpenGL::AddShowObject( IShowObject* pShowObj )
+{
+	m_showObjectList.push_back( pShowObj );
 }

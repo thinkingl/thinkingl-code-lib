@@ -1,0 +1,10 @@
+#pragma once
+
+/** ÏÔÊ¾½Ó¿Ú. */
+class IShowObject
+{
+public:
+	virtual void Show() = 0;
+};
+
+typedef std::vector< IShowObject* > CShowObjectPointList;
