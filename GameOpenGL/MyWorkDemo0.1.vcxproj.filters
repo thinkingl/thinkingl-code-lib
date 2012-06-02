@@ -75,9 +75,6 @@
     <ClCompile Include="TextureManager.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="Timer.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="ViewStatusManage.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
@@ -144,9 +141,6 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="TextureManager.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="Timer.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="ViewStatusManage.h">

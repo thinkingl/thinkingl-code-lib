@@ -53,6 +53,10 @@ private:
 	// 角色
 	CRole m_mainRole;
 
+	// 群众演员.
+	typedef std::vector< CRole > CRoleList;
+	CRoleList m_roleList;
+
 public:
 	// 显示绘制所有的人物. 临时这样处理, 放在这里并不合理.
 	CRolePointList GetAllRole();

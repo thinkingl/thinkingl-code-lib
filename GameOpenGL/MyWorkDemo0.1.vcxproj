@@ -104,10 +104,6 @@
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="stdafx.cpp" />
     <ClCompile Include="TextureManager.cpp" />
-    <ClCompile Include="Timer.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-    </ClCompile>
     <ClCompile Include="ViewStatusManage.cpp" />
     <ClCompile Include="VisualServerTemp.cpp" />
     <ClCompile Include="Win32Input.cpp" />
@@ -133,7 +129,6 @@
     <ClInclude Include="Scene.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="TextureManager.h" />
-    <ClInclude Include="Timer.h" />
     <ClInclude Include="ViewStatusManage.h" />
     <ClInclude Include="VisualServerTemp.h" />
     <ClInclude Include="Win32Input.h" />

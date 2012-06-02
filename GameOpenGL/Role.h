@@ -8,7 +8,6 @@
 #include "MymathArithmetic.h"
 #include "ModelManager.h"
 
-#include "timer.h"
 #include "IShowObject.h"
 
 //const unsigned int FORWARD = 0;
@@ -112,7 +111,7 @@ public:
 public:
 	virtual void Show();
 public:
-	bool Init();			// 初始化英雄状态。
+	bool Init( const stRoleState& initSt, int modelId );			// 初始化英雄状态。
 	
 	stRolePropertiy GetRolePropertiy();
 	stRoleState		GetRoleState();
@@ -150,7 +149,7 @@ private:
 //	ModelManager * pModelManager;	//	模型管理对象指针.
 
 	stRolePropertiy rolePropertiy;	// 英雄属性
-	stRoleState roleState;			// 英雄状态。
+	stRoleState m_roleState;			// 英雄状态。
 
 	int m_curRoleAct;
 	//	定时器指针
@@ -158,6 +157,9 @@ private:
 
 	//	角色正在执行的指令
 //	int m_doing;
+
+	// 角色的模型id.
+	int m_modelId;
 
 };
 
