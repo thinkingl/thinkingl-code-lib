@@ -1,18 +1,19 @@
-// OpenGL.h: interface for the OpenGL class.
+// COpenGL.h: interface for the COpenGL class.
 //
 //////////////////////////////////////////////////////////////////////
 #include "Objects.h"
 #include "stdafx.h"
 #include "Scene.h"
+#include "IShowObject.h"
 
 #pragma once
 
 
-class OpenGL  
+class COpenGL  
 {	
 public:	
-	OpenGL();
-	virtual ~OpenGL();
+	COpenGL();
+	virtual ~COpenGL();
 	public:
 
 
@@ -46,5 +47,10 @@ public:
 	// OpenGL的初始化。绑定设备。
 	BOOL Init(HWND hWnd);
 	bool InitOpenGL(void);
+
+public:
+	void AddShowObject( IShowObject* pShowObj );
+private:
+	CShowObjectPointList m_showObjectList;
 };
 

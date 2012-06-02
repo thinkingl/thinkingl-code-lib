@@ -24,10 +24,11 @@ struct ViewWow		// 魔兽世界式的观察模式时,存储距离和角度
 	float viewAngle;		// 视点和角色之间连线和地平面之间的角度.
 };
 
+class CRole;
 class Camera
 {
 public:
-	Camera(void);
+	Camera( CRole* pMainRole );
 	~Camera(void);
 
 private:
@@ -56,4 +57,7 @@ public:
 
 	// 更新现在观看的视角.
 	//void SetCamera(int xMoved , int yMoved);
+
+private:
+	CRole *m_pMainRole;
 };

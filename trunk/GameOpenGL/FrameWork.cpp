@@ -27,11 +27,12 @@
 
 UINT TIMER_ID;				//  多媒体定时器的标识.
 Control gameControl;		//  定义一个游戏控制对象,翻译用户的输入为游戏控制命令.
-OpenGL  OpenGL;				//  定义一个OpenGL显示的对象,功能是显示.
-WorldModel  worldModel;		//  定义一个世界模型的对象.
-Camera camera ;				//  控制摄像机(屏幕显示)的类的指针.
+COpenGL  openGL;				//  定义一个OpenGL显示的对象,功能是显示.
+CWorldModel  worldModel;		//  定义一个世界模型的对象.
+Camera * g_pCamera = 0;				//  控制摄像机(屏幕显示)的类的指针.
 OpenGLWindow openGLWindow ;	// 窗口类。
-CRole * pRole;					//  游戏角色。
+//CRole * pRole;					//  游戏角色。
+
 
 
 /////////////////////////////////////////////////////////////////////////////
@@ -68,11 +69,11 @@ LRESULT WINAPI MsgProc(HWND hWnd,UINT message,WPARAM wParam,LPARAM lParam )// 消
 	switch(message)
 	{	
 		case WM_CLOSE:						// 关闭窗口
-			OpenGL.CleanUp();			// 结束处理
+			openGL.CleanUp();			// 结束处理
 			PostQuitMessage(0);
 			return 0;		break;
 		case WM_SIZE:						// 窗口尺寸变化
-			OpenGL.Resize();
+			openGL.Resize();
 			return 0;		break;
 		case WM_DESTROY:					// 退出消息
             PostQuitMessage(0);
@@ -81,10 +82,10 @@ LRESULT WINAPI MsgProc(HWND hWnd,UINT message,WPARAM wParam,LPARAM lParam )// 消
 
 		case WM_TIMER:	//系统定时器消息,主要用来为屏幕重画定时.
 			{
-				camera.Update();
+				g_pCamera->Update();
 
 
-				OpenGL.Render();		//遇到定时器消息则重画屏幕.
+				openGL.Render();		//遇到定时器消息则重画屏幕.
 			}
 			return 0;		break;
 			
@@ -109,7 +110,7 @@ int PASCAL WinMain( HINSTANCE hInst, HINSTANCE hPrevInstance,  LPSTR lpCmdLine, 
 	// 创建窗口并进行初始化。
 	hWnd = openGLWindow.IniWindow(hInst,nCmdShow,MsgProc);
 	
-	OpenGL.Init(hWnd);		// 初始化OpenGL。
+	openGL.Init(hWnd);		// 初始化OpenGL。
 
 	// 初始化纹理管理器.
 	TextureManager::GetInstance();
@@ -117,11 +118,17 @@ int PASCAL WinMain( HINSTANCE hInst, HINSTANCE hPrevInstance,  LPSTR lpCmdLine, 
 	// 游戏输入控制对象初始化.
 	gameControl.Initialize( hWnd );
 
-	// 初始化游戏角色。
-	pRole = CRole::GetInstance();
 	// 初始化游戏
 	worldModel.Init();
 
+	CRolePointList allRole = worldModel.GetAllRole();
+	for ( size_t i=0; i<allRole.size(); ++i )
+	{
+		openGL.AddShowObject( allRole[i] );
+	}
+
+	g_pCamera = new Camera( worldModel.GetMainRole() );
+	
 	// 初始化地图.
 //	map.Init();
 
@@ -155,7 +162,7 @@ int PASCAL WinMain( HINSTANCE hInst, HINSTANCE hPrevInstance,  LPSTR lpCmdLine, 
 	GameLoop();	 //  进入消息循环
 
 	// 退出程序，进行内存清理。
-	OpenGL.CleanUp();	// 结束处理
+	openGL.CleanUp();	// 结束处理
 	KillTimer( hWnd,IDT_TIMERDRAW);//  删除系统定时器.
 	timeEndPeriod( wTimerRes );			//  删除多媒体定时器的精度.
 	timeKillEvent( TIMER_ID );
@@ -170,7 +177,8 @@ void WINAPI	TimerProc (UINT wTimerID, UINT msg,DWORD dwUser,DWORD dwl,DWORD dw2)
 			gameControl.Update();
 			CarryOut( gameControl.GetOrderList());	// 执行用户输入的命令.
 //			worldModel.UpdateRoleDirector( gameControl.GetMouseRelMoveX() , gameControl.GetMouseRelMoveY() );
-			pRole->UpdateDirection( gameControl.GetMouseRelMoveX() , gameControl.GetMouseRelMoveY () );
+
+			worldModel.UpdateViewDirection( gameControl.GetMouseRelMoveX() , gameControl.GetMouseRelMoveY () );
 		}
 }
 ///退出游戏的消息循环.
