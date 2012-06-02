@@ -92,6 +92,18 @@ bool CWorldModel::Init()
 	//roleMoveStatus.vPos = Vector3f( 0.0f ,0.0f ,0.0f );
 	//roleMoveStatus.vMoveDirector = roleMoveStatus.vRoleDirector = Vector3f( 0.0f , 0.0f ,-1.0f);
 	//roleMoveStatus.vUp = Vector3f( 0.0f , 1.0f , 0.0f );
+
+	// 防止重新分配内存造成崩溃.
+	m_roleList.reserve( 1000 );
+
+	stRoleState initSt;
+	initSt.vAbsolutePos = Vector3f( -5.0f ,0.0f ,-0.0f );
+	initSt.vDirection = Vector3f( 1.0f , 0.0f ,0.0f );
+	initSt.fSpeed = 0.03f;
+	CRole another;
+	another.Init( initSt, 2 );
+	m_roleList.push_back( another );
+
 	return 0;
 }
 
@@ -141,7 +153,13 @@ bool CWorldModel::UpdateViewDirection( int xMoved , int yMoved )
 CRolePointList CWorldModel::GetAllRole()
 {
 	CRolePointList allRole;
+	
 	allRole.push_back( &m_mainRole );
+	
+	for ( size_t i = 0; i<m_roleList.size(); ++i )
+	{
+		allRole.push_back( &m_roleList[i] );
+	}
 	return allRole;
 }
 
