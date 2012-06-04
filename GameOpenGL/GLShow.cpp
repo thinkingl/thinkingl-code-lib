@@ -20,8 +20,8 @@ extern HWND	hWnd;
 COpenGL::COpenGL()
 {
 	// 初始化变量.
-	LightAmbient[0] = LightAmbient[1] = LightAmbient[2] = LightAmbient[3] =  0.5f ;		//Ambient light values.
-	LightDiffuse[0] = LightDiffuse[1] = LightDiffuse[2] = LightDiffuse[3] = 1.0f ;		//Diffuse light values.
+	LightAmbient[0] = LightAmbient[1] = LightAmbient[2] = LightAmbient[3] =  0.0f ;		//Ambient light values.
+	LightDiffuse[0] = LightDiffuse[1] = LightDiffuse[2] = LightDiffuse[3] = 0.5f ;		//Diffuse light values.
 	LightPosition[2] = 1.0f  ;		//Light position.
 	LightPosition[0] = LightPosition[1] = LightPosition[3] = 0.0f;
 }
@@ -88,7 +88,7 @@ BOOL COpenGL::SetupPixelFormat(HDC hDC)	  // 检测安装OpenGL
 	glLightfv(GL_LIGHT1,GL_DIFFUSE,LightDiffuse);
 	glLightfv(GL_LIGHT1,GL_POSITION,LightPosition);
 	glEnable(GL_LIGHT1);
-	glEnable(GL_LIGHTING);
+	//glEnable(GL_LIGHTING);
 
 // 	GLuint	fogMode[]= { GL_EXP, GL_EXP2, GL_LINEAR };	// Storage For Three Types Of Fog
 // 	GLfloat	fogColor[4] = {0.5f,0.5f,0.5f,1.0f};		// Fog Color
