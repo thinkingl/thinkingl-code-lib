@@ -7,6 +7,8 @@
 #include "SZMapDlg.h"
 #include "afxdialogex.h"
 #include "DialogConfig.h"
+#include "chinamapdeviationfix.h"
+#include <set>
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -82,6 +84,8 @@ BEGIN_MESSAGE_MAP(CSZMapDlg, CDialogEx)
 	ON_BN_CLICKED(IDC_BUTTON_GO_TO_KEDA, &CSZMapDlg::OnBnClickedButtonGoToKeda)
 	ON_BN_CLICKED(IDC_BUTTON_GO, &CSZMapDlg::OnBnClickedButtonGo)
 	ON_BN_CLICKED(ID_BUTTON_DOWNLOAD, &CSZMapDlg::OnBnClickedButtonDownload)
+	ON_BN_CLICKED(IDC_BUTTON_MAR_EARTH, &CSZMapDlg::OnBnClickedButtonMarEarth)
+	ON_BN_CLICKED(IDC_BUTTON_EARTH_MAR, &CSZMapDlg::OnBnClickedButtonEarthMar)
 END_MESSAGE_MAP()
 
 
@@ -368,4 +372,76 @@ void CSZMapDlg::OnBnClickedButtonDownload()
 		m_mapDownloadDlg.Create( CMapDownloadDialog::IDD, this );
 		m_mapDownloadDlg.ShowWindow( SW_SHOW );
 	}
+}
+
+
+void CSZMapDlg::OnBnClickedButtonMarEarth()
+{
+	// TODO: 在此添加控件通知处理程序代码
+	this->UpdateData();
+
+	CChinaMapDeviationFix fixer;
+	double earthLongitude, earthLatitude;
+	fixer.MarsToEarth( this->m_dbGoLongitude, this->m_dbGoLatitude, earthLongitude, earthLatitude );
+
+	// 校验.
+	double marsLongitudeTest, marsLatitudeTest;
+	fixer.EarthToMars( earthLongitude, earthLatitude, marsLongitudeTest, marsLatitudeTest );
+	double longitudeOffset = abs( marsLongitudeTest - this->m_dbGoLongitude );
+	double latitudeOffset = abs( marsLatitudeTest - m_dbGoLatitude );
+
+	std::stringstream ssMsg;
+	ssMsg << setprecision( 20 ) 
+		<< " mars latitude, longitude : " << m_dbGoLatitude  << " , " << m_dbGoLongitude 
+		<< " \nEarth : " << earthLatitude << " , " << earthLongitude
+		<< " \n反向运算误差 : 经: " << longitudeOffset  << " , " << (int)longitudeOffset * 40000*1000 / 360 
+		<< " 米 纬: " << latitudeOffset  << " , " << (int)latitudeOffset * 40000*1000 / 360 << " 米";
+
+
+	CString strMsg;
+
+	strMsg = ssMsg.str().c_str();
+	this->MessageBox( strMsg );
+// 	
+// 	strMsg.Format( _T( "mars latitude : %lf mars longitude : %lf Earth : %lf, %lf \n\
+// 					   反向运算误差 : 经: %lf %d米 纬: %lf %d米" ), 
+// 					   m_dbGoLatitude, m_dbGoLongitude,
+// 					   earthLatitude, earthLongitude,
+// 					   longitudeOffset, (int)longitudeOffset * 40000*1000 / 360,
+// 					   latitudeOffset, (int)latitudeOffset * 40000*1000 / 360
+// 					   );
+// 
+// 	this->MessageBox( strMsg );
+}
+
+
+void CSZMapDlg::OnBnClickedButtonEarthMar()
+{
+	// TODO: 在此添加控件通知处理程序代码
+	this->UpdateData();
+
+	CChinaMapDeviationFix fixer;
+
+	double marsLongitudeTest, marsLatitudeTest;
+	fixer.EarthToMars( this->m_dbGoLongitude, this->m_dbGoLatitude, marsLongitudeTest, marsLatitudeTest );
+
+	double earthLongitude, earthLatitude;
+	fixer.MarsToEarth( marsLongitudeTest, marsLatitudeTest, earthLongitude, earthLatitude );
+
+	// 校验.	
+	double longitudeOffset = abs( earthLongitude - this->m_dbGoLongitude );
+	double latitudeOffset = abs( earthLatitude - m_dbGoLatitude );
+
+	std::stringstream ssMsg;
+	ssMsg << setprecision( 20 ) 
+		<< " Earth latitude, longitude : " << m_dbGoLatitude  << " , " << m_dbGoLongitude 
+		<< " \nMar : " << marsLatitudeTest << " , " << marsLongitudeTest
+		<< " \n反向运算误差 : 经: " << longitudeOffset  << " , " << (int)longitudeOffset * 40000*1000 / 360 
+		<< " 米 纬: " << latitudeOffset  << " , " << (int)latitudeOffset * 40000*1000 / 360 << " 米";
+
+
+	CString strMsg;
+	strMsg = ssMsg.str().c_str();
+	this->MessageBox( strMsg );
+
 }

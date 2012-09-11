@@ -4,7 +4,7 @@
 #include "Log.h"
 
 // 搞到的数据的精度是 0.025 个经纬度.
-const double CORRECTION_POINTS_PRECISION = 0.025 + 0.02;
+const double CORRECTION_POINTS_PRECISION = 0.025 /*+ 0.02*/;
 
 CChinaMapDeviationFix::CChinaMapDeviationFix()
 {

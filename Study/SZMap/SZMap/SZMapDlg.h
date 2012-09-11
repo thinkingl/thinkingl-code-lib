@@ -59,4 +59,6 @@ public:
 	double m_dbGoLongitude;
 	afx_msg void OnBnClickedButtonGo();
 	afx_msg void OnBnClickedButtonDownload();
+	afx_msg void OnBnClickedButtonMarEarth();
+	afx_msg void OnBnClickedButtonEarthMar();
 };
