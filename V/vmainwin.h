@@ -12,6 +12,10 @@ public:
 	CVMainWin(QWidget *parent = 0, Qt::WFlags flags = 0);
 	~CVMainWin();
 
+private slots: // 工具栏/菜单 处理.
+		// 连接一个用户.
+		void ConnectUserByAddress();
+
 private:
 	Ui::vClass ui;
 };
