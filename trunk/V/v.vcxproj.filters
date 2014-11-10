@@ -50,6 +50,15 @@
     <ClCompile Include="vmainwin.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_dlgadduserbyaddress.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_dlgadduserbyaddress.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="dlgadduserbyaddress.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="v.qrc">
@@ -61,6 +70,12 @@
     <CustomBuild Include="vmainwin.ui">
       <Filter>Form Files</Filter>
     </CustomBuild>
+    <CustomBuild Include="dlgadduserbyaddress.ui">
+      <Filter>Form Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="dlgadduserbyaddress.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="v.rc" />
@@ -69,8 +84,13 @@
     <ClInclude Include="GeneratedFiles\ui_vmainwin.h">
       <Filter>Generated Files</Filter>
     </ClInclude>
+    <ClInclude Include="GeneratedFiles\ui_dlgadduserbyaddress.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="log.txt" />
+    <None Include="protocol.txt" />
+    <None Include="v.ico" />
   </ItemGroup>
 </Project>
