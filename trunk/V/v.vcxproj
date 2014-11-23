@@ -97,7 +97,9 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="User.cpp" />
     <ClCompile Include="vmainwin.cpp" />
+    <ClCompile Include="VModel.cpp" />
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="vmainwin.h">
@@ -141,6 +143,8 @@
     <ResourceCompile Include="v.rc" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="User.h" />
+    <ClInclude Include="VModel.h" />
     <CustomBuild Include="dlgadduserbyaddress.h">
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath);$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Moc%27ing dlgadduserbyaddress.h...</Message>

@@ -17,6 +17,9 @@ CVMainWin::~CVMainWin()
 
 void CVMainWin::ConnectUserByAddress()
 {
-	CDlgAddUserByAddress dlg;
-	dlg.exec();
+	CDlgAddUserByAddress dlg( &m_vModel, this );
+	if( QDialog::Accepted == dlg.exec() )
+	{
+		
+	}
 }
