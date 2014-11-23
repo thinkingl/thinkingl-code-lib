@@ -3,6 +3,7 @@
 
 #include <QtGui/QMainWindow>
 #include "ui_vmainwin.h"
+#include "VModel.h"
 
 class CVMainWin : public QMainWindow
 {
@@ -18,6 +19,9 @@ private slots: // 工具栏/菜单 处理.
 
 private:
 	Ui::vClass ui;
+
+private:
+	CVModel m_vModel;
 };
 
 #endif // V_H
