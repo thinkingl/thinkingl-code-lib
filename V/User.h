@@ -25,6 +25,7 @@ public:
 	string GetIP() const;
 	int GetPort() const;
 
+
 private:
 	// ÓÃ»§µÄIP.
 	string m_ip;

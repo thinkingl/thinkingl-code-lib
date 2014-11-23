@@ -98,6 +98,7 @@
     </ClCompile>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="User.cpp" />
+    <ClCompile Include="UserConnectTask.cpp" />
     <ClCompile Include="vmainwin.cpp" />
     <ClCompile Include="VModel.cpp" />
   </ItemGroup>
@@ -144,6 +145,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="User.h" />
+    <ClInclude Include="UserConnectTask.h" />
     <ClInclude Include="VModel.h" />
     <CustomBuild Include="dlgadduserbyaddress.h">
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath);$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
