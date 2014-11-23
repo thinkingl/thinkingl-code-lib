@@ -21,6 +21,9 @@ public:
 	bool AddUser( const string& ipAddr, int port );
 
 private:
+	// 
+
+private:
 	// 用户列表.
 	CUserList m_userList;
 };
