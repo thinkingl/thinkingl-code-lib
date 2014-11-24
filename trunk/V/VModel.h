@@ -27,6 +27,8 @@ public:
 	// 获取用户.
 	bool GetUser( int userInternalId, CUser& userInfo );
 
+	// 监听
+
 private slots:
 	// 定时任务,遍历用户列表.
 	void PollUserList();
