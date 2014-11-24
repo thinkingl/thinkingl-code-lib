@@ -13,11 +13,19 @@ using namespace std;
 class CUser
 {
 public:
+	enum{
+		INVALID_USER_INTERNAL_ID = 0,
+	};
+public:
 	CUser(void);
-	CUser( const string& ip, int port );
+	CUser( int id, const string& ip, int port );
 	virtual ~CUser(void);
 
 public:
+	// 唯一ID.
+	int GetTempInternalId() const;
+	void SetTempInternalId( int id );
+
 	// 设置用户的地址.
 	void SetNetAddr( const string& ip, int port );
 
@@ -27,6 +35,9 @@ public:
 
 
 private:
+	// 用户的唯一临时ID. 用于程序内部标识/查找用户.
+	int m_tempInternalId;
+
 	// 用户的IP.
 	string m_ip;
 	// 用户的网络端口.
