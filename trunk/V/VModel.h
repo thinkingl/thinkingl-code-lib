@@ -12,6 +12,7 @@ using namespace std;
 
 #include <QRunnable>
 #include <QObject>
+#include <QtNetwork/QTcpServer>
 
 class CVModel : public QObject
 {
@@ -25,17 +26,22 @@ public:
 	bool AddUser( const string& ipAddr, int port );
 
 	// 获取用户.
-	bool GetUser( int userInternalId, CUser& userInfo );
+//	bool GetUser( int userInternalId, CUser& userInfo );
 
-	// 监听
-
+	// 监听本地端口,等待其它用户的连接.
+	bool StartTcpService();
 private slots:
 	// 定时任务,遍历用户列表.
 	void PollUserList();
 
+
+
+	//////////////////////////////////////////////////////////////////////////
+	// 有用户连接了.
+	void OnUserConnect();
 private:
 	// 获取一个连接用户的Task.
-	QRunnable* GetUserConnectTask();
+	//QRunnable* GetUserConnectTask();
 
 private:
 	// 用户列表.
@@ -45,5 +51,8 @@ private:
 
 	// 遍历用户列表用的当前游标.
 	int m_curUserListPollIndex;
+
+	// 监听本地服务端口的TCP Server对象.
+	QTcpServer m_tcpServer;
 };
 

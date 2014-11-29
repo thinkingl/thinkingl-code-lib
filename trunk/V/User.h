@@ -8,10 +8,15 @@
 #include <string>
 #include <vector>
 
+#include <QObject>
+#include <QTcpSocket>
+
 using namespace std;
 
-class CUser
+class CUser : public QObject
 {
+	Q_OBJECT
+
 public:
 	enum{
 		INVALID_USER_INTERNAL_ID = 0,
@@ -33,6 +38,14 @@ public:
 	string GetIP() const;
 	int GetPort() const;
 
+public:
+	void Work();
+
+private slots:
+	// 处理连接的信号.
+	void OnConnect();
+	void OnError( QAbstractSocket::SocketError err );
+	void OnStateChanged(QAbstractSocket::SocketState);
 
 private:
 	// 用户的唯一临时ID. 用于程序内部标识/查找用户.
@@ -43,7 +56,8 @@ private:
 	// 用户的网络端口.
 	int m_port;
 
-	// 
+	// 用户的连接.
+	QTcpSocket* m_pUserSocket;
 };
 
-typedef std::vector< CUser > CUserList;
+typedef std::vector< CUser* > CUserList;

@@ -74,6 +74,12 @@
     <ClCompile Include="GeneratedFiles\Release\moc_VModel.cpp">
       <Filter>Generated Files\Release</Filter>
     </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_User.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_User.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="v.qrc">
@@ -94,6 +100,9 @@
     <CustomBuild Include="VModel.h">
       <Filter>Header Files</Filter>
     </CustomBuild>
+    <CustomBuild Include="User.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="v.rc" />
@@ -104,9 +113,6 @@
     </ClInclude>
     <ClInclude Include="GeneratedFiles\ui_dlgadduserbyaddress.h">
       <Filter>Generated Files</Filter>
-    </ClInclude>
-    <ClInclude Include="User.h">
-      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="UserConnectTask.h">
       <Filter>Header Files</Filter>
