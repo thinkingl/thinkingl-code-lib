@@ -83,7 +83,20 @@ TEmployerList CEmployerInput::GetAllNoGiftEmployer() const
 				allEmplyer.push_back( employerIn );
 
 				_ASSERT( tAllKedaNo.find( employerIn.m_strKedaNo ) == tAllKedaNo.end() );
-				_ASSERT( employerIn.m_strKedaNo.GetLength() == 6 );
+				_ASSERT( employerIn.m_strKedaNo.GetLength() == 8 );
+
+				if ( employerIn.m_strKedaNo.GetLength() != 8 )
+				{
+					AfxMessageBox( _T("工号错误,有一个工号不是8位的！") ) ;
+					AfxMessageBox( employerIn.m_strKedaNo );
+					continue;
+				}
+
+				if ( tAllKedaNo.find( employerIn.m_strKedaNo ) != tAllKedaNo.end() )
+				{
+					AfxMessageBox( _T("工号重复出现！") );
+					AfxMessageBox( employerIn.m_strKedaNo );
+				}
 
 				tAllKedaNo.insert( employerIn.m_strKedaNo );
 			}			

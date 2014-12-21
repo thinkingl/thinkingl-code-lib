@@ -38,6 +38,8 @@ void CFlashDialog::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_STATIC_PIC_NUM_2, m_picNum2);
 	DDX_Control(pDX, IDC_STATIC_PIC_NUM_3, m_picNum3);
 	DDX_Control(pDX, IDC_STATIC_PIC_NUM_4, m_picNum4);
+	DDX_Control(pDX, IDC_STATIC_PIC_NUM_5, m_picNum5);
+	DDX_Control(pDX, IDC_STATIC_PIC_NUM_6, m_picNum6);
 	DDX_Control(pDX, IDC_STATIC_NAME, m_staticName);
 	DDX_Control(pDX, IDCANCEL, m_btnClose);
 	DDX_Control(pDX, ID_ABSENT, m_btnAbsent);
@@ -99,6 +101,8 @@ BOOL CFlashDialog::OnInitDialog()
 	this->m_tAllNumberFlashControls.push_back( &m_picNum2 );
 	this->m_tAllNumberFlashControls.push_back( &m_picNum3 );
 	this->m_tAllNumberFlashControls.push_back( &m_picNum4 );
+	this->m_tAllNumberFlashControls.push_back( &m_picNum5 );
+	this->m_tAllNumberFlashControls.push_back( &m_picNum6 );
 	for ( int i=0; i<m_tAllNumberFlashControls.size(); ++i )
 	{
 		m_tAllNumberFlashControls[i]->SetPicture( strCurrentDir + "KedaGiftTextNull.png" );
@@ -304,7 +308,14 @@ void CFlashDialog::OnTimer(UINT_PTR nIDEvent)
 void CFlashDialog::ShowAEmployer( const CEmployer& employer )
 {
 	CString strKedaNo = employer.m_strKedaNo;
-	_ASSERT( strKedaNo.GetLength() == 6 );	// 只能处理 KD1234 这样的工号.
+	_ASSERT( strKedaNo.GetLength() == 8 );	// 只能处理 KD1234 这样的工号.
+
+	if ( strKedaNo.GetLength() != 8 )
+	{
+		MessageBox( _T("工号错误"), _T("有一个工号不是8位的！"), MB_OK ) ;
+		MessageBox( _T( "错误的工号" ), strKedaNo, MB_OK );
+		return;
+	}
 
 	this->m_staticName.SetWindowText( employer.m_strName );
 	this->m_staticName.Invalidate();
@@ -314,7 +325,7 @@ void CFlashDialog::ShowAEmployer( const CEmployer& employer )
 	rcName.top -= 30;
 	this->InvalidateRect( rcName );
 
-	for ( int i=0; i<4; ++i )
+	for ( int i=0; i<6; ++i )
 	{
 		int nNum = strKedaNo.GetAt( i+2 ) - '0';
 //		int nFrame = nNum + 3;

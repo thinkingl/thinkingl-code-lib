@@ -91,6 +91,8 @@ public:
 	CPictureStatic m_picNum2;
 	CPictureStatic m_picNum3;
 	CPictureStatic m_picNum4;
+	CPictureStatic m_picNum5;
+	CPictureStatic m_picNum6;
 	CStatic m_staticName;
 	afx_msg void OnLButtonDblClk(UINT nFlags, CPoint point);
 	CButton m_btnClose;
