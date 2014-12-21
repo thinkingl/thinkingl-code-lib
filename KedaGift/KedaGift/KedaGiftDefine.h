@@ -21,6 +21,10 @@ public:
 
 	/** 姓名 */
 	CString m_strName;
+
+	// 部门
+	CString m_department;
+
 	/** 中奖情况. */
 	CTime m_timeLuck;
 

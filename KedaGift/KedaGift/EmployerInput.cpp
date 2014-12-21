@@ -76,8 +76,9 @@ TEmployerList CEmployerInput::GetAllNoGiftEmployer() const
 		{
 			CEmployer employerIn;
 			
-			bOk &= ReadString( &inputFile, employerIn.m_strName );
-			bOk &=ReadString( &inputFile, employerIn.m_strKedaNo );		
+			bOk &= ReadString( &inputFile, employerIn.m_strName );		// 读取姓名。
+			bOk &= ReadString( &inputFile, employerIn.m_department );	// 读取部门。
+			bOk &=ReadString( &inputFile, employerIn.m_strKedaNo );		// 读取工号。
 			if ( bOk )
 			{
 				allEmplyer.push_back( employerIn );
