@@ -41,6 +41,7 @@ void CFlashDialog::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_STATIC_PIC_NUM_5, m_picNum5);
 	DDX_Control(pDX, IDC_STATIC_PIC_NUM_6, m_picNum6);
 	DDX_Control(pDX, IDC_STATIC_NAME, m_staticName);
+	DDX_Control(pDX, IDC_STATIC_DEPARTMENT, m_staticDepartment);
 	DDX_Control(pDX, IDCANCEL, m_btnClose);
 	DDX_Control(pDX, ID_ABSENT, m_btnAbsent);
 	DDX_Control(pDX, IDC_STATIC_LUCKY_NUM, m_staticLuckyNum);
@@ -132,7 +133,11 @@ BOOL CFlashDialog::OnInitDialog()
 
 	this->m_staticName.SetFont( &m_fontShowName );
 
+
 	this->m_staticLuckyNum.SetFont( &m_fontShowName );
+	
+	this->m_staticDepartment.SetFont( &m_fontShowName );
+
 	this->UpdateLuckNum();
 
 	CString strSoundPath = strCurrentDir + "defBBSound.wav";
@@ -319,6 +324,9 @@ void CFlashDialog::ShowAEmployer( const CEmployer& employer )
 
 	this->m_staticName.SetWindowText( employer.m_strName );
 	this->m_staticName.Invalidate();
+
+	this->m_staticDepartment.SetWindowTextA( employer.m_department );
+	this->m_staticDepartment.Invalidate();
 
 	CRect rcName;
 	this->m_staticName.GetWindowRect( rcName );

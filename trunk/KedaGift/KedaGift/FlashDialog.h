@@ -94,6 +94,8 @@ public:
 	CPictureStatic m_picNum5;
 	CPictureStatic m_picNum6;
 	CStatic m_staticName;
+	CStatic m_staticDepartment;	// ≤ø√≈°£
+
 	afx_msg void OnLButtonDblClk(UINT nFlags, CPoint point);
 	CButton m_btnClose;
 	CButton m_btnAbsent;
