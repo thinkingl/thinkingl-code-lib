@@ -58,9 +58,10 @@ TEmployerList CEmployerInput::GetAllNoGiftEmployer() const
 	TEmployerList allEmplyer;
 
 	LPCTSTR ALL_EMPLOYER_LIST_FILE = _T( "EmployerList.txt" );
+	LPCTSTR ALL_EMPLOYER_LIST_FILE_V2 = _T( "employerlistv2.txt" );
 
 	CFile inputFile;
-	BOOL bOpen = inputFile.Open( ALL_EMPLOYER_LIST_FILE, CFile::modeRead );
+	BOOL bOpen = inputFile.Open( ALL_EMPLOYER_LIST_FILE_V2, CFile::modeRead );
 	if ( !bOpen )
 	{
 		AfxMessageBox( _T( "打开员工列表文件失败!" ) );
@@ -76,8 +77,8 @@ TEmployerList CEmployerInput::GetAllNoGiftEmployer() const
 		{
 			CEmployer employerIn;
 			
-			bOk &= ReadString( &inputFile, employerIn.m_strName );		// 读取姓名。
 			bOk &= ReadString( &inputFile, employerIn.m_department );	// 读取部门。
+			bOk &= ReadString( &inputFile, employerIn.m_strName );		// 读取姓名。
 			bOk &=ReadString( &inputFile, employerIn.m_strKedaNo );		// 读取工号。
 			if ( bOk )
 			{

@@ -102,6 +102,7 @@
     <None Include="defStopSound.wav" />
     <None Include="defsym.swf" />
     <None Include="EmployerList.txt" />
+    <None Include="employerlistv2.txt" />
     <None Include="KedaGiftText0.png" />
     <None Include="KedaGiftText1.png" />
     <None Include="KedaGiftText2.png" />

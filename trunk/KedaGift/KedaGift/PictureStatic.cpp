@@ -40,7 +40,7 @@ void CPictureStatic::OnPaint()
 	// 不为绘图消息调用 CStatic::OnPaint()
 	CRect rcClient;
 	this->GetClientRect( rcClient );
-	if ( this->m_pImageShow )
+	if ( this->m_pImageShow && !this->m_pImageShow->IsNull() )
 	{
 		this->m_pImageShow->Draw( dc, rcClient );
 	}
