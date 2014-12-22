@@ -68,6 +68,8 @@ BOOL CFlashDialog::OnInitDialog()
 {
 	CDialogEx::OnInitDialog();
 
+	m_staticDepartment.SetWindowText( _T("") );
+
 	CString strCurrentDir;
 	LPSTR lpBufCurDir = strCurrentDir.GetBuffer( MAX_PATH * 2 );
 	::GetCurrentDirectory( MAX_PATH*2, lpBufCurDir );
@@ -190,6 +192,16 @@ void CFlashDialog::OnSize(UINT nType, int cx, int cy)
 
 		int BLANK_SIDE = 200;	// 边上留的空白.
 
+		if ( cx <= 1280 )
+		{
+			BLANK_SIDE = 50;	// 如果分辨率不够高,边上就不留那么多空白了.
+		}
+
+		if ( cx<= 1024 )
+		{
+			BLANK_SIDE = 5;
+		}
+
 		int nDistance = ( cx - BLANK_SIDE * 2 ) / tAllWnd.size() - NUMBER_WIDTH;
 		int nTop = float( cy ) * 0.3;
 		for ( int i=0; i<tAllWnd.size(); ++i )
@@ -199,7 +211,10 @@ void CFlashDialog::OnSize(UINT nType, int cx, int cy)
 			tAllWnd[i]->MoveWindow( rcFirstNum );
 		}
 
-		CRect rcName( 0, nTop + 200, cx, cy - 200 );;
+		CRect rcDepartment( 0, nTop + 200, cx, nTop + 300 );
+		this->m_staticDepartment.MoveWindow( rcDepartment );
+
+		CRect rcName( 0, nTop + 300, cx, cy-100 );
 		this->m_staticName.MoveWindow( rcName );
 
 		CRect rcBtnSize;

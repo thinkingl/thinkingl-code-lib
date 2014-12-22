@@ -77,6 +77,7 @@
     <None Include="defStopSound.wav">
       <Filter>资源文件</Filter>
     </None>
+    <None Include="employerlistv2.txt" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="KedaGift.h">
