@@ -14,6 +14,7 @@ public:
 	CEmployer()
 	{
 		m_bAbsent = FALSE;
+		m_luckyRaund = 0;
 	}
 
 	/** 工号*/
@@ -33,6 +34,9 @@ public:
 
 	/** 是否缺席. */
 	BOOL m_bAbsent;
+
+	/** 中奖轮次. */
+	int m_luckyRaund;
 };
 
 

@@ -33,6 +33,7 @@ private:
 		ColHead_SequenceNo,	// 序号.
 		ColHead_KedaNo,
 		ColHead_Name,
+		ColHead_Raund,		// 轮次.
 		ColHead_Time,
 		ColHead_GetGift,	// 是否领奖.
 		ColHead_Absent,		// 是否缺席

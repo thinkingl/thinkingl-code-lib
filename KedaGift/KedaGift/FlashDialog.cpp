@@ -12,8 +12,9 @@
 
 IMPLEMENT_DYNAMIC(CFlashDialog, CDialogEx)
 
-CFlashDialog::CFlashDialog(CWnd* pParent, CRandomPick* pRandomPic )
+CFlashDialog::CFlashDialog(CWnd* pParent, CRandomPick* pRandomPic, int raund )
 	: CDialogEx(CFlashDialog::IDD, pParent)
+	, m_raund( raund )
 {
 	this->m_pRandomPick = pRandomPic;
 	this->m_eState = State_Ready;
@@ -418,7 +419,7 @@ void CFlashDialog::GoOrStop()
 		::PlaySound( strSoundPath,  NULL, SND_ASYNC | SND_FILENAME );
 
 		// Ë¢ÐÂ.....
-		CEmployer randomShowEmployer = this->m_pRandomPick->GetLukyOne();
+		CEmployer randomShowEmployer = this->m_pRandomPick->GetLukyOne( m_raund );
 
 		this->ShowAEmployer( randomShowEmployer );
 
@@ -519,6 +520,7 @@ void CFlashDialog::OnBnClickedAbsent()
 			m_tAllNumberFlashControls[i]->SetPicture( strCurrentDir + "KedaGiftTextNull.png" );
 		}
 
+		this->m_staticDepartment.SetWindowText( _T("") );
 		this->m_staticName.SetWindowText( "¨r(£þ¨Œ£þ)¨q" );
 
 		this->Invalidate();

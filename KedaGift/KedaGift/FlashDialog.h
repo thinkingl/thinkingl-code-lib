@@ -11,7 +11,7 @@ class CFlashDialog : public CDialogEx
 	DECLARE_DYNAMIC(CFlashDialog)
 
 public:
-	CFlashDialog(CWnd* pParent, CRandomPick* pRandomPic );   // 标准构造函数
+	CFlashDialog(CWnd* pParent, CRandomPick* pRandomPic, int raund );   // 标准构造函数
 	virtual ~CFlashDialog();
 
 // 对话框数据
@@ -66,6 +66,9 @@ private:
 	
 	/** 中奖人列表. */
 	TKedaNoList m_tLuckyMen;
+
+	// 轮次
+	int m_raund;
 public:
 //	CShockwaveflash_background m_flashBackground;
 	virtual BOOL OnInitDialog();
