@@ -48,6 +48,7 @@ BOOL CGiftStatusView::OnInitDialog()
 	this->m_listGiftStatus.InsertColumn( ColHead_SequenceNo, _T( "序号" ), 0, 40 );
 	this->m_listGiftStatus.InsertColumn( ColHead_KedaNo, _T( "工号" ), 0, 50 );
 	this->m_listGiftStatus.InsertColumn( ColHead_Name, _T( "姓名" ), 0, 100 );
+	this->m_listGiftStatus.InsertColumn( ColHead_Raund, _T( "轮次" ), 0, 50 );
 	this->m_listGiftStatus.InsertColumn( ColHead_Time, _T( "中奖时间" ), 0, 150 );
 	this->m_listGiftStatus.InsertColumn( ColHead_GetGift, _T( "已领奖" ), 0, 50 );
 	this->m_listGiftStatus.InsertColumn( ColHead_Absent, _T( "缺席" ), 0, 50 );
@@ -63,6 +64,11 @@ BOOL CGiftStatusView::OnInitDialog()
 		int nItem = m_listGiftStatus.InsertItem( 0, strSn );
 		m_listGiftStatus.SetItemText( nItem, ColHead_KedaNo, allGifted[i].m_strKedaNo );
 		m_listGiftStatus.SetItemText( nItem, ColHead_Name, allGifted[i].m_strName );
+
+		CString luckRaund;
+		luckRaund.Format( _T( "%d" ), allGifted[i].m_luckyRaund+1 );
+		m_listGiftStatus.SetItemText( nItem, ColHead_Raund, luckRaund );
+
 		CString strTime = allGifted[i].m_timeLuck.Format( "%y/%m/%d-%H:%M:%S" );
 		m_listGiftStatus.SetItemText( nItem, ColHead_Time, strTime );
 

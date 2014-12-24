@@ -204,6 +204,24 @@ BOOL CKedaGiftDlg::OnInitDialog()
 
 	m_listLuckyMen.SetExtendedStyle(LVS_EX_GRIDLINES |LVS_EX_FULLROWSELECT);
 
+	// 初始化有轮次的得奖状态表.
+	CEmployerGiftConfig config;
+	TEmployerList allGifted = config.GetLuckies();
+	for ( size_t i=0; i<allGifted.size(); ++i )
+	{
+		CEmployer& employer = allGifted[i];
+
+		int tableIndex = employer.m_luckyRaund;
+		if ( tableIndex >= m_giftStateTable.size() )
+		{
+			m_giftStateTable.resize( tableIndex + 1 );
+		}
+		m_giftStateTable[ tableIndex ].push_back( employer.m_strKedaNo );
+	}
+
+	// 显示最后一轮的结果.
+	this->OnBnClickedButtonLastPage();
+
 	return TRUE;  // 除非将焦点设置到控件，否则返回 TRUE
 }
 
@@ -266,7 +284,7 @@ void CKedaGiftDlg::OnBnClickedStartStop()
 	if ( !m_bEmployRefreshing )
 	{
 		// 选一个人中奖.
-		CEmployer luckyOne = this->m_radomLuckyPick.GetLukyOne();
+		CEmployer luckyOne = this->m_radomLuckyPick.GetLukyOne( this->m_nCurShowTurn );
 		this->ShowAMan( luckyOne );
 		
 		this->m_strGifted += this->GetShowText( luckyOne );
@@ -332,6 +350,13 @@ void CKedaGiftDlg::OnBnClickedGiftState()
 		this->m_staticEmplyer.SetWindowText( "KEDACOM" );
 
 		this->m_editGifted.SetWindowText( "" );
+
+		// 清空本地的表.
+		m_giftStateTable.clear();
+
+		// 清空显示.
+		this->m_listLuckyMen.DeleteAllItems();
+		this->m_staticTurn.SetWindowText( _T("") );
 	}
 	this->m_radomLuckyPick;
 }
@@ -364,7 +389,7 @@ void CKedaGiftDlg::OnBnClickedFlash()
 	this->m_listLuckyMen.DeleteAllItems();
 
 	// TODO: 在此添加控件通知处理程序代码
-	CFlashDialog dlg( this, &this->m_radomLuckyPick );
+	CFlashDialog dlg( this, &this->m_radomLuckyPick, m_giftStateTable.size() );
 	dlg.DoModal();
 
 	TKedaNoList allLucky = dlg.GetAllLuckyMen();
@@ -521,7 +546,7 @@ void CKedaGiftDlg::OnBnClickedButtonLastPage()
 {
 	// TODO: 在此添加控件通知处理程序代码
 	int nLastPage = int( m_giftStateTable.size()-1 );
-	if ( nLastPage > 0 )
+	if ( nLastPage >= 0 )
 	{
 		this->m_nCurShowTurn = nLastPage;
 		this->ShowGiftState( m_nCurShowTurn );

@@ -18,7 +18,7 @@ public:
 	/** 获取随机人员中奖.. 
 	*	每个人只有一次中奖机会,不重复.
 	*/
-	CEmployer GetLukyOne();
+	CEmployer GetLukyOne( int raund );
 
 	/** 随机选取一个还没有中奖人,用于显示. */
 	CEmployer RandomPickOneNoGiftToShow() const;

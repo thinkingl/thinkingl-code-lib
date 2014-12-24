@@ -82,6 +82,14 @@ TEmployerList CEmployerInput::GetAllNoGiftEmployer() const
 			bOk &=ReadString( &inputFile, employerIn.m_strKedaNo );		// 读取工号。
 			if ( bOk )
 			{
+				// 头要去掉.
+				if ( employerIn.m_strKedaNo.Find( _T( "KD" ) ) == -1 )
+				{
+					AfxMessageBox( _T( "有个工号不太对劲,没有KD!" ) );
+					AfxMessageBox( employerIn.m_strKedaNo );
+					continue;
+				}
+
 				allEmplyer.push_back( employerIn );
 
 				_ASSERT( tAllKedaNo.find( employerIn.m_strKedaNo ) == tAllKedaNo.end() );

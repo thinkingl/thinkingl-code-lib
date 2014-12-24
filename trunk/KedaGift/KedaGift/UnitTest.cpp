@@ -41,7 +41,7 @@ void CUnitTest::UTRadomPick()
 	{
 		for ( int k=0; k<GIFT_NUM; ++k )
 		{
-			CEmployer luckone = rp.GetLukyOne();
+			CEmployer luckone = rp.GetLukyOne( i );
 			tCounter[ luckone.m_strKedaNo ] ++;
 		}
 		rp.ResetGift();	// ÖØÐÂÒ»ÂÖ³é½±...

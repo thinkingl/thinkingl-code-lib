@@ -55,12 +55,15 @@ void CRandomPick::SetEmployerList( const TEmployerList& employerList )
 	this->InitAllReadyGifted();
 }
 
-CEmployer CRandomPick::GetLukyOne()
+CEmployer CRandomPick::GetLukyOne( int raund )
 {
 	int luckyIndex = this->GetRadomNum( m_nFirstNoGift, m_tAllEmployer.size() -1 );
 
-	this->m_tAllEmployer[ luckyIndex ].m_timeLuck = CTime::GetCurrentTime();
+	
+	// 下面必须不能用引用, 否则更新了数组中的存储后, 引用对象也会被改掉.
 	CEmployer luckyOne = this->m_tAllEmployer[ luckyIndex ];
+	m_tAllEmployer[ luckyIndex ].m_timeLuck = CTime::GetCurrentTime();
+	m_tAllEmployer[ luckyIndex ].m_luckyRaund = raund;
 
 	this->HandleGiftedLucyMan( luckyIndex );
 	

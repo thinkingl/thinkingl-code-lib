@@ -8,6 +8,8 @@ LPCTSTR KEY_NAME = _T( "name" );
 LPCTSTR KEY_TIME = _T( "time" );
 LPCTSTR KEY_GETGIFT_TIME = _T( "getgifttime" );
 LPCTSTR KEY_ABSENT = _T( "isabsent" );
+LPCTSTR KEY_RAUND = _T( "raund" );
+
 
 CEmployerGiftConfig::CEmployerGiftConfig(void)
 {
@@ -42,6 +44,7 @@ void CEmployerGiftConfig::AddLuckMan( const CEmployer& lucyMan )
 	this->m_iniFileParser.WriteInt( lucyMan.m_strKedaNo, KEY_TIME, lucyMan.m_timeLuck.GetTime() );
 	this->m_iniFileParser.WriteInt( lucyMan.m_strKedaNo, KEY_GETGIFT_TIME, lucyMan.m_timeGetGift.GetTime() );
 	this->m_iniFileParser.WriteInt( lucyMan.m_strKedaNo, KEY_ABSENT, lucyMan.m_bAbsent );
+	this->m_iniFileParser.WriteInt( lucyMan.m_strKedaNo, KEY_RAUND, lucyMan.m_luckyRaund );
 }
 
 void CEmployerGiftConfig::Reset()
@@ -60,6 +63,6 @@ BOOL CEmployerGiftConfig::GetEmployerLucky( LPCTSTR strKedaNo, CEmployer& employ
 	employer.m_timeLuck = CTime( this->m_iniFileParser.ReadInt( strKedaNo, KEY_TIME, 0 ) );
 	employer.m_timeGetGift = CTime( this->m_iniFileParser.ReadInt( strKedaNo, KEY_GETGIFT_TIME, 0 ) );
 	employer.m_bAbsent = this->m_iniFileParser.ReadInt( strKedaNo, KEY_ABSENT, FALSE );
-
+	employer.m_luckyRaund = this->m_iniFileParser.ReadInt( strKedaNo, KEY_RAUND, 0 );
 	return !employer.m_strName.IsEmpty();
 }
