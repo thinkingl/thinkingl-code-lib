@@ -33,6 +33,12 @@
       <Extensions>cpp;moc</Extensions>
       <SourceControlFiles>False</SourceControlFiles>
     </Filter>
+    <Filter Include="protocol">
+      <UniqueIdentifier>{34c74e36-f364-422f-9f95-93ba5679538e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="config">
+      <UniqueIdentifier>{acf7c557-fd50-40fb-bd7e-d5c23f11455c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -80,6 +86,12 @@
     <ClCompile Include="GeneratedFiles\Release\moc_User.cpp">
       <Filter>Generated Files\Release</Filter>
     </ClCompile>
+    <ClCompile Include="protocol.cpp">
+      <Filter>protocol</Filter>
+    </ClCompile>
+    <ClCompile Include="UserConfig.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="v.qrc">
@@ -103,6 +115,9 @@
     <CustomBuild Include="User.h">
       <Filter>Header Files</Filter>
     </CustomBuild>
+    <CustomBuild Include="dlglogin.ui">
+      <Filter>Form Files</Filter>
+    </CustomBuild>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="v.rc" />
@@ -116,6 +131,15 @@
     </ClInclude>
     <ClInclude Include="UserConnectTask.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="protocol.h">
+      <Filter>protocol</Filter>
+    </ClInclude>
+    <ClInclude Include="UserConfig.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GeneratedFiles\ui_dlglogin.h">
+      <Filter>Generated Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

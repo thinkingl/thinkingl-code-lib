@@ -39,6 +39,8 @@ private slots:
 	//////////////////////////////////////////////////////////////////////////
 	// 有用户连接了.
 	void OnUserConnect();
+	// 连接上有数据可以读了.
+	//void OnUserConnectReadyRead();
 private:
 	// 获取一个连接用户的Task.
 	//QRunnable* GetUserConnectTask();
@@ -46,6 +48,10 @@ private:
 private:
 	// 用户列表.
 	CUserList m_userList;
+
+	// 接收到的连接, 对应的用户.
+	CUserList m_inConnectingUserList;
+
 	// 累加的用户内部ID.
 	int m_maxUserInternalId;
 

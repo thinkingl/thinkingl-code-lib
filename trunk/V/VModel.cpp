@@ -14,6 +14,9 @@ CVModel::CVModel(void)
 	QTimer *timer = new QTimer(this);
 	connect( timer, SIGNAL(timeout()), this, SLOT( PollUserList() ) );
 	timer->start(1000);
+
+	// 监听TCP端口,等待其它用户来连接.
+	this->StartTcpService();
 }
 
 CVModel::~CVModel(void)
@@ -103,8 +106,19 @@ bool CVModel::StartTcpService()
 void CVModel::OnUserConnect()
 {
 	QTcpSocket* pSock = m_tcpServer.nextPendingConnection();
+	if ( pSock && pSock->isValid() )
+	{
+		CUser* pInConnectingUser = new CUser;
 
-	pSock;
-	bool bValid = pSock->isValid();
-	bValid;
+		pInConnectingUser->FromConnect( pSock );
+		m_inConnectingUserList.push_back( pInConnectingUser );
+		//connect( pSock, SIGNAL( readyRead() ), SLOT( OnUserConnectReadyRead() ) );
+		//pSock->write( "hello! On connect" );
+	}
 }
+
+// void CVModel::OnUserConnectReadyRead()
+// {
+// 
+// }
+

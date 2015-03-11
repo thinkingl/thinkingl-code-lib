@@ -26,6 +26,8 @@ public:
 	CUser( int id, const string& ip, int port );
 	virtual ~CUser(void);
 
+	// 从一个连接初始化一个用户.
+	void FromConnect( QAbstractSocket* pSock );
 public:
 	// 唯一ID.
 	int GetTempInternalId() const;
@@ -46,6 +48,7 @@ private slots:
 	void OnConnect();
 	void OnError( QAbstractSocket::SocketError err );
 	void OnStateChanged(QAbstractSocket::SocketState);
+	void OnReadyRead();
 
 private:
 	// 用户的唯一临时ID. 用于程序内部标识/查找用户.
@@ -57,7 +60,7 @@ private:
 	int m_port;
 
 	// 用户的连接.
-	QTcpSocket* m_pUserSocket;
+	QAbstractSocket* m_pUserSocket;
 };
 
 typedef std::vector< CUser* > CUserList;
