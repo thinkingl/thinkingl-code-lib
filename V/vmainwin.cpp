@@ -1,7 +1,7 @@
 #include "vmainwin.h"
 #include "dlgadduserbyaddress.h"
 
-CVMainWin::CVMainWin(QWidget *parent, Qt::WFlags flags)
+CVMainWin::CVMainWin(QWidget *parent, Qt::WindowFlags flags)
 	: QMainWindow(parent, flags)
 {
 	ui.setupUi(this);
