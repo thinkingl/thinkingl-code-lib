@@ -13,6 +13,9 @@ public:
 	CUserConfig(void);
 	~CUserConfig(void);
 
+	// 初始化.
+	static bool Init();
+
 	// 获取用户的列表,本地有哪些用户的配置保持着.
 	static QStringList GetAllUserEmail();
 
@@ -29,5 +32,8 @@ public:
 
 private:
 
+
+private:
+	// 数据库对象.
 };
 
