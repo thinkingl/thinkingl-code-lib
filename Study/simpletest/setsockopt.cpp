@@ -9,14 +9,17 @@
 #include <sys/types.h>          /* See NOTES */
 #include <sys/socket.h>	// socket..
 #include <errno.h> // errno
+#include <netinet/in.h> // sockaddr_in
+#include <arpa/inet.h>	// inet_addr
+#include <unistd.h>		// close
 
 int main(int argc, char *argv[])
 {
 	printf("Test Set Sock Opt\n argc:%d\n", argc);
 
-	if (argc < 2)
+	if (argc < 4)
 	{
-		printf("Invalid param. cmd ip port\n");
+		printf("Invalid param. cmd ip port TimeoutSecs \n");
 		exit(-1);
 		return -1;
 	}
@@ -37,22 +40,42 @@ int main(int argc, char *argv[])
 	sockaddr_in clientaddr;
 	clientaddr.sin_family = AF_INET;
 	clientaddr.sin_addr.s_addr = inet_addr( argv[1] );
-	
-	//clientaddr.sin_port = htons(nport);
 
-	//int connectError = connect(tcpLink, (SOCKADDR*)&clientaddr, sizeof(clientaddr));
-	//if (connectError == SOCKET_ERROR)
-	//{
-	//	int lastError = CU::GetLastError();
-	//	LOGERR() << L"连接服务器失败 er =" << connectError
-	//		<< L",WSAGetLastError=" << lastError
-	//		<< L",serverIp=" << serverIp
-	//		<< L",serverPort=" << serverPort;
-	//	closesocket(tcpLink);
+	unsigned short nport = atoi(argv[2]);
+	clientaddr.sin_port = htons(nport);
 
+	// 超时时间.
+	int timeoutSecs = atoi(argv[3]);
+
+	struct timeval timeout = {0,0};
+	timeout.tv_sec = timeoutSecs;
+
+	int setoptError = setsockopt( tcpLink, SOL_SOCKET, SO_SNDTIMEO, (char*)&timeout, sizeof(timeout) );
+	if( setoptError == -1 )
+    {
+        printf("setsockopt SO_SNDTIMEO fail! er: %d\n", errno);
+        exit(-1);
+    }
+
+	setoptError = setsockopt(tcpLink, SOL_SOCKET, SO_RCVTIMEO, (char*)&timeout, sizeof(timeout));
+	if (setoptError == -1)
+	{
+		printf("setsockopt SO_RCVTIMEO fail! er: %d\n", errno);
+		exit(-1);
+	}
+
+
+	int connectError = connect(tcpLink, (sockaddr*)&clientaddr, sizeof(clientaddr));
+	if (connectError == -1)
+	{
+		printf("connect fail! er: %d \n", errno);
+        exit(-1);
 	//	WSACleanup();
 	//	return false;
-	//}
+	}
+
+	close(tcpLink);
+
 
 	return 1;
 }
