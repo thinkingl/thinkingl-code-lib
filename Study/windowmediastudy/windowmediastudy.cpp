@@ -12,6 +12,7 @@ using namespace std;
 
 #pragma comment( lib, "vfw32.lib")
 #pragma comment( lib, "Winmm.lib")
+#pragma comment( lib, "Msacm32.lib")
 
 #define WAVE_FORMAT_G723       (unsigned short)0x0042
 #define WAVE_FORMAT_G728       (unsigned short)0x0041//
@@ -316,6 +317,9 @@ void ReportAudioEnv()
 		cout << "packing: " << woCaps.wReserved1 << endl;
 		cout << "fanctionality supported by driver: " << woCaps.dwSupport << endl;
 		cout << "----------------------------------------" << endl << endl;
+
+		WAVE_FORMAT_PCM;
+		WAVE_FORMAT_G723_ADPCM;
 	}
 
 	cout << endl;
@@ -347,10 +351,178 @@ void ReportAudioEnv()
 
 }
 
+// 测试, 是否支持MP3解码.
+// 原理就是查看一下不同编码是否能进行转换.
+// 解码是从指定编码转换到PCM.
+// 编码是从PCM到指定编码.
+void TestMP3()
+{
+	WAVEFORMATEX wfxSrc, wfxDst;
+	memset(&wfxSrc, 0, sizeof(wfxSrc));
+	memset(&wfxDst, 0, sizeof(wfxDst));
+	wfxSrc.wFormatTag = WAVE_FORMAT_MPEGLAYER3;
+	wfxSrc.nChannels = 2;
+	wfxSrc.nSamplesPerSec = 44100;
+	wfxSrc.nAvgBytesPerSec = 32000;
+	wfxSrc.nBlockAlign = 16;
+	wfxSrc.wBitsPerSample = 16;
+	wfxSrc.cbSize = 0;
+
+	wfxSrc = g_sAudioFormat[8].wfx;
+	wfxDst = g_sAudioFormat[9].wfx;
+// 	Best Pcm格式
+// 		{ { WAVE_FORMAT_PCM, 2, 32000L, 128000L, 4, 16, 0 },
+// 		{ 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 } },
+// 		//Best Mp3格式
+// 		{ { WAVE_FORMAT_MPEGLAYER3, 2, 32000L, 12000L, 1, 0, 12 },
+// 		{ 0x01, 0x00, 0x02, 0x00, 0x00, 0x00, 0xb0, 0x01, 0x01, 0x00, 0x71, 0x05 } },
+
+
+	MMRESULT ret = acmStreamOpen(
+		NULL, // Pointer to a handle that will receive the new stream handle that can be used to perform conversions. This handle is used to identify the stream in calls to other ACM stream conversion functions. If the ACM_STREAMOPENF_QUERY flag is specified, this parameter should be NULL.
+		NULL,	//Handle to an ACM driver. If this handle is specified, it identifies a specific driver to be used for a conversion stream. If this parameter is NULL, all suitable installed ACM drivers are queried until a match is found.
+		&wfxSrc,	// Pointer to a WAVEFORMATEX structure that identifies the desired source format for the conversion.
+		&wfxDst,	// Pointer to a WAVEFORMATEX structure that identifies the desired destination format for the conversion.
+		NULL,	// Pointer to a WAVEFILTER structure that identifies the desired filtering operation to perform on the conversion stream. If no filtering operation is desired, this parameter can be NULL. If a filter is specified, the source (pwfxSrc) and destination (pwfxDst) formats must be the same.
+		NULL,	// Pointer to a callback function, a handle of a window, or a handle of an event. A callback function will be called only if the conversion stream is opened with the ACM_STREAMOPENF_ASYNC flag. A callback function is notified when the conversion stream is opened or closed and after each buffer is converted. If the conversion stream is opened without the ACM_STREAMOPENF_ASYNC flag, this parameter should be set to zero.
+		NULL,	// User-instance data passed to the callback function specified by the dwCallback parameter. This parameter is not used with window and event callbacks. If the conversion stream is opened without the ACM_STREAMOPENF_ASYNC flag, this parameter should be set to zero.
+		ACM_STREAMOPENF_QUERY	// ACM will be queried to determine whether it supports the given conversion. A conversion stream will not be opened, and no handle will be returned in the phas parameter.
+		);
+	if ( MMSYSERR_NOERROR != ret )
+	{
+		cout << "acmStreamOpen fail! ret: " << ret << endl;
+		ACMERR_NOTPOSSIBLE;
+	}
+	else
+	{
+		cout << "The format is supported!" << endl;
+	}
+}
+
+BOOL CALLBACK AcmDriverEnumCallback(
+	HACMDRIVERID            hadid,
+	DWORD_PTR               dwInstance,
+	DWORD                   fdwSupport
+	)
+{
+	//cout << "hadid: " << hadid << " fdwSupport: " << fdwSupport << endl;
+
+	ACMDRIVERDETAILS driverDetail;
+	memset(&driverDetail, 0, sizeof(driverDetail));
+	driverDetail.cbStruct = sizeof(driverDetail);
+	MMRESULT ret = acmDriverDetails(
+		hadid, 
+		&driverDetail, 
+		0);
+	if ( MMSYSERR_NOERROR != ret )
+	{
+		cout << "acmDriverDetail fail! ret: " << ret << endl;
+		MMSYSERR_INVALFLAG;
+	}
+	else
+	{
+		cout << "----------------------------------------------------------------" << endl;
+		cout << "cbStruct: " << driverDetail.cbStruct << endl;
+		cout << "fccType: " << driverDetail.fccType << endl;
+		cout << "fccComp: " << driverDetail.fccComp << endl;
+		cout << "wMid: " << driverDetail.wMid << endl;
+		cout << "wPid:" << driverDetail.wPid << endl;
+		cout << "vdwACM: " << driverDetail.vdwACM << endl;
+		cout << "vdwDriver: " << driverDetail.vdwDriver << endl;
+		cout << "fdwSupport: " << driverDetail.fdwSupport << endl;
+		cout << "cFormatTags: " << driverDetail.cFormatTags << endl;
+		cout << "cFilterTags: " << driverDetail.cFilterTags << endl;
+		cout << "hicon: " << driverDetail.hicon << endl;
+		//wcout << "short name: " << driverDetail.szShortName << endl;
+		wprintf(L"short name:%s\n", driverDetail.szShortName);
+		//wcout << "long name: " << driverDetail.szLongName << endl;
+		wprintf(L"long name:%s\n", driverDetail.szLongName);
+		//wcout << "copy right:" << driverDetail.szCopyright << endl;
+		wprintf(L"copy right: %s\n", driverDetail.szCopyright);
+		//wcout << "licensing: " << driverDetail.szLicensing << endl;
+		wprintf(L"licensing: %s\n", driverDetail.szLicensing);
+		//wcout << "features: " << driverDetail.szFeatures << endl;
+		wprintf(L"features: %s\n", driverDetail.szFeatures);
+// 		DWORD           cbStruct;           // number of valid bytes in structure
+// 
+// 		FOURCC          fccType;            // compressor type 'audc'
+// 		FOURCC          fccComp;            // sub-type (not used; reserved)
+// 
+// 		WORD            wMid;               // manufacturer id
+// 		WORD            wPid;               // product id
+// 
+// 		DWORD           vdwACM;             // version of the ACM *compiled* for
+// 		DWORD           vdwDriver;          // version of the driver
+// 
+// 		DWORD           fdwSupport;         // misc. support flags
+// 		DWORD           cFormatTags;        // total unique format tags supported
+// 		DWORD           cFilterTags;        // total unique filter tags supported
+// 
+// 		HICON           hicon;              // handle to custom icon
+// 
+// 		char            szShortName[ACMDRIVERDETAILS_SHORTNAME_CHARS];
+// 		char            szLongName[ACMDRIVERDETAILS_LONGNAME_CHARS];
+// 		char            szCopyright[ACMDRIVERDETAILS_COPYRIGHT_CHARS];
+// 		char            szLicensing[ACMDRIVERDETAILS_LICENSING_CHARS];
+// 		char            szFeatures[ACMDRIVERDETAILS_FEATURES_CHARS];
+	}
+
+	return TRUE;
+}
+
+void EnumAcmDriver()
+{
+	MMRESULT ret = acmDriverEnum(
+		AcmDriverEnumCallback,
+		1,
+		0
+		);
+	if ( MMSYSERR_NOERROR != ret )
+	{
+		cout << "acmDriverEnum fail! ret: " << ret << endl;
+	}
+}
+
+BOOL CALLBACK AcmFilterEnumCB(
+	HACMDRIVERID            hadid,
+	LPACMFILTERDETAILS      pafd,
+	DWORD_PTR               dwInstance,
+	DWORD                   fdwSupport
+	)
+{
+	cout << "-----------------------------------------" << endl;
+	wprintf(L"filter: %s\n", pafd->szFilter);
+	return TRUE;
+}
+
+void EnumFilter()
+{
+	WAVEFILTER waveFilter;
+	memset(&waveFilter, 0, sizeof(waveFilter));
+	waveFilter.cbStruct = sizeof(waveFilter);
+
+	ACMFILTERDETAILS filterDetail;
+	memset(&filterDetail, 0, sizeof(filterDetail));
+	filterDetail.cbStruct = sizeof(filterDetail);
+	filterDetail.pwfltr = &waveFilter;
+	filterDetail.cbwfltr = sizeof(waveFilter);
+	MMRESULT ret = acmFilterEnum(
+		0,	// Handle to the ACM driver to query for waveform-audio filter details. If this parameter is NULL, the ACM uses the details from the first suitable ACM driver.
+		&filterDetail,
+		AcmFilterEnumCB,
+		1,
+		0
+		);
+	if ( MMSYSERR_NOERROR != ret )
+	{
+		cout << "acmFilterEnum fail! ret: " << ret <<endl;
+	}
+}
+
 int _tmain(int argc, _TCHAR* argv[])
 {
 	// 设置字符集,输出中文.
-	setlocale(LC_CTYPE, "");
+	setlocale(LC_ALL, ".ACP");
 
 	// 是否支持图像采集.
 	bool isSupportVideoInput = HasVideoInput();
@@ -361,6 +533,14 @@ int _tmain(int argc, _TCHAR* argv[])
 
 	// 音频
 	ReportAudioEnv();
+
+	// test
+	TestMP3();
+
+	// enum
+	EnumAcmDriver();
+
+	EnumFilter();
 
 	system("pause");
 	return 0;
