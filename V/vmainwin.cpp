@@ -1,5 +1,7 @@
 #include "vmainwin.h"
 #include "dlgadduserbyaddress.h"
+#include "cdlglogin.h"
+#include <qevent.h>
 
 CVMainWin::CVMainWin(QWidget *parent, Qt::WindowFlags flags)
 	: QMainWindow(parent, flags)
@@ -8,6 +10,9 @@ CVMainWin::CVMainWin(QWidget *parent, Qt::WindowFlags flags)
 
 	// 连接菜单/工具栏的action.
 	connect( ui.actionAddUserByAddress, SIGNAL(triggered()), this, SLOT( ConnectUserByAddress() ) );	// 连接一个用户.
+
+	emit Login();
+	
 }
 
 CVMainWin::~CVMainWin()
@@ -22,4 +27,16 @@ void CVMainWin::ConnectUserByAddress()
 	{
 		
 	}
+}
+
+void CVMainWin::closeEvent(QCloseEvent* event)
+{
+	event->accept();
+
+	//this->quit();
+}
+
+void CVMainWin::Login()
+{
+	
 }

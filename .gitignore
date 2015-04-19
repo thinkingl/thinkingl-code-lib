@@ -1,0 +1,13 @@
+V/GeneratedFiles/ui_vmainwin.h
+*.sdf
+V/v.v12.suo
+*.suo
+*.opensdf
+*.user
+*.ilk
+*.ipch
+*.lastbuildstate
+*.tlog
+*.obj
+*.log
+*.pch

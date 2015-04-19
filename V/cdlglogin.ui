@@ -52,9 +52,9 @@
      </spacer>
     </item>
     <item>
-     <widget class="QPushButton" name="okButton">
+     <widget class="QPushButton" name="buttonLogin">
       <property name="text">
-       <string>OK</string>
+       <string>登录</string>
       </property>
      </widget>
     </item>
@@ -84,7 +84,7 @@
    <property name="geometry">
     <rect>
      <x>60</x>
-     <y>80</y>
+     <y>150</y>
      <width>211</width>
      <height>20</height>
     </rect>
@@ -107,7 +107,7 @@
    <property name="geometry">
     <rect>
      <x>20</x>
-     <y>90</y>
+     <y>160</y>
      <width>54</width>
      <height>12</height>
     </rect>
@@ -116,11 +116,47 @@
     <string>密码</string>
    </property>
   </widget>
+  <widget class="QLabel" name="label_3">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>90</y>
+     <width>54</width>
+     <height>12</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>姓名</string>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="lineEditName">
+   <property name="geometry">
+    <rect>
+     <x>60</x>
+     <y>90</y>
+     <width>113</width>
+     <height>20</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="buttonRegister">
+   <property name="geometry">
+    <rect>
+     <x>220</x>
+     <y>190</y>
+     <width>75</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>注册</string>
+   </property>
+  </widget>
  </widget>
  <resources/>
  <connections>
   <connection>
-   <sender>okButton</sender>
+   <sender>buttonLogin</sender>
    <signal>clicked()</signal>
    <receiver>CDlgLogin</receiver>
    <slot>accept()</slot>
