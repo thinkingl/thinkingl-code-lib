@@ -3,6 +3,7 @@
 #include <QVariant>
 #include <QtSql/QSqlError>
 #include <QtCore/qdebug.h>
+#include <QtCore/QUuid>
 
 CUserConfig* CUserConfig::s_instance = 0;
 QSqlDatabase CUserConfig::s_database;
@@ -86,7 +87,7 @@ bool CUserConfig::Init()
 		// 创建用户信息表.
 		// 字段: 用户UUID ; 用户名; 用户邮箱; 
 		QSqlQuery sqlCreateUserTable(s_database);
-		bool bOk = sqlCreateUserTable.exec("CREATE TABLE user( uuid TEXT PRIMARY KEY, name TEXT, email TEXT UNIQUE);");
+		bool bOk = sqlCreateUserTable.exec("CREATE TABLE user( uuid TEXT PRIMARY KEY, name TEXT, email TEXT UNIQUE, password TEXT);");
 		if (!bOk)
 		{
 			qDebug() << "db operation fail! er: " << sqlCreateUserTable.lastError();
@@ -122,4 +123,22 @@ QStringList CUserConfig::GetAllUserId()
 		allUserId.push_back(userId);
 	}
 	return allUserId;
+}
+
+bool CUserConfig::RegisterUser(const QString& email, const QString& userName, const QString& password)
+{
+	QUuid uuid = QUuid::createUuid();
+
+	QSqlQuery sqlQuery(s_database);
+	sqlQuery.prepare("INSERT INTO user(uuid, email, name, password) VALUES(:uuid,:email,:name,:password);");
+	sqlQuery.bindValue(":uuid", uuid.toString());
+	sqlQuery.bindValue(":email", email);
+	sqlQuery.bindValue(":name", userName);
+	sqlQuery.bindValue(":password", password);
+	bool bOk = sqlQuery.exec();
+	if ( !bOk )
+	{
+		qDebug() << "Register user fail! er:" << sqlQuery.lastError().text();
+	}
+	return bOk;
 }

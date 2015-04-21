@@ -23,6 +23,10 @@ public:
 	// 获取用户的列表,本地有哪些用户的配置保持着.
 	static QStringList GetAllUserId();
 
+	// 注册一个用户. 返回用户的uuid.
+	static bool RegisterUser( const QString& email, const QString& userName, const QString& password );
+
+
 	// 通过邮箱名来获取.
 	static CUserConfig* GetUserConfig( const QString& userId );
 
