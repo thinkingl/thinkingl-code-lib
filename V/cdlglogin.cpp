@@ -39,7 +39,7 @@ void CDlgLogin::OnButtonLogin()
 	QString email = ui.cmbEmail->currentText();
 	if (email.isEmpty())
 	{
-		QMessageBox::critical(this, tr("注册失败"), tr("Email不能为空!"), QMessageBox::Ok);
+		QMessageBox::critical(this, tr("登录失败"), tr("Email不能为空!"), QMessageBox::Ok);
 		ui.cmbEmail->setFocus();
 		return;
 	}
@@ -47,7 +47,7 @@ void CDlgLogin::OnButtonLogin()
 	QString password = ui.lineEditPassword->text();
 	if (password.isEmpty())
 	{
-		QMessageBox::critical(this, tr("注册失败"), tr("密码不能为空"), QMessageBox::Ok);
+		QMessageBox::critical(this, tr("登录失败"), tr("密码不能为空"), QMessageBox::Ok);
 		ui.lineEditPassword->setFocus();
 		return;
 	}
