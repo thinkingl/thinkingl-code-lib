@@ -4,12 +4,13 @@
 #include <QDialog>
 #include "ui_cdlglogin.h"
 
+class CVModel;
 class CDlgLogin : public QDialog
 {
 	Q_OBJECT
 
 public:
-	CDlgLogin(QWidget *parent = 0);
+	CDlgLogin( CVModel* pModel, QWidget *parent = 0);
 	~CDlgLogin();
 
 private slots:
@@ -17,6 +18,11 @@ private slots:
 	// ×¢²á.
 	void OnButtonRegister();
 
+	// µÇÂ¼.
+	void OnButtonLogin();
+
+private:
+	CVModel* m_pModel;
 private:
 	Ui::CDlgLogin ui;
 };

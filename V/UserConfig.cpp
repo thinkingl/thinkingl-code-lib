@@ -26,7 +26,8 @@ QSqlDatabase CUserConfig::s_database;
 //	}
 //}
 
-CUserConfig::CUserConfig(void)
+CUserConfig::CUserConfig( const QString& userId )
+	:m_userId( userId )
 {
 }
 
@@ -142,3 +143,51 @@ bool CUserConfig::RegisterUser(const QString& email, const QString& userName, co
 	}
 	return bOk;
 }
+
+bool CUserConfig::CheckUserPassword(const QString& email, const QString& password)
+{
+	QSqlQuery sqlQuery(s_database);
+	sqlQuery.prepare("SELECT COUNT(0) from user where email=:email AND password=:password");
+	sqlQuery.bindValue(":email", email);
+	sqlQuery.bindValue(":password", password);
+	bool bOk = sqlQuery.exec();
+	if ( !bOk )
+	{
+		qDebug() << "Check user password sql error: " << sqlQuery.lastError().text();
+	}
+
+	if ( sqlQuery.next() )
+	{
+		int count = sqlQuery.value(0).toInt();
+		return count > 0;
+	}
+
+
+	return bOk;
+}
+
+QString CUserConfig::GetUserEmail()
+{
+	QSqlQuery sqlQuery(s_database);
+	sqlQuery.prepare("SELECT email from user where uuid=:uuid");
+	sqlQuery.bindValue(":uuid", m_userId);
+	bool bOk = sqlQuery.exec();
+	if ( !bOk )
+	{
+		qDebug() << "sql: " << sqlQuery.lastQuery() << " er: " << sqlQuery.lastError().text();
+		return "";
+	}
+	else
+	{
+		sqlQuery.next();
+		QString email = sqlQuery.value(0).toString();
+		return email;
+	}
+}
+
+// CUserConfig* CUserConfig::GetUserConfig(const QString& userId)
+// {
+// 
+// 	CUserConfig* pCfg = new CUserConfig( userId );
+// 	return pCfg;
+// }

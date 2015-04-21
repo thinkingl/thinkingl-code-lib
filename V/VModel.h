@@ -22,6 +22,9 @@ public:
 	~CVModel(void);
 
 public:
+	// 用户登录.
+	bool Login(const QString& email, const QString& password);
+
 	// 添加一个用户.
 	bool AddUser( const string& ipAddr, int port );
 

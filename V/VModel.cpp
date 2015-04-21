@@ -6,6 +6,7 @@
 #include <QTcpSocket>
 
 #include "UserConnectTask.h"
+#include "UserConfig.h"
 
 CVModel::CVModel(void)
 	:m_maxUserInternalId( CUser::INVALID_USER_INTERNAL_ID )
@@ -121,4 +122,8 @@ void CVModel::OnUserConnect()
 // {
 // 
 // }
-
+bool CVModel::Login(const QString& email, const QString& password)
+{
+	bool bOk = CUserConfig::CheckUserPassword(email, password);
+	return bOk;
+}

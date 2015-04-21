@@ -14,6 +14,9 @@ int main(int argc, char *argv[])
 
 	QApplication a(argc, argv);
 
+	CVModel vModel;
+
+
 	QTextCodec* locale = QTextCodec::codecForLocale();
 	QString kkk = locale->name();
 	//QTextCodec::setCodecForLocale(locale);
@@ -21,13 +24,13 @@ int main(int argc, char *argv[])
 	
 
 	// 弹出登录窗口.
-	CDlgLogin dlgLogin;
+	CDlgLogin dlgLogin(&vModel);
 	int ret = dlgLogin.exec();
 	if (ret == QDialog::Accepted)
 	{
 		// 处理登录.
 
-		CVMainWin w;
+		CVMainWin w(&vModel);
 		w.show();
 		ret = a.exec();
 	}

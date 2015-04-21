@@ -11,7 +11,7 @@
 class CUserConfig
 {
 public:
-	CUserConfig(void);
+	CUserConfig( const QString& userId );
 	~CUserConfig(void);
 
 	//static CUserConfig* GetInstance();
@@ -27,8 +27,11 @@ public:
 	static bool RegisterUser( const QString& email, const QString& userName, const QString& password );
 
 
-	// 通过邮箱名来获取.
-	static CUserConfig* GetUserConfig( const QString& userId );
+	// 通过uuid来获取.
+	//static CUserConfig* GetUserConfig( const QString& userId );
+
+	// 检查用户密码.
+	static bool CheckUserPassword( const QString& email, const QString& password );
 
 	// 用户ID.
 	QString GetUserId();
@@ -44,7 +47,8 @@ public:
 
 private:
 
-
+	// 用户uuid.
+	QString m_userId;
 private:
 	// 数据库对象.
 	static QSqlDatabase s_database;

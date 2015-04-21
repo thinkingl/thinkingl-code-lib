@@ -10,7 +10,7 @@ class CVMainWin : public QMainWindow
 	Q_OBJECT
 
 public:
-	CVMainWin(QWidget *parent = 0, Qt::WindowFlags flags = 0);
+	CVMainWin(CVModel* pModel, QWidget *parent = 0, Qt::WindowFlags flags = 0);
 	~CVMainWin();
 
 private slots: // 工具栏/菜单 处理.
@@ -25,7 +25,7 @@ private:
 	Ui::vClass ui;
 
 private:
-	CVModel m_vModel;
+	CVModel* m_pModel;
 };
 
 #endif // V_H
