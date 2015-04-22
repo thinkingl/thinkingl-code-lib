@@ -20,7 +20,7 @@ void CDlgRegister::OnButtonRegister()
 	QString email = ui.lineEditEmail->text();
 	if (email.isEmpty())
 	{
-		QMessageBox::critical(this, tr("×¢²áÊ§°Ü"), tr("Email²»ÄÜÎª¿Õ!"), QMessageBox::Ok);
+		QMessageBox::critical(this, tr("æ³¨å†Œå¤±è´¥"), tr("Emailä¸èƒ½ä¸ºç©º!"), QMessageBox::Ok);
 		ui.lineEditEmail->setFocus();
 		return;
 	}
@@ -28,7 +28,7 @@ void CDlgRegister::OnButtonRegister()
 	QString name = ui.lineEditName->text();
 	if (name.isEmpty())
 	{
-		QMessageBox::critical(this, tr("×¢²áÊ§°Ü"), tr("ÐÕÃû²»ÄÜÎª¿Õ"), QMessageBox::Ok);
+		QMessageBox::critical(this, tr("æ³¨å†Œå¤±è´¥"), tr("å§“åä¸èƒ½ä¸ºç©º"), QMessageBox::Ok);
 		ui.lineEditName->setFocus();
 		return;
 	}
@@ -36,17 +36,17 @@ void CDlgRegister::OnButtonRegister()
 	QString password = ui.lineEditPassword->text();
 	if (password.isEmpty())
 	{
-		QMessageBox::critical(this, tr("×¢²áÊ§°Ü"), tr("ÃÜÂë²»ÄÜÎª¿Õ"), QMessageBox::Ok);
+		QMessageBox::critical(this, tr("æ³¨å†Œå¤±è´¥"), tr("å¯†ç ä¸èƒ½ä¸ºç©º"), QMessageBox::Ok);
 		ui.lineEditPassword->setFocus();
 		return;
 	}
 
-	// ½øÐÐ×¢²á.
+	// è¿›è¡Œæ³¨å†Œ.
 	bool bOk = CUserConfig::RegisterUser(email, name, password);
 
 	if (bOk)
 	{
-		// ¹Ø±Õ×¢²á´°¿Ú.
+		// å…³é—­æ³¨å†Œçª—å£.
 		this->close();
 	}
 }

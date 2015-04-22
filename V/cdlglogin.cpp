@@ -11,16 +11,9 @@ CDlgLogin::CDlgLogin(CVModel* pModel, QWidget *parent)
 {
 	ui.setupUi(this);
 	connect(ui.buttonLogin, SIGNAL(clicked()), SLOT(OnButtonLogin()));
+	connect(ui.buttonRegister, SIGNAL(clicked()), SLOT(OnButtonRegister()));
 
-	// 读取所有用户.
-	QStringList allUser = CUserConfig::GetAllUserId();
-	for (int i = 0; i < allUser.size();++i)
-	{
-//		CUserConfig* pCfg = CUserConfig::GetUserConfig(allUser[i]);
-		CUserConfig cfg(allUser[i]);
-		QString email = cfg.GetUserEmail();
-		ui.cmbEmail->addItem(email);
-	}
+	UpdateUserList();
 }
 
 CDlgLogin::~CDlgLogin()
@@ -31,7 +24,12 @@ CDlgLogin::~CDlgLogin()
 void CDlgLogin::OnButtonRegister()
 {
 	CDlgRegister dlgReg( this );
-	dlgReg.exec();
+	int ret = dlgReg.exec();
+	if ( ret == QDialog::Accepted )
+	{
+		// 重新生成登录下拉框
+		UpdateUserList();
+	}
 }
 
 void CDlgLogin::OnButtonLogin()
@@ -60,5 +58,19 @@ void CDlgLogin::OnButtonLogin()
 	else
 	{
 		this->accept();
+	}
+}
+
+void CDlgLogin::UpdateUserList()
+{
+	ui.cmbEmail->clear();
+	// 读取所有用户.
+	QStringList allUser = CUserConfig::GetAllUserId();
+	for (int i = 0; i < allUser.size(); ++i)
+	{
+		//		CUserConfig* pCfg = CUserConfig::GetUserConfig(allUser[i]);
+		CUserConfig cfg(allUser[i]);
+		QString email = cfg.GetUserEmail();
+		ui.cmbEmail->addItem(email);
 	}
 }

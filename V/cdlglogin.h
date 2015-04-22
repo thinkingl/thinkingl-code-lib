@@ -22,6 +22,10 @@ private slots:
 	void OnButtonLogin();
 
 private:
+	// 刷新用户列表.
+	void UpdateUserList();
+
+private:
 	CVModel* m_pModel;
 private:
 	Ui::CDlgLogin ui;
