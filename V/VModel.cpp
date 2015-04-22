@@ -12,12 +12,7 @@ CVModel::CVModel(void)
 	:m_maxUserInternalId( CUser::INVALID_USER_INTERNAL_ID )
 	,m_curUserListPollIndex(0)
 {
-	QTimer *timer = new QTimer(this);
-	connect( timer, SIGNAL(timeout()), this, SLOT( PollUserList() ) );
-	timer->start(1000);
-
-	// 监听TCP端口,等待其它用户来连接.
-	this->StartTcpService();
+	
 }
 
 CVModel::~CVModel(void)
@@ -58,7 +53,7 @@ bool CVModel::AddUser( const string& ipAddr, int port )
 //	return 0;
 //}
 
-void CVModel::PollUserList()
+void CVModel::PollFriendsList()
 {
 	if ( m_userList.empty() )
 	{
@@ -125,5 +120,15 @@ void CVModel::OnUserConnect()
 bool CVModel::Login(const QString& email, const QString& password)
 {
 	bool bOk = CUserConfig::CheckUserPassword(email, password);
+
+	if ( bOk )
+	{
+		QTimer *timer = new QTimer(this);
+		connect(timer, SIGNAL(timeout()), this, SLOT(PollFriendsList()));
+		timer->start(1000);
+
+		// 监听TCP端口,等待其它用户来连接.
+		this->StartTcpService();
+	}
 	return bOk;
 }

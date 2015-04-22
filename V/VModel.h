@@ -35,7 +35,7 @@ public:
 	bool StartTcpService();
 private slots:
 	// 定时任务,遍历用户列表.
-	void PollUserList();
+	void PollFriendsList();
 
 
 
