@@ -9,7 +9,7 @@
 #include "UserConfig.h"
 
 CVModel::CVModel(void)
-	:m_maxUserInternalId( CUser::INVALID_USER_INTERNAL_ID )
+	:m_maxUserInternalId( CFriend::INVALID_USER_INTERNAL_ID )
 	,m_curUserListPollIndex(0)
 {
 	
@@ -42,7 +42,7 @@ bool CVModel::AddUser( const string& ipAddr, int port )
 
 	// Ìí¼Ó.
 	m_maxUserInternalId++;
-	CUser *pNewUser = new CUser( m_maxUserInternalId, ipAddr, port );
+	CFriend *pNewUser = new CFriend( m_maxUserInternalId, ipAddr, port );
 	m_userList.push_back( pNewUser );
 
 	return true;
@@ -65,7 +65,7 @@ void CVModel::PollFriendsList()
 		m_curUserListPollIndex = 0;
 	}
 
-	CUser* userInfo = m_userList[m_curUserListPollIndex];
+	CFriend* userInfo = m_userList[m_curUserListPollIndex];
 
 	userInfo->Work();
 
@@ -104,7 +104,7 @@ void CVModel::OnUserConnect()
 	QTcpSocket* pSock = m_tcpServer.nextPendingConnection();
 	if ( pSock && pSock->isValid() )
 	{
-		CUser* pInConnectingUser = new CUser;
+		CFriend* pInConnectingUser = new CFriend;
 
 		pInConnectingUser->FromConnect( pSock );
 		m_inConnectingUserList.push_back( pInConnectingUser );

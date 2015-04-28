@@ -15,7 +15,7 @@ CUserConnectTask::~CUserConnectTask(void)
 
 void CUserConnectTask::run()
 {
-	if ( m_pVModel && CUser::INVALID_USER_INTERNAL_ID != m_userInternalId )
+	if ( m_pVModel && CFriend::INVALID_USER_INTERNAL_ID != m_userInternalId )
 	{
 		//CUser userInfo;
 		//bool bOk = m_pVModel->GetUser( m_userInternalId, userInfo );

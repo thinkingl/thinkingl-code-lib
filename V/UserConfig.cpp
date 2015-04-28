@@ -91,11 +91,27 @@ bool CUserConfig::Init()
 		bool bOk = sqlCreateUserTable.exec("CREATE TABLE user( uuid TEXT PRIMARY KEY, name TEXT, email TEXT UNIQUE, password TEXT);");
 		if (!bOk)
 		{
-			qDebug() << "db operation fail! er: " << sqlCreateUserTable.lastError();
+			qDebug() << "db operation fail! er: " << sqlCreateUserTable.lastError() << " sql: " << sqlCreateUserTable.lastQuery();
 			Q_ASSERT(bOk);
 		}
 	}
 
+	// 好友列表.
+	const QString tableFriend = "friend";
+	if ( !tList.contains( tableFriend ) )
+	{
+		// 创建好友信息表.
+		// 字段: 用户UUID(外键); 好友UUID; 好友用户名; 好友用户邮箱; 好友IP; 好友端口;
+		QSqlQuery sqlCreateFriendTable(s_database);
+		sqlCreateFriendTable.prepare("CREATE TABLE :tablename( useruuid TEXT, frienduuid TEXT, name TEXT, email TEXT, ip TEXT, port INTEGER);");
+		sqlCreateFriendTable.bindValue(":tablename", tableFriend);
+		bool bOk = sqlCreateFriendTable.exec();
+		if ( !bOk )
+		{
+			qDebug() << "db operation fail! er: " << sqlCreateFriendTable.lastError() << " sql: " << sqlCreateFriendTable.lastQuery();
+			Q_ASSERT(bOk);
+		}
+	}
 
 // 	db.setHostName("MyServer");
 // 	db.setDatabaseName("C:\\test.gdb");

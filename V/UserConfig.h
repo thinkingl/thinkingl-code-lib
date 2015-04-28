@@ -2,6 +2,7 @@
 
 #include <QStringList>
 #include <QtSql/QSqlDatabase>
+#include "Friend.h"
 
 /** 
 *	保存用户的配置信息,每个用户都有自己的配置.
@@ -44,6 +45,18 @@ public:
 
 	// 用户EMAIL.
 	QString GetUserEmail();
+
+	//////////////////////////////////////////////////////////////////////////
+	// 用户好友数据的存储.
+	CFriendList GetAllFriends();
+
+	// 添加一个好友.
+	bool AddFriend( const CFriend& f);
+	// 删除一个好友.
+	bool DelFriend( const QString& friendUuid );
+	// 更新一个好友的信息.
+	bool UpdateFriend(const CFriend& f);
+	//////////////////////////////////////////////////////////////////////////
 
 private:
 

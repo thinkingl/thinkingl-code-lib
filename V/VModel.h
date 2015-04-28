@@ -5,7 +5,7 @@
 *	+by lizhixing@2014-11-23
 */
 
-#include "User.h"
+#include "friend.h"
 
 #include <string>
 using namespace std;
@@ -50,10 +50,10 @@ private:
 
 private:
 	// 用户列表.
-	CUserList m_userList;
+	CFriendList m_userList;
 
 	// 接收到的连接, 对应的用户.
-	CUserList m_inConnectingUserList;
+	CFriendList m_inConnectingUserList;
 
 	// 累加的用户内部ID.
 	int m_maxUserInternalId;
