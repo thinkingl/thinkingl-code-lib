@@ -69,9 +69,6 @@
     <ClCompile Include="VModel.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="User.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="UserConnectTask.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -79,12 +76,6 @@
       <Filter>Generated Files\Debug</Filter>
     </ClCompile>
     <ClCompile Include="GeneratedFiles\Release\moc_VModel.cpp">
-      <Filter>Generated Files\Release</Filter>
-    </ClCompile>
-    <ClCompile Include="GeneratedFiles\Debug\moc_User.cpp">
-      <Filter>Generated Files\Debug</Filter>
-    </ClCompile>
-    <ClCompile Include="GeneratedFiles\Release\moc_User.cpp">
       <Filter>Generated Files\Release</Filter>
     </ClCompile>
     <ClCompile Include="protocol.cpp">
@@ -111,6 +102,15 @@
     <ClCompile Include="GeneratedFiles\Release\moc_dlgregister.cpp">
       <Filter>Generated Files\Release</Filter>
     </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_Friend.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_Friend.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="Friend.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="v.qrc">
@@ -123,9 +123,6 @@
       <Filter>Form Files</Filter>
     </CustomBuild>
     <CustomBuild Include="dlgadduserbyaddress.h">
-      <Filter>Source Files</Filter>
-    </CustomBuild>
-    <CustomBuild Include="User.h">
       <Filter>Source Files</Filter>
     </CustomBuild>
     <CustomBuild Include="vmainwin.h">
@@ -145,6 +142,9 @@
     </CustomBuild>
     <CustomBuild Include="dlgregister.ui">
       <Filter>Form Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="Friend.h">
+      <Filter>Source Files</Filter>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
