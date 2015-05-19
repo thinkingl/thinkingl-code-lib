@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>600</width>
-    <height>400</height>
+    <width>504</width>
+    <height>388</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -73,7 +73,7 @@
      <string>抓拍时间间隔</string>
     </property>
    </widget>
-   <widget class="QLineEdit" name="lineEditPicEclapse">
+   <widget class="QLineEdit" name="lineEditElapse">
     <property name="geometry">
      <rect>
       <x>160</x>
@@ -142,7 +142,7 @@
     <property name="geometry">
      <rect>
       <x>230</x>
-      <y>290</y>
+      <y>310</y>
       <width>75</width>
       <height>23</height>
      </rect>
@@ -155,7 +155,7 @@
     <property name="geometry">
      <rect>
       <x>380</x>
-      <y>290</y>
+      <y>310</y>
       <width>75</width>
       <height>23</height>
      </rect>
@@ -168,7 +168,7 @@
     <property name="geometry">
      <rect>
       <x>50</x>
-      <y>260</y>
+      <y>270</y>
       <width>301</width>
       <height>16</height>
      </rect>

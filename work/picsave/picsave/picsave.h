@@ -3,6 +3,7 @@
 
 #include <QtWidgets/QMainWindow>
 #include "ui_picsave.h"
+#include "picsaveconfig.h"
 
 class picsave : public QMainWindow
 {
@@ -12,19 +13,30 @@ public:
 	picsave(QWidget *parent = 0);
 	~picsave();
 
+
+
 public slots:
 	// 确定按钮
+	void OnBtnOk();
 
 	// 取消按钮
+	void OnBtnCancel();
 
 	// 选择新的保存位置.
-
-	// 设置新的.
+	void OnBtnChooseNewDir();
+	// 打开图片保存目录.
+	void OnBtnOpenDir();
 
 	// 最小化.
+private:
+	// 读取配置,显示到界面上.
+	void ReadConfig();
 
 private:
 	Ui::picsaveClass ui;
+
+	// 程序配置.
+	CPicSaveConfig m_cfg;
 };
 
 #endif // PICSAVE_H
