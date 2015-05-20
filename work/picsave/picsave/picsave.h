@@ -5,6 +5,7 @@
 #include "ui_picsave.h"
 #include "picsaveconfig.h"
 #include <QSystemTrayIcon>
+#include "urldownload.h"
 
 class picsave : public QMainWindow
 {
@@ -42,11 +43,19 @@ private:
 	// 读取配置,显示到界面上.
 	void ReadConfig();
 
+	// 定时监测服务器上图片的时间.
+	void OnCheckPicTimer();
 private:
 	Ui::picsaveClass ui;
 
 	// 程序配置.
 	CPicSaveConfig m_cfg;
+
+	// 下载控件
+	DownloadControl* m_pDownloader;
+
+	// 定时器, 定时检测抓拍图片.
+	QTimer* m_pTimer;
 };
 
 #endif // PICSAVE_H

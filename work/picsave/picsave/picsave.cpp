@@ -7,11 +7,14 @@
 #include <QSystemTrayIcon>
 #include <QMenu>
 #include <QCloseEvent>
+#include <Qtimer>
 
 using namespace std;
 
 picsave::picsave(QWidget *parent)
 	: QMainWindow(parent)
+	, m_pDownloader(0)
+	, m_pTimer(0)
 {
 	ui.setupUi(this);
 
@@ -56,6 +59,17 @@ picsave::picsave(QWidget *parent)
 	//点击托盘执行的事件
 	connect(pTray, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this, SLOT(iconIsActived(QSystemTrayIcon::ActivationReason)));
 	connect(pTrayMenu, SIGNAL(showWidget()), this, SLOT(showNormal()));
+
+
+	// 定时器.
+	int secs = m_cfg.GetElapse();
+	m_pTimer = new QTimer(this);
+	connect(m_pTimer, SIGNAL(timeout()), this, SLOT(OnCheckPicTimer()));
+	m_pTimer->setInterval(60 * 1000);	// 1分钟检查一次.
+	m_pTimer->start();
+
+	// 立马检查一次.
+	emit OnCheckPicTimer();
 }
 
 void picsave::iconIsActived(QSystemTrayIcon::ActivationReason reason)
@@ -81,7 +95,7 @@ void picsave::iconIsActived(QSystemTrayIcon::ActivationReason reason)
 
 picsave::~picsave()
 {
-
+	m_pTimer->stop();
 }
 
 void picsave::OnBtnOk()
@@ -174,4 +188,16 @@ void picsave::closeEvent(QCloseEvent *event)
 {
 	this->hide();
 	event->ignore();
+}
+
+void picsave::OnCheckPicTimer()
+{
+	// 下载xml设备信息文件.
+
+	// 获取最近一次的图片下载时间.
+
+	// 检查是否达到设置的间隔.
+
+	// 开始下载图片.
+
 }
