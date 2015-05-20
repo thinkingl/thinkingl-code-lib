@@ -1,4 +1,5 @@
 <RCC>
-    <qresource prefix="picsave">
+    <qresource prefix="/picsave">
+        <file>pic.ico</file>
     </qresource>
 </RCC>

@@ -4,6 +4,7 @@
 #include <QtWidgets/QMainWindow>
 #include "ui_picsave.h"
 #include "picsaveconfig.h"
+#include <QSystemTrayIcon>
 
 class picsave : public QMainWindow
 {
@@ -28,6 +29,15 @@ public slots:
 	void OnBtnOpenDir();
 
 	// 最小化.
+
+	// 系统托盘处理.
+	void iconIsActived(QSystemTrayIcon::ActivationReason reason);
+	// 显示窗口.
+	void OnTrayShow();
+	// 退出程序.
+	void OnTrayExit();
+
+	void closeEvent(QCloseEvent *event);
 private:
 	// 读取配置,显示到界面上.
 	void ReadConfig();

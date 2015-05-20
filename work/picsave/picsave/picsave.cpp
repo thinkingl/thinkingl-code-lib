@@ -4,6 +4,9 @@
 #include <string>
 #include <QDir>
 #include <QFileDialog>
+#include <QSystemTrayIcon>
+#include <QMenu>
+#include <QCloseEvent>
 
 using namespace std;
 
@@ -12,16 +15,68 @@ picsave::picsave(QWidget *parent)
 {
 	ui.setupUi(this);
 
+	this->setWindowIcon(QIcon(":/picsave/pic.ico"));
+
 	// 读取配置.
 	ReadConfig();
 
 	// 按钮的信号绑定.
-	connect(ui.pushButtonOK, SIGNAL(clicked()), SLOT(OnBtnOK()));	// OK
+	connect(ui.pushButtonOK, SIGNAL(clicked()), SLOT(OnBtnOk()));	// OK
 	connect(ui.pushButtonCancel, SIGNAL(clicked()), SLOT(OnBtnCancel()));	// 取消.
 	connect(ui.pushButtonChooseNewDir, SIGNAL(clicked()), SLOT(OnBtnChooseNewDir()));	// 选择新目录.
 	connect(ui.pushButtonOpenDir, SIGNAL(clicked()), SLOT(OnBtnOpenDir()));	// 打开目录.
 
+	// 系统托盘.
+	QAction* pActionShow = new QAction(this);
+	pActionShow->setText(tr("显示"));
 
+	QAction* pActionExit = new QAction(this);
+	pActionExit->setText( tr("关闭") );
+
+	QMenu* pTrayMenu = new QMenu(this);
+	pTrayMenu->addAction(pActionShow);
+	pTrayMenu->addAction(pActionExit);
+
+
+
+	// 创建托盘.
+	QSystemTrayIcon* pTray = new QSystemTrayIcon(this);
+
+	pTray->setToolTip(tr("图片抓拍助手"));
+	pTray->setContextMenu(pTrayMenu);
+	pTray->setIcon(QIcon(":/picsave/pic.ico"));
+
+	pTray->show();
+	pTray->showMessage(tr("图片抓拍助手"),tr("图片抓拍"));
+
+	// 信号连接.
+	connect(pActionShow, SIGNAL(triggered(bool)), this, SLOT(OnTrayShow()));
+	connect(pActionExit, SIGNAL(triggered(bool)), this, SLOT(OnTrayExit()));
+
+	//点击托盘执行的事件
+	connect(pTray, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this, SLOT(iconIsActived(QSystemTrayIcon::ActivationReason)));
+	connect(pTrayMenu, SIGNAL(showWidget()), this, SLOT(showNormal()));
+}
+
+void picsave::iconIsActived(QSystemTrayIcon::ActivationReason reason)
+{
+	switch (reason)
+	{
+		//点击托盘显示窗口
+	case QSystemTrayIcon::Trigger:
+	{
+		showNormal();
+		break;
+	}
+		//双击托盘显示窗口
+	case QSystemTrayIcon::DoubleClick:
+	{
+		showNormal();
+		break;
+	}
+	default:
+		break;
+	}
 }
 
 picsave::~picsave()
@@ -42,19 +97,19 @@ void picsave::OnBtnOk()
 	m_cfg.SetPicSaveDir(dir);
 
 	// 抓拍间隔
-	int elapseMin = ui.lineEditPicDir->text().toInt();
+	int elapseMin = ui.lineEditElapse->text().toInt();
 	m_cfg.SetElapse(elapseMin * 60);
 
 	// 开机自动运行.
 	m_cfg;
 
 	// 关闭.
-	this->close();
+	this->hide();
 }
 
 void picsave::OnBtnCancel()
 {
-	this->close();
+	this->hide();
 }
 
 void picsave::OnBtnChooseNewDir()
@@ -103,4 +158,20 @@ void picsave::ReadConfig()
 
 	// 开机自动运行.
 
+}
+
+void picsave::OnTrayShow()
+{
+	this->show();
+}
+
+void picsave::OnTrayExit()
+{
+	exit(0);
+}
+
+void picsave::closeEvent(QCloseEvent *event)
+{
+	this->hide();
+	event->ignore();
 }
