@@ -153,6 +153,9 @@
   <ItemGroup>
     <ResourceCompile Include="picsave.rc" />
   </ItemGroup>
+  <ItemGroup>
+    <Image Include="pic.ico" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

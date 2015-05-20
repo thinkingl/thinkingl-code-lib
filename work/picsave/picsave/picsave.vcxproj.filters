@@ -88,4 +88,9 @@
   <ItemGroup>
     <ResourceCompile Include="picsave.rc" />
   </ItemGroup>
+  <ItemGroup>
+    <Image Include="pic.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+  </ItemGroup>
 </Project>

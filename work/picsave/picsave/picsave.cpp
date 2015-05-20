@@ -192,7 +192,10 @@ void picsave::closeEvent(QCloseEvent *event)
 
 void picsave::OnCheckPicTimer()
 {
+	// 检测xml文件有没有更新.
+
 	// 下载xml设备信息文件.
+
 
 	// 获取最近一次的图片下载时间.
 
