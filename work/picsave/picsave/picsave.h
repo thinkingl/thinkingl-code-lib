@@ -38,7 +38,13 @@ public slots:
 	// 退出程序.
 	void OnTrayExit();
 
+	// 重载关闭,改为隐藏窗口.
 	void closeEvent(QCloseEvent *event);
+
+	// 下载完成.
+	void OnDownloadFinished(QString url, emDownLoadErrorType code );
+	// 下载进度.
+	void OnDownloadProgress(QString url, qint64 cur, qint64 total);
 private:
 	// 读取配置,显示到界面上.
 	void ReadConfig();
@@ -56,6 +62,15 @@ private:
 
 	// 定时器, 定时检测抓拍图片.
 	QTimer* m_pTimer;
+
+	enum EWorkState
+	{
+		StateIdle,			// 初始状态.
+		StateDownloadXML,	// 正在下载XML文件.
+		StateDownloadPic,	// 正在下载图片.
+	};
+
+	EWorkState m_curState;
 };
 
 #endif // PICSAVE_H

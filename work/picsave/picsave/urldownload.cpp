@@ -5,7 +5,6 @@
 #include <QFileInfo>
 #include <QTextCodec>
 
-#define SAFE_DELETE(p) if(p){delete p;p=NULL;}
 
 
 Download::Download(int index, QObject *pParent)

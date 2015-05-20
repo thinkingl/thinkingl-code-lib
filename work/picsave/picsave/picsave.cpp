@@ -15,6 +15,7 @@ picsave::picsave(QWidget *parent)
 	: QMainWindow(parent)
 	, m_pDownloader(0)
 	, m_pTimer(0)
+	, m_curState( StateIdle )
 {
 	ui.setupUi(this);
 
@@ -192,6 +193,34 @@ void picsave::closeEvent(QCloseEvent *event)
 
 void picsave::OnCheckPicTimer()
 {
+	switch (m_curState)
+	{
+	case StateIdle:
+	{
+		Q_ASSERT((m_pDownloader == 0)&&"Last work unfinished!");
+
+		SAFE_DELETE(m_pDownloader);
+		m_pDownloader = new DownloadControl(this);
+
+		// 连接信号.
+		connect(m_pDownloader, SIGNAL(SignalDownloadFinished(QString, emDownLoadErrorType)), this, SLOT(OnDownloadFinished(QString, emDownLoadErrorType)));
+		connect(m_pDownloader, SIGNAL(SignalProgress(QString, qint64, qint64)), this, SLOT(OnDownladProgress(QString, qint64, qint64)));
+
+		QString xmlFileUrl;
+		QString xmlFileLocalPath;
+		m_pDownloader->StartFileDownload(xmlFileUrl, xmlFileLocalPath);
+
+		m_curState = StateDownloadXML;
+	}
+		break;
+
+	case StateDownloadXML:
+		break;
+
+	case StateDownloadPic:
+		break;
+	}
+
 	// 检测xml文件有没有更新.
 
 	// 下载xml设备信息文件.
@@ -203,4 +232,19 @@ void picsave::OnCheckPicTimer()
 
 	// 开始下载图片.
 
+}
+
+void picsave::OnDownloadFinished(QString url, emDownLoadErrorType er)
+{
+	qDebug() << "Downlaod finish! url: " << url << " er: " << er;
+
+	// 是xml文件完成了.
+
+	// 是图片文件完成了.
+
+}
+
+void picsave::OnDownloadProgress(QString url, qint64 cur, qint64 total)
+{
+	qDebug() << "Download progress. url: " << url << " cur: " << cur << "/" << total;
 }

@@ -9,6 +9,9 @@
 #include <QNetworkReply>
 #include <QFile>
 
+#define SAFE_DELETE(p) if(p){delete p;p=NULL;}
+
+
 enum emDownLoadErrorType
 {
     LOG_TYPE_TRUE = 0,              //œ¬‘ÿ≥…π¶
