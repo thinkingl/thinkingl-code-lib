@@ -5,6 +5,7 @@ CPicSaveConfig::CPicSaveConfig()
 	:m_pSetting(0)
 {
 	m_pSetting = new QSettings(QSettings::IniFormat, QSettings::UserScope, "LL", "PicSave");
+	m_pSetting->setIniCodec("UTF-8");
 }
 
 
@@ -24,7 +25,7 @@ void CPicSaveConfig::SetServerAddr(const QString& addr)
 
 const QString CPicSaveConfig::GetPicSaveDir() const
 {
-	return m_pSetting->value("picsave/picdir", "./pics/").toString();
+	return m_pSetting->value("picsave/picdir", "d:/pics/").toString();
 }
 
 void CPicSaveConfig::SetPicSaveDir(const QString& dir)
