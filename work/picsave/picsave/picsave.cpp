@@ -3,6 +3,7 @@
 #include "picsave.h"
 #include <string>
 #include <QDir>
+#include <QFileDialog>
 
 using namespace std;
 
@@ -11,14 +12,14 @@ picsave::picsave(QWidget *parent)
 {
 	ui.setupUi(this);
 
-	// ¶ÁÈ¡ÅäÖÃ.
+	// è¯»å–é…ç½®.
 	ReadConfig();
 
-	// °´Å¥µÄĞÅºÅ°ó¶¨.
+	// æŒ‰é’®çš„ä¿¡å·ç»‘å®š.
 	connect(ui.pushButtonOK, SIGNAL(clicked()), SLOT(OnBtnOK()));	// OK
-	connect(ui.pushButtonCancel, SIGNAL(clicked()), SLOT(OnBtnCancel()));	// È¡Ïû.
-	connect(ui.pushButtonChooseNewDir, SIGNAL(clicked()), SLOT(OnBtnChooseNewDir()));	// Ñ¡ÔñĞÂÄ¿Â¼.
-	connect(ui.pushButtonOpenDir, SIGNAL(clicked()), SLOT(OnBtnOpenDir()));	// ´ò¿ªÄ¿Â¼.
+	connect(ui.pushButtonCancel, SIGNAL(clicked()), SLOT(OnBtnCancel()));	// å–æ¶ˆ.
+	connect(ui.pushButtonChooseNewDir, SIGNAL(clicked()), SLOT(OnBtnChooseNewDir()));	// é€‰æ‹©æ–°ç›®å½•.
+	connect(ui.pushButtonOpenDir, SIGNAL(clicked()), SLOT(OnBtnOpenDir()));	// æ‰“å¼€ç›®å½•.
 
 
 }
@@ -30,22 +31,25 @@ picsave::~picsave()
 
 void picsave::OnBtnOk()
 {
-	// ±£´æÅäÖÃ.
+	// ä¿å­˜é…ç½®.
 
-	// ·şÎñÆ÷µØÖ·.
+	// æœåŠ¡å™¨åœ°å€.
 	QString addr = ui.lineEditServerAddr->text();
 	m_cfg.SetServerAddr(addr);
 
-	// Í¼Æ¬±£´æÄ¿Â¼.
+	// å›¾ç‰‡ä¿å­˜ç›®å½•.
 	QString dir = ui.lineEditPicDir->text();
 	m_cfg.SetPicSaveDir(dir);
 
-	// ×¥ÅÄ¼ä¸ô
+	// æŠ“æ‹é—´éš”
 	int elapseMin = ui.lineEditPicDir->text().toInt();
 	m_cfg.SetElapse(elapseMin * 60);
 
-	// ¿ª»ú×Ô¶¯ÔËĞĞ.
+	// å¼€æœºè‡ªåŠ¨è¿è¡Œ.
 	m_cfg;
+
+	// å…³é—­.
+	this->close();
 }
 
 void picsave::OnBtnCancel()
@@ -55,25 +59,13 @@ void picsave::OnBtnCancel()
 
 void picsave::OnBtnChooseNewDir()
 {
-
+	QString oldDir = ui.lineEditPicDir->text();
+	QString newDir = QFileDialog::getExistingDirectory(this, tr("é€‰æ‹©æ–°çš„å›¾ç‰‡ç›®å½•"), oldDir);
+	if ( !newDir.isEmpty() )
+	{
+		ui.lineEditPicDir->setText(newDir);
+	}
 }
-
-
-// bool LocationFileInExplorer(IN CStringUtf8& filePath)
-// {
-// 	if (!IsFileExist(filePath))
-// 	{
-// 		assert(false && "ÎÄ¼ş²»´æÔÚ!");
-// 		return false;
-// 	}
-// 
-// 	StringAnsi cmd = "Explorer /e,/select, ";
-// 	cmd += Utf8ToAnsi(filePath);
-// 
-// 	UINT ret = WinExec(cmd.c_str(), SW_SHOWNORMAL);
-// 	LOGLOW() << cmd << "\tret:" << ret;
-// 	return ret > 31;
-// }
 
 void picsave::OnBtnOpenDir()
 {
@@ -97,18 +89,18 @@ void picsave::OnBtnOpenDir()
 
 void picsave::ReadConfig()
 {
-	// ·şÎñÆ÷µØÖ·.
+	// æœåŠ¡å™¨åœ°å€.
 	QString addr = m_cfg.GetServerAddr();
 	ui.lineEditServerAddr->setText(addr);
 
-	// Í¼Æ¬±£´æÄ¿Â¼.
+	// å›¾ç‰‡ä¿å­˜ç›®å½•.
 	QString dir = m_cfg.GetPicSaveDir();
 	ui.lineEditPicDir->setText(dir);
 
-	// ×¥ÅÄ¼ä¸ô.
+	// æŠ“æ‹é—´éš”.
 	int elapse = m_cfg.GetElapse();
 	ui.lineEditElapse->setText(QString::number(elapse/60));
 
-	// ¿ª»ú×Ô¶¯ÔËĞĞ.
+	// å¼€æœºè‡ªåŠ¨è¿è¡Œ.
 
 }
