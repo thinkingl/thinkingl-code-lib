@@ -8,8 +8,13 @@
 #include <QMenu>
 #include <QCloseEvent>
 #include <Qtimer>
+#include <QDomDocument>
 
 using namespace std;
+
+const QString DevicelistFileName = "/caps/wx/devicelist.xml";
+const QString XmlFileLocalPath = "./devicelist.xml";
+
 
 picsave::picsave(QWidget *parent)
 	: QMainWindow(parent)
@@ -206,9 +211,9 @@ void picsave::OnCheckPicTimer()
 		connect(m_pDownloader, SIGNAL(SignalDownloadFinished(QString, emDownLoadErrorType)), this, SLOT(OnDownloadFinished(QString, emDownLoadErrorType)));
 		connect(m_pDownloader, SIGNAL(SignalProgress(QString, qint64, qint64)), this, SLOT(OnDownladProgress(QString, qint64, qint64)));
 
-		QString xmlFileUrl;
-		QString xmlFileLocalPath;
-		m_pDownloader->StartFileDownload(xmlFileUrl, xmlFileLocalPath);
+		QString serverAddr = m_cfg.GetServerAddr();
+		QString xmlFileUrl = NormalizeUrl(serverAddr, DevicelistFileName);
+		m_pDownloader->StartFileDownload(xmlFileUrl, XmlFileLocalPath);
 
 		m_curState = StateDownloadXML;
 	}
@@ -238,13 +243,116 @@ void picsave::OnDownloadFinished(QString url, emDownLoadErrorType er)
 {
 	qDebug() << "Downlaod finish! url: " << url << " er: " << er;
 
-	// 是xml文件完成了.
+	SAFE_DELETE(m_pDownloader);
 
-	// 是图片文件完成了.
+	if (url.indexOf(DevicelistFileName) != -1)
+	{
+		// 是xml文件完成了.
+		qDebug() << "XML file download finished!";
+
+		m_waittingPicList = ParsePicInfo(XmlFileLocalPath);
+
+		// 切换到图片下载状态.
+		m_curState = StateDownloadPic;
+
+		// 判断图片最后抓拍时间,是否达到设置的抓拍间隔.
+		emit OnCheckPic();
+	}
+	else
+	{
+		// 是图片文件完成了.
+
+
+		// 下载下一个.
+	}
+
 
 }
 
 void picsave::OnDownloadProgress(QString url, qint64 cur, qint64 total)
 {
 	qDebug() << "Download progress. url: " << url << " cur: " << cur << "/" << total;
+}
+
+QString picsave::NormalizeUrl(const QString& serverAddr, const QString urlDir)
+{
+	QString url = serverAddr;
+
+	// 补上http://
+	const QString httpHead = "http://";
+	if (url.indexOf(httpHead) != 0)
+	{
+		url = httpHead + url;
+	}
+
+	url += urlDir;
+
+	return url;
+}
+
+CPicInfoList picsave::ParsePicInfo(QString xmlFileName)
+{
+	CPicInfoList picInfoList;
+
+	// 解析XML文件.
+	QFile xmlFile(xmlFileName);
+	if (!xmlFile.open(QIODevice::ReadOnly))
+	{
+		qDebug() << "Open devicelist xml file fail! xml: " << XmlFileLocalPath;
+		return picInfoList;
+	}
+
+	QDomDocument doc;
+	if (!doc.setContent(&xmlFile))
+	{
+		qDebug() << "Parse xml fail! ";
+		return picInfoList;
+	}
+
+	QDomNodeList devXmlList = doc.elementsByTagName("device");
+
+	for (int i = 0; i < devXmlList.size(); ++i)
+	{
+		const QDomNode& devNode = devXmlList.at(i);
+
+		CPicInfo pic;
+		pic.m_deviceId = GetDomNodeValue(devNode, "id");			// 设备ID
+		pic.m_deviceName = GetDomNodeValue(devNode, "name");	// 设备名称
+		pic.m_picUrl = GetDomNodeValue(devNode, "photo");		// 图片路径(url)
+		pic.m_chnId = GetDomNodeValue(devNode, "chn").toInt();	// 通道ID
+		picInfoList.push_back(pic);
+	}
+	return picInfoList;
+}
+
+QString picsave::GetDomNodeValue(const QDomNode& node, const QString& tagName)
+{
+	QDomElement devIdEle = node.firstChildElement(tagName);
+	if (!devIdEle.isNull())
+	{
+		QString text = devIdEle.text();
+		if ( text.length() > 2 )
+		{
+			text = text.mid(1, text.length() - 1);
+		}
+		return text;
+	}
+	return "";
+}
+
+void picsave::OnCheckPic()
+{
+	// 取列表头上的.
+	if ( m_waittingPicList.empty() )
+	{
+		qDebug() << "Waitting pic queue is empty!";
+		m_curState = StateIdle;
+		return;
+	}
+
+	CPicInfo picInfo = m_waittingPicList.front();
+	m_waittingPicList.pop_front();
+
+	// 找到最近的这个设备的图片.
+
 }

@@ -6,6 +6,18 @@
 #include "picsaveconfig.h"
 #include <QSystemTrayIcon>
 #include "urldownload.h"
+#include <QString>
+#include <QDomNode>
+
+class CPicInfo
+{
+public:
+	QString m_deviceId;
+	int m_chnId;
+	QString m_deviceName;
+	QString m_picUrl;
+};
+typedef QList<CPicInfo> CPicInfoList;
 
 class picsave : public QMainWindow
 {
@@ -45,12 +57,29 @@ public slots:
 	void OnDownloadFinished(QString url, emDownLoadErrorType code );
 	// 下载进度.
 	void OnDownloadProgress(QString url, qint64 cur, qint64 total);
+
+	// 定时监测服务器上图片的时间.
+	void OnCheckPicTimer();
+
+	// 检测图片时间,是否需要下载.
+	void OnCheckPic();
+
+	// 拼凑本地图片路径.
+
 private:
 	// 读取配置,显示到界面上.
 	void ReadConfig();
 
-	// 定时监测服务器上图片的时间.
-	void OnCheckPicTimer();
+	// 拼凑生成下载的完整URL.
+	QString NormalizeUrl(const QString& serverAddr, const QString urlDir);
+
+
+	// 解析出服务器上的图片完整信息.
+	CPicInfoList ParsePicInfo( QString xmlFileName );
+
+	// 获取一个XML节点下指定名称的子节点的值.
+	QString GetDomNodeValue(const QDomNode& node, const QString& tagName);
+	
 private:
 	Ui::picsaveClass ui;
 
@@ -71,6 +100,9 @@ private:
 	};
 
 	EWorkState m_curState;
+
+	// 等待抓拍的图片
+	CPicInfoList m_waittingPicList;
 };
 
 #endif // PICSAVE_H
