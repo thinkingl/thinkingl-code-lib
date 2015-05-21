@@ -113,7 +113,7 @@ DownloadControl::~DownloadControl()
 }
 
 //用阻塞的方式获取下载文件的长度
-qint64 DownloadControl::GetFileSize(QUrl url)
+void DownloadControl::GetFileInfo(QUrl url, qint64& fileLen, QDateTime& lastmodifiedTime )
 {
 	QNetworkAccessManager manager;	
 	qDebug() << "Getting the file size...";
@@ -123,12 +123,17 @@ qint64 DownloadControl::GetFileSize(QUrl url)
 	QObject::connect(reply, SIGNAL(finished()), &loop, SLOT(quit()), Qt::DirectConnection);
 	loop.exec();
 	QVariant var = reply->header(QNetworkRequest::ContentLengthHeader);
+	QVariant varLastmodified = reply->header(QNetworkRequest::LastModifiedHeader);
+	
 	reply->deleteLater();
 	reply = NULL;
 	Q_UNUSED(reply);
-	qint64 size = var.toLongLong();
-	qDebug() << "The file size is: " << size;
-	return size;
+	fileLen = var.toLongLong();
+	qDebug() << "The file size is: " << fileLen;
+
+	lastmodifiedTime = varLastmodified.toDateTime();
+	qDebug() << "File last modifyed: " << lastmodifiedTime.toString("yyyy/MM/dd hh:mm:ss");
+
 }
 qint64 DownloadControl::GetReqFileSize()
 {
@@ -180,11 +185,12 @@ bool DownloadControl::StartFileDownload(const QString &url, const QString &saveF
 	}
 	m_Url = QUrl(tmpUrl);	
 	m_nDoneBytes = 0;
-	m_nReqFileSize = static_cast<int>(GetFileSize(m_Url));
+	//m_nReqFileSize = static_cast<int>(GetFileSize(m_Url));
+	GetFileInfo(m_Url, m_nReqFileSize, m_fileLastModified);
 	if (m_nReqFileSize == 0)
 	{
 		m_bFailed = true;
-		emit SignalDownloadFinished(m_strUrl, LOG_TYPE_NOTFOUNDFILE);
+		emit SignalDownloadFinished(m_strUrl, LOG_TYPE_NOTFOUNDFILE, m_fileLastModified);
 
 		qDebug()<<"http file not found!";
 		return false;
@@ -201,7 +207,7 @@ bool DownloadControl::StartFileDownload(const QString &url, const QString &saveF
 	if (!m_pFileSave->open(QIODevice::WriteOnly))
 	{
 		m_bFailed = true;		        
-        emit SignalDownloadFinished(m_strUrl, LOG_TYPE_OPENFILEFAILED);
+		emit SignalDownloadFinished(m_strUrl, LOG_TYPE_OPENFILEFAILED, m_fileLastModified);
 
 		qDebug()<<"open file "<<fileName<<" for write failed";
 		return false;
@@ -241,7 +247,7 @@ void DownloadControl::PriSlotOnPartFinished(int nIndex, bool bSucessful)
 	if (!bSucessful)
 	{		
 		m_bFailed = true;		        
-        emit SignalDownloadFinished(m_strUrl, LOG_TYPE_THREADSDOWNDFAILED);
+		emit SignalDownloadFinished(m_strUrl, LOG_TYPE_THREADSDOWNDFAILED, m_fileLastModified);
 
 		qDebug() << "some threads download failed";	
 		return;
@@ -257,7 +263,7 @@ void DownloadControl::PriSlotOnPartFinished(int nIndex, bool bSucessful)
 			SAFE_DELETE(m_pFileSave);
 		}
 		qDebug() << "Download finished";
-		emit SignalDownloadFinished(m_strUrl, LOG_TYPE_TRUE);
+		emit SignalDownloadFinished(m_strUrl, LOG_TYPE_TRUE, m_fileLastModified);
 	}
 }
 
@@ -293,7 +299,7 @@ void CLogFileDownloadControl::PriSlotOnPartFinished(int nIndex, bool bSucessful)
 	if (!bSucessful)
 	{		
 		m_bFailed = true;		        
-		emit SignalDownloadFinished(m_strUrl, LOG_TYPE_THREADSDOWNDFAILED);
+		emit SignalDownloadFinished(m_strUrl, LOG_TYPE_THREADSDOWNDFAILED, m_fileLastModified);
 
 		qDebug() << "some threads download failed";	
 		return;
@@ -313,16 +319,16 @@ void CLogFileDownloadControl::PriSlotOnPartFinished(int nIndex, bool bSucessful)
 			if (TranslateLogFileCodec(strLogFile,"utf8"))
 			{
 				qDebug() << "Download finished";
-				emit SignalDownloadFinished(m_strUrl, LOG_TYPE_TRUE);
+				emit SignalDownloadFinished(m_strUrl, LOG_TYPE_TRUE, m_fileLastModified);
 			}
 			else
 			{
-				emit SignalDownloadFinished(m_strUrl, LOG_TYPE_TRANSCODECFAILED);
+				emit SignalDownloadFinished(m_strUrl, LOG_TYPE_TRANSCODECFAILED, m_fileLastModified);
 			}
 		}
 		else
 		{
-			emit SignalDownloadFinished(m_strUrl, LOG_TYPE_OPENFILEFAILED);
+			emit SignalDownloadFinished(m_strUrl, LOG_TYPE_OPENFILEFAILED, m_fileLastModified);
 		}
 	}
 }

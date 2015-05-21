@@ -54,7 +54,8 @@ class DownloadControl : public QObject
 protected:
 	int m_ndlThreadCount;
 	int m_nFinishedThreadNum;
-	int m_nReqFileSize;
+	qint64 m_nReqFileSize;
+	QDateTime m_fileLastModified;
 	int m_nDoneBytes;
 	QUrl m_Url;
 	QFile *m_pFileSave;
@@ -70,12 +71,12 @@ public:
 	QString GetDownloadFile();//返回下载的文件名
 	void StopDownload();//停止下载
 private:
-	qint64 GetFileSize(QUrl url);
+	void GetFileInfo(QUrl url, qint64& fileLen, QDateTime& lastmodifiedTime);
 signals:
 	////下载成功通知（或失败通知）
     //@yu 2013.2.4 修改 （增加提示错误码）
 	//void SignalDownloadFinished(bool bSucessful);
-    void SignalDownloadFinished(QString strUrl, emDownLoadErrorType emErrorType);
+    void SignalDownloadFinished(QString strUrl, emDownLoadErrorType emErrorType, QDateTime lastModifiedTime);
 
 	//进度通知，已经完成字节数/总字节数
 	void SignalProgress(QString strUrl, qint64 nDoneBytes, qint64 nTotalBytes);

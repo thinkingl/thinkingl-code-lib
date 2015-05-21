@@ -239,9 +239,9 @@ void picsave::OnCheckPicTimer()
 
 }
 
-void picsave::OnDownloadFinished(QString url, emDownLoadErrorType er)
+void picsave::OnDownloadFinished(QString url, emDownLoadErrorType er, QDateTime fileLastModified)
 {
-	qDebug() << "Downlaod finish! url: " << url << " er: " << er;
+	qDebug() << "Downlaod finish! url: " << url << " er: " << er << " lastmodified: " << fileLastModified.toString("yy/MM/dd hh:mm:ss");
 
 	SAFE_DELETE(m_pDownloader);
 
@@ -467,6 +467,6 @@ void picsave::RecreateDownloader()
 	m_pDownloader = new DownloadControl(this);
 
 	// 连接信号.
-	connect(m_pDownloader, SIGNAL(SignalDownloadFinished(QString, emDownLoadErrorType)), this, SLOT(OnDownloadFinished(QString, emDownLoadErrorType)));
+	connect(m_pDownloader, SIGNAL(SignalDownloadFinished(QString, emDownLoadErrorType,QDateTime)), this, SLOT(OnDownloadFinished(QString, emDownLoadErrorType,QDateTime)));
 	connect(m_pDownloader, SIGNAL(SignalProgress(QString, qint64, qint64)), this, SLOT(OnDownloadProgress(QString, qint64, qint64)));
 }

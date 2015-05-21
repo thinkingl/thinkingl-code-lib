@@ -54,7 +54,7 @@ public slots:
 	void closeEvent(QCloseEvent *event);
 
 	// 下载完成.
-	void OnDownloadFinished(QString url, emDownLoadErrorType code );
+	void OnDownloadFinished(QString url, emDownLoadErrorType code, QDateTime fileLastModified );
 	// 下载进度.
 	void OnDownloadProgress(QString url, qint64 cur, qint64 total);
 
