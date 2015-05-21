@@ -61,10 +61,12 @@ public slots:
 	// 定时监测服务器上图片的时间.
 	void OnCheckPicTimer();
 
+	void RecreateDownloader();
+
 	// 检测图片时间,是否需要下载.
 	void OnCheckPic();
 
-	// 拼凑本地图片路径.
+	
 
 private:
 	// 读取配置,显示到界面上.
@@ -73,13 +75,23 @@ private:
 	// 拼凑生成下载的完整URL.
 	QString NormalizeUrl(const QString& serverAddr, const QString urlDir);
 
-
 	// 解析出服务器上的图片完整信息.
 	CPicInfoList ParsePicInfo( QString xmlFileName );
 
 	// 获取一个XML节点下指定名称的子节点的值.
 	QString GetDomNodeValue(const QDomNode& node, const QString& tagName);
 	
+	// 检查图片是否需要更新.
+	bool IsPicExpired(const QString& picPath);
+
+	// 开始下载一张图片.
+	void StartDownloadPic(const CPicInfo& picInfo);
+
+	// 拼凑本地图片.
+	QString GetPicPath( const CPicInfo& picInfo );
+
+	void UpdateCheckTimer();
+
 private:
 	Ui::picsaveClass ui;
 
@@ -106,3 +118,4 @@ private:
 };
 
 #endif // PICSAVE_H
+

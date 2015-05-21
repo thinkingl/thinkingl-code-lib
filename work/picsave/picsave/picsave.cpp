@@ -64,18 +64,17 @@ picsave::picsave(QWidget *parent)
 
 	//点击托盘执行的事件
 	connect(pTray, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this, SLOT(iconIsActived(QSystemTrayIcon::ActivationReason)));
-	connect(pTrayMenu, SIGNAL(showWidget()), this, SLOT(showNormal()));
+	//connect(pTrayMenu, SIGNAL(showWidget()), this, SLOT(showNormal()));
 
 
 	// 定时器.
-	int secs = m_cfg.GetElapse();
 	m_pTimer = new QTimer(this);
 	connect(m_pTimer, SIGNAL(timeout()), this, SLOT(OnCheckPicTimer()));
-	m_pTimer->setInterval(60 * 1000);	// 1分钟检查一次.
-	m_pTimer->start();
+	UpdateCheckTimer();
+
 
 	// 立马检查一次.
-	emit OnCheckPicTimer();
+//	emit OnCheckPicTimer();
 }
 
 void picsave::iconIsActived(QSystemTrayIcon::ActivationReason reason)
@@ -102,6 +101,8 @@ void picsave::iconIsActived(QSystemTrayIcon::ActivationReason reason)
 picsave::~picsave()
 {
 	m_pTimer->stop();
+
+	SAFE_DELETE(m_pDownloader);
 }
 
 void picsave::OnBtnOk()
@@ -122,6 +123,9 @@ void picsave::OnBtnOk()
 
 	// 开机自动运行.
 	m_cfg;
+
+	// 更新定时器.
+	UpdateCheckTimer();
 
 	// 关闭.
 	this->hide();
@@ -173,7 +177,7 @@ void picsave::ReadConfig()
 	ui.lineEditPicDir->setText(dir);
 
 	// 抓拍间隔.
-	int elapse = m_cfg.GetElapse();
+	int elapse = m_cfg.GetElapseSec();
 	ui.lineEditElapse->setText(QString::number(elapse/60));
 
 	// 开机自动运行.
@@ -204,12 +208,8 @@ void picsave::OnCheckPicTimer()
 	{
 		Q_ASSERT((m_pDownloader == 0)&&"Last work unfinished!");
 
-		SAFE_DELETE(m_pDownloader);
-		m_pDownloader = new DownloadControl(this);
+		RecreateDownloader();
 
-		// 连接信号.
-		connect(m_pDownloader, SIGNAL(SignalDownloadFinished(QString, emDownLoadErrorType)), this, SLOT(OnDownloadFinished(QString, emDownLoadErrorType)));
-		connect(m_pDownloader, SIGNAL(SignalProgress(QString, qint64, qint64)), this, SLOT(OnDownladProgress(QString, qint64, qint64)));
 
 		QString serverAddr = m_cfg.GetServerAddr();
 		QString xmlFileUrl = NormalizeUrl(serverAddr, DevicelistFileName);
@@ -262,11 +262,9 @@ void picsave::OnDownloadFinished(QString url, emDownLoadErrorType er)
 	{
 		// 是图片文件完成了.
 
-
 		// 下载下一个.
+		emit OnCheckPic();
 	}
-
-
 }
 
 void picsave::OnDownloadProgress(QString url, qint64 cur, qint64 total)
@@ -283,6 +281,11 @@ QString picsave::NormalizeUrl(const QString& serverAddr, const QString urlDir)
 	if (url.indexOf(httpHead) != 0)
 	{
 		url = httpHead + url;
+	}
+
+	if ( !urlDir.startsWith('/') && !url.endsWith('/'))
+	{
+		url += '/';
 	}
 
 	url += urlDir;
@@ -331,10 +334,10 @@ QString picsave::GetDomNodeValue(const QDomNode& node, const QString& tagName)
 	if (!devIdEle.isNull())
 	{
 		QString text = devIdEle.text();
-		if ( text.length() > 2 )
-		{
-			text = text.mid(1, text.length() - 1);
-		}
+// 		if ( text.endsWith( '"' ) && text.startsWith('"') )
+// 		{
+// 			text = text.mid(1, text.length() - 1);
+// 		}
 		return text;
 	}
 	return "";
@@ -354,5 +357,116 @@ void picsave::OnCheckPic()
 	m_waittingPicList.pop_front();
 
 	// 找到最近的这个设备的图片.
+	QString picPath = m_cfg.GetPicPath(picInfo.m_deviceId, picInfo.m_chnId);
+	if ( IsPicExpired( picPath) )
+	{
+		// 下载这个图片.
+		StartDownloadPic(picInfo);
+	}
+	else
+	{
+		qDebug() << "Pic is new, don't need update. name: " << picInfo.m_deviceName;
+		// 这个图片不需要更新,继续检查下一张.
+		emit OnCheckPic();
+	}
+}
 
+bool picsave::IsPicExpired(const QString& picPath)
+{
+	if ( picPath.isEmpty() )
+	{
+		return true;
+	}
+	// 获取图片文件的时间.
+	QFileInfo info(picPath);
+	bool exist = info.exists();
+	if ( !exist )
+	{
+		return true;	// 文件不存在,下载.
+	}
+
+	QDateTime lastModifiedTime = info.lastModified();
+	QDateTime now = QDateTime::currentDateTime();
+	uint diff = now.toTime_t() - lastModifiedTime.toTime_t();
+
+	int elapseSec = m_cfg.GetElapseSec();
+	return diff >= elapseSec;
+}
+
+void picsave::StartDownloadPic(const CPicInfo& picInfo)
+{
+	Q_ASSERT((m_pDownloader == 0) && "Last download unfinished!");
+	SAFE_DELETE(m_pDownloader);
+
+	RecreateDownloader();
+	
+	QString addr = m_cfg.GetServerAddr();
+	// 图片所在路径url需要 http://ip/shm/图片相对路径.
+	if ( !addr.endsWith('/'))
+	{
+		addr += '/';
+	}
+	if ( !picInfo.m_picUrl.startsWith("shm") )
+	{
+		addr += "shm";
+	}
+
+	QString picUrl = NormalizeUrl( addr, picInfo.m_picUrl );
+
+	QString picPath = GetPicPath( picInfo );
+
+	// 记录这个设备的图片路径.
+	m_cfg.SetPicPath(picInfo.m_deviceId, picInfo.m_chnId, picPath);
+
+	// 开始下载.
+	m_pDownloader->StartFileDownload( picUrl, picPath );
+
+	qDebug() << "Start download pic: " << picUrl << " path: " << picPath;
+}
+
+QString picsave::GetPicPath(const CPicInfo& picInfo)
+{
+	// 图片本地路径. 格式: 图片存放目录/日期/设备名_时间_设备ID_通道ID.文件后缀
+	QString picPath = m_cfg.GetPicSaveDir();
+
+	if (!(picPath.endsWith('\\') || picPath.endsWith("/")))
+	{
+		picPath += "/";
+	}
+	// 日期.
+	QString dateStr = QDate::currentDate().toString("yyyyMMdd");
+	picPath += dateStr;
+	picPath += '/';
+
+	// 创建目录.
+	QDir().mkpath(picPath);
+
+	picPath += picInfo.m_deviceName;
+	picPath += '_';
+	picPath += QDateTime::currentDateTime().toString("hhmmss");
+	picPath += '_';
+	picPath += picInfo.m_deviceId;
+	picPath += '_';
+	picPath += QString::number( picInfo.m_chnId );
+	picPath += ".jpg";
+	return picPath;
+}
+
+void picsave::UpdateCheckTimer()
+{
+	m_pTimer->stop();
+
+	int picExpiredTime = m_cfg.GetElapseSec();
+	int minTimerElapse = 5 * 1000;
+	m_pTimer->start(min(minTimerElapse, picExpiredTime * 1000 / 2));		// 定时器间隔, 设置为1分钟,或者图片超时时间的一半,保证图片会被更新.
+}
+
+void picsave::RecreateDownloader()
+{
+	SAFE_DELETE(m_pDownloader);
+	m_pDownloader = new DownloadControl(this);
+
+	// 连接信号.
+	connect(m_pDownloader, SIGNAL(SignalDownloadFinished(QString, emDownLoadErrorType)), this, SLOT(OnDownloadFinished(QString, emDownLoadErrorType)));
+	connect(m_pDownloader, SIGNAL(SignalProgress(QString, qint64, qint64)), this, SLOT(OnDownloadProgress(QString, qint64, qint64)));
 }

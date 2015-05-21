@@ -21,9 +21,15 @@ public:
 	void SetPicSaveDir(const QString& dir);
 
 	// 抓拍时间间隔.
-	const int GetElapse() const;
+	const int GetElapseSec() const;
 	void SetElapse(int timeElapseSecs);
 
+	// 最后一次抓拍图片的路径.
+	void SetPicPath( const QString& devId, int chnId, const QString& path );
+	QString GetPicPath(const QString& devId, int chnId);
+private:
+	// 拼凑图片抓拍路径的Key.
+	QString MakePicPathKey(const QString& devId, int chnId);
 private:
 	QSettings* m_pSetting;
 };

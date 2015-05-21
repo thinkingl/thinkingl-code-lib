@@ -33,7 +33,7 @@ void CPicSaveConfig::SetPicSaveDir(const QString& dir)
 	m_pSetting->setValue("picsave/picdir", dir);
 }
 
-const int CPicSaveConfig::GetElapse() const
+const int CPicSaveConfig::GetElapseSec() const
 {
 	return m_pSetting->value("picsave/elapse", 60*60).toInt();
 }
@@ -41,6 +41,25 @@ const int CPicSaveConfig::GetElapse() const
 void CPicSaveConfig::SetElapse(int timeElapseSecs)
 {
 	m_pSetting->setValue("picsave/elapse", timeElapseSecs);
+}
+
+void CPicSaveConfig::SetPicPath(const QString& devId, int chnId, const QString& path)
+{
+	QString key = MakePicPathKey(devId, chnId);
+	m_pSetting->setValue(key, path);
+}
+
+QString CPicSaveConfig::GetPicPath(const QString& devId, int chnId)
+{
+	QString key = MakePicPathKey(devId, chnId);
+	return m_pSetting->value(key).toString();
+}
+
+QString CPicSaveConfig::MakePicPathKey(const QString& devId, int chnId)
+{
+	QString key = "picpath/";
+	key = key + devId + "_" + chnId;
+	return key;
 }
 
 
