@@ -68,6 +68,7 @@ public:
 	virtual ~DownloadControl();
 	bool StartFileDownload(const QString &url, const QString &saveFile, int count = PointCount);
 	qint64 GetReqFileSize();//返回所请求文件在服务器上的大小
+	QDateTime GetFileLastModified(); // 返回文件最后修改时间.
 	QString GetDownloadFile();//返回下载的文件名
 	void StopDownload();//停止下载
 private:

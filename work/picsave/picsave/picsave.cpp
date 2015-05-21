@@ -29,6 +29,9 @@ picsave::picsave(QWidget *parent)
 	// 读取配置.
 	ReadConfig();
 
+	// 默认提示清空.
+	ui.labelState->setText("");
+
 	// 按钮的信号绑定.
 	connect(ui.pushButtonOK, SIGNAL(clicked()), SLOT(OnBtnOk()));	// OK
 	connect(ui.pushButtonCancel, SIGNAL(clicked()), SLOT(OnBtnCancel()));	// 取消.
@@ -261,6 +264,8 @@ void picsave::OnDownloadFinished(QString url, emDownLoadErrorType er, QDateTime 
 	else
 	{
 		// 是图片文件完成了.
+		QString state = fileLastModified.toLocalTime().toString(("最近抓拍时间 yyyy年MM月dd日  hh:mm:ss"));
+		ui.labelState->setText(state);
 
 		// 下载下一个.
 		emit OnCheckPic();

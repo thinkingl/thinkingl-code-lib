@@ -132,12 +132,16 @@ void DownloadControl::GetFileInfo(QUrl url, qint64& fileLen, QDateTime& lastmodi
 	qDebug() << "The file size is: " << fileLen;
 
 	lastmodifiedTime = varLastmodified.toDateTime();
-	qDebug() << "File last modifyed: " << lastmodifiedTime.toString("yyyy/MM/dd hh:mm:ss");
+	qDebug() << "File last modifyed: " << lastmodifiedTime.toLocalTime().toString("yyyy/MM/dd hh:mm:ss");
 
 }
 qint64 DownloadControl::GetReqFileSize()
 {
 	return m_nReqFileSize;
+}
+QDateTime DownloadControl::GetFileLastModified()
+{
+	return m_fileLastModified;
 }
 QString DownloadControl::GetDownloadFile()//返回下载的文件名
 {
