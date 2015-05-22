@@ -165,6 +165,9 @@
     </property>
    </widget>
    <widget class="QCheckBox" name="checkBoxAutoRun">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
     <property name="geometry">
      <rect>
       <x>50</x>

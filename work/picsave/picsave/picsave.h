@@ -90,7 +90,8 @@ private:
 	// 拼凑本地图片.
 	QString GetPicPath( const CPicInfo& picInfo );
 
-	void UpdateCheckTimer();
+	// 重置所有.
+	void ResetAll();
 
 private:
 	Ui::picsaveClass ui;

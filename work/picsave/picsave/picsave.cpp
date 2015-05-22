@@ -9,6 +9,7 @@
 #include <QCloseEvent>
 #include <Qtimer>
 #include <QDomDocument>
+#include <QDebug>
 
 using namespace std;
 
@@ -73,7 +74,7 @@ picsave::picsave(QWidget *parent)
 	// 定时器.
 	m_pTimer = new QTimer(this);
 	connect(m_pTimer, SIGNAL(timeout()), this, SLOT(OnCheckPicTimer()));
-	UpdateCheckTimer();
+	ResetAll();
 
 
 	// 立马检查一次.
@@ -128,7 +129,7 @@ void picsave::OnBtnOk()
 	m_cfg;
 
 	// 更新定时器.
-	UpdateCheckTimer();
+	ResetAll();
 
 	// 关闭.
 	this->hide();
@@ -228,18 +229,6 @@ void picsave::OnCheckPicTimer()
 	case StateDownloadPic:
 		break;
 	}
-
-	// 检测xml文件有没有更新.
-
-	// 下载xml设备信息文件.
-
-
-	// 获取最近一次的图片下载时间.
-
-	// 检查是否达到设置的间隔.
-
-	// 开始下载图片.
-
 }
 
 void picsave::OnDownloadFinished(QString url, emDownLoadErrorType er, QDateTime fileLastModified)
@@ -266,7 +255,10 @@ void picsave::OnDownloadFinished(QString url, emDownLoadErrorType er, QDateTime 
 	{
 		// 是图片文件完成了.
 		QString state = fileLastModified.toLocalTime().toString(("最近抓拍时间 yyyy年MM月dd日  hh:mm:ss"));
-		ui.labelState->setText(state);
+		if ( !state.isEmpty() )
+		{
+			ui.labelState->setText(state);
+		}
 
 		// 下载下一个.
 		emit OnCheckPic();
@@ -461,13 +453,19 @@ QString picsave::GetPicPath(const CPicInfo& picInfo)
 	return picPath;
 }
 
-void picsave::UpdateCheckTimer()
+void picsave::ResetAll()
 {
 	m_pTimer->stop();
 
 	int picExpiredTime = m_cfg.GetElapseSec();
 	int minTimerElapse = 5 * 1000;
 	m_pTimer->start(min(minTimerElapse, picExpiredTime * 1000 / 2));		// 定时器间隔, 设置为1分钟,或者图片超时时间的一半,保证图片会被更新.
+
+	// 状态归位.
+	m_curState = StateIdle;
+	m_pDownloader->deleteLater();
+	m_pDownloader = 0;
+	m_waittingPicList.clear();
 }
 
 void picsave::RecreateDownloader()

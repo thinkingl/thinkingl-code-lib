@@ -4,7 +4,8 @@
 #include <QEventLoop>
 #include <QFileInfo>
 #include <QTextCodec>
-
+#include <QDebug>
+#include <QStringList>
 
 
 Download::Download(int index, QObject *pParent)
@@ -119,19 +120,27 @@ void DownloadControl::GetFileInfo(QUrl url, qint64& fileLen, QDateTime& lastmodi
 	qDebug() << "Getting the file size...";
 	QEventLoop loop;
 	//发出请求，获取目标地址的头部信息
-	QNetworkReply *reply = manager.head(QNetworkRequest(url));
-	QObject::connect(reply, SIGNAL(finished()), &loop, SLOT(quit()), Qt::DirectConnection);
+	QNetworkReply *pReply = manager.head(QNetworkRequest(url));
+	if ( pReply == 0 )
+	{
+		fileLen = 0;
+		return;
+	}
+	QObject::connect(pReply, SIGNAL(finished()), &loop, SLOT(quit()), Qt::DirectConnection);
 	loop.exec();
-	QVariant var = reply->header(QNetworkRequest::ContentLengthHeader);
-	QVariant varLastmodified = reply->header(QNetworkRequest::LastModifiedHeader);
+	QVariant var = pReply->header(QNetworkRequest::ContentLengthHeader);
+	QVariant varLastmodified = pReply->header(QNetworkRequest::LastModifiedHeader);
 	
-	reply->deleteLater();
-	reply = NULL;
-	Q_UNUSED(reply);
+	pReply->deleteLater();
+	pReply = NULL;
+	Q_UNUSED(pReply);
 	fileLen = var.toLongLong();
 	qDebug() << "The file size is: " << fileLen;
 
-	lastmodifiedTime = varLastmodified.toDateTime();
+	if ( !varLastmodified.isNull() )
+	{
+		lastmodifiedTime = varLastmodified.toDateTime();
+	}
 	qDebug() << "File last modifyed: " << lastmodifiedTime.toLocalTime().toString("yyyy/MM/dd hh:mm:ss");
 
 }
