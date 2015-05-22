@@ -105,7 +105,7 @@ picsave::~picsave()
 {
 	m_pTimer->stop();
 
-	SAFE_DELETE(m_pDownloader);
+//	SAFE_DELETE(m_pDownloader);
 }
 
 void picsave::OnBtnOk()
@@ -246,7 +246,8 @@ void picsave::OnDownloadFinished(QString url, emDownLoadErrorType er, QDateTime 
 {
 	qDebug() << "Downlaod finish! url: " << url << " er: " << er << " lastmodified: " << fileLastModified.toString("yy/MM/dd hh:mm:ss");
 
-	SAFE_DELETE(m_pDownloader);
+	m_pDownloader->deleteLater();
+	m_pDownloader = 0;
 
 	if (url.indexOf(DevicelistFileName) != -1)
 	{
@@ -401,7 +402,10 @@ bool picsave::IsPicExpired(const QString& picPath)
 void picsave::StartDownloadPic(const CPicInfo& picInfo)
 {
 	Q_ASSERT((m_pDownloader == 0) && "Last download unfinished!");
-	SAFE_DELETE(m_pDownloader);
+	//SAFE_DELETE(m_pDownloader);
+
+	m_pDownloader->deleteLater();
+	m_pDownloader = 0;
 
 	RecreateDownloader();
 	
@@ -422,7 +426,7 @@ void picsave::StartDownloadPic(const CPicInfo& picInfo)
 
 	// 记录这个设备的图片路径.
 	m_cfg.SetPicPath(picInfo.m_deviceId, picInfo.m_chnId, picPath);
-
+	
 	// 开始下载.
 	m_pDownloader->StartFileDownload( picUrl, picPath );
 
@@ -468,7 +472,10 @@ void picsave::UpdateCheckTimer()
 
 void picsave::RecreateDownloader()
 {
-	SAFE_DELETE(m_pDownloader);
+	//SAFE_DELETE(m_pDownloader);
+	m_pDownloader->deleteLater();
+	m_pDownloader = 0;
+
 	m_pDownloader = new DownloadControl(this);
 
 	// 连接信号.
