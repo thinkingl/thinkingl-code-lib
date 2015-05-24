@@ -22,10 +22,13 @@ picsave::picsave(QWidget *parent)
 	, m_pDownloader(0)
 	, m_pTimer(0)
 	, m_curState( StateIdle )
+	, m_pTray(0)
 {
 	ui.setupUi(this);
 
-	this->setWindowIcon(QIcon(":/picsave/pic.ico"));
+	QIcon* pIcon = new QIcon("./pic.ico");
+	bool kkk = pIcon->isNull();
+	this->setWindowIcon(*pIcon);
 
 	// 读取配置.
 	ReadConfig();
@@ -38,6 +41,8 @@ picsave::picsave(QWidget *parent)
 	connect(ui.pushButtonCancel, SIGNAL(clicked()), SLOT(OnBtnCancel()));	// 取消.
 	connect(ui.pushButtonChooseNewDir, SIGNAL(clicked()), SLOT(OnBtnChooseNewDir()));	// 选择新目录.
 	connect(ui.pushButtonOpenDir, SIGNAL(clicked()), SLOT(OnBtnOpenDir()));	// 打开目录.
+
+	connect(ui.checkBoxAutoRun, SIGNAL(stateChanged(int)), SLOT(OnCheckAutoRun(int)));	// 开机自动运行.
 
 	// 系统托盘.
 	QAction* pActionShow = new QAction(this);
@@ -53,21 +58,21 @@ picsave::picsave(QWidget *parent)
 
 
 	// 创建托盘.
-	QSystemTrayIcon* pTray = new QSystemTrayIcon(this);
+	m_pTray = new QSystemTrayIcon(this);
 
-	pTray->setToolTip(tr("图片抓拍助手"));
-	pTray->setContextMenu(pTrayMenu);
-	pTray->setIcon(QIcon(":/picsave/pic.ico"));
+	m_pTray->setToolTip(tr("图片抓拍助手"));
+	m_pTray->setContextMenu(pTrayMenu);
+	m_pTray->setIcon(QIcon("./pic.ico"));
 
-	pTray->show();
-	pTray->showMessage(tr("图片抓拍助手"),tr("图片抓拍"));
+	m_pTray->show();
+	m_pTray->showMessage(tr("图片抓拍助手"),tr("图片抓拍"));
 
 	// 信号连接.
 	connect(pActionShow, SIGNAL(triggered(bool)), this, SLOT(OnTrayShow()));
 	connect(pActionExit, SIGNAL(triggered(bool)), this, SLOT(OnTrayExit()));
 
 	//点击托盘执行的事件
-	connect(pTray, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this, SLOT(iconIsActived(QSystemTrayIcon::ActivationReason)));
+	connect( m_pTray, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this, SLOT(iconIsActived(QSystemTrayIcon::ActivationReason)));
 	//connect(pTrayMenu, SIGNAL(showWidget()), this, SLOT(showNormal()));
 
 
@@ -76,6 +81,9 @@ picsave::picsave(QWidget *parent)
 	connect(m_pTimer, SIGNAL(timeout()), this, SLOT(OnCheckPicTimer()));
 	ResetAll();
 
+	// 是不是自动运行.
+	bool autoRun = this->IsAppAutoRun();
+	ui.checkBoxAutoRun->setChecked( autoRun );
 
 	// 立马检查一次.
 //	emit OnCheckPicTimer();
@@ -202,6 +210,8 @@ void picsave::closeEvent(QCloseEvent *event)
 {
 	this->hide();
 	event->ignore();
+
+	m_pTray->showMessage(tr("图片抓拍助手"),tr("图片抓拍"));
 }
 
 void picsave::OnCheckPicTimer()
@@ -479,4 +489,79 @@ void picsave::RecreateDownloader()
 	// 连接信号.
 	connect(m_pDownloader, SIGNAL(SignalDownloadFinished(QString, emDownLoadErrorType,QDateTime)), this, SLOT(OnDownloadFinished(QString, emDownLoadErrorType,QDateTime)));
 	connect(m_pDownloader, SIGNAL(SignalProgress(QString, qint64, qint64)), this, SLOT(OnDownloadProgress(QString, qint64, qint64)));
+}
+
+bool picsave::IsAppAutoRun()
+{
+	// 打开注册表.
+	HKEY autoRunKey;
+	LONG ret = RegOpenKeyEx( HKEY_LOCAL_MACHINE, L"SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run\\", 0, KEY_QUERY_VALUE, &autoRunKey );
+	if ( ERROR_SUCCESS != ret )
+	{
+		qDebug() << "Open registry fail! er: " << ret;
+		return false;
+	}
+
+	bool isAutoRun = false;
+
+	wchar_t wszPath[MAX_PATH] = {0};
+	DWORD bufLen = MAX_PATH*sizeof(wszPath[0]);
+	DWORD dwType = REG_SZ;
+	ret = RegQueryValueExW( autoRunKey, L"picsave", NULL, &dwType, (LPBYTE)wszPath, &bufLen );
+	if ( ERROR_SUCCESS != ret )
+	{
+		qDebug() << "RegGetValue fail! er: " << ret;
+		isAutoRun = false;
+	}
+	else
+	{
+		// 比较路径, 是否和本程序相同.
+		QString appPath = qApp->applicationFilePath();
+
+		isAutoRun = (appPath == QString::fromUtf16((const ushort*)wszPath));
+	}
+
+	RegCloseKey( autoRunKey );
+
+	return isAutoRun;
+}
+
+void picsave::OnCheckAutoRun(int qtCheckedState)
+{
+	bool autoRun = ui.checkBoxAutoRun->isChecked();
+	bool autoRunNow = IsAppAutoRun();
+	if ( autoRun != autoRunNow )
+	{
+		this->SetAppAutoRun( autoRun );
+	}
+}
+
+bool picsave::SetAppAutoRun(bool autoRun)
+{
+	// 打开注册表.
+	HKEY autoRunKey;
+	LONG ret = RegOpenKeyEx( HKEY_LOCAL_MACHINE, L"SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run\\", 0, KEY_SET_VALUE|KEY_CREATE_SUB_KEY, &autoRunKey );
+	if ( ERROR_SUCCESS != ret )
+	{
+		qDebug() << "Open registry fail! er: " << ret;
+
+		// 创建注册表项.
+		return false;
+	}
+
+	QString appPath;
+	if ( autoRun )
+	{
+		appPath = qApp->applicationFilePath();
+	}
+
+	ret = RegSetValueEx( autoRunKey, L"picsave", NULL, REG_SZ, (const BYTE*)appPath.toStdWString().c_str(), appPath.length()*sizeof(wchar_t)+1 );
+	if ( ERROR_SUCCESS != ret )
+	{
+		qDebug() << "RegSetValueEx fail! er: " << ret;
+	}
+
+	RegCloseKey( autoRunKey );
+
+	return ERROR_SUCCESS == ret;
 }

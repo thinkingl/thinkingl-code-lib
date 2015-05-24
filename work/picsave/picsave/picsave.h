@@ -41,6 +41,9 @@ public slots:
 	// 打开图片保存目录.
 	void OnBtnOpenDir();
 
+	// 开机自动运行.
+	void OnCheckAutoRun(int qtCheckBoxState);
+
 	// 最小化.
 
 	// 系统托盘处理.
@@ -93,6 +96,12 @@ private:
 	// 重置所有.
 	void ResetAll();
 
+	// 程序是否自动运行了.
+	bool IsAppAutoRun();
+
+	// 设置程序开机后自动运行.
+	bool SetAppAutoRun( bool autoRun );
+
 private:
 	Ui::picsaveClass ui;
 
@@ -116,6 +125,8 @@ private:
 
 	// 等待抓拍的图片
 	CPicInfoList m_waittingPicList;
+
+	QSystemTrayIcon* m_pTray;
 };
 
 #endif // PICSAVE_H

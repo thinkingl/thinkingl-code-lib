@@ -58,7 +58,7 @@ QString CPicSaveConfig::GetPicPath(const QString& devId, int chnId)
 QString CPicSaveConfig::MakePicPathKey(const QString& devId, int chnId)
 {
 	QString key = "picpath/";
-	key = key + devId + "_" + chnId;
+	key = key + devId + "_" + QString::number(chnId);
 	return key;
 }
 
