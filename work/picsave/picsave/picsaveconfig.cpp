@@ -1,5 +1,6 @@
 #include "picsaveconfig.h"
 #include <QSettings>
+#include <QTime>
 
 CPicSaveConfig::CPicSaveConfig()
 	:m_pSetting(0)
@@ -60,6 +61,18 @@ QString CPicSaveConfig::MakePicPathKey(const QString& devId, int chnId)
 	QString key = "picpath/";
 	key = key + devId + "_" + QString::number(chnId);
 	return key;
+}
+
+void CPicSaveConfig::SetTimeRange(const QTime& start, const QTime& end)
+{
+	m_pSetting->setValue("picsave/start", start);
+	m_pSetting->setValue("picsave/end", end);
+}
+
+void CPicSaveConfig::GetTimeRange(QTime& start, QTime& end)
+{
+	start = m_pSetting->value("picsave/start", QTime(0,0)).toTime();
+	end = m_pSetting->value("picsave/end", QTime(23, 59, 59, 999)).toTime();
 }
 
 

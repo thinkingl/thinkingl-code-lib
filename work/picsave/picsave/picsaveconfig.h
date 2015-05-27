@@ -27,6 +27,11 @@ public:
 	// 最后一次抓拍图片的路径.
 	void SetPicPath( const QString& devId, int chnId, const QString& path );
 	QString GetPicPath(const QString& devId, int chnId);
+
+	// 抓拍时间段配置.
+	void SetTimeRange( const QTime& start, const QTime& end );
+	void GetTimeRange(QTime& start, QTime& end);
+
 private:
 	// 拼凑图片抓拍路径的Key.
 	QString MakePicPathKey(const QString& devId, int chnId);

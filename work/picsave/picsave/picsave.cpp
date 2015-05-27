@@ -10,6 +10,7 @@
 #include <Qtimer>
 #include <QDomDocument>
 #include <QDebug>
+#include <QImageReader>
 
 using namespace std;
 
@@ -26,9 +27,14 @@ picsave::picsave(QWidget *parent)
 {
 	ui.setupUi(this);
 
+	QList<QByteArray> aaaa = QImageReader::supportedImageFormats();
 	QIcon* pIcon = new QIcon("./pic.ico");
 	bool kkk = pIcon->isNull();
 	this->setWindowIcon(*pIcon);
+
+	// 窗口标题, 版本.
+	QString title = tr("图片抓拍助手 Ver.150527");
+	this->setWindowTitle( title );
 
 	// 读取配置.
 	ReadConfig();
@@ -133,8 +139,11 @@ void picsave::OnBtnOk()
 	int elapseMin = ui.lineEditElapse->text().toInt();
 	m_cfg.SetElapse(elapseMin * 60);
 
-	// 开机自动运行.
-	m_cfg;
+	// 抓拍时间段.
+	QTime start = ui.timeEditStart->time();
+	QTime end = ui.timeEditEnd->time();
+	m_cfg.SetTimeRange(start, end);
+
 
 	// 更新定时器.
 	ResetAll();
@@ -192,8 +201,17 @@ void picsave::ReadConfig()
 	int elapse = m_cfg.GetElapseSec();
 	ui.lineEditElapse->setText(QString::number(elapse/60));
 
-	// 开机自动运行.
 
+	// 时间段.
+	QTime start, end;
+	m_cfg.GetTimeRange(start, end);
+	ui.timeEditStart->setTime(start);
+	ui.timeEditEnd->setTime(end);
+
+	// 开机自动运行.
+	// 是不是自动运行.
+	bool autoRun = this->IsAppAutoRun();
+	ui.checkBoxAutoRun->setChecked(autoRun);
 }
 
 void picsave::OnTrayShow()
@@ -216,6 +234,16 @@ void picsave::closeEvent(QCloseEvent *event)
 
 void picsave::OnCheckPicTimer()
 {
+	// 增加抓拍时间段控制支持.
+	QTime start, end;
+	m_cfg.GetTimeRange(start, end);
+	QTime now = QTime::currentTime();
+	if ( now < start || now > end )
+	{
+		qDebug() << "Not in time range, return!";
+		return;
+	}
+
 	switch (m_curState)
 	{
 	case StateIdle:
@@ -438,6 +466,7 @@ void picsave::StartDownloadPic(const CPicInfo& picInfo)
 QString picsave::GetPicPath(const CPicInfo& picInfo)
 {
 	// 图片本地路径. 格式: 图片存放目录/日期/设备名_时间_设备ID_通道ID.文件后缀
+	// 改为 图片存放目录/日期/设备名/设备名_时间.文件后缀
 	QString picPath = m_cfg.GetPicSaveDir();
 
 	if (!(picPath.endsWith('\\') || picPath.endsWith("/")))
@@ -445,20 +474,24 @@ QString picsave::GetPicPath(const CPicInfo& picInfo)
 		picPath += "/";
 	}
 	// 日期.
-	QString dateStr = QDate::currentDate().toString("yyyyMMdd");
-	picPath += dateStr;
+// 	QString dateStr = QDate::currentDate().toString("yyyyMMdd");
+// 	picPath += dateStr;
+// 	picPath += '/';
+
+	// 设备名.
+	picPath += picInfo.m_deviceName;
 	picPath += '/';
 
 	// 创建目录.
 	QDir().mkpath(picPath);
 
 	picPath += picInfo.m_deviceName;
-	picPath += '_';
-	picPath += QDateTime::currentDateTime().toString("hhmmss");
-	picPath += '_';
-	picPath += picInfo.m_deviceId;
-	picPath += '_';
-	picPath += QString::number( picInfo.m_chnId );
+	picPath += '-';
+	picPath += QDateTime::currentDateTime().toString("yyyy-MM-dd-hh-mm-ss");
+//	picPath += '_';
+//	picPath += picInfo.m_deviceId;
+//	picPath += '_';
+//	picPath += QString::number( picInfo.m_chnId );
 	picPath += ".jpg";
 	return picPath;
 }
