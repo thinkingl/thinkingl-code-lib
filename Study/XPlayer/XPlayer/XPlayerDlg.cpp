@@ -6,6 +6,7 @@
 #include "XPlayer.h"
 #include "XPlayerDlg.h"
 #include "afxdialogex.h"
+// ÎÄµµ²Î¼û https://msdn.microsoft.com/en-us/library/windows/desktop/dd375454(v=vs.85).aspx
 
 #include <dshow.h>
 
