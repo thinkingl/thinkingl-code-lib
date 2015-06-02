@@ -24,6 +24,24 @@ private slots:
 	// 打开文件.
 	void OnOpenFile();
 
+
+	// QMediaPlayer的信号.
+	void	OnMediaPlayerAudioAvailableChanged(bool available);
+	void	OnMediaPlayerBufferStatusChanged(int percentFilled);
+	void	OnMediaPlayerCurrentMediaChanged(const QMediaContent & media);
+	void	OnMediaPlayerDurationChanged(qint64 duration);
+	void	OnMediaPlayerError(QMediaPlayer::Error error);
+	void	OnMediaPlayerMediaChanged(const QMediaContent & media);
+	void	OnMediaPlayerMediaStatusChanged(QMediaPlayer::MediaStatus status);
+	void	OnMediaPlayerMutedChanged(bool muted);
+	void	OnMediaPlayerNetworkConfigurationChanged(const QNetworkConfiguration & configuration);
+	void	OnMediaPlayerPlaybackRateChanged(qreal rate);
+	void	OnMediaPlayerPositionChanged(qint64 position);
+	void	OnMediaPlayerSeekableChanged(bool seekable);
+	void	OnMediaPlayerStateChanged(QMediaPlayer::State state);
+	void	OnMediaPlayerVideoAvailableChanged(bool videoAvailable);
+	void	OnMediaPlayerVolumeChanged(int volume);
+
 private:
 	Ui::XPlayerQtClass ui;
 
