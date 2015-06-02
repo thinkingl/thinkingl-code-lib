@@ -68,6 +68,7 @@ BEGIN_MESSAGE_MAP(CXPlayerDlg, CDialogEx)
 	ON_WM_SYSCOMMAND()
 	ON_WM_PAINT()
 	ON_WM_QUERYDRAGICON()
+	ON_BN_CLICKED(ID_PLAY, &CXPlayerDlg::OnBnClickedPlay)
 END_MESSAGE_MAP()
 
 
@@ -156,3 +157,62 @@ HCURSOR CXPlayerDlg::OnQueryDragIcon()
 	return static_cast<HCURSOR>(m_hIcon);
 }
 
+
+
+void CXPlayerDlg::OnBnClickedPlay()
+{
+	// TODO:  在此添加控件通知处理程序代码
+	// CFileDialog(BOOL bOpenFileDialog, // TRUE for FileOpen, FALSE for FileSaveAs
+	// 	LPCTSTR lpszDefExt = NULL,
+	// 		LPCTSTR lpszFileName = NULL,
+	// 		DWORD dwFlags = OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT,
+	// 		LPCTSTR lpszFilter = NULL,
+	// 		CWnd* pParentWnd = NULL,
+	// 		DWORD dwSize = 0,
+	// 		BOOL bVistaStyle = TRUE);
+	HRESULT hr = CoInitialize(NULL);
+	if ( FAILED( hr ) )
+	{
+		MessageBox(L"Initialize COM fail!");
+		return;
+	}
+
+	IGraphBuilder *pGraph = NULL;
+	IMediaControl *pControl = NULL;
+	IMediaEvent* pEvent = NULL;
+
+	hr = CoCreateInstance(CLSID_FilterGraph, NULL, CLSCTX_INPROC_SERVER, IID_IGraphBuilder, (void**)&pGraph);
+	if ( FAILED( hr ) )
+	{
+		MessageBox(L"Create the Filter Graph Manager fail!");
+		return;
+	}
+
+	hr = pGraph->QueryInterface(IID_IMediaControl, (void**)&pControl);
+	hr = pGraph->QueryInterface(IID_IMediaEvent, (void**)&pEvent);
+
+
+	CFileDialog dlg(TRUE, NULL, NULL, NULL, NULL, this);
+	if (IDOK == dlg.DoModal())
+	{
+		CString filePath = dlg.GetPathName();
+
+		hr = pGraph->RenderFile(filePath, NULL);
+		if ( SUCCEEDED(hr))
+		{
+			// Run the graph
+			hr = pControl->Run();
+			if (SUCCEEDED(hr))
+			{
+				long evCode;
+				pEvent->WaitForCompletion(INFINITE, &evCode);
+
+			}
+		}
+	}
+
+	pControl->Release();
+	pEvent->Release();
+	pGraph->Release();
+	CoUninitialize();
+}
