@@ -58,6 +58,9 @@ END_MESSAGE_MAP()
 
 CXPlayerDlg::CXPlayerDlg(CWnd* pParent /*=NULL*/)
 	: CDialogEx(CXPlayerDlg::IDD, pParent)
+	, m_pGraph(NULL)
+	, m_pControl(NULL)
+	, m_pEvent(NULL)
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 }
@@ -74,6 +77,8 @@ BEGIN_MESSAGE_MAP(CXPlayerDlg, CDialogEx)
 	ON_WM_QUERYDRAGICON()
 	ON_BN_CLICKED(ID_PLAY, &CXPlayerDlg::OnBnClickedPlay)
 	ON_BN_CLICKED(ID_SHOWLOG, &CXPlayerDlg::OnBnClickedShowlog)
+	ON_WM_TIMER()
+	ON_BN_CLICKED(ID_STOP, &CXPlayerDlg::OnBnClickedStop)
 END_MESSAGE_MAP()
 
 
@@ -109,6 +114,10 @@ BOOL CXPlayerDlg::OnInitDialog()
 	SetIcon(m_hIcon, FALSE);		// 设置小图标
 
 	// TODO:  在此添加额外的初始化代码
+
+	// 设置定时器.
+	this->SetTimer(0, 1, 0);
+
 
 	return TRUE;  // 除非将焦点设置到控件，否则返回 TRUE
 }
@@ -167,14 +176,13 @@ HCURSOR CXPlayerDlg::OnQueryDragIcon()
 void CXPlayerDlg::OnBnClickedPlay()
 {
 	// TODO:  在此添加控件通知处理程序代码
-	// CFileDialog(BOOL bOpenFileDialog, // TRUE for FileOpen, FALSE for FileSaveAs
-	// 	LPCTSTR lpszDefExt = NULL,
-	// 		LPCTSTR lpszFileName = NULL,
-	// 		DWORD dwFlags = OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT,
-	// 		LPCTSTR lpszFilter = NULL,
-	// 		CWnd* pParentWnd = NULL,
-	// 		DWORD dwSize = 0,
-	// 		BOOL bVistaStyle = TRUE);
+	
+	if ( m_pGraph )
+	{
+		LOG() << "Already playing.";
+		return;
+	}
+
 	HRESULT hr = CoInitialize(NULL);
 	if ( FAILED( hr ) )
 	{
@@ -182,19 +190,17 @@ void CXPlayerDlg::OnBnClickedPlay()
 		return;
 	}
 
-	IGraphBuilder *pGraph = NULL;
-	IMediaControl *pControl = NULL;
-	IMediaEvent* pEvent = NULL;
 
-	hr = CoCreateInstance(CLSID_FilterGraph, NULL, CLSCTX_INPROC_SERVER, IID_IGraphBuilder, (void**)&pGraph);
+
+	hr = CoCreateInstance(CLSID_FilterGraph, NULL, CLSCTX_INPROC_SERVER, IID_IGraphBuilder, (void**)&m_pGraph);
 	if ( FAILED( hr ) )
 	{
 		MessageBox(L"Create the Filter Graph Manager fail!");
 		return;
 	}
 
-	hr = pGraph->QueryInterface(IID_IMediaControl, (void**)&pControl);
-	hr = pGraph->QueryInterface(IID_IMediaEvent, (void**)&pEvent);
+	hr = m_pGraph->QueryInterface(IID_IMediaControl, (void**)&m_pControl);
+	hr = m_pGraph->QueryInterface(IID_IMediaEvent, (void**)&m_pEvent);
 
 
 	CFileDialog dlg(TRUE, NULL, NULL, NULL, NULL, this);
@@ -202,17 +208,14 @@ void CXPlayerDlg::OnBnClickedPlay()
 	{
 		CString filePath = dlg.GetPathName();
 
-		hr = pGraph->RenderFile(filePath, NULL);
+		hr = m_pGraph->RenderFile(filePath, NULL);
 		if ( SUCCEEDED(hr))
 		{
 			// Run the graph
-			hr = pControl->Run();
+			hr = m_pControl->Run();
 			if (SUCCEEDED(hr))
 			{
-				long evCode;
-				pEvent->WaitForCompletion(INFINITE, &evCode);
-				
-				LOG() << "Play complete, event code: " << evCode;
+//				LOG() << "Play complete, hr: " << (void*)hr << " mean: " << CError::ErrorMsg(hr) << " event code: " << evCode;
 			}
 		}
 		else
@@ -222,10 +225,7 @@ void CXPlayerDlg::OnBnClickedPlay()
 		}
 	}
 
-	pControl->Release();
-	pEvent->Release();
-	pGraph->Release();
-	CoUninitialize();
+
 }
 
 
@@ -235,4 +235,43 @@ void CXPlayerDlg::OnBnClickedShowlog()
 	std::wstring allLog;
 	s_log.toString( allLog );
 	m_eidtLog.SetWindowTextW(allLog.c_str());
+}
+
+
+void CXPlayerDlg::OnTimer(UINT_PTR nIDEvent)
+{
+	// TODO:  在此添加消息处理程序代码和/或调用默认值
+
+	// 处理播放器事件.
+	if ( m_pEvent )
+	{
+		long evCode;
+		LONG_PTR param1, param2;
+		HRESULT hr;
+		while ( hr = m_pEvent->GetEvent(&evCode, &param1, &param2, 0), SUCCEEDED(hr))
+		{
+			LOG() << "Get event: " << CError::EVMsg(evCode) << " [" << evCode << "] p1: " << param1 << " p2: " << param2;
+
+			hr = m_pEvent->FreeEventParams(evCode, param1, param2);
+		}
+	}
+
+
+	CDialogEx::OnTimer(nIDEvent);
+}
+
+
+void CXPlayerDlg::OnBnClickedStop()
+{
+	// TODO:  在此添加控件通知处理程序代码
+	if ( m_pGraph )
+	{
+		m_pControl->Release();
+		m_pControl = NULL;
+		m_pEvent->Release();
+		m_pEvent = NULL;
+		m_pGraph->Release();
+		m_pGraph = NULL;
+		CoUninitialize();
+	}
 }
