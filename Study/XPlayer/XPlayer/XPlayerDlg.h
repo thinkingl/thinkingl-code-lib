@@ -3,6 +3,7 @@
 //
 
 #pragma once
+#include "afxwin.h"
 
 
 // CXPlayerDlg ¶Ô»°¿ò
@@ -31,4 +32,6 @@ protected:
 	DECLARE_MESSAGE_MAP()
 public:
 	afx_msg void OnBnClickedPlay();
+	CEdit m_eidtLog;
+	afx_msg void OnBnClickedShowlog();
 };

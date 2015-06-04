@@ -6,6 +6,9 @@
 #include "XPlayer.h"
 #include "XPlayerDlg.h"
 #include "afxdialogex.h"
+#include "Log.h"
+#include "error.h"
+
 // 文档参见 https://msdn.microsoft.com/en-us/library/windows/desktop/dd375454(v=vs.85).aspx
 
 #include <dshow.h>
@@ -62,6 +65,7 @@ CXPlayerDlg::CXPlayerDlg(CWnd* pParent /*=NULL*/)
 void CXPlayerDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogEx::DoDataExchange(pDX);
+	DDX_Control(pDX, IDC_EDIT_LOG, m_eidtLog);
 }
 
 BEGIN_MESSAGE_MAP(CXPlayerDlg, CDialogEx)
@@ -69,6 +73,7 @@ BEGIN_MESSAGE_MAP(CXPlayerDlg, CDialogEx)
 	ON_WM_PAINT()
 	ON_WM_QUERYDRAGICON()
 	ON_BN_CLICKED(ID_PLAY, &CXPlayerDlg::OnBnClickedPlay)
+	ON_BN_CLICKED(ID_SHOWLOG, &CXPlayerDlg::OnBnClickedShowlog)
 END_MESSAGE_MAP()
 
 
@@ -206,8 +211,14 @@ void CXPlayerDlg::OnBnClickedPlay()
 			{
 				long evCode;
 				pEvent->WaitForCompletion(INFINITE, &evCode);
-
+				
+				LOG() << "Play complete, event code: " << evCode;
 			}
+		}
+		else
+		{
+			LOG() << "Render file fail! hr: " << (void*)hr << " meaning: " << CError::ErrorMsg(hr);
+			VFW_E_INVALID_FILE_FORMAT;
 		}
 	}
 
@@ -215,4 +226,13 @@ void CXPlayerDlg::OnBnClickedPlay()
 	pEvent->Release();
 	pGraph->Release();
 	CoUninitialize();
+}
+
+
+void CXPlayerDlg::OnBnClickedShowlog()
+{
+	// TODO:  在此添加控件通知处理程序代码
+	std::wstring allLog;
+	s_log.toString( allLog );
+	m_eidtLog.SetWindowTextW(allLog.c_str());
 }
