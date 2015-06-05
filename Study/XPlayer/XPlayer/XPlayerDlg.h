@@ -41,4 +41,5 @@ public:
 	afx_msg void OnBnClickedShowlog();
 	afx_msg void OnTimer(UINT_PTR nIDEvent);
 	afx_msg void OnBnClickedStop();
+	afx_msg void OnBnClickedEnumFilter();
 };

@@ -79,6 +79,7 @@ BEGIN_MESSAGE_MAP(CXPlayerDlg, CDialogEx)
 	ON_BN_CLICKED(ID_SHOWLOG, &CXPlayerDlg::OnBnClickedShowlog)
 	ON_WM_TIMER()
 	ON_BN_CLICKED(ID_STOP, &CXPlayerDlg::OnBnClickedStop)
+	ON_BN_CLICKED(ID_ENUM_FILTER, &CXPlayerDlg::OnBnClickedEnumFilter)
 END_MESSAGE_MAP()
 
 
@@ -274,4 +275,75 @@ void CXPlayerDlg::OnBnClickedStop()
 		m_pGraph = NULL;
 		CoUninitialize();
 	}
+}
+
+
+void CXPlayerDlg::OnBnClickedEnumFilter()
+{
+	// TODO:  在此添加控件通知处理程序代码
+	IFilterMapper2 *pMapper = NULL;
+	IEnumMoniker *pEnum = NULL;
+
+	HRESULT hr = CoCreateInstance(CLSID_FilterMapper2, NULL, CLSCTX_INPROC, IID_IFilterMapper2, (void**)&pMapper);
+	if ( FAILED(hr))
+	{
+		LOG() << "Create filter mapper fail! hr: " << CError::ErrorMsg(hr) << "[" << (void*)hr << "]";
+	}
+
+	GUID arrayInTypes[2] = { NULL, NULL };
+	MEDIATYPE_Video;
+	MEDIASUBTYPE_dvsd;
+
+	hr = pMapper->EnumMatchingFilters(
+		&pEnum,
+		0,	// Reserved.
+		FALSE, //TRUE,	// Use exact match.
+		MERIT_DO_NOT_USE+1, // Minimum merit.
+		TRUE,	// At least one input pin?
+		1,		// Number of major type/subtype pairs for input.
+		arrayInTypes,	// Array of major type/subtype pairs for input.
+		NULL,	// Input medium.
+		NULL,	// Input pin category
+		FALSE,	// Must be a render?
+		TRUE,	// At least one output pin?
+		0,			// Number of major type/subtype paires for output.
+		NULL,	// Array of major type/subtype pairs for output.
+		NULL,	// Output medium.
+		NULL		// Output pin Category.
+		);
+
+	// Emumerate the monikers.
+	IMoniker *pMoniker = 0;
+	ULONG cFetched;
+	while (pEnum->Next(1, &pMoniker, &cFetched) == S_OK)
+	{
+		IPropertyBag* pPropBag = NULL;
+		hr = pMoniker->BindToStorage(0, 0, IID_IPropertyBag, (void**)&pPropBag);
+		if ( SUCCEEDED(hr))
+		{
+			// To retrieve the friendly name of the filter, do the following.
+			VARIANT varName;
+			VariantInit(&varName);
+			hr = pPropBag->Read(L"FriendlyName", &varName, 0);
+			if (SUCCEEDED(hr))
+			{
+				// Display the name.
+				LOG() << "Filter name: " << varName.bstrVal;
+			}
+			VariantClear(&varName);
+
+			// To Create an instance of the filter
+			//IBaseFilter* pFilter;
+			//hr = pMoniker->BindToObject(NULL, NULL, IID_IBaseFilter, (void**)&pFilter);
+
+			// Clean up.
+			pPropBag->Release();
+		}
+
+		pMoniker->Release();
+	}
+
+	// Clean up.
+	pMapper->Release();
+	pEnum->Release();
 }
