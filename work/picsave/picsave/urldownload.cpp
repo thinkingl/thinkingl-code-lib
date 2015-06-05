@@ -11,6 +11,7 @@
 Download::Download(int index, QObject *pParent)
 	: QObject(pParent), m_Index(index)
 {
+
 	m_HaveDoneBytes = 0;
 	m_StartPoint = 0;
 	m_EndPoint = 0;
@@ -107,6 +108,9 @@ DownloadControl::DownloadControl(QObject *pParent)
 	m_pFileSave = NULL;
 	m_strUrl = "";
 	m_bStopDownload = false;
+
+	qRegisterMetaType<emDownLoadErrorType>("emDownLoadErrorType");
+
 }
 DownloadControl::~DownloadControl()
 {

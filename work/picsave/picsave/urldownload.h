@@ -21,6 +21,8 @@ enum emDownLoadErrorType
     LOG_TYPE_THREADSDOWNDFAILED,    //多线程下载失败
 	LOG_TYPE_TRANSCODECFAILED       //文件格式转码失败
 };
+Q_DECLARE_METATYPE(emDownLoadErrorType)
+
 
 //多线程下载的线程数，由于QT存在从公网下载文件会请求两次的bug（原因未知），所以目前只能用单线程下载，不要修改这个值 zsy 20141016
 const int PointCount = 1;

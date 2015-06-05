@@ -520,7 +520,8 @@ void picsave::RecreateDownloader()
 	m_pDownloader = new DownloadControl(this);
 
 	// 连接信号.
-	connect(m_pDownloader, SIGNAL(SignalDownloadFinished(QString, emDownLoadErrorType,QDateTime)), this, SLOT(OnDownloadFinished(QString, emDownLoadErrorType,QDateTime)));
+	// 下载完成需要是异步信号, 否则在Win2003下发现会有崩溃问题.
+	connect(m_pDownloader, SIGNAL(SignalDownloadFinished(QString, emDownLoadErrorType,QDateTime)), this, SLOT(OnDownloadFinished(QString, emDownLoadErrorType,QDateTime)), Qt::QueuedConnection );
 	connect(m_pDownloader, SIGNAL(SignalProgress(QString, qint64, qint64)), this, SLOT(OnDownloadProgress(QString, qint64, qint64)));
 }
 
