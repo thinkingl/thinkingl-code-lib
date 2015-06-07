@@ -101,6 +101,7 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="dsfun.h" />
     <ClInclude Include="error.h" />
     <ClInclude Include="FilePlayer.h" />
     <ClInclude Include="Log.h" />
@@ -111,6 +112,7 @@
     <ClInclude Include="XPlayerDlg.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="dsfun.cpp" />
     <ClCompile Include="error.cpp" />
     <ClCompile Include="FilePlayer.cpp" />
     <ClCompile Include="Log.cpp" />

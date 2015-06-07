@@ -8,6 +8,7 @@
 #include "afxdialogex.h"
 #include "Log.h"
 #include "error.h"
+#include "dsfun.h"
 
 // 文档参见 https://msdn.microsoft.com/en-us/library/windows/desktop/dd375454(v=vs.85).aspx
 
@@ -61,6 +62,7 @@ CXPlayerDlg::CXPlayerDlg(CWnd* pParent /*=NULL*/)
 	, m_pGraph(NULL)
 	, m_pControl(NULL)
 	, m_pEvent(NULL)
+	, m_rotRegister(0)
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 }
@@ -200,6 +202,11 @@ void CXPlayerDlg::OnBnClickedPlay()
 		return;
 	}
 
+	// 添加到ROT,启用Graph Edit的DirectShow filter调试功能.
+#ifdef _DEBUG
+	hr = AddToRot( m_pGraph, &m_rotRegister);
+#endif
+
 	hr = m_pGraph->QueryInterface(IID_IMediaControl, (void**)&m_pControl);
 	hr = m_pGraph->QueryInterface(IID_IMediaEvent, (void**)&m_pEvent);
 
@@ -267,6 +274,9 @@ void CXPlayerDlg::OnBnClickedStop()
 	// TODO:  在此添加控件通知处理程序代码
 	if ( m_pGraph )
 	{
+#ifdef _DEBUG
+		RemoveFromRot(m_rotRegister);
+#endif
 		m_pControl->Release();
 		m_pControl = NULL;
 		m_pEvent->Release();

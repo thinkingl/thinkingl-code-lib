@@ -24,6 +24,7 @@ private:
 	IGraphBuilder *m_pGraph;
 	IMediaControl *m_pControl;
 	IMediaEvent* m_pEvent;
+	DWORD m_rotRegister;		// 注册到ROT的记录.
 
 // 实现
 protected:
