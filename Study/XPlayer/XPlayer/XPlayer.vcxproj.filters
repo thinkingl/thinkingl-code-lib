@@ -45,6 +45,12 @@
     <ClInclude Include="dsfun.h">
       <Filter>源文件</Filter>
     </ClInclude>
+    <ClInclude Include="ConfigDialog.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="xplayerconfig.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="XPlayer.cpp">
@@ -66,6 +72,12 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="dsfun.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="ConfigDialog.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="xplayerconfig.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

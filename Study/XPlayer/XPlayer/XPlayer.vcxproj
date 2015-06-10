@@ -101,6 +101,7 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ConfigDialog.h" />
     <ClInclude Include="dsfun.h" />
     <ClInclude Include="error.h" />
     <ClInclude Include="FilePlayer.h" />
@@ -109,9 +110,11 @@
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="XPlayer.h" />
+    <ClInclude Include="xplayerconfig.h" />
     <ClInclude Include="XPlayerDlg.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="ConfigDialog.cpp" />
     <ClCompile Include="dsfun.cpp" />
     <ClCompile Include="error.cpp" />
     <ClCompile Include="FilePlayer.cpp" />
@@ -121,6 +124,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="XPlayer.cpp" />
+    <ClCompile Include="xplayerconfig.cpp" />
     <ClCompile Include="XPlayerDlg.cpp" />
   </ItemGroup>
   <ItemGroup>
