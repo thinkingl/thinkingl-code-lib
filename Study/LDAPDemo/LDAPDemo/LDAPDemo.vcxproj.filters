@@ -18,10 +18,10 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="XPlayer.h">
+    <ClInclude Include="LDAPDemo.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="XPlayerDlg.h">
+    <ClInclude Include="LDAPDemoDlg.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="stdafx.h">
@@ -33,66 +33,30 @@
     <ClInclude Include="Resource.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="FilePlayer.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="Log.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="error.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="dsfun.h">
-      <Filter>源文件</Filter>
-    </ClInclude>
-    <ClInclude Include="ConfigDialog.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="xplayerconfig.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="XPlayer.cpp">
+    <ClCompile Include="LDAPDemo.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="XPlayerDlg.cpp">
+    <ClCompile Include="LDAPDemoDlg.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="stdafx.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="FilePlayer.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="Log.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="error.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="dsfun.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="ConfigDialog.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="xplayerconfig.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="XPlayer.rc">
+    <ResourceCompile Include="LDAPDemo.rc">
       <Filter>资源文件</Filter>
     </ResourceCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="res\XPlayer.rc2">
+    <None Include="res\LDAPDemo.rc2">
       <Filter>资源文件</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Image Include="res\XPlayer.ico">
+    <Image Include="res\LDAPDemo.ico">
       <Filter>资源文件</Filter>
     </Image>
   </ItemGroup>
