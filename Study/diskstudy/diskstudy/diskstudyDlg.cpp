@@ -237,6 +237,10 @@ void CDiskStudyDlg::UpdateDiskInfo()
 		break;
 	}
 
+	// SMART Version信息.
+	ss << L"IDE Devcie Map Raw(IDE信息原始值):\t" << (void*)diskInfo.bIDEDeviceMap << "\r\n";
+	ss << L"Capabilities Raw(能力集原始值):\t" << (void*)diskInfo.fCapabilities << "\r\n";
+
 	m_strDiskInfo = ss.str().c_str();
 
 	UpdateData(FALSE);

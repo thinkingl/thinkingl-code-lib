@@ -205,7 +205,8 @@ bool GetDiskInfo(const CPhysicalDrive& drive, TDiskInfo& diskInfo)
 		);
 	if (bOk)
 	{
-		smartVersion;
+		diskInfo.bIDEDeviceMap = smartVersion.bIDEDeviceMap;
+		diskInfo.fCapabilities = smartVersion.fCapabilities;
 	}
 	else
 	{

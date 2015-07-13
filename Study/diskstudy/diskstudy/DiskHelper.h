@@ -57,6 +57,15 @@ struct TDiskInfo
 	//
 	unsigned int m_bytesPerSector;
 
+	// SMART版本信息. https://msdn.microsoft.com/en-us/library/windows/hardware/ff554977(v=vs.85).aspx
+	//BYTE     bVersion;               // Binary driver version.
+	//BYTE     bRevision;              // Binary driver revision.
+	//BYTE     bReserved;              // Not used.
+	//BYTE     bIDEDeviceMap;          // Bit map of IDE devices.
+	//DWORD   fCapabilities;          // Bit mask of driver capabilities.
+	unsigned char bIDEDeviceMap;	// IDE信息.
+	unsigned int fCapabilities;		// 驱动能力集合Bit mask.
+
 	// 温度.
 	float m_diskTemperature;
 };
