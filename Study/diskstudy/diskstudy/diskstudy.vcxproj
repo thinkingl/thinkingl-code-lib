@@ -113,6 +113,7 @@
     <ClCompile Include="DiskHelper.cpp" />
     <ClCompile Include="diskstudy.cpp" />
     <ClCompile Include="diskstudyDlg.cpp" />
+    <ClCompile Include="smart._view.c" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>

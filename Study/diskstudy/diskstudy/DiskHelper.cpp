@@ -221,3 +221,79 @@ bool GetDiskInfo(const CPhysicalDrive& drive, TDiskInfo& diskInfo)
 
 	return ret;
 }
+
+
+typedef unsigned char uint8_t;
+typedef unsigned int uint32_t;
+
+/*
+* SCSI Passthrough (using IOCTL_SCSI_PASS_THROUGH_DIRECT)
+* Should be provided a handle to the physical device (R/W) as well as a Cdb and a buffer that is page aligned
+* Direction should be one of SCSI_IOCTL_DATA_###
+*
+* Returns 0 (SPT_SUCCESS) on success, a positive SCSI Status in case of an SCSI error or negative otherwise.
+*/
+
+BOOL ScsiPassthroughDirect(HANDLE hPhysical, uint8_t* Cdb, size_t CdbLen, uint8_t Direction,
+	void* DataBuffer, size_t BufLen, uint32_t Timeout)
+{
+	SCSI_PASS_THROUGH_DIRECT_WITH_BUFFER sptdwb = { { 0 }, 0, { 0 } };
+	DWORD err, size = sizeof(SCSI_PASS_THROUGH_DIRECT_WITH_BUFFER);
+	BOOL r;
+
+	// Sanity checks
+	if ((CdbLen == 0) || (CdbLen > sizeof(sptdwb.sptd.Cdb)))
+		return SPT_ERROR_CDB_LENGTH;
+
+	if (((uintptr_t)DataBuffer % 0x10 != 0) || (BufLen > 0xFFFF))
+		return SPT_ERROR_BUFFER;
+
+	if (Direction > SCSI_IOCTL_DATA_UNSPECIFIED)
+		return SPT_ERROR_DIRECTION;
+
+	// http://en.wikipedia.org/wiki/SCSI_command
+	if ((Cdb[0] == 0x7e) || (Cdb[0] == 0x7f))
+		return SPT_ERROR_EXTENDED_CDB;
+
+	// Opcodes above 0xC0 are unsupported (apart for the special JMicron/Sunplus modes)
+	if ((Cdb[0] >= 0xc0) && (Cdb[0] != USB_JMICRON_ATA_PASSTHROUGH)
+		&& (Cdb[0] != USB_SUNPLUS_ATA_PASSTHROUGH))
+		return SPT_ERROR_CDB_OPCODE;
+
+	sptdwb.sptd.Length = sizeof(SCSI_PASS_THROUGH_DIRECT);
+	sptdwb.sptd.PathId = 0;
+	sptdwb.sptd.TargetId = 0;
+	sptdwb.sptd.Lun = 0;
+	sptdwb.sptd.CdbLength = (uint8_t)CdbLen;
+	sptdwb.sptd.DataIn = Direction;		// One of SCSI_IOCTL_DATA_###
+	sptdwb.sptd.SenseInfoLength = SPT_SENSE_LENGTH;
+	sptdwb.sptd.DataTransferLength = (uint16_t)BufLen;
+	sptdwb.sptd.TimeOutValue = Timeout;
+	sptdwb.sptd.DataBuffer = DataBuffer;
+	sptdwb.sptd.SenseInfoOffset = offsetof(SCSI_PASS_THROUGH_DIRECT_WITH_BUFFER, SenseBuf);
+
+	memcpy(sptdwb.sptd.Cdb, Cdb, CdbLen);
+
+	r = DeviceIoControl(hPhysical, IOCTL_SCSI_PASS_THROUGH_DIRECT, &sptdwb, size, &sptdwb, size, &size, FALSE);
+	if ((r) && (sptdwb.sptd.ScsiStatus == 0)) {
+		return SPT_SUCCESS;
+	}
+
+	if (sptdwb.sptd.ScsiStatus != 0) {
+		// uprintf("ScsiPassthroughDirect: CDB command 0x%02X failed (SCSI status 0x%02X)\n", Cdb[0], sptdwb.sptd.ScsiStatus);
+		return (int)sptdwb.sptd.ScsiStatus;
+	}
+	else {
+		err = GetLastError();
+		// uprintf("ScsiPassthroughDirect: CDB command 0x%02X failed %s\n", Cdb[0], WindowsErrorString()); SetLastError(err);
+		switch (err) {
+		case ERROR_SEM_TIMEOUT:
+			return SPT_ERROR_TIMEOUT;
+		case ERROR_INVALID_PARAMETER:
+			return SPT_ERROR_INVALID_PARAMETER;
+		default:
+			return SPT_ERROR_UNKNOWN_ERROR;
+		}
+	}
+	return FALSE;
+}

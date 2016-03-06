@@ -50,6 +50,9 @@
     <ClCompile Include="DiskHelper.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="smart._view.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="diskstudy.rc">
