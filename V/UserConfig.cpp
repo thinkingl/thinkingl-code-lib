@@ -103,8 +103,8 @@ bool CUserConfig::Init()
 		// 创建好友信息表.
 		// 字段: 用户UUID(外键); 好友UUID; 好友用户名; 好友用户邮箱; 好友IP; 好友端口;
 		QSqlQuery sqlCreateFriendTable(s_database);
-		sqlCreateFriendTable.prepare("CREATE TABLE :tablename( useruuid TEXT, frienduuid TEXT, name TEXT, email TEXT, ip TEXT, port INTEGER);");
-		sqlCreateFriendTable.bindValue(":tablename", tableFriend);
+		sqlCreateFriendTable.prepare("CREATE TABLE friend( useruuid TEXT, frienduuid TEXT, name TEXT, email TEXT, ip TEXT, port INTEGER);");
+	//	sqlCreateFriendTable.bindValue("@tablename", tableFriend);
 		bool bOk = sqlCreateFriendTable.exec();
 		if ( !bOk )
 		{

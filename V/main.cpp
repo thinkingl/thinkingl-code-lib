@@ -10,9 +10,12 @@ int main(int argc, char *argv[])
 {
 	//QTextCodec::setCodecForLocale(QTextCodec::codecForName("UTF8"));
 
-	CUserConfig::Init();
+	qApp->addLibraryPath("C:\\01-code\\qt\\Qt5.4.1-x86-vc2013\\5.4\\msvc2013\\plugins");
 
 	QApplication a(argc, argv);
+
+
+	CUserConfig::Init();
 
 	CVModel vModel;
 
