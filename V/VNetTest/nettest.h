@@ -11,6 +11,8 @@ public:
 	NetTest(QObject *parent);
     ~NetTest();
 
+public slots:
+	void Proc();
 private:
     
 };
