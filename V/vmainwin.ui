@@ -29,7 +29,14 @@
     </property>
     <addaction name="actionAddUserByAddress"/>
    </widget>
+   <widget class="QMenu" name="menu_2">
+    <property name="title">
+     <string>加密代理</string>
+    </property>
+    <addaction name="actionConfig"/>
+   </widget>
    <addaction name="menu"/>
+   <addaction name="menu_2"/>
   </widget>
   <widget class="QToolBar" name="mainToolBar">
    <attribute name="toolBarArea">
@@ -43,6 +50,11 @@
   <action name="actionAddUserByAddress">
    <property name="text">
     <string>输入地址</string>
+   </property>
+  </action>
+  <action name="actionConfig">
+   <property name="text">
+    <string>config</string>
    </property>
   </action>
  </widget>

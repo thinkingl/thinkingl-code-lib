@@ -1,4 +1,5 @@
 #include "proxychannel.h"
+#include "proxychanneltranslation.h"
 
 ProxyChannel::ProxyChannel(QObject *parent)
 	: QObject(parent)
@@ -13,6 +14,7 @@ ProxyChannel::~ProxyChannel()
 
 void ProxyChannel::Start(int localPort, const QString& remoteAddr, int remotePort)
 {
+	qDebug() << "local port:[" << localPort << "] remote addr:[" << remoteAddr << "] port:[" << remotePort << "]";
 	this->Stop();
 
 	bool bOk = m_server.listen(QHostAddress::Any, localPort);
@@ -38,6 +40,8 @@ void ProxyChannel::OnNewConnection()
 	// 建立一个新连接。
 	QTcpSocket* remoteSock = new QTcpSocket(this);
 	remoteSock->connectToHost(m_remoteAddr, m_remotePort);
+
+	ProxyChannelTranslation * pTrans = new ProxyChannelTranslation(this, pendingSocket, remoteSock);
 
 //	connect(pendingSocket, SIGNAL(error(QAbstractSocket::SocketError)), SLOT(OnError(QAbstractSocket::SocketError)));
 //	connect(pendingSocket, SIGNAL(stateChanged(QAbstractSocket::SocketState)), SLOT(OnStateChanged(QAbstractSocket::SocketState)));

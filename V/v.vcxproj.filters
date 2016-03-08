@@ -129,6 +129,15 @@
     <ClCompile Include="GeneratedFiles\Release\moc_proxychanneltranslation.cpp">
       <Filter>Generated Files\Release</Filter>
     </ClCompile>
+    <ClCompile Include="proxychanneldlg.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_proxychanneldlg.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_proxychanneldlg.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="v.qrc">
@@ -170,6 +179,12 @@
     <CustomBuild Include="proxychanneltranslation.h">
       <Filter>Header Files</Filter>
     </CustomBuild>
+    <CustomBuild Include="proxychanneldlg.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="proxychanneldlg.ui">
+      <Filter>Form Files</Filter>
+    </CustomBuild>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="v.rc" />
@@ -194,6 +209,9 @@
       <Filter>Generated Files</Filter>
     </ClInclude>
     <ClInclude Include="GeneratedFiles\ui_dlgregister.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GeneratedFiles\ui_proxychanneldlg.h">
       <Filter>Generated Files</Filter>
     </ClInclude>
   </ItemGroup>

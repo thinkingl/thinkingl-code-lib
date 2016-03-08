@@ -13,7 +13,15 @@ public:
 	~ProxyChannelTranslation();
 
 private slots:
-	void OnReadyRead();
+	void OnLocalReadyRead();
+	void OnLocalDisconnected();
+	void OnLocalError(QAbstractSocket::SocketError);
+
+	void OnRemoteReadyRead();
+	void OnRemoteConnected();
+	void OnRemoteDisconnected();
+	void OnRemoteError(QAbstractSocket::SocketError);
+
 private:
 	QTcpSocket* m_localSock;
 	QTcpSocket* m_remoteSock;
