@@ -11,6 +11,9 @@ int main(int argc, char *argv[])
 	//QTextCodec::setCodecForLocale(QTextCodec::codecForName("UTF8"));
 
 	qApp->addLibraryPath("C:\\01-code\\qt\\Qt5.4.1-x86-vc2013\\5.4\\msvc2013\\plugins");
+	qApp->addLibraryPath(".\\plugins");
+	qApp->addLibraryPath("G:/5-qt/qt5.5.1-vs2013-x86/5.5/msvc2013/plugins");
+
 
 	QApplication a(argc, argv);
 

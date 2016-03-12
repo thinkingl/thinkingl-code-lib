@@ -9,7 +9,7 @@ class ProxyChannelTranslation : public QObject
 	Q_OBJECT
 
 public:
-	ProxyChannelTranslation(QObject *parent, QTcpSocket* localSock, QTcpSocket* remoteSock );
+	ProxyChannelTranslation(QObject *parent, QTcpSocket* localSock, QString remoteAddr, int remotePort );
 	~ProxyChannelTranslation();
 
 private slots:

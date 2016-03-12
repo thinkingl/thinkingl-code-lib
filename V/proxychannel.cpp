@@ -17,6 +17,9 @@ void ProxyChannel::Start(int localPort, const QString& remoteAddr, int remotePor
 	qDebug() << "local port:[" << localPort << "] remote addr:[" << remoteAddr << "] port:[" << remotePort << "]";
 	this->Stop();
 
+	this->m_remoteAddr = remoteAddr;
+	this->m_remotePort = remotePort;
+
 	bool bOk = m_server.listen(QHostAddress::Any, localPort);
 	Q_ASSERT(bOk);
 
@@ -41,7 +44,7 @@ void ProxyChannel::OnNewConnection()
 	QTcpSocket* remoteSock = new QTcpSocket(this);
 	remoteSock->connectToHost(m_remoteAddr, m_remotePort);
 
-	ProxyChannelTranslation * pTrans = new ProxyChannelTranslation(this, pendingSocket, remoteSock);
+	ProxyChannelTranslation * pTrans = new ProxyChannelTranslation(this, pendingSocket, m_remoteAddr, m_remotePort );
 
 //	connect(pendingSocket, SIGNAL(error(QAbstractSocket::SocketError)), SLOT(OnError(QAbstractSocket::SocketError)));
 //	connect(pendingSocket, SIGNAL(stateChanged(QAbstractSocket::SocketState)), SLOT(OnStateChanged(QAbstractSocket::SocketState)));
