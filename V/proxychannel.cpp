@@ -41,8 +41,8 @@ void ProxyChannel::OnNewConnection()
 	QTcpSocket* pendingSocket = m_server.nextPendingConnection();
 
 	// 建立一个新连接。
-	QTcpSocket* remoteSock = new QTcpSocket(this);
-	remoteSock->connectToHost(m_remoteAddr, m_remotePort);
+//	QTcpSocket* remoteSock = new QTcpSocket(this);
+//	remoteSock->connectToHost(m_remoteAddr, m_remotePort);
 
 	ProxyChannelTranslation * pTrans = new ProxyChannelTranslation(this, pendingSocket, m_remoteAddr, m_remotePort );
 

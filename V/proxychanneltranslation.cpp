@@ -28,6 +28,8 @@ ProxyChannelTranslation::~ProxyChannelTranslation()
 
 	if ( m_remoteSock )
 	{
+		m_remoteSock->disconnectFromHost();
+		m_remoteSock->close();
 		m_remoteSock->deleteLater();
 	}
 }
@@ -39,6 +41,10 @@ void ProxyChannelTranslation::OnLocalReadyRead()
 	QByteArray data = m_localSock->readAll();
 
 	//qDebug() << data;
+	if ( data.size() < 100 )
+	{
+		qDebug() << "local rcv: " << data;
+	}
 
 	// ¼ÓÃÜ¡£
 	for (int i = 0; i < data.size(); ++i )
