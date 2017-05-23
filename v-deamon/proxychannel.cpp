@@ -9,7 +9,7 @@ ProxyChannel::ProxyChannel(QObject *parent)
 
 ProxyChannel::~ProxyChannel()
 {
-
+    this->Stop();
 }
 
 void ProxyChannel::Start(int localPort, const QString& remoteAddr, int remotePort)
