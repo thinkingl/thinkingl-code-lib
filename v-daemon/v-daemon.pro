@@ -3,7 +3,7 @@ QT -= gui
 
 CONFIG += c++11
 
-TARGET = v-deamon
+TARGET = v-daemon
 CONFIG += console
 CONFIG -= app_bundle
 
