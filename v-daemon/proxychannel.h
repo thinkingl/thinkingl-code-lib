@@ -14,7 +14,7 @@ public:
 	ProxyChannel(QObject *parent);
 	~ProxyChannel();
 
-	// ¿ªÊ¼¡£ ¼àÌılocalPort£¬ ½«ÊÕµ½µÄÊı¾İ¼ÓÃÜ/½âÃÜºó·¢ÍùremoteAddr:port
+	// å¼€å§‹ã€‚ ç›‘å¬localPortï¼Œ å°†æ”¶åˆ°çš„æ•°æ®åŠ å¯†/è§£å¯†åå‘å¾€remoteAddr:port
 	void Start(int localPort, const QString& remoteAddr, int remotePort);
 
 	void Stop();

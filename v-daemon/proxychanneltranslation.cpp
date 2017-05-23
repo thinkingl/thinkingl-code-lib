@@ -46,14 +46,14 @@ void ProxyChannelTranslation::OnLocalReadyRead()
 		qDebug() << "local rcv: " << data;
 	}
 
-	// ¼ÓÃÜ¡£
+	// åŠ å¯†ã€‚
 	for (int i = 0; i < data.size(); ++i )
 	{
 		data[i] = data[i] + 128;
 	}
 	qDebug() << "Local rcv size:" << data.size();
 
-	// ·¢ËÍ³öÈ¥¡£
+	// å‘é€å‡ºåŽ»ã€‚
 	m_remoteSock->write( data );
 }
 
@@ -63,9 +63,12 @@ void ProxyChannelTranslation::OnRemoteReadyRead()
 
 	QByteArray data = m_remoteSock->readAll();
 
-	//qDebug() << data;
+    if ( data.size() < 100 )
+    {
+        qDebug() << data;
+    }
 
-	// ¼ÓÃÜ¡£
+	// åŠ å¯†ã€‚
 	for (int i = 0; i < data.size(); ++i)
 	{
 		data[i] = data[i] + 128;
@@ -74,7 +77,7 @@ void ProxyChannelTranslation::OnRemoteReadyRead()
 	qDebug() << "remote rcv size: " << data.size();
 
 
-	// ·¢ËÍ³öÈ¥¡£
+	// å‘é€å‡ºåŽ»ã€‚
 	m_localSock->write(data);
 }
 

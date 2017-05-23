@@ -40,7 +40,7 @@ void ProxyChannel::OnNewConnection()
 {
 	QTcpSocket* pendingSocket = m_server.nextPendingConnection();
 
-	// ½¨Á¢Ò»¸öÐÂÁ¬½Ó¡£
+	// å»ºç«‹ä¸€ä¸ªæ–°è¿žæŽ¥ã€‚
 //	QTcpSocket* remoteSock = new QTcpSocket(this);
 //	remoteSock->connectToHost(m_remoteAddr, m_remotePort);
 
