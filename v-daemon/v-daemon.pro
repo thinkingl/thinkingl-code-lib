@@ -11,7 +11,12 @@ TEMPLATE = app
 
 SOURCES += main.cpp \
     proxychanneltranslation.cpp \
-    proxychannel.cpp
+    proxychannel.cpp \
+    idatatrans.cpp \
+    tcpsource.cpp \
+    udpclient.cpp \
+    datasplit.cpp \
+    udpserver.cpp
 
 # The following define makes your compiler emit warnings if you use
 # any feature of Qt which as been marked deprecated (the exact warnings
@@ -26,4 +31,9 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 HEADERS += \
     proxychanneltranslation.h \
-    proxychannel.h
+    proxychannel.h \
+    idatatrans.h \
+    tcpsource.h \
+    udpclient.h \
+    datasplit.h \
+    udpserver.h
