@@ -2,6 +2,9 @@
 #include <QCommandLineParser>
 #include "proxychannel.h"
 
+#include "udpserver.h"
+
+
 int main(int argc, char *argv[])
 {
     QCoreApplication a(argc, argv);
@@ -12,6 +15,7 @@ int main(int argc, char *argv[])
     parser.setApplicationDescription("Test helper");
     parser.addHelpOption();
     parser.addVersionOption();
+    parser.addPositionalArgument("mode", QCoreApplication::translate("main", "Work mode of V [client] or [server]."));
     parser.addPositionalArgument("localport", QCoreApplication::translate("main", "Local port to listen."));
     parser.addPositionalArgument("destip", QCoreApplication::translate("main", "Destination ip addr to trans."));
     parser.addPositionalArgument("destport", QCoreApplication::translate("main", "Destination port to trans."));
@@ -22,12 +26,27 @@ int main(int argc, char *argv[])
     const QStringList args = parser.positionalArguments();
     // source is args.at(0), destination is args.at(1)
 
-    int localPort = args.at(0).toInt();
-    QString destIP = args.at(1);
-    int destPort = args.at(2).toInt();
+    QString workMode = args.at(0);
 
-    ProxyChannel proxy(&a);
-    proxy.Start( localPort, destIP, destPort );
+    int localPort = args.at(1).toInt();
+    QString destIP = args.at(2);
+    int destPort = args.at(3).toInt();
+
+    if( workMode.toLower().compare( "client") == 0 )
+    {
+        ProxyChannel* proxyClient = new ProxyChannel(&a);
+        proxyClient->Start( localPort, destIP, destPort );
+    }
+    else if( workMode.toLower().compare( "server" ) == 0 )
+    {
+        UDPServer* proxyServer = new UDPServer(&a, localPort, destIP, destPort);
+    }
+    else
+    {
+        qDebug() << "Invalid work mode!";
+    }
+    //ProxyChannel proxy(&a);
+    //proxy.Start( localPort, destIP, destPort );
 
     return a.exec();
 }

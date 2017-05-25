@@ -27,7 +27,7 @@ private:
 	typedef QSet<QTcpSocket*> QSocketSet;
 	QSocketSet m_localTcpSocketTable;
 
-	QString m_remoteAddr;
+    QHostAddress m_remoteAddr;
 	int m_remotePort;
 };
 

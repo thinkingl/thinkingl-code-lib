@@ -7,28 +7,36 @@ IDataTrans::IDataTrans(QObject* parent)
 {
 }
 
-bool IDataTrans::InputDataForward(const QByteArray &data)
+IDataTrans::~IDataTrans()
+{
+    if( m_nextItem )
+    {
+        m_nextItem->deleteLater();
+    }
+}
+
+bool IDataTrans::InputDataForward(IDataTrans* pPreItem, const QByteArray &data)
 {
     QByteArrayList dataOut;
     bool bOk = this->TransDataForward(data, dataOut);
     if( m_nextItem && bOk && !dataOut.empty() )
     {
         foreach (const QByteArray& d, dataOut) {
-            bOk &= m_nextItem->InputDataForward( d );
+            bOk &= m_nextItem->InputDataForward( this, d );
         }
         //bOk = m_nextItem->InputDataForward(dataOut);
     }
     return bOk;
 }
 
-bool IDataTrans::InputDataBack(const QByteArray &data)
+bool IDataTrans::InputDataBack(IDataTrans* pNextItem, const QByteArray &data)
 {
     QByteArrayList dataOut;
     bool bOk = this->TransDataBack(data, dataOut);
     if( m_preItem && bOk && !dataOut.empty() )
     {
         foreach (const QByteArray& d, dataOut) {
-            bOk &= m_preItem->InputDataBack( d );
+            bOk &= m_preItem->InputDataBack( this, d );
         }
        // bOk = m_preItem->InputDataBack(dataOut);
     }
@@ -40,5 +48,13 @@ bool IDataTrans::SetNextDataTrans( IDataTrans* pre, IDataTrans* next )
     m_preItem = pre;
     m_nextItem = next;
     return true;
+}
+
+void IDataTrans::CloseBack()
+{
+    if( m_preItem )
+    {
+        m_preItem->CloseBack();
+    }
 }
 

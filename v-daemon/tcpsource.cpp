@@ -13,7 +13,10 @@ TCPSource::TCPSource( QObject* parent, QTcpSocket* localSock)
 
 TCPSource::~TCPSource()
 {
-
+    if( m_localSock )
+    {
+        m_localSock->close();
+    }
 }
 
 bool TCPSource::TransDataForward(const QByteArray &dataIn, QByteArrayList &dataOut)
@@ -37,13 +40,18 @@ bool TCPSource::TransDataBack(const QByteArray &dataIn, QByteArrayList &dataOut)
     return true;
 }
 
+void TCPSource::CloseBack()
+{
+    this->deleteLater();
+}
+
 
 void TCPSource::OnLocalReadyRead()
 {
     qDebug() << "Local Ready Read!";
 
     QByteArray data = m_localSock->readAll();
-    this->InputDataForward( data );
+    this->InputDataForward( this, data );
 }
 
 void TCPSource::OnLocalDisconnected()
