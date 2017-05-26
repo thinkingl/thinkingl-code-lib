@@ -177,6 +177,8 @@ bool DataSplit::ProcessData(QByteArrayList& dataOutBack)
                     for( quint32 i=beginSN; i!=endSN; ++i)
                     {
                         data.push_back( m_recvCache[i].mid( UDP_PACK_HEAD_LEN ) );
+
+                        m_recvCache.erase( m_recvCache.find(i) );
                     }
 
                     // 校验数据有效性.
