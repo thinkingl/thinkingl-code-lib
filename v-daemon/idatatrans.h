@@ -20,8 +20,8 @@ public:
     virtual bool InputDataBack(IDataTrans* pNextItem, const QByteArray& data);
 
     // 处理数据.
-    virtual bool TransDataForward(const QByteArray& dataIn, QByteArrayList& dataOut) = 0;
-    virtual bool TransDataBack(const QByteArray& dataIn, QByteArrayList& dataOut) = 0;
+    virtual bool TransDataForward(const QByteArray& dataIn, QByteArrayList& dataOutForward, QByteArrayList& dataOutBack) = 0;
+    virtual bool TransDataBack(const QByteArray& dataIn, QByteArrayList& dataOutForward, QByteArrayList& dataOutBack) = 0;
 
     // 设置下一环节数据处理对象.
     bool SetNextDataTrans( IDataTrans* pre, IDataTrans* next );

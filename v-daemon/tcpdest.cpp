@@ -8,7 +8,7 @@ TCPDest::TCPDest(QObject *parent, QString remoteAddr, int remotePort)
 
 }
 
-bool TCPDest::TransDataForward(const QByteArray &dataIn, QByteArrayList &dataOut)
+bool TCPDest::TransDataForward(const QByteArray &dataIn, QByteArrayList& dataOutForward, QByteArrayList& dataOutBack)
 {
     // 将数据发出去.
     bool bOk = true;
@@ -34,11 +34,10 @@ bool TCPDest::TransDataForward(const QByteArray &dataIn, QByteArrayList &dataOut
     return bOk;
 }
 
-bool TCPDest::TransDataBack(const QByteArray &dataIn, QByteArrayList &dataOut)
+bool TCPDest::TransDataBack(const QByteArray &dataIn, QByteArrayList& dataOutForward, QByteArrayList& dataOutBack)
 {
     // 将socks5代理服务器发送的数据发回.
-    dataOut.clear();
-    dataOut.push_back( dataIn );
+    dataOutBack.push_back( dataIn );
     return true;
 }
 

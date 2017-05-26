@@ -1,4 +1,5 @@
 #include "idatatrans.h"
+#include <QDebug>
 
 IDataTrans::IDataTrans(QObject* parent)
     :QObject( parent )
@@ -17,28 +18,62 @@ IDataTrans::~IDataTrans()
 
 bool IDataTrans::InputDataForward(IDataTrans* pPreItem, const QByteArray &data)
 {
-    QByteArrayList dataOut;
-    bool bOk = this->TransDataForward(data, dataOut);
-    if( m_nextItem && bOk && !dataOut.empty() )
-    {
-        foreach (const QByteArray& d, dataOut) {
-            bOk &= m_nextItem->InputDataForward( this, d );
+    QByteArrayList dataOutForward, dataOutBack;
+    bool bOk = this->TransDataForward(data, dataOutForward, dataOutBack);
+    if( bOk )
+    {        
+        foreach (const QByteArray& d, dataOutForward) {
+            if( m_nextItem )
+            {
+                bOk &= m_nextItem->InputDataForward( this, d );
+            }
+            else
+            {
+                qDebug() << "Next item is null! can't trans data forward!!!";
+            }
         }
-        //bOk = m_nextItem->InputDataForward(dataOut);
+
+        foreach (const QByteArray& d, dataOutBack) {
+            if( m_preItem )
+            {
+                bOk &= m_preItem->InputDataBack( this, d );
+            }
+            else
+            {
+                qDebug() << "Pre item is null! can't trans data back!";
+            }
+        }
     }
     return bOk;
 }
 
 bool IDataTrans::InputDataBack(IDataTrans* pNextItem, const QByteArray &data)
 {
-    QByteArrayList dataOut;
-    bool bOk = this->TransDataBack(data, dataOut);
-    if( m_preItem && bOk && !dataOut.empty() )
+    QByteArrayList dataOutForward, dataOutBack;
+    bool bOk = this->TransDataBack(data, dataOutForward, dataOutBack);
+    if( bOk )
     {
-        foreach (const QByteArray& d, dataOut) {
-            bOk &= m_preItem->InputDataBack( this, d );
+        foreach (const QByteArray& d, dataOutForward) {
+            if( m_nextItem )
+            {
+                bOk &= m_nextItem->InputDataForward( this, d );
+            }
+            else
+            {
+                qDebug() << "Next item is null! can't trans data forward!!!";
+            }
         }
-       // bOk = m_preItem->InputDataBack(dataOut);
+
+        foreach (const QByteArray& d, dataOutBack) {
+            if( m_preItem )
+            {
+                bOk &= m_preItem->InputDataBack( this, d );
+            }
+            else
+            {
+                qDebug() << "Pre item is null! can't trans data back!";
+            }
+        }
     }
     return bOk;
 }

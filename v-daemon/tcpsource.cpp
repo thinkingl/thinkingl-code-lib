@@ -19,18 +19,17 @@ TCPSource::~TCPSource()
     }
 }
 
-bool TCPSource::TransDataForward(const QByteArray &dataIn, QByteArrayList &dataOut)
+bool TCPSource::TransDataForward(const QByteArray &dataIn, QByteArrayList& dataOutForward, QByteArrayList& dataOutBack)
 {
     // TCP 源只管收发, 不修改数据.
-    dataOut.clear();;
-    dataOut.push_back( dataIn );
+
+    dataOutForward.push_back( dataIn );
     return true;
 }
 
-bool TCPSource::TransDataBack(const QByteArray &dataIn, QByteArrayList &dataOut)
+bool TCPSource::TransDataBack(const QByteArray &dataIn, QByteArrayList& dataOutForward, QByteArrayList& dataOutBack)
 {
     // 将数据发回, 不需要再回传.
-    dataOut.clear();
 
     // 发回到socket.
     if( this->m_localSock )

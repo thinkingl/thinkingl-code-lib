@@ -13,8 +13,8 @@ public:
     explicit UDPServer(QObject *parent, int localPort, QString socks5ServerAddr, quint16 socks5ServerPort);
 
     // 处理数据.
-    virtual bool TransDataForward(const QByteArray& /* dataIn */, QByteArrayList& /* dataOut */ );
-    virtual bool TransDataBack(const QByteArray& dataIn, QByteArrayList& dataOut);
+    virtual bool TransDataForward(const QByteArray& dataIn, QByteArrayList& dataOutForward, QByteArrayList& dataOutBack);
+    virtual bool TransDataBack(const QByteArray& dataIn, QByteArrayList& dataOutForward, QByteArrayList& dataOutBack);
 
     // 回送数据.
     virtual bool InputDataBack(IDataTrans* pNextItem, const QByteArray& data);

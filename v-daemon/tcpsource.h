@@ -20,8 +20,8 @@ public:
     virtual ~TCPSource();
 
     // 处理数据.
-    virtual bool TransDataForward(const QByteArray& /* dataIn */, QByteArrayList& /* dataOut */ );
-    virtual bool TransDataBack(const QByteArray& dataIn, QByteArrayList& dataOut);
+    virtual bool TransDataForward(const QByteArray& dataIn, QByteArrayList& dataOutForward, QByteArrayList& dataOutBack);
+    virtual bool TransDataBack(const QByteArray& dataIn, QByteArrayList& dataOutForward, QByteArrayList& dataOutBack);
 
     // 向前关闭.
     virtual void CloseBack();

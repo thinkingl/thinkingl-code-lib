@@ -13,10 +13,9 @@ UDPClient::UDPClient(QObject *parent, QHostAddress serverAddr, int remotePort)
 
 }
 
-bool UDPClient::TransDataForward(const QByteArray &dataIn, QByteArrayList &dataOut)
+bool UDPClient::TransDataForward(const QByteArray &dataIn, QByteArrayList& dataOutForward, QByteArrayList& dataOutBack)
 {
     // 将数据通过UDP发出.
-    dataOut.clear();
 
     bool bOk = true;
 
@@ -46,11 +45,10 @@ bool UDPClient::TransDataForward(const QByteArray &dataIn, QByteArrayList &dataO
     return bOk;
 }
 
-bool UDPClient::TransDataBack(const QByteArray &dataIn, QByteArrayList &dataOut)
+bool UDPClient::TransDataBack(const QByteArray &dataIn, QByteArrayList& dataOutForward, QByteArrayList& dataOutBack)
 {
     //  收到的数据发回.
-    dataOut.clear();;
-    dataOut.push_back( dataIn );
+    dataOutBack.push_back( dataIn );
     return false;
 }
 

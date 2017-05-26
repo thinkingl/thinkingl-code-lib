@@ -14,8 +14,8 @@ public:
     explicit UDPClient(QObject *parent, QHostAddress serverAddr, int remotePort);
 
     // 处理数据.
-    virtual bool TransDataForward(const QByteArray& /* dataIn */, QByteArrayList& /* dataOut */ );
-    virtual bool TransDataBack(const QByteArray& dataIn, QByteArrayList& dataOut);
+    virtual bool TransDataForward(const QByteArray& dataIn, QByteArrayList& dataOutForward, QByteArrayList& dataOutBack);
+    virtual bool TransDataBack(const QByteArray& dataIn, QByteArrayList& dataOutForward, QByteArrayList& dataOutBack);
 
 signals:
 

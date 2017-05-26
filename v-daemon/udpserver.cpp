@@ -21,15 +21,15 @@ UDPServer::UDPServer(QObject *parent, int localPort
 
 }
 
-bool UDPServer::TransDataForward(const QByteArray &dataIn, QByteArrayList &dataOut)
+bool UDPServer::TransDataForward(const QByteArray &dataIn, QByteArrayList& dataOutForward, QByteArrayList& dataOutBack)
 {
-    dataOut.clear();
-    dataOut.push_back(dataIn);
+    dataOutForward.push_back(dataIn);
     return true;
 }
 
-bool UDPServer::TransDataBack(const QByteArray &dataIn, QByteArrayList &dataOut)
+bool UDPServer::TransDataBack(const QByteArray &dataIn, QByteArrayList& dataOutForward, QByteArrayList& dataOutBack)
 {
+    qDebug() << "Shouldn't call TransDataBack function!";
     // not needed.
     return false;
 }

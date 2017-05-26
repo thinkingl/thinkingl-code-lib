@@ -6,12 +6,12 @@ DataMerge::DataMerge(QObject *parent)
 
 }
 
-bool DataMerge::TransDataForward(const QByteArray &dataIn, QByteArrayList &dataOut)
+bool DataMerge::TransDataForward(const QByteArray& dataIn, QByteArrayList& dataOutForward, QByteArrayList& dataOutBack)
 {
-    return DataSplit::TransDataBack( dataIn, dataOut );
+    return DataSplit::TransDataBack( dataIn, dataOutBack, dataOutForward );
 }
 
-bool DataMerge::TransDataBack(const QByteArray &dataIn, QByteArrayList &dataOut)
+bool DataMerge::TransDataBack(const QByteArray& dataIn, QByteArrayList& dataOutForward, QByteArrayList& dataOutBack)
 {
-    return DataSplit::TransDataForward( dataIn, dataOut );
+    return DataSplit::TransDataForward( dataIn, dataOutForward, dataOutBack );
 }
