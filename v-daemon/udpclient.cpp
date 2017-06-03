@@ -13,7 +13,7 @@ UDPClient::UDPClient(QObject *parent, QHostAddress serverAddr, int remotePort)
 
 }
 
-bool UDPClient::TransDataForward(const QByteArray &dataIn, QByteArrayList& dataOutForward, QByteArrayList& dataOutBack)
+bool UDPClient::TransDataDown(const QByteArray &dataIn, QByteArrayList& dataOutForward, QByteArrayList& dataOutBack)
 {
     // 将数据通过UDP发出.
 
@@ -38,18 +38,21 @@ bool UDPClient::TransDataForward(const QByteArray &dataIn, QByteArrayList& dataO
         qDebug() << "UDP write error:[" << er << "]-[" << m_udpSocket->errorString() << "]"
                  << " Addr:[" << m_remoteAddr.toString() << "] port: [" << m_remotePort << "]";
     }
-    qDebug() << "UDP write len:[" << writedLen << "]";
+    qDebug() << "UDP write data:[" << dataIn << "] len:[" << writedLen << "]";
 
     m_lastActiveTime = QDateTime::currentDateTime().toTime_t();
 
     return bOk;
 }
 
-bool UDPClient::TransDataBack(const QByteArray &dataIn, QByteArrayList& dataOutForward, QByteArrayList& dataOutBack)
+bool UDPClient::TransDataUp(const QByteArray &dataIn, QByteArrayList& dataOutForward, QByteArrayList& dataOutBack)
 {
     //  收到的数据发回.
     dataOutBack.push_back( dataIn );
-    return false;
+
+    m_lastActiveTime = QDateTime::currentDateTime().toTime_t();
+
+    return true;
 }
 
 void UDPClient::readPendingDatagrams()
@@ -63,9 +66,15 @@ void UDPClient::readPendingDatagrams()
               m_udpSocket->readDatagram(datagram.data(), datagram.size(),
                                       &sender, &senderPort);
 
-              this->InputDataBack( this, datagram );
+              if( !datagram.isEmpty() )
+              {
+                  this->InputDataUp( this, datagram );
 
-              this->m_lastActiveTime = QDateTime::currentDateTime().toTime_t();
+                  qDebug() << "UDPClient read datagrams:[" << datagram << "]";
+
+                  this->m_lastActiveTime = QDateTime::currentDateTime().toTime_t();
+              }
+
           }
 }
 

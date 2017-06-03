@@ -16,16 +16,16 @@ IDataTrans::~IDataTrans()
     }
 }
 
-bool IDataTrans::InputDataForward(IDataTrans* pPreItem, const QByteArray &data)
+bool IDataTrans::InputDataDown(IDataTrans* pPreItem, const QByteArray &data)
 {
     QByteArrayList dataOutForward, dataOutBack;
-    bool bOk = this->TransDataForward(data, dataOutForward, dataOutBack);
+    bool bOk = this->TransDataDown(data, dataOutForward, dataOutBack);
     if( bOk )
     {        
         foreach (const QByteArray& d, dataOutForward) {
             if( m_nextItem )
             {
-                bOk &= m_nextItem->InputDataForward( this, d );
+                bOk &= m_nextItem->InputDataDown( this, d );
             }
             else
             {
@@ -36,7 +36,7 @@ bool IDataTrans::InputDataForward(IDataTrans* pPreItem, const QByteArray &data)
         foreach (const QByteArray& d, dataOutBack) {
             if( m_preItem )
             {
-                bOk &= m_preItem->InputDataBack( this, d );
+                bOk &= m_preItem->InputDataUp( this, d );
             }
             else
             {
@@ -47,16 +47,16 @@ bool IDataTrans::InputDataForward(IDataTrans* pPreItem, const QByteArray &data)
     return bOk;
 }
 
-bool IDataTrans::InputDataBack(IDataTrans* pNextItem, const QByteArray &data)
+bool IDataTrans::InputDataUp(IDataTrans* pNextItem, const QByteArray &data)
 {
     QByteArrayList dataOutForward, dataOutBack;
-    bool bOk = this->TransDataBack(data, dataOutForward, dataOutBack);
+    bool bOk = this->TransDataUp(data, dataOutForward, dataOutBack);
     if( bOk )
     {
         foreach (const QByteArray& d, dataOutForward) {
             if( m_nextItem )
             {
-                bOk &= m_nextItem->InputDataForward( this, d );
+                bOk &= m_nextItem->InputDataDown( this, d );
             }
             else
             {
@@ -67,7 +67,7 @@ bool IDataTrans::InputDataBack(IDataTrans* pNextItem, const QByteArray &data)
         foreach (const QByteArray& d, dataOutBack) {
             if( m_preItem )
             {
-                bOk &= m_preItem->InputDataBack( this, d );
+                bOk &= m_preItem->InputDataUp( this, d );
             }
             else
             {

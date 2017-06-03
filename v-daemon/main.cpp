@@ -39,7 +39,17 @@ int main(int argc, char *argv[])
     }
     else if( workMode.toLower().compare( "server" ) == 0 )
     {
-        UDPServer* proxyServer = new UDPServer(&a, localPort, destIP, destPort);
+        qDebug() << "Server mode run!";
+        UDPServer* proxyServer = new UDPServer(&a);
+        bool bOk = proxyServer->Start( localPort, destIP, destPort );
+        if( !bOk )
+        {
+            qDebug() << "Proxy server start fail! port:[" << localPort << "]";
+        }
+        else
+        {
+            qDebug() << "Proxy server start at port:[" << localPort << "]";
+        }
     }
     else
     {

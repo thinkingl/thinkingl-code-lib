@@ -9,11 +9,8 @@
 *   数据的拆分和组合, 为了适合UDP的包大小用.
 *   +by lzx@2017-05-25
 */
-// 格式: cmd | sn | sub total | sub sn | data ( 重传和关闭命令没有data )
-// 格式: cmd 1byte 命令(UDP_CMD) | sn 4byte 当前总包序号 | 4byte 当前数据段的包总数 | 4byte 当前数据段的包序号 | data 数据
-// 数据格式: SHA-256 32byte | 原始数据
-static const int UDP_PACK_HEAD_LEN = 1+4+4+4;
-static const int SHA_256_LEN = 32;
+// 格式: total num 1byte | cur sn 1byte | data
+static const int PACK_MAX_LEN = 1300;
 
 class DataSplit : public IDataTrans
 {
@@ -21,66 +18,26 @@ class DataSplit : public IDataTrans
 public:
     explicit DataSplit(QObject *parent = 0);
 
-
-
     // 处理数据.
-    virtual bool TransDataForward(const QByteArray& dataIn, QByteArrayList& dataOutForward, QByteArrayList& dataOutBack);
-    virtual bool TransDataBack(const QByteArray& dataIn, QByteArrayList& dataOutForward, QByteArrayList& dataOutBack);
-
-    // 命令.
-    enum UDP_CMD
-    {
-        CMD_DATA,   // 数据
-        CMD_CONFIRM,// 确认
-        CMD_BYE,    // 关闭
-    };
-
-    class UDPPackHead
-    {
-    public:
-        quint8 cmd;
-        quint32 sn;
-        quint32 curDataPackNum;
-        quint32 curDataSN;
-
-        UDPPackHead() : cmd(CMD_DATA), sn(0), curDataPackNum(0), curDataSN(0)
-        {
-        }
-    };
+    virtual bool TransDataDown(const QByteArray& dataIn, QByteArrayList& dataOutForward, QByteArrayList& dataOutBack);
+    virtual bool TransDataUp(const QByteArray& dataIn, QByteArrayList& dataOutForward, QByteArrayList& dataOutBack);
 
 signals:
 
-public slots:
+private:
+    class DataSplitHead
+    {
+    public:
+        quint8 totalNum;    // total splited pack num. >0
+        quint8 curSn;       // cur pack sn. 0 -> totalNum-1
+    };
+
+    bool ReadHead( const QByteArray& dataIn, DataSplitHead& head );
+    bool WriteHead( QByteArray& dataOut, const DataSplitHead& head );
 
 private:
-    bool ReadHead( const QByteArray& data, UDPPackHead& head );
-    bool WriteHead( const UDPPackHead& head, QByteArray& data );
+    QByteArray m_recvCache;
 
-    void ConfirmPack( QByteArrayList& dataOutForward );
-
-    bool ProcessData(QByteArrayList& dataOutBack);
-
-private:
-    QByteArrayList m_recvSpilitedDataCache;
-
-    typedef QMap<quint32, QByteArray> UDPPackCache;
-    // 发送缓冲, 用于重传. 包序号->UDP包数据.
-    UDPPackCache m_sendCache;
-
-    // 接收缓冲.
-    UDPPackCache m_recvCache;
-
-    // 定时器, 用于检测重传及超时.
-    QTimer m_timer;
-
-    // 当前发送包序号.
-    quint32 m_curSentPackSN;
-
-    // 当前已经确认到的包序号.
-    quint32 m_curConfirmedRecvPackSN;
-
-    // 当前已经处理过的接收到的包序号, 再收到之前的序号就不用处理了.
-    quint32 m_curProcessedRecvPackSN;
 };
 
 #endif // DATASPLIT_H

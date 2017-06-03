@@ -3,6 +3,8 @@
 #include "tcpsource.h"
 #include "datasplit.h"
 #include "udpclient.h"
+#include "datahashcheck.h"
+#include "transprotocol.h"
 #include <QHostInfo>
 
 ProxyChannel::ProxyChannel(QObject *parent)
@@ -37,10 +39,9 @@ void ProxyChannel::Start(int localPort, const QString& remoteAddr, int remotePor
 	this->m_remotePort = remotePort;
 
 	bool bOk = m_server.listen(QHostAddress::Any, localPort);
-	Q_ASSERT(bOk);
     if( !bOk )
     {
-        qDebug() << "Failed to listen the port[" << localPort << "]";
+        qDebug() << "Error! Failed to listen the port[" << localPort << "]";
     }
 
 
@@ -73,13 +74,15 @@ void ProxyChannel::OnNewConnection()
 
     // UDP方式.
     TCPSource* pTCPSource = new TCPSource( this, pendingSocket );
-
+    DataHashCheck* pDataHashCheck = new DataHashCheck( this );
     DataSplit* pDataSplit = new DataSplit(this);
-
+    TransProtocol* pTransProtocol = new TransProtocol( this );
     UDPClient* pUDPClient = new UDPClient(this, this->m_remoteAddr, this->m_remotePort );
 
-    // 连接起来.
-    pTCPSource->SetNextDataTrans(0, pDataSplit );
-    pDataSplit->SetNextDataTrans(pTCPSource, pUDPClient);
-    pUDPClient->SetNextDataTrans(pDataSplit, 0);
+    // 连接起来. TCPSource -> DataHashCheck -> DataSplit -> TransProtocol -> UDPClient.
+    pTCPSource->SetNextDataTrans(0, pDataHashCheck );
+    pDataHashCheck->SetNextDataTrans( pTCPSource, pDataSplit );
+    pDataSplit->SetNextDataTrans(pDataHashCheck, pTransProtocol);
+    pTransProtocol->SetNextDataTrans( pDataSplit, pUDPClient );
+    pUDPClient->SetNextDataTrans(pTransProtocol, 0);
 }

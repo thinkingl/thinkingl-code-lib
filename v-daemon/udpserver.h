@@ -10,14 +10,18 @@ class UDPServer : public IDataTrans
 {
     Q_OBJECT
 public:
-    explicit UDPServer(QObject *parent, int localPort, QString socks5ServerAddr, quint16 socks5ServerPort);
+
+    explicit UDPServer(QObject *parent);
+
+    // 开始工作.
+    bool Start(int localPort, QString socks5ServerAddr, quint16 socks5ServerPort);
 
     // 处理数据.
-    virtual bool TransDataForward(const QByteArray& dataIn, QByteArrayList& dataOutForward, QByteArrayList& dataOutBack);
-    virtual bool TransDataBack(const QByteArray& dataIn, QByteArrayList& dataOutForward, QByteArrayList& dataOutBack);
+    virtual bool TransDataDown(const QByteArray& dataIn, QByteArrayList& dataOutForward, QByteArrayList& dataOutBack);
+    virtual bool TransDataUp(const QByteArray& dataIn, QByteArrayList& dataOutForward, QByteArrayList& dataOutBack);
 
     // 回送数据.
-    virtual bool InputDataBack(IDataTrans* pNextItem, const QByteArray& data);
+    virtual bool InputDataDown(IDataTrans* pNextItem, const QByteArray& data);
 
 signals:
 

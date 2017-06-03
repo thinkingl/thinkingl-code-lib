@@ -2,34 +2,48 @@
 #include <QDateTime>
 #include <QTimer>
 #include "vdef.h"
-#include "datamerge.h"
 #include "tcpdest.h"
+#include "datahashcheck.h"
+#include "transprotocol.h"
+#include "datasplit.h"
 
-UDPServer::UDPServer(QObject *parent, int localPort
-                     , QString socks5ServerAddr, quint16 socks5ServerPort)
-    : IDataTrans(parent)
-    , m_socks5ServerAddr( socks5ServerAddr )
-    , m_socks5ServerPort( socks5ServerPort )
+UDPServer::UDPServer(QObject *parent)
+    : IDataTrans(parent)    
+    , m_udpSocket( 0 )
 {
-    m_udpSocket = new QUdpSocket(this);
-    m_udpSocket->bind( localPort );
+}
 
+bool UDPServer::Start(int localPort, QString socks5ServerAddr, quint16 socks5ServerPort)
+{
+    if( m_udpSocket )
+    {
+        m_udpSocket->deleteLater();
+        m_udpSocket = 0;
+    }
+
+    m_socks5ServerAddr = socks5ServerAddr;
+    m_socks5ServerPort = socks5ServerPort;
+
+    m_udpSocket = new QUdpSocket(this);
     connect( m_udpSocket, SIGNAL(readyRead()), this, SLOT(readPendingDatagrams()));
+
+    bool bOk = m_udpSocket->bind( localPort );
 
     connect( &m_checkTimer, SIGNAL(timeout()), this, SLOT(CheckTableTimeout()) );
     m_checkTimer.start( 10* 1000 );
 
+    return bOk;
 }
 
-bool UDPServer::TransDataForward(const QByteArray &dataIn, QByteArrayList& dataOutForward, QByteArrayList& dataOutBack)
+bool UDPServer::TransDataDown(const QByteArray &dataIn, QByteArrayList& dataOutForward, QByteArrayList& dataOutBack)
 {
-    dataOutForward.push_back(dataIn);
+    qDebug() << "Shouldn't call UDPServer::TransDataDown function!";
     return true;
 }
 
-bool UDPServer::TransDataBack(const QByteArray &dataIn, QByteArrayList& dataOutForward, QByteArrayList& dataOutBack)
+bool UDPServer::TransDataUp(const QByteArray &dataIn, QByteArrayList& dataOutForward, QByteArrayList& dataOutBack)
 {
-    qDebug() << "Shouldn't call TransDataBack function!";
+    qDebug() << "Shouldn't call UDPServer::TransDataUp function!";
     // not needed.
     return false;
 }
@@ -58,6 +72,11 @@ void UDPServer::readPendingDatagrams()
               m_udpSocket->readDatagram(datagram.data(), datagram.size(),
                                       &sender, &senderPort);
 
+              if( datagram.isEmpty() )
+              {
+                  continue;
+              }
+
               UDPSenderAndDataTransTableItem* pItem = this->findItem( sender, senderPort );
               if( pItem == 0 )
               {
@@ -68,9 +87,16 @@ void UDPServer::readPendingDatagrams()
                   newItem.senderPort = senderPort;
                   newItem.lastActiveTime = QDateTime::currentDateTime().toTime_t();
                   this->m_udpSenderAndDataTransTable.push_back( newItem );
+
+                  pItem = this->findItem( sender, senderPort );
               }
 
-              pItem->dataTrans->InputDataForward( this, datagram );
+              // 服务端接收到的 数据向上解析.
+              //pItem->dataTrans->InputDataForward( this, datagram );
+              pItem->dataTrans->InputDataUp( this, datagram );
+
+              qDebug() << "UDPServer read datagram:[" << datagram << "]";
+
               pItem->lastActiveTime = QDateTime::currentDateTime().toTime_t();
     }
 }
@@ -95,12 +121,21 @@ void UDPServer::CheckTableTimeout()
 
 IDataTrans *UDPServer::CreateDataTrans()
 {
-    DataMerge* pDataMerge = new DataMerge( this );
-    TCPDest* pTCPDest = new TCPDest( this, m_socks5ServerAddr, m_socks5ServerPort );
+    // Down -> Up,  UDPServer -> Socks5Proxy
+    // UDPServer -> Trans Protocol -> DataSplit -> DataHashCheck  -> TCPDest -> socks5Proxy
 
-    pDataMerge->SetNextDataTrans( this, pTCPDest );
-    pTCPDest->SetNextDataTrans( pDataMerge, 0 );
-    return pDataMerge;
+    TCPDest* pTCPDest = new TCPDest( this, m_socks5ServerAddr, m_socks5ServerPort );
+    DataHashCheck* pDataHashCheck = new DataHashCheck( this );
+    DataSplit* pDataSplit = new DataSplit(this);
+    TransProtocol* pTransProtocol = new TransProtocol( this );
+
+    // 连接.
+    pTCPDest->SetNextDataTrans(0, pDataHashCheck );
+    pDataHashCheck->SetNextDataTrans( pTCPDest, pDataSplit );
+    pDataSplit->SetNextDataTrans( pDataHashCheck, pTransProtocol );
+    pTransProtocol->SetNextDataTrans( pDataSplit, this );
+
+    return pTransProtocol;
 }
 
 UDPServer::UDPSenderAndDataTransTableItem *UDPServer::findItem(const QHostAddress &senderAddr, quint16 senderPort)
@@ -133,7 +168,7 @@ UDPServer::UDPSenderAndDataTransTableItem *UDPServer::findItem(IDataTrans *pTran
     return 0;
 }
 
-bool UDPServer::InputDataBack(IDataTrans *pNextItem, const QByteArray &data)
+bool UDPServer::InputDataDown(IDataTrans *pNextItem, const QByteArray &data)
 {
     if( 0 == m_udpSocket )
     {

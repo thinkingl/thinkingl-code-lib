@@ -19,22 +19,26 @@ TCPSource::~TCPSource()
     }
 }
 
-bool TCPSource::TransDataForward(const QByteArray &dataIn, QByteArrayList& dataOutForward, QByteArrayList& dataOutBack)
+bool TCPSource::TransDataDown(const QByteArray &dataIn, QByteArrayList& dataOutForward, QByteArrayList& dataOutBack)
 {
     // TCP 源只管收发, 不修改数据.
-
     dataOutForward.push_back( dataIn );
+
+    qDebug() << "TCP source trasn data forward:[" << dataIn << "]";
+
     return true;
 }
 
-bool TCPSource::TransDataBack(const QByteArray &dataIn, QByteArrayList& dataOutForward, QByteArrayList& dataOutBack)
+bool TCPSource::TransDataUp(const QByteArray &dataIn, QByteArrayList& dataOutForward, QByteArrayList& dataOutBack)
 {
     // 将数据发回, 不需要再回传.
 
     // 发回到socket.
     if( this->m_localSock )
     {
-        m_localSock->write( dataIn );
+        qint64 wLen = m_localSock->write( dataIn );
+
+        qDebug() << "TCPSource trans data back to socket:[" << dataIn << "] wlen:[" << wLen << "]";
     }
     return true;
 }
@@ -50,7 +54,7 @@ void TCPSource::OnLocalReadyRead()
     qDebug() << "Local Ready Read!";
 
     QByteArray data = m_localSock->readAll();
-    this->InputDataForward( this, data );
+    this->InputDataDown( this, data );
 }
 
 void TCPSource::OnLocalDisconnected()

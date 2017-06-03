@@ -18,7 +18,9 @@ SOURCES += main.cpp \
     datasplit.cpp \
     udpserver.cpp \
     datamerge.cpp \
-    tcpdest.cpp
+    tcpdest.cpp \
+    transprotocol.cpp \
+    datahashcheck.cpp
 
 # The following define makes your compiler emit warnings if you use
 # any feature of Qt which as been marked deprecated (the exact warnings
@@ -41,4 +43,6 @@ HEADERS += \
     udpserver.h \
     vdef.h \
     datamerge.h \
-    tcpdest.h
+    tcpdest.h \
+    transprotocol.h \
+    datahashcheck.h

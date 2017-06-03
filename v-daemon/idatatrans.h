@@ -16,12 +16,12 @@ public:
     virtual ~IDataTrans();
 
     // 传入数据.
-    virtual bool InputDataForward(IDataTrans* pPreItem, const QByteArray& data);
-    virtual bool InputDataBack(IDataTrans* pNextItem, const QByteArray& data);
+    virtual bool InputDataDown(IDataTrans* pPreItem, const QByteArray& data);
+    virtual bool InputDataUp(IDataTrans* pNextItem, const QByteArray& data);
 
     // 处理数据.
-    virtual bool TransDataForward(const QByteArray& dataIn, QByteArrayList& dataOutForward, QByteArrayList& dataOutBack) = 0;
-    virtual bool TransDataBack(const QByteArray& dataIn, QByteArrayList& dataOutForward, QByteArrayList& dataOutBack) = 0;
+    virtual bool TransDataDown(const QByteArray& dataIn, QByteArrayList& dataOutForward, QByteArrayList& dataOutBack) = 0;
+    virtual bool TransDataUp(const QByteArray& dataIn, QByteArrayList& dataOutForward, QByteArrayList& dataOutBack) = 0;
 
     // 设置下一环节数据处理对象.
     bool SetNextDataTrans( IDataTrans* pre, IDataTrans* next );
