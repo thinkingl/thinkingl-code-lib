@@ -73,9 +73,8 @@ void UDPClient::readPendingDatagrams()
 
               if( !datagram.isEmpty() )
               {
-                  this->InputDataUp( this, datagram );
-
                   qDebug() << "UDPClient read datagrams:[" << datagram << "]";
+                  this->InputDataUp( this, datagram );
 
                   this->m_lastActiveTime = QDateTime::currentDateTime().toTime_t();
               }

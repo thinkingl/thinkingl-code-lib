@@ -48,14 +48,14 @@ bool DataSplit::TransDataUp(const QByteArray &dataIn, QByteArrayList& dataOutFor
     DataSplitHead head;
     if( ReadHead( dataIn, head ) )
     {
-        head.curSn == head.totalNum-1;
+        if( head.curSn == head.totalNum-1 )
+        {
+            dataOutBack.push_back( m_recvCache );
 
-        dataOutBack.push_back( m_recvCache );
+            qDebug() << "Data Spliter trans merged data up:[" << m_recvCache << "]";
 
-        qDebug() << "Data Spliter trans merged data up:[" << m_recvCache << "]";
-
-        m_recvCache.clear();
-
+            m_recvCache.clear();
+        }
 
         return true;
     }
