@@ -91,6 +91,18 @@ bool IDataTrans::SetNextDataTrans( IDataTrans* pre, IDataTrans* next )
     return true;
 }
 
+bool IDataTrans::SetPreDataTrans(IDataTrans *pre)
+{
+    m_preItem = pre;
+    return true;
+}
+
+bool IDataTrans::SetNextDataTrans(IDataTrans *next)
+{
+    m_nextItem = next;
+    return true;
+}
+
 void IDataTrans::CloseUp()
 {
     if( m_preItem )
