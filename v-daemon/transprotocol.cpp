@@ -38,7 +38,7 @@ bool TransProtocol::TransDataDown(const QByteArray &dataIn, QByteArrayList& data
     dataOutDown.push_back( dataOut );
 
     // 缓存.
-    // to be continued.
+    m_sendCache[ head.sn ] = dataOut;
 
     // 更新最近活动时间.
     m_lastSendPackDownTime = QDateTime::currentDateTime().toTime_t();
