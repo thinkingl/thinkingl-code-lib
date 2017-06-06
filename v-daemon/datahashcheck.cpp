@@ -17,7 +17,7 @@ bool DataHashCheck::TransDataDown(const QByteArray &dataIn, QByteArrayList &data
 
     m_lastSentPackHash = QCryptographicHash::hash( dataOut, QCryptographicHash::Sha256 );
 
-    for( size_t i=0; i<SHA_256_LEN; ++i )
+    for( int i=0; i<SHA_256_LEN; ++i )
     {
         dataOut[i] = m_lastSentPackHash[i];
     }
