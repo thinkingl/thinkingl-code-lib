@@ -78,7 +78,6 @@ bool TransProtocol::TransDataUp(const QByteArray &dataIn, QByteArrayList& dataOu
             break;
         case CMD_CONFIRM:
         {
-            qDebug() << "TransProtocol recv config pack!";
             this->OnConfirmPack( dataIn );
         }
             break;
@@ -232,7 +231,9 @@ void TransProtocol::CheckSendRetrans()
         {
             this->NextDataTrans()->InputDataDown( this, it.value() );
 
-            qDebug() << "Retrans data:[" << it.value() << "]";
+            UDPPackHead head;
+            ReadHead( it.value(), head );
+            qDebug() << "Retrans data:[" << head.sn << "]";
 
             transPackCount++;
 
