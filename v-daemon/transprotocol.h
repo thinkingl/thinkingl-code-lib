@@ -20,8 +20,8 @@ public:
     virtual ~TransProtocol();
 
     // 处理数据.
-    virtual bool TransDataDown(const QByteArray& dataIn, QByteArrayList& dataOutForward, QByteArrayList& dataOutBack);
-    virtual bool TransDataUp(const QByteArray& dataIn, QByteArrayList& dataOutForward, QByteArrayList& dataOutBack);
+    virtual bool TransDataDown(const QByteArray& dataIn, QByteArrayList& dataOutDown, QByteArrayList& dataOutUp);
+    virtual bool TransDataUp(const QByteArray& dataIn, QByteArrayList& dataOutDown, QByteArrayList& dataOutUp);
 
     // 命令.
     enum UDP_CMD
@@ -56,9 +56,10 @@ private:
     bool ReadHead( const QByteArray& data, UDPPackHead& head );
     bool WriteHead( QByteArray& data, const UDPPackHead& head );
 
-    void ConfirmPack( QByteArrayList& dataOutForward );
+    void CachePack( const QByteArray& data );
+    void ConfirmPack( QByteArrayList& dataOutDown );
 
-    bool ProcessData(QByteArrayList& dataOutBack);
+    bool ProcessData(QByteArrayList& dataOutUp);
 
     // 发送心跳检测.
     void CheckSendHeartbeat();
@@ -71,9 +72,13 @@ private:
 
     // 发送关闭包.
     void SendBye();
-private:
-    QByteArrayList m_recvSpilitedDataCache;
 
+    // 处理确认包.
+    void OnConfirmPack( const QByteArray& data );
+
+    // 检测重传.
+    void CheckSendRetrans();
+private:    
     typedef QMap<quint32, QByteArray> UDPPackCache;
     // 发送缓冲, 用于重传. 包序号->UDP包数据.
     UDPPackCache m_sendCache;

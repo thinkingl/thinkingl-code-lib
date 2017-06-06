@@ -8,7 +8,6 @@ UDPClient::UDPClient(QObject *parent, QHostAddress serverAddr, int remotePort)
     , m_remoteAddr( serverAddr )
     , m_remotePort( remotePort )
     , m_udpSocket( 0 )
-    , m_lastActiveTime( QDateTime::currentDateTime().toTime_t() )
 {
 
 }
@@ -49,8 +48,6 @@ bool UDPClient::TransDataDown(const QByteArray &dataIn, QByteArrayList& dataOutF
         qDebug() << "UDP write data:[" << dataIn << "] len:[" << writedLen << "]";
     }
 
-    m_lastActiveTime = QDateTime::currentDateTime().toTime_t();
-
     return bOk;
 }
 
@@ -58,9 +55,6 @@ bool UDPClient::TransDataUp(const QByteArray &dataIn, QByteArrayList& dataOutFor
 {
     //  收到的数据发回.
     dataOutBack.push_back( dataIn );
-
-    m_lastActiveTime = QDateTime::currentDateTime().toTime_t();
-
     return true;
 }
 
@@ -82,18 +76,8 @@ void UDPClient::readPendingDatagrams()
                     qDebug() << "UDPClient read datagrams:[" << datagram << "]";
                   }
                   this->InputDataUp( this, datagram );
-
-                  this->m_lastActiveTime = QDateTime::currentDateTime().toTime_t();
               }
 
           }
 }
 
-void UDPClient::checkTimeout()
-{
-    if( QDateTime::currentDateTime().toTime_t() - m_lastActiveTime > UDP_TIMEOUT_MSEC/1000 )
-    {
-        qDebug() << "UDP Client time out!";
-        this->CloseUp();
-    }
-}

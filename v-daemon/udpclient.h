@@ -22,16 +22,11 @@ signals:
 
 public slots:
     void readPendingDatagrams();
-
-    void checkTimeout();
 private:
     QHostAddress m_remoteAddr;
     int m_remotePort;
 
     QUdpSocket* m_udpSocket;
-
-    QTimer m_timerCheckTimeout;
-    time_t m_lastActiveTime;
 };
 
 #endif // UDPSENDER_H

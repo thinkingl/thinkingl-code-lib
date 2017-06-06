@@ -12,7 +12,7 @@ TransProtocol::TransProtocol(QObject *parent) : IDataTrans(parent)
   , m_lastRecvPackUpTime( 0 )
 {
     connect( &m_timer, SIGNAL(timeout()), this, SLOT(OnTimer()) );
-    m_timer.start( 1*1000 );
+    m_timer.start( 500 );
 }
 
 TransProtocol::~TransProtocol()
@@ -21,7 +21,7 @@ TransProtocol::~TransProtocol()
     this->SendBye();
 }
 
-bool TransProtocol::TransDataDown(const QByteArray &dataIn, QByteArrayList &dataOutForward, QByteArrayList &dataOutBack)
+bool TransProtocol::TransDataDown(const QByteArray &dataIn, QByteArrayList& dataOutDown, QByteArrayList& dataOutUp)
 {
     // 将dataIn中的原始数据加上包头, 发到下一环节.
     QByteArray dataOut;
@@ -35,7 +35,7 @@ bool TransProtocol::TransDataDown(const QByteArray &dataIn, QByteArrayList &data
     dataOut.push_back( dataIn );
 
     // 输出到下一环节.
-    dataOutForward.push_back( dataOut );
+    dataOutDown.push_back( dataOut );
 
     // 缓存.
     // to be continued.
@@ -57,7 +57,7 @@ bool TransProtocol::TransDataDown(const QByteArray &dataIn, QByteArrayList &data
     return true;
 }
 
-bool TransProtocol::TransDataUp(const QByteArray &dataIn, QByteArrayList &dataOutForward, QByteArrayList &dataOutBack)
+bool TransProtocol::TransDataUp(const QByteArray &dataIn, QByteArrayList& dataOutDown, QByteArrayList& dataOutUp)
 {
     UDPPackHead head;
     if( this->ReadHead( dataIn, head ) )
@@ -66,21 +66,20 @@ bool TransProtocol::TransDataUp(const QByteArray &dataIn, QByteArrayList &dataOu
         {
         case CMD_DATA:
         {
-            // 读取数据.
-            QByteArray data = dataIn.mid( TransProtocolHeadSize );
+            // 缓存数据包.
+            this->CachePack( dataIn );
 
-            // 输出.
-            dataOutBack.push_back( data );
+            // 确认.
+            this->ConfirmPack( dataOutDown );
 
-            if( s_logRawData )
-            {
-                qDebug() << "TransProtocol trans data back:[" << data << "]";
-            }
+            // 处理数据.
+            this->ProcessData( dataOutUp );
         }
             break;
         case CMD_CONFIRM:
         {
             qDebug() << "TransProtocol recv config pack!";
+            this->OnConfirmPack( dataIn );
         }
             break;
         case CMD_HEART_BEAT:
@@ -117,6 +116,9 @@ bool TransProtocol::TransDataUp(const QByteArray &dataIn, QByteArrayList &dataOu
 
 void TransProtocol::OnTimer()
 {
+    // 检测重传.
+    this->CheckSendRetrans();
+
     // 发送心跳.
     this->CheckSendHeartbeat();
 
@@ -192,6 +194,58 @@ void TransProtocol::SendBye()
     }
 }
 
+void TransProtocol::OnConfirmPack(const QByteArray &data)
+{
+    UDPPackHead head;
+    if( ReadHead( data, head ) )
+    {
+        UDPPackCache::iterator it = m_sendCache.begin();
+        while (it!=m_sendCache.end()) {
+            UDPPackHead cacheHead;
+            ReadHead( it.value(), cacheHead );
+            if( cacheHead.sn <= head.sn )
+            {
+                it = m_sendCache.erase( it );
+                qDebug() << "TransProtocol erase send cache:[" << cacheHead.sn << "]";
+            }
+            else
+            {
+                break;
+            }
+        }
+    }
+    else
+    {
+        qDebug() << "Read confirm pack head fail! data:[" << data << "]";
+    }
+}
+
+void TransProtocol::CheckSendRetrans()
+{
+    const int MaxRetransPack = 2;   // 一次最多重传的包数.
+
+    int transPackCount = 0;
+    UDPPackCache::iterator it = m_sendCache.begin();
+    while (it!=m_sendCache.end()) {
+
+        if( this->NextDataTrans() )
+        {
+            this->NextDataTrans()->InputDataDown( this, it.value() );
+
+            qDebug() << "Retrans data:[" << it.value() << "]";
+
+            transPackCount++;
+
+            if(transPackCount>=MaxRetransPack)
+            {
+                break;
+            }
+        }
+
+        ++it;
+    }
+}
+
 bool TransProtocol::ReadHead(const QByteArray& data, UDPPackHead& head)
 {
     if( data.size() < TransProtocolHeadSize )
@@ -224,8 +278,32 @@ bool TransProtocol::WriteHead(QByteArray& data, const UDPPackHead& head)
     return true;
 }
 
-void TransProtocol::ConfirmPack(QByteArrayList& dataOutForward)
+void TransProtocol::CachePack(const QByteArray &data)
 {
+    UDPPackHead head;
+    if( ReadHead( data, head ) )
+    {
+        if( head.sn > m_curConfirmedRecvPackSN
+                || ( m_curConfirmedRecvPackSN == 0 && head.sn == m_curConfirmedRecvPackSN ) ) // 对第一个包特殊处理.
+        {
+            m_recvCache[ head.sn ] = data;
+            qDebug() << "TransProtocol cache data:[" << head.sn << "]";
+        }
+        else
+        {
+            qDebug() << "TransProtocol Old sn not cache.[" << head.sn << "]";
+        }
+    }
+
+}
+
+void TransProtocol::ConfirmPack(QByteArrayList& dataOutDown)
+{
+    if( m_recvCache.empty() )
+    {
+        return;
+    }
+
     quint32 sn = m_curConfirmedRecvPackSN;
     while (m_recvCache.find(sn+1) != m_recvCache.end() ) {
         ++sn;
@@ -241,70 +319,32 @@ void TransProtocol::ConfirmPack(QByteArrayList& dataOutForward)
 
     WriteHead( udpConfirmPack, head );
 
-    dataOutForward.push_back( udpConfirmPack );
+    dataOutDown.push_back( udpConfirmPack );
+    qDebug() << "TransProtocol confirm recv pack:[" << sn << "]";
     //this->InputDataForward( this, udpConfirmPack );
 }
 
-bool TransProtocol::ProcessData(QByteArrayList& dataOutBack)
+bool TransProtocol::ProcessData(QByteArrayList& dataOutUp )
 {
-    if( !m_recvCache.empty() )
+    UDPPackCache::iterator it= m_recvCache.begin();
+    while(  it!=m_recvCache.end() )
     {
+        const QByteArray& data = it.value();
         UDPPackHead head;
-        if( ReadHead( *m_recvCache.begin(), head ) )
+        ReadHead( data, head );
+        if( head.sn <= m_curConfirmedRecvPackSN )
         {
-            quint32 beginSN = 0;
-            quint32 endSN = 0;
-//            if( head.curDataSN == 0 )
-//            {
-//                // 是一个数据的起始.
-//                beginSN = head.sn;
-//                endSN = beginSN + head.curDataPackNum;
-//            }
-//            else
-//            {
-//                qDebug() << "Invalid first item in rcv cache!";
-//                return false;
-//            }
+            // 可以处理.
+            dataOutUp.push_back( data.mid( TransProtocolHeadSize ) );
 
-            int dataPackNum = (endSN - beginSN);
-            if( dataPackNum > 0 )   // 考虑翻转的情况, 用 - , 不用 >.
-            {
-                if( (int)(endSN - m_curConfirmedRecvPackSN) > 0 )
-                {
-                    // 数据已经够了,可以处理了.
-                    QByteArray data;
-                    for( quint32 i=beginSN; i!=endSN; ++i)
-                    {
-                        data.push_back( m_recvCache[i].mid( TransProtocolHeadSize ) );
+            it = m_recvCache.erase( it );
 
-                        m_recvCache.erase( m_recvCache.find(i) );
-                    }
-
-                    // 校验数据有效性.
-//                    QByteArray shaData = data.mid(0,SHA_256_LEN);
-//                    QByteArray originalData = data.mid( SHA_256_LEN );
-//                    if( shaData == QCryptographicHash::hash( originalData, QCryptographicHash::Sha256 ) )
-//                    {
-//                        // 数据ok.
-//                        dataOutBack.push_back( originalData );
-//                    }
-//                    else
-//                    {
-//                        qDebug() << "Check the hash fail!!";
-//                        return false;
-//                    }
-                }
-            }
-            else
-            {
-                qDebug() << "end sn is not > begin sn.";
-                return false;
-            }
+            qDebug() << "TransProtocol process data:[" << head.sn << "]";
         }
         else
         {
-            qDebug() << "Process data error ! Read head fail!!";
-            return false;
+            // Out of range.
+            break;
         }
     }
     return true;

@@ -10,7 +10,7 @@ DataSplit::DataSplit(QObject *parent) : IDataTrans(parent)
 
 }
 
-bool DataSplit::TransDataDown(const QByteArray &dataIn, QByteArrayList& dataOutForward, QByteArrayList& dataOutBack)
+bool DataSplit::TransDataDown(const QByteArray &dataIn, QByteArrayList& dataOutDown, QByteArrayList& dataOutUp)
 {
     // 将数据拆成小包.( <1300byte )
     // 格式: total num 1byte | cur sn 1byte | data
@@ -32,7 +32,7 @@ bool DataSplit::TransDataDown(const QByteArray &dataIn, QByteArrayList& dataOutF
         }
 
         pack.push_back( dataIn.mid( i*MaxDataLen, MaxDataLen ) );
-        dataOutForward.push_back( pack );
+        dataOutDown.push_back( pack );
 
         if( s_logRawData )
         {
