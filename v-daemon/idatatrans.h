@@ -34,6 +34,8 @@ public:
 
     virtual void CloseDown( IDataTrans* pre );
 
+    static bool s_logRawData;
+
 protected:
     IDataTrans* NextDataTrans() const;
 private:

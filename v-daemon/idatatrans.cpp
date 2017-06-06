@@ -1,6 +1,8 @@
 #include "idatatrans.h"
 #include <QDebug>
 
+bool IDataTrans::s_logRawData = false;
+
 IDataTrans::IDataTrans(QObject* parent)
     :QObject( parent )
     ,m_preItem( 0 )

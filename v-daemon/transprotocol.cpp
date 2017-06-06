@@ -49,7 +49,10 @@ bool TransProtocol::TransDataDown(const QByteArray &dataIn, QByteArrayList &data
         m_lastRecvPackUpTime = QDateTime::currentDateTime().toTime_t();
     }
 
-    qDebug() << "TransProtocol trans data forward:[" << dataOut << "]";
+    if( s_logRawData )
+    {
+        qDebug() << "TransProtocol trans data forward:[" << dataOut << "]";
+    }
 
     return true;
 }
@@ -68,7 +71,11 @@ bool TransProtocol::TransDataUp(const QByteArray &dataIn, QByteArrayList &dataOu
 
             // 输出.
             dataOutBack.push_back( data );
-            qDebug() << "TransProtocol trans data back:[" << data << "]";
+
+            if( s_logRawData )
+            {
+                qDebug() << "TransProtocol trans data back:[" << data << "]";
+            }
         }
             break;
         case CMD_CONFIRM:

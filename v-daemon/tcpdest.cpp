@@ -31,7 +31,10 @@ bool TCPDest::TransDataDown(const QByteArray &dataIn, QByteArrayList& dataOutFor
     // 将socks5代理服务器发送的数据发向下层协议.
     dataOutForward.push_back( dataIn );
 
-    qDebug() << "TCPDst trans data up:[" << dataIn << "]";
+    if( s_logRawData )
+    {
+        qDebug() << "TCPDst trans data up:[" << dataIn << "]";
+    }
 
     return true;
 }
@@ -51,7 +54,10 @@ bool TCPDest::TransDataUp(const QByteArray &dataIn, QByteArrayList& dataOutForwa
         qint64 writeLen = m_socks5TCPSocket->write( dataIn );
         bOk = (writeLen == dataIn.length());
 
-        qDebug() << "TCPDst write data:[" << dataIn << "] wlen:[" << writeLen << "]";
+        if( s_logRawData )
+        {
+            qDebug() << "TCPDst write data:[" << dataIn << "] wlen:[" << writeLen << "]";
+        }
     }
     else
     {

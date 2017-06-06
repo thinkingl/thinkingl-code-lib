@@ -34,7 +34,10 @@ bool DataSplit::TransDataDown(const QByteArray &dataIn, QByteArrayList& dataOutF
         pack.push_back( dataIn.mid( i*MaxDataLen, MaxDataLen ) );
         dataOutForward.push_back( pack );
 
-        qDebug() << "Data split trans forward:[" << pack << "]";
+        if( s_logRawData )
+        {
+            qDebug() << "Data split trans forward:[" << pack << "]";
+        }
     }
     return true;
 }
@@ -52,7 +55,10 @@ bool DataSplit::TransDataUp(const QByteArray &dataIn, QByteArrayList& dataOutFor
         {
             dataOutBack.push_back( m_recvCache );
 
-            qDebug() << "Data Spliter trans merged data up:[" << m_recvCache << "]";
+            if( s_logRawData )
+            {
+                qDebug() << "Data Spliter trans merged data up:[" << m_recvCache << "]";
+            }
 
             m_recvCache.clear();
         }

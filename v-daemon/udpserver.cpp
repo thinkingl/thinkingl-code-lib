@@ -77,7 +77,10 @@ void UDPServer::readPendingDatagrams()
                   continue;
               }
 
-              qDebug() << "UDPServer read datagram:[" << datagram << "]";
+              if( s_logRawData )
+              {
+                qDebug() << "UDPServer read datagram:[" << datagram << "]";
+              }
 
               UDPSenderAndDataTransTableItem* pItem = this->findItem( sender, senderPort );
               if( pItem == 0 )

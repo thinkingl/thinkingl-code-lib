@@ -43,7 +43,11 @@ bool UDPClient::TransDataDown(const QByteArray &dataIn, QByteArrayList& dataOutF
         qDebug() << "UDP write error:[" << er << "]-[" << m_udpSocket->errorString() << "]"
                  << " Addr:[" << m_remoteAddr.toString() << "] port: [" << m_remotePort << "]";
     }
-    qDebug() << "UDP write data:[" << dataIn << "] len:[" << writedLen << "]";
+
+    if( s_logRawData )
+    {
+        qDebug() << "UDP write data:[" << dataIn << "] len:[" << writedLen << "]";
+    }
 
     m_lastActiveTime = QDateTime::currentDateTime().toTime_t();
 
@@ -73,7 +77,10 @@ void UDPClient::readPendingDatagrams()
 
               if( !datagram.isEmpty() )
               {
-                  qDebug() << "UDPClient read datagrams:[" << datagram << "]";
+                  if( s_logRawData )
+                  {
+                    qDebug() << "UDPClient read datagrams:[" << datagram << "]";
+                  }
                   this->InputDataUp( this, datagram );
 
                   this->m_lastActiveTime = QDateTime::currentDateTime().toTime_t();

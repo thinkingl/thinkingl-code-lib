@@ -25,7 +25,10 @@ bool TCPSource::TransDataDown(const QByteArray &dataIn, QByteArrayList& dataOutF
     // TCP 源只管收发, 不修改数据.
     dataOutForward.push_back( dataIn );
 
-    qDebug() << "TCP source trasn data forward:[" << dataIn << "]";
+    if( s_logRawData )
+    {
+        qDebug() << "TCP source trasn data forward:[" << dataIn << "]";
+    }
 
     return true;
 }
@@ -39,7 +42,10 @@ bool TCPSource::TransDataUp(const QByteArray &dataIn, QByteArrayList& dataOutFor
     {
         qint64 wLen = m_localSock->write( dataIn );
 
-        qDebug() << "TCPSource trans data back to socket:[" << dataIn << "] wlen:[" << wLen << "]";
+        if( s_logRawData )
+        {
+            qDebug() << "TCPSource trans data back to socket:[" << dataIn << "] wlen:[" << wLen << "]";
+        }
     }
     return true;
 }

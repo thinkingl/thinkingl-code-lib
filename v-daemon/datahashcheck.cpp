@@ -28,7 +28,10 @@ bool DataHashCheck::TransDataDown(const QByteArray &dataIn, QByteArrayList &data
     }
     dataOutForward.push_back( dataOut );
 
-    qDebug() << "Data hash check trans data forward:[" << dataOut << "]";
+    if( s_logRawData )
+    {
+        qDebug() << "Data hash check trans data forward:[" << dataOut << "]";
+    }
 
     return true;
 }
@@ -55,7 +58,10 @@ bool DataHashCheck::TransDataUp(const QByteArray &dataIn, QByteArrayList &dataOu
 
         m_lastRecvPackHash = hash;
 
-        qDebug() << "Data hash check ok, trans data back:[" << curData << "]";
+        if( s_logRawData )
+        {
+            qDebug() << "Data hash check ok, trans data back:[" << curData << "]";
+        }
         return true;
     }
     else
