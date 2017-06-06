@@ -12,7 +12,13 @@ IDataTrans::~IDataTrans()
 {
     if( m_nextItem )
     {
+        m_nextItem->SetPreDataTrans(0);
         m_nextItem->deleteLater();
+    }
+
+    if( m_preItem )
+    {
+        m_preItem->SetNextDataTrans(0);
     }
 }
 

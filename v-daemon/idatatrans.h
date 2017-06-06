@@ -26,6 +26,9 @@ public:
     // 设置下一环节数据处理对象.
     bool SetNextDataTrans( IDataTrans* pre, IDataTrans* next );
 
+    bool SetPreDataTrans( IDataTrans* pre );
+    bool SetNextDataTrans( IDataTrans* next );
+
     // 向前关闭.
     virtual void CloseUp();
 
