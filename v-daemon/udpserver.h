@@ -23,6 +23,9 @@ public:
     // 回送数据.
     virtual bool InputDataDown(IDataTrans* pNextItem, const QByteArray& data);
 
+    // 向下关闭, UDP Server不能销毁,  只销毁其中的记录.
+    virtual void CloseDown( IDataTrans* pre );
+
 signals:
 
 private slots:

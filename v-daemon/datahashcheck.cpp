@@ -9,6 +9,11 @@ DataHashCheck::DataHashCheck(QObject *parent) : IDataTrans(parent)
     m_lastRecvPackHash.fill(0, SHA_256_LEN );
 }
 
+DataHashCheck::~DataHashCheck()
+{
+    qDebug() << "DataHashCheck destruct!";
+}
+
 bool DataHashCheck::TransDataDown(const QByteArray &dataIn, QByteArrayList &dataOutForward, QByteArrayList &dataOutBack)
 {
     QByteArray dataOut;

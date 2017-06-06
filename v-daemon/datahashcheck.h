@@ -20,6 +20,7 @@ class DataHashCheck : public IDataTrans
     Q_OBJECT
 public:
     explicit DataHashCheck(QObject *parent = 0);
+    virtual ~DataHashCheck();
 
     static const int SHA_256_LEN = 32;
 

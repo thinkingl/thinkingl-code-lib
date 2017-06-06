@@ -32,6 +32,8 @@ public:
     // 向前关闭.
     virtual void CloseUp();
 
+    virtual void CloseDown( IDataTrans* pre );
+
 protected:
     IDataTrans* NextDataTrans() const;
 private:

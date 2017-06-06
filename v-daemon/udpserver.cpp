@@ -8,7 +8,7 @@
 #include "datasplit.h"
 
 UDPServer::UDPServer(QObject *parent)
-    : IDataTrans(parent)    
+    : IDataTrans(parent)
     , m_udpSocket( 0 )
 {
 }
@@ -91,7 +91,7 @@ void UDPServer::readPendingDatagrams()
                   this->m_udpSenderAndDataTransTable.push_back( newItem );
 
                   pItem = this->findItem( sender, senderPort );
-              }            
+              }
 
               // 服务端接收到的 数据向上解析.
               //pItem->dataTrans->InputDataForward( this, datagram );
@@ -191,4 +191,22 @@ bool UDPServer::InputDataDown(IDataTrans *pNextItem, const QByteArray &data)
         return false;
     }
     return true;
+}
+
+void UDPServer::CloseDown(IDataTrans *pre)
+{
+    qDebug() << "UDP Server close down!";
+
+    for( UDPSenderAndDataTransTable::iterator it = m_udpSenderAndDataTransTable.begin(); it != m_udpSenderAndDataTransTable.end(); ++it )
+    {
+        if( it->dataTrans == pre )
+        {
+            qDebug() << "Erase the item! addr:[" << it->senderAddr.toString() << ":" << it->senderPort << "]";
+            m_udpSenderAndDataTransTable.erase( it );
+
+            return;
+        }
+    }
+
+    qDebug() << "UDPServer closeDown Can't find the data transer!";
 }

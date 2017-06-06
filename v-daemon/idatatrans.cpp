@@ -13,7 +13,7 @@ IDataTrans::~IDataTrans()
     if( m_nextItem )
     {
         m_nextItem->SetPreDataTrans(0);
-        m_nextItem->deleteLater();
+        m_nextItem->CloseDown( this );
     }
 
     if( m_preItem )
@@ -111,7 +111,16 @@ void IDataTrans::CloseUp()
     }
     else
     {
-        this->deleteLater();
+        this->CloseDown( 0 );
+    }
+}
+
+void IDataTrans::CloseDown( IDataTrans* pre )
+{
+    this->deleteLater();
+    if( m_nextItem )
+    {
+        m_nextItem->CloseDown( this );
     }
 }
 
