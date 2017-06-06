@@ -27,7 +27,7 @@ public:
     bool SetNextDataTrans( IDataTrans* pre, IDataTrans* next );
 
     // 向前关闭.
-    virtual void CloseBack();
+    virtual void CloseUp();
 
 protected:
     IDataTrans* NextDataTrans() const;

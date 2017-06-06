@@ -16,6 +16,16 @@ TCPDest::TCPDest(QObject *parent, QString remoteAddr, int remotePort)
     m_socks5TCPSocket->connectToHost( this->m_socks5ServerAddr, this->m_socks5ServerPort );
 }
 
+TCPDest::~TCPDest()
+{
+    qDebug() << "TCPDest destruct!";
+    if( m_socks5TCPSocket )
+    {
+        m_socks5TCPSocket->close();
+        m_socks5TCPSocket->deleteLater();
+    }
+}
+
 bool TCPDest::TransDataDown(const QByteArray &dataIn, QByteArrayList& dataOutForward, QByteArrayList& dataOutBack)
 {
     // 将socks5代理服务器发送的数据发向下层协议.
@@ -52,6 +62,12 @@ bool TCPDest::TransDataUp(const QByteArray &dataIn, QByteArrayList& dataOutForwa
 
 }
 
+void TCPDest::CloseUp()
+{
+    qDebug() << "TCPDest close up";
+    this->deleteLater();
+}
+
 void TCPDest::OnSocks5ServerReadyRead()
 {
     qDebug() << "Socks5Server Ready Read!";
@@ -69,7 +85,7 @@ void TCPDest::OnSocks5ServerDisconnected()
 {
     qDebug() << "Socks5Server Disconnectd!";
 
-    this->CloseBack();
+    this->CloseUp();
 }
 
 
@@ -77,5 +93,5 @@ void TCPDest::OnSocks5ServerError(QAbstractSocket::SocketError er)
 {
     qDebug() << "Socks5Server Error!" << er;
 
-    this->CloseBack();
+    this->CloseUp();
 }

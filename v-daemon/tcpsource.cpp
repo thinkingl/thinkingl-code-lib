@@ -13,6 +13,7 @@ TCPSource::TCPSource( QObject* parent, QTcpSocket* localSock)
 
 TCPSource::~TCPSource()
 {
+    qDebug() << "TCP Source begin to destruct";
     if( m_localSock )
     {
         m_localSock->close();
@@ -43,8 +44,9 @@ bool TCPSource::TransDataUp(const QByteArray &dataIn, QByteArrayList& dataOutFor
     return true;
 }
 
-void TCPSource::CloseBack()
+void TCPSource::CloseUp()
 {
+    qDebug() << "TCPSource closeup, delete self later!";
     this->deleteLater();
 }
 

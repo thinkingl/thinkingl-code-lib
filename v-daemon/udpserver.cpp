@@ -77,6 +77,8 @@ void UDPServer::readPendingDatagrams()
                   continue;
               }
 
+              qDebug() << "UDPServer read datagram:[" << datagram << "]";
+
               UDPSenderAndDataTransTableItem* pItem = this->findItem( sender, senderPort );
               if( pItem == 0 )
               {
@@ -89,13 +91,13 @@ void UDPServer::readPendingDatagrams()
                   this->m_udpSenderAndDataTransTable.push_back( newItem );
 
                   pItem = this->findItem( sender, senderPort );
-              }
+              }            
 
               // 服务端接收到的 数据向上解析.
               //pItem->dataTrans->InputDataForward( this, datagram );
               pItem->dataTrans->InputDataUp( this, datagram );
 
-              qDebug() << "UDPServer read datagram:[" << datagram << "]";
+
 
               pItem->lastActiveTime = QDateTime::currentDateTime().toTime_t();
     }
@@ -111,8 +113,9 @@ void UDPServer::CheckTableTimeout()
             // 超时.
             qDebug() << "UDP Server time out! dst ip:["
                      << it->senderAddr << ":" << it->senderPort << "]";
-            it->dataTrans->deleteLater();
+            //it->dataTrans->deleteLater();
 
+            it->dataTrans->CloseUp();
 
             it = m_udpSenderAndDataTransTable.erase( it );
         }

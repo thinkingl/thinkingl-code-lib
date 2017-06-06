@@ -85,11 +85,20 @@ bool IDataTrans::SetNextDataTrans( IDataTrans* pre, IDataTrans* next )
     return true;
 }
 
-void IDataTrans::CloseBack()
+void IDataTrans::CloseUp()
 {
     if( m_preItem )
     {
-        m_preItem->CloseBack();
+        m_preItem->CloseUp();
     }
+    else
+    {
+        this->deleteLater();
+    }
+}
+
+IDataTrans *IDataTrans::NextDataTrans() const
+{
+    return m_nextItem;
 }
 

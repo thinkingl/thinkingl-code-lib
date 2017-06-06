@@ -17,6 +17,7 @@ class TransProtocol : public IDataTrans
     Q_OBJECT
 public:
     explicit TransProtocol(QObject *parent = 0);
+    virtual ~TransProtocol();
 
     // 处理数据.
     virtual bool TransDataDown(const QByteArray& dataIn, QByteArrayList& dataOutForward, QByteArrayList& dataOutBack);
@@ -27,7 +28,7 @@ public:
     {
         CMD_DATA,   // 数据
         CMD_CONFIRM,// 确认
-        CMD_HEART_BEAT, // 心跳, 因为长时间没有数据, UDP的NAT通道会被路由器关闭.
+        CMD_HEART_BEAT, // 心跳, 因为长时间没有数据, UDP的NAT通道会被路由器关闭. 10s一次.
         CMD_BYE,    // 关闭
     };
 
@@ -59,6 +60,17 @@ private:
 
     bool ProcessData(QByteArrayList& dataOutBack);
 
+    // 发送心跳检测.
+    void CheckSendHeartbeat();
+
+    // 接收心跳检测.
+    void CheckRecvHeartbeat();
+
+    // 发送心跳包
+    void SendHeartbeat();
+
+    // 发送关闭包.
+    void SendBye();
 private:
     QByteArrayList m_recvSpilitedDataCache;
 
@@ -80,6 +92,12 @@ private:
 
     // 当前已经处理过的接收到的包序号, 再收到之前的序号就不用处理了.
     quint32 m_curProcessedRecvPackSN;
+
+    // 最近一次发包或心跳的时间.
+    time_t m_lastSendPackDownTime;
+
+    // 最近一次收到包的时间.
+    time_t m_lastRecvPackUpTime;
 };
 
 #endif // TRANSPROTOCOL_H

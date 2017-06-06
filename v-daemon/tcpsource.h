@@ -24,7 +24,7 @@ public:
     virtual bool TransDataUp(const QByteArray& dataIn, QByteArrayList& dataOutForward, QByteArrayList& dataOutBack);
 
     // 向前关闭.
-    virtual void CloseBack();
+    virtual void CloseUp();
 private slots:
     void OnLocalReadyRead();
     void OnLocalDisconnected();

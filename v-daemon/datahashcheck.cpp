@@ -57,7 +57,7 @@ bool DataHashCheck::TransDataUp(const QByteArray &dataIn, QByteArrayList &dataOu
     {
         qDebug() << "Data hash check fail! data:[" << curData << "] cur hash:[" << curHash << "] Expected hash:[" << hash << "] last hash:[" << m_lastRecvPackHash << "]";
 
-        this->CloseBack();
+        this->CloseUp();
 
         return false;
     }

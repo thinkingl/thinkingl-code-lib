@@ -13,6 +13,11 @@ UDPClient::UDPClient(QObject *parent, QHostAddress serverAddr, int remotePort)
 
 }
 
+UDPClient::~UDPClient()
+{
+    qDebug() << "UDPClient destruct!";
+}
+
 bool UDPClient::TransDataDown(const QByteArray &dataIn, QByteArrayList& dataOutForward, QByteArrayList& dataOutBack)
 {
     // 将数据通过UDP发出.
@@ -83,6 +88,6 @@ void UDPClient::checkTimeout()
     if( QDateTime::currentDateTime().toTime_t() - m_lastActiveTime > UDP_TIMEOUT_MSEC/1000 )
     {
         qDebug() << "UDP Client time out!";
-        this->CloseBack();
+        this->CloseUp();
     }
 }

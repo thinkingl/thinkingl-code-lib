@@ -9,10 +9,14 @@ class TCPDest : public IDataTrans
     Q_OBJECT
 public:
     explicit TCPDest(QObject *parent, QString remoteAddr, int remotePort);
+    virtual ~TCPDest();
 
     // 处理数据.
     virtual bool TransDataDown(const QByteArray& dataIn, QByteArrayList& dataOutForward, QByteArrayList& dataOutBack);
     virtual bool TransDataUp(const QByteArray& dataIn, QByteArrayList& dataOutForward, QByteArrayList& dataOutBack);
+
+    // 向前关闭.
+    virtual void CloseUp();
 signals:
 
 public slots:
