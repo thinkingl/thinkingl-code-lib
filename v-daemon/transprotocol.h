@@ -56,7 +56,7 @@ private:
     bool ReadHead( const QByteArray& data, UDPPackHead& head );
     bool WriteHead( QByteArray& data, const UDPPackHead& head );
 
-    void CachePack( const QByteArray& data );
+    void CacheRecvPack( const QByteArray& data );
     void ConfirmPack( QByteArrayList& dataOutDown );
 
     bool ProcessData(QByteArrayList& dataOutUp);

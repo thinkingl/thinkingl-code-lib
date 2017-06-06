@@ -67,7 +67,7 @@ bool TransProtocol::TransDataUp(const QByteArray &dataIn, QByteArrayList& dataOu
         case CMD_DATA:
         {
             // 缓存数据包.
-            this->CachePack( dataIn );
+            this->CacheRecvPack( dataIn );
 
             // 确认.
             this->ConfirmPack( dataOutDown );
@@ -198,11 +198,12 @@ void TransProtocol::OnConfirmPack(const QByteArray &data)
     UDPPackHead head;
     if( ReadHead( data, head ) )
     {
+        qDebug() << "TransProtocol recv config pack:[" << head.sn << "]";
         UDPPackCache::iterator it = m_sendCache.begin();
         while (it!=m_sendCache.end()) {
             UDPPackHead cacheHead;
             ReadHead( it.value(), cacheHead );
-            if( cacheHead.sn <= head.sn )
+            if( int(head.sn - cacheHead.sn) >= 0 )
             {
                 it = m_sendCache.erase( it );
                 qDebug() << "TransProtocol erase send cache:[" << cacheHead.sn << "]";
@@ -279,7 +280,7 @@ bool TransProtocol::WriteHead(QByteArray& data, const UDPPackHead& head)
     return true;
 }
 
-void TransProtocol::CachePack(const QByteArray &data)
+void TransProtocol::CacheRecvPack(const QByteArray &data)
 {
     UDPPackHead head;
     if( ReadHead( data, head ) )
@@ -288,7 +289,7 @@ void TransProtocol::CachePack(const QByteArray &data)
                 || ( m_curConfirmedRecvPackSN == 0 && head.sn == m_curConfirmedRecvPackSN ) ) // 对第一个包特殊处理.
         {
             m_recvCache[ head.sn ] = data;
-            qDebug() << "TransProtocol cache data:[" << head.sn << "]";
+            qDebug() << "TransProtocol cache recv data:[" << head.sn << "]";
         }
         else
         {
