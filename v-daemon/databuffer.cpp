@@ -9,6 +9,7 @@ DataBuffer::DataBuffer(QObject *parent) : IDataTrans(parent)
     m_timer.setInterval( m_timerInterval );
 
     connect( &m_timer, SIGNAL(timeout()), this, SLOT(OnTimer()) );
+    m_timer.start();
 }
 
 bool DataBuffer::TransDataDown(const QByteArray &dataIn, QByteArrayList &dataOutDown, QByteArrayList &dataOutUp)
