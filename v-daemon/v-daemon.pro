@@ -20,7 +20,8 @@ SOURCES += main.cpp \
     datamerge.cpp \
     tcpdest.cpp \
     transprotocol.cpp \
-    datahashcheck.cpp
+    datahashcheck.cpp \
+    databuffer.cpp
 
 # The following define makes your compiler emit warnings if you use
 # any feature of Qt which as been marked deprecated (the exact warnings
@@ -45,4 +46,5 @@ HEADERS += \
     datamerge.h \
     tcpdest.h \
     transprotocol.h \
-    datahashcheck.h
+    datahashcheck.h \
+    databuffer.h

@@ -103,6 +103,9 @@ private:
 
     // 最近一次收到包的时间.
     time_t m_lastRecvPackUpTime;
+
+    // 收到的最后一个应打包是不是重复应答.
+    bool m_lastRecvConfirmPackRepeated;
 };
 
 #endif // TRANSPROTOCOL_H

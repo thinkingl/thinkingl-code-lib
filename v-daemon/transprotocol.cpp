@@ -10,9 +10,10 @@ TransProtocol::TransProtocol(QObject *parent) : IDataTrans(parent)
   , m_curProcessedRecvPackSN(0)
   , m_lastSendPackDownTime( 0 )
   , m_lastRecvPackUpTime( 0 )
+  , m_lastRecvConfirmPackRepeated( false )
 {
     connect( &m_timer, SIGNAL(timeout()), this, SLOT(OnTimer()) );
-    m_timer.start( 500 );
+    m_timer.start( 100 );
 }
 
 TransProtocol::~TransProtocol()
@@ -23,6 +24,13 @@ TransProtocol::~TransProtocol()
 
 bool TransProtocol::TransDataDown(const QByteArray &dataIn, QByteArrayList& dataOutDown, QByteArrayList& dataOutUp)
 {
+    // 如果当前有重复的应答包, 拒绝继续接收数据.
+    if( m_lastRecvConfirmPackRepeated )
+    {
+        qDebug() << "TransProtocol reject the pack because last confirm packet is repeated!";
+        return false;
+    }
+
     // 将dataIn中的原始数据加上包头, 发到下一环节.
     QByteArray dataOut;
 
@@ -198,7 +206,7 @@ void TransProtocol::OnConfirmPack(const QByteArray &data)
     UDPPackHead head;
     if( ReadHead( data, head ) )
     {
-        qDebug() << "TransProtocol recv config pack:[" << head.sn << "]";
+        qDebug() << "TransProtocol recv confirm pack:[" << head.sn << "]";
         UDPPackCache::iterator it = m_sendCache.begin();
         while (it!=m_sendCache.end()) {
             UDPPackHead cacheHead;
@@ -207,9 +215,12 @@ void TransProtocol::OnConfirmPack(const QByteArray &data)
             {
                 it = m_sendCache.erase( it );
                 qDebug() << "TransProtocol erase send cache:[" << cacheHead.sn << "]";
+                m_lastRecvConfirmPackRepeated = false;
             }
             else
             {
+                qDebug() << "Receive repeat confirm pack! means has some pack lost!";
+                m_lastRecvConfirmPackRepeated = true;
                 break;
             }
         }

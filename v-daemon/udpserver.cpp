@@ -6,6 +6,7 @@
 #include "datahashcheck.h"
 #include "transprotocol.h"
 #include "datasplit.h"
+#include "databuffer.h"
 
 UDPServer::UDPServer(QObject *parent)
     : IDataTrans(parent)
@@ -133,13 +134,15 @@ IDataTrans *UDPServer::CreateDataTrans()
     TCPDest* pTCPDest = new TCPDest( this, m_socks5ServerAddr, m_socks5ServerPort );
     DataHashCheck* pDataHashCheck = new DataHashCheck( this );
     DataSplit* pDataSplit = new DataSplit(this);
+    DataBuffer* pDataBuffer = new DataBuffer(this);
     TransProtocol* pTransProtocol = new TransProtocol( this );
 
     // 连接.
     pTCPDest->SetNextDataTrans(0, pDataHashCheck );
     pDataHashCheck->SetNextDataTrans( pTCPDest, pDataSplit );
-    pDataSplit->SetNextDataTrans( pDataHashCheck, pTransProtocol );
-    pTransProtocol->SetNextDataTrans( pDataSplit, this );
+    pDataSplit->SetNextDataTrans( pDataHashCheck, pDataBuffer );
+    pDataBuffer->SetNextDataTrans( pDataSplit, pTransProtocol );
+    pTransProtocol->SetNextDataTrans( pDataBuffer, this );
 
     return pTransProtocol;
 }

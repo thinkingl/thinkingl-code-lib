@@ -6,6 +6,7 @@
 #include "datahashcheck.h"
 #include "transprotocol.h"
 #include <QHostInfo>
+#include "databuffer.h"
 
 ProxyChannel::ProxyChannel(QObject *parent)
 	: QObject(parent)
@@ -76,13 +77,15 @@ void ProxyChannel::OnNewConnection()
     TCPSource* pTCPSource = new TCPSource( this, pendingSocket );
     DataHashCheck* pDataHashCheck = new DataHashCheck( this );
     DataSplit* pDataSplit = new DataSplit(this);
+    DataBuffer* pDataBuffer = new DataBuffer(this);
     TransProtocol* pTransProtocol = new TransProtocol( this );
     UDPClient* pUDPClient = new UDPClient(this, this->m_remoteAddr, this->m_remotePort );
 
     // 连接起来. TCPSource -> DataHashCheck -> DataSplit -> TransProtocol -> UDPClient.
     pTCPSource->SetNextDataTrans(0, pDataHashCheck );
     pDataHashCheck->SetNextDataTrans( pTCPSource, pDataSplit );
-    pDataSplit->SetNextDataTrans(pDataHashCheck, pTransProtocol);
-    pTransProtocol->SetNextDataTrans( pDataSplit, pUDPClient );
+    pDataSplit->SetNextDataTrans(pDataHashCheck, pDataBuffer);
+    pDataBuffer->SetNextDataTrans( pDataSplit, pTransProtocol );
+    pTransProtocol->SetNextDataTrans( pDataBuffer, pUDPClient );
     pUDPClient->SetNextDataTrans(pTransProtocol, 0);
 }
