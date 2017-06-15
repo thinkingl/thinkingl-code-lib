@@ -1,6 +1,6 @@
 #include "databuffer.h"
 
-int DataBuffer::s_timerInterval = 50;
+int DataBuffer::s_timerInterval = 10;
 int DataBuffer::s_transDataDownSuccessCount = 0;
 
 DataBuffer::DataBuffer(QObject *parent) : IDataTrans(parent)
@@ -47,8 +47,10 @@ void DataBuffer::OnTimer()
         else
         {
             // fail.
-            m_timer.setInterval( ++s_timerInterval );
-
+            if( s_timerInterval < 100 )
+            {
+                m_timer.setInterval( ++s_timerInterval );
+            }
             s_transDataDownSuccessCount = 0;
         }
 
