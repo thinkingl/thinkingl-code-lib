@@ -10,7 +10,7 @@
 *   +by lzx@2017-05-25
 */
 // 格式: total num 1byte | cur sn 1byte | data
-static const int PACK_MAX_LEN = 1300;
+static const int PACK_MAX_LEN = 1000;
 
 class DataSplit : public IDataTrans
 {
