@@ -7,6 +7,7 @@
 #include "transprotocol.h"
 #include "datasplit.h"
 #include "databuffer.h"
+#include "datacryptographic.h"
 
 UDPServer::UDPServer(QObject *parent)
     : IDataTrans(parent)
@@ -133,14 +134,16 @@ IDataTrans *UDPServer::CreateDataTrans()
 
     TCPDest* pTCPDest = new TCPDest( this, m_socks5ServerAddr, m_socks5ServerPort );
     DataHashCheck* pDataHashCheck = new DataHashCheck( this );
+    DataCryptographic* pDataCry = new DataCryptographic(this);
     DataSplit* pDataSplit = new DataSplit(this);
     DataBuffer* pDataBuffer = new DataBuffer(this);
     TransProtocol* pTransProtocol = new TransProtocol( this );
 
     // 连接.
     pTCPDest->SetNextDataTrans(0, pDataHashCheck );
-    pDataHashCheck->SetNextDataTrans( pTCPDest, pDataSplit );
-    pDataSplit->SetNextDataTrans( pDataHashCheck, pDataBuffer );
+    pDataHashCheck->SetNextDataTrans( pTCPDest, pDataCry );
+    pDataCry->SetNextDataTrans( pDataHashCheck, pDataSplit );
+    pDataSplit->SetNextDataTrans( pDataCry, pDataBuffer );
     pDataBuffer->SetNextDataTrans( pDataSplit, pTransProtocol );
     pTransProtocol->SetNextDataTrans( pDataBuffer, this );
 

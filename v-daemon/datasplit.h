@@ -20,7 +20,7 @@ public:
 
     // 处理数据.
     virtual bool TransDataDown(const QByteArray& dataIn, QByteArrayList& dataOutDown, QByteArrayList& dataOutUp);
-    virtual bool TransDataUp(const QByteArray& dataIn, QByteArrayList& dataOutForward, QByteArrayList& dataOutBack);
+    virtual bool TransDataUp(const QByteArray& dataIn, QByteArrayList &dataOutDown, QByteArrayList &dataOutUp);
 
 signals:
 

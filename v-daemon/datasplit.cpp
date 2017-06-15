@@ -42,7 +42,7 @@ bool DataSplit::TransDataDown(const QByteArray &dataIn, QByteArrayList& dataOutD
     return true;
 }
 
-bool DataSplit::TransDataUp(const QByteArray &dataIn, QByteArrayList& dataOutForward, QByteArrayList& dataOutBack)
+bool DataSplit::TransDataUp(const QByteArray &dataIn, QByteArrayList &dataOutDown, QByteArrayList &dataOutUp)
 {
     // 将小包数据合并.
     const int DataSplitHeadSize = 2;
@@ -53,7 +53,7 @@ bool DataSplit::TransDataUp(const QByteArray &dataIn, QByteArrayList& dataOutFor
     {
         if( head.curSn == head.totalNum-1 )
         {
-            dataOutBack.push_back( m_recvCache );
+            dataOutUp.push_back( m_recvCache );
 
             if( s_logRawData )
             {

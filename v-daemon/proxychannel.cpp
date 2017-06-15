@@ -7,6 +7,7 @@
 #include "transprotocol.h"
 #include <QHostInfo>
 #include "databuffer.h"
+#include "datacryptographic.h"
 
 ProxyChannel::ProxyChannel(QObject *parent)
 	: QObject(parent)
@@ -76,6 +77,7 @@ void ProxyChannel::OnNewConnection()
     // UDP方式.
     TCPSource* pTCPSource = new TCPSource( this, pendingSocket );
     DataHashCheck* pDataHashCheck = new DataHashCheck( this );
+    DataCryptographic* pDataCry = new DataCryptographic( this );
     DataSplit* pDataSplit = new DataSplit(this);
     DataBuffer* pDataBuffer = new DataBuffer(this);
     TransProtocol* pTransProtocol = new TransProtocol( this );
@@ -83,8 +85,9 @@ void ProxyChannel::OnNewConnection()
 
     // 连接起来. TCPSource -> DataHashCheck -> DataSplit -> TransProtocol -> UDPClient.
     pTCPSource->SetNextDataTrans(0, pDataHashCheck );
-    pDataHashCheck->SetNextDataTrans( pTCPSource, pDataSplit );
-    pDataSplit->SetNextDataTrans(pDataHashCheck, pDataBuffer);
+    pDataHashCheck->SetNextDataTrans( pTCPSource, pDataCry );
+    pDataCry->SetNextDataTrans( pDataHashCheck, pDataSplit );
+    pDataSplit->SetNextDataTrans(pDataCry, pDataBuffer);
     pDataBuffer->SetNextDataTrans( pDataSplit, pTransProtocol );
     pTransProtocol->SetNextDataTrans( pDataBuffer, pUDPClient );
     pUDPClient->SetNextDataTrans(pTransProtocol, 0);
