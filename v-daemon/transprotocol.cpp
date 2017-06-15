@@ -13,7 +13,7 @@ TransProtocol::TransProtocol(QObject *parent) : IDataTrans(parent)
   , m_lastRecvConfirmPackRepeated( false )
 {
     connect( &m_timer, SIGNAL(timeout()), this, SLOT(OnTimer()) );
-    m_timer.start( 100 );
+    m_timer.start( 500 );
 }
 
 TransProtocol::~TransProtocol()

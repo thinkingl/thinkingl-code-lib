@@ -1,12 +1,13 @@
 #include "databuffer.h"
 
-
+int DataBuffer::s_timerInterval = 50;
+int DataBuffer::s_transDataDownSuccessCount = 0;
 
 DataBuffer::DataBuffer(QObject *parent) : IDataTrans(parent)
-  , m_timerInterval( 50 )
-  , m_transDataDownSuccessCount( 0 )
+ // , m_timerInterval( 50 )
+ // , m_transDataDownSuccessCount( 0 )
 {
-    m_timer.setInterval( m_timerInterval );
+    m_timer.setInterval( s_timerInterval );
 
     connect( &m_timer, SIGNAL(timeout()), this, SLOT(OnTimer()) );
     m_timer.start();
@@ -35,20 +36,20 @@ void DataBuffer::OnTimer()
         if( this->NextDataTrans()->InputDataDown( this, data ) )
         {
             m_dataBuffer.pop_front();
-            m_transDataDownSuccessCount++;
+            s_transDataDownSuccessCount++;
 
-            if( m_transDataDownSuccessCount > 100 )
+            if( s_transDataDownSuccessCount > 100 )
             {
-                m_transDataDownSuccessCount = 0;
-                m_timer.setInterval( -- m_timerInterval );
+                s_transDataDownSuccessCount = 0;
+                m_timer.setInterval( -- s_timerInterval );
             }
         }
         else
         {
             // fail.
-            m_timer.setInterval( ++m_timerInterval );
+            m_timer.setInterval( ++s_timerInterval );
 
-            m_transDataDownSuccessCount = 0;
+            s_transDataDownSuccessCount = 0;
         }
 
     }

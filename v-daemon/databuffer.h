@@ -27,16 +27,19 @@ public slots:
     void OnTimer();
 private:
     // 定时发包的定时器.
+    // 当前有点问题, 因为这个定时器是属于这个对象的, 应该是全局控制发送频率. +by lzx@2017-06-15
     QTimer m_timer;
 
     //  发送缓存.
     QByteArrayList m_dataBuffer;
 
     // 定时器间隔.
-    int m_timerInterval;
+    // 改为静态全局配置,因为网络状况是全局的. +by lzx@2017-06-15
+    static int s_timerInterval;
 
     // 向下传输数据连续成功次数.
-    int m_transDataDownSuccessCount;
+    // 改为静态全局配置, 因为网络状况是全局的. +by lzx@2017-06-15
+    static int s_transDataDownSuccessCount;
 };
 
 #endif // DATABUFFER_H
