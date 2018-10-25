@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
       <Configuration>Debug</Configuration>
@@ -18,12 +18,14 @@
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
+    <PlatformToolset>v140</PlatformToolset>
     <UseOfMfc>Dynamic</UseOfMfc>
     <CharacterSet>Unicode</CharacterSet>
     <WholeProgramOptimization>true</WholeProgramOptimization>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
+    <PlatformToolset>v140</PlatformToolset>
     <UseOfMfc>Dynamic</UseOfMfc>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
@@ -38,19 +40,17 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
-    <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)$(Configuration)\</OutDir>
-    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(Configuration)\</IntDir>
-    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</LinkIncremental>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)$(Configuration)\</OutDir>
-    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(Configuration)\</IntDir>
-    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</LinkIncremental>
-    <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">AllRules.ruleset</CodeAnalysisRuleSet>
-    <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" />
-    <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" />
-    <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AllRules.ruleset</CodeAnalysisRuleSet>
-    <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
-    <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
+    <_ProjectFileVersion>14.0.23107.0</_ProjectFileVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <OutDir>$(SolutionDir)$(Configuration)\</OutDir>
+    <IntDir>$(Configuration)\</IntDir>
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <OutDir>$(SolutionDir)$(Configuration)\</OutDir>
+    <IntDir>$(Configuration)\</IntDir>
+    <LinkIncremental>false</LinkIncremental>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -60,8 +60,7 @@
       <MinimalRebuild>true</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
-      <PrecompiledHeader>
-      </PrecompiledHeader>
+      <PrecompiledHeader />
       <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
     </ClCompile>
@@ -69,8 +68,6 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Console</SubSystem>
       <TargetMachine>MachineX86</TargetMachine>
-      <AdditionalDependencies>sqlite.lib</AdditionalDependencies>
-      <AdditionalLibraryDirectories>..\..\..\sqlite\lib\$(Configuration)\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -81,8 +78,7 @@
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <FunctionLevelLinking>true</FunctionLevelLinking>
-      <PrecompiledHeader>
-      </PrecompiledHeader>
+      <PrecompiledHeader />
       <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
     </ClCompile>
@@ -95,9 +91,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\src\ClassFactory.cpp" />
     <ClCompile Include="..\src\Common.cpp" />
     <ClCompile Include="..\src\HtmlPageParser.cpp" />
+    <ClCompile Include="..\src\IConfig.cpp" />
+    <ClCompile Include="..\src\IDatabase.cpp" />
     <ClCompile Include="..\src\IniConfig.cpp" />
+    <ClCompile Include="..\src\IWebpageManager.cpp" />
     <ClCompile Include="..\src\Log.cpp" />
     <ClCompile Include="..\src\LogManager.cpp" />
     <ClCompile Include="..\src\main.cpp" />
@@ -106,24 +106,29 @@
     <ClCompile Include="..\src\ScopeLock.cpp" />
     <ClCompile Include="..\src\SqliteDatabase.cpp" />
     <ClCompile Include="..\src\UrlParser.cpp" />
-    <ClCompile Include="IniConfigFile.cpp" />
-    <ClCompile Include="WebFetcherLog.cpp" />
     <ClCompile Include="..\src\WebpageManager.cpp" />
+    <ClCompile Include="..\src\Win32Application.cpp" />
     <ClCompile Include="..\src\Win32Mutex.cpp" />
     <ClCompile Include="..\src\Win32PageFetchThread.cpp" />
-    <ClCompile Include="..\src\IConfig.cpp" />
-    <ClCompile Include="..\src\IDatabase.cpp" />
-    <ClCompile Include="..\src\IWebpageManager.cpp" />
-    <ClCompile Include="..\src\ClassFactory.cpp" />
-    <ClCompile Include="..\src\Win32Application.cpp" />
     <ClCompile Include="..\src\Win32Thread.cpp" />
     <ClCompile Include="..\src\WinInetHttpFecher.cpp" />
+    <ClCompile Include="WebFetcherLog.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\include\ClassFactory.h" />
     <ClInclude Include="..\include\Common.h" />
     <ClInclude Include="..\include\HtmlPageParser.h" />
+    <ClInclude Include="..\include\IApplication.h" />
+    <ClInclude Include="..\include\IConfig.h" />
+    <ClInclude Include="..\include\IDatabase.h" />
+    <ClInclude Include="..\include\IHtmlPageParser.h" />
+    <ClInclude Include="..\include\IHttpDownloader.h" />
+    <ClInclude Include="..\include\IMutex.h" />
     <ClInclude Include="..\include\IniConfig.h" />
+    <ClInclude Include="..\include\INoCopy.h" />
     <ClInclude Include="..\include\IPageFecher.h" />
+    <ClInclude Include="..\include\IThread.h" />
+    <ClInclude Include="..\include\IWebpageManager.h" />
     <ClInclude Include="..\include\Log.h" />
     <ClInclude Include="..\include\LogManager.h" />
     <ClInclude Include="..\include\MimeType.h" />
@@ -132,26 +137,22 @@
     <ClInclude Include="..\include\ScopeLock.h" />
     <ClInclude Include="..\include\SqliteDatabase.h" />
     <ClInclude Include="..\include\UrlParser.h" />
-    <ClInclude Include="WebFetcherLog.h" />
     <ClInclude Include="..\include\WebpageManager.h" />
+    <ClInclude Include="..\include\Win32Application.h" />
     <ClInclude Include="..\include\Win32Mutex.h" />
     <ClInclude Include="..\include\Win32PageFetchThread.h" />
-    <ClInclude Include="..\include\IApplication.h" />
-    <ClInclude Include="..\include\IConfig.h" />
-    <ClInclude Include="..\include\IDatabase.h" />
-    <ClInclude Include="..\include\IHtmlPageParser.h" />
-    <ClInclude Include="..\include\IHttpDownloader.h" />
-    <ClInclude Include="..\include\IMutex.h" />
-    <ClInclude Include="..\include\INoCopy.h" />
-    <ClInclude Include="..\include\IThread.h" />
-    <ClInclude Include="..\include\IWebpageManager.h" />
-    <ClInclude Include="..\include\ClassFactory.h" />
-    <ClInclude Include="..\include\Win32Application.h" />
     <ClInclude Include="..\include\Win32Thread.h" />
     <ClInclude Include="..\include\WinInetHttpFecher.h" />
+    <ClInclude Include="WebFetcherLog.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\Debug\WEBFETCH.INI" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\sqlite\prj_win32\sqlite.vcxproj">
+      <Project>{9d858d33-7695-4eb4-b7d7-087d6a67abd4}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

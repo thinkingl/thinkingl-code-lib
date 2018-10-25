@@ -14,13 +14,13 @@
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav</Extensions>
     </Filter>
     <Filter Include="interface">
-      <UniqueIdentifier>{d8e254b9-e513-4b93-b5b3-9b7bc19dfff3}</UniqueIdentifier>
+      <UniqueIdentifier>{379a0b9b-699f-44e8-a4bd-99caf9b808d0}</UniqueIdentifier>
     </Filter>
     <Filter Include="class factory">
-      <UniqueIdentifier>{f1c295c3-649f-4cdf-b9f8-91b4e214d881}</UniqueIdentifier>
+      <UniqueIdentifier>{8d525ec0-4813-46c6-8ce6-04dbeba8792f}</UniqueIdentifier>
     </Filter>
     <Filter Include="win32 impl">
-      <UniqueIdentifier>{200301dc-ae2c-42ac-92dc-667b7ca48e3d}</UniqueIdentifier>
+      <UniqueIdentifier>{358fa95a-c66f-4121-8016-ecb2a8e5e2e1}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -89,9 +89,6 @@
     </ClCompile>
     <ClCompile Include="..\src\WinInetHttpFecher.cpp">
       <Filter>win32 impl</Filter>
-    </ClCompile>
-    <ClCompile Include="IniConfigFile.cpp">
-      <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
