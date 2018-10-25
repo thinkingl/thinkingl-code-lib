@@ -14,10 +14,11 @@ proxies = {
 proxies = {};
 
 domain = 'http://m.23wx.cm'
-#url = '/0/767/15675647.html'
-url = '/0/767/201981.html'
+url = '/0/767/15675647.html'
+#http://m.23wx.cm/0/767/16892999.html
+url = "/0/767/16892999.html"
 
-f = open("c:/temp/lgqm.txt", "w", encoding='utf-8');
+f = open("c:/9-tmp/lgqm.txt", "w", encoding='utf-8');
 
 while( url != "" ):
     fullUrl = domain+url;
