@@ -16,6 +16,30 @@ cloudMusicCacheDir = os.environ['LOCALAPPDATA'] + "\\Netease\\CloudMusic\\Cache\
 cloudMusicLyricDir = os.environ['LOCALAPPDATA'] + "\\Netease\\CloudMusic\\webdata\\lyric"
 MaxNameLen = 64 # 限制名称(歌手名称,专辑名称,歌曲名称)的最长长度, 超过长度的截断, 防止路径过长.
 
+
+def GetBrowser(PROXY_HOST, httpPort, ftpPort, sock5Port):
+    fp = webdriver.FirefoxProfile()
+    fp.set_preference("network.proxy.type", 1)
+    fp.set_preference("network.proxy.http",PROXY_HOST)
+    fp.set_preference("network.proxy.http_port",int( httpPort ))
+    fp.set_preference("network.proxy.https",PROXY_HOST)
+    fp.set_preference("network.proxy.https_port",int( httpPort ))
+    fp.set_preference("network.proxy.ssl",PROXY_HOST)
+    fp.set_preference("network.proxy.ssl_port",int( httpPort ))
+    fp.set_preference("network.proxy.ftp", ftpPort)
+    fp.set_preference("network.proxy.ftp_port",int(ftpPort))
+    fp.set_preference("network.proxy.socks",PROXY_HOST)
+    fp.set_preference("network.proxy.socks_port",int(sock5Port))
+    fp.set_preference("general.useragent.override","Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_3) AppleWebKit/537.75.14 (KHTML, like Gecko) Version/7.0.3 Safari/7046A194A")
+    fp.update_preferences()
+    return webdriver.Firefox(firefox_profile=fp)
+
+fireFoxOptions = webdriver.FirefoxOptions()
+
+#fireFoxOptions.set_headless()
+
+browser = GetBrowser("127.0.0.1", 808, 2121, 1080)
+
 def NormalizeName( name ):
     name = name[0:MaxNameLen] # 截断超长的部分. 要先截断,否则可能会在截断后在结尾出现空格.
     name = re.sub('[\\\/:*?"<>|\t\v\r\n]','-',name)#去掉非法字符
@@ -24,22 +48,6 @@ def NormalizeName( name ):
     name = name.replace( '\0', '' );    # 有的名称里面有0,必须去掉.
     return name
 
-def install_proxy(PROXY_HOST, httpPort, ftpPort, sock5Port):
-        fp = webdriver.FirefoxProfile()
-        fp.set_preference("network.proxy.type", 1)
-        fp.set_preference("network.proxy.http",PROXY_HOST)
-        fp.set_preference("network.proxy.http_port",int( httpPort ))
-        fp.set_preference("network.proxy.https",PROXY_HOST)
-        fp.set_preference("network.proxy.https_port",int( httpPort ))
-        fp.set_preference("network.proxy.ssl",PROXY_HOST)
-        fp.set_preference("network.proxy.ssl_port",int( httpPort ))
-        fp.set_preference("network.proxy.ftp", ftpPort)
-        fp.set_preference("network.proxy.ftp_port",int(ftpPort))
-        fp.set_preference("network.proxy.socks",PROXY_HOST)
-        fp.set_preference("network.proxy.socks_port",int(sock5Port))
-        fp.set_preference("general.useragent.override","Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_3) AppleWebKit/537.75.14 (KHTML, like Gecko) Version/7.0.3 Safari/7046A194A")
-        fp.update_preferences()
-        return webdriver.Firefox(firefox_profile=fp)
 
 def GetSongInfo( songId, fileSize, format ):
     songIdDirPath = songStorageDir + songIdDir
@@ -55,18 +63,19 @@ def GetSongInfo( songId, fileSize, format ):
                 return songInfo
         except:
             print( "Load song info fail! path:" + songInfoFilePath )
-    fireFoxOptions = webdriver.FirefoxOptions()
-    fireFoxOptions.set_headless()
-    browser = webdriver.Firefox(firefox_options=fireFoxOptions)
+
     #browser = webdriver.Firefox()
     #browser = webdriver.Chrome()
     #browser = webdriver.PhantomJS()
     #browser.get( "http://music.163.com/#/song?id=" + songId )
-    songUrl = "http://music.163.com/song?id=" + songId
+    songUrl = "https://music.163.com/#/song?id=" + songId
+    global browser
     try:
         browser.get( songUrl )
     except:
         print( "Browser get url fail!" + songUrl )
+        browser.quit()
+        browser = GetBrowser()
         return
 
     try:
@@ -88,16 +97,18 @@ def GetSongInfo( songId, fileSize, format ):
             print( "Parse song info from html element /html/head/script[2] fail! songId:" + songId )
             logging.exception("message")
     
-    try:
-        infoArray = songInfo["description"].split('。')
-        for subStr in infoArray:
-            if( "歌手" in subStr ):
-                songInfo["artist"] = subStr.split('：')[1]
-            if( "专辑" in subStr ):
-                songInfo["album"] = subStr.split('：')[1]
-    except Exception as e:
-        print( "Parse song info from json fail! songId:" + songId + " json:" + json.dumps(songInfo) )
-        logging.exception("message")
+    # try:
+    #     infoArray = songInfo["description"].split('。')
+    #     for subStr in infoArray:
+    #         if( "歌手" in subStr ):
+    #             songInfo["artist"] = subStr.split('：')[1]
+    #         if( "专辑" in subStr ):
+    #             songInfo["album"] = subStr.split('：')[1]
+    # except Exception as e:
+    #     print( "Parse song info from json fail! songId:" + songId + " json:" + json.dumps(songInfo) )
+    #     logging.exception("message")
+
+    
     if( not songInfo ):
         songInfo = {}
     try:
@@ -123,7 +134,7 @@ def GetSongInfo( songId, fileSize, format ):
         json.dump( songInfo, f )
     f.close()
     #print( songInfo )
-    browser.quit()
+    #browser.quit()
     return songInfo
 
 def DecodeCloudMusicCacheFile( cacheFilePath, storageFilePath ):
@@ -165,7 +176,7 @@ def SaveSongFile( ucFilePath, songInfo ):
         if( os.path.getsize( songFilePath ) >= int( songInfo["fileSize"] ) ):
             #print( songFilePath + " already exist!")
             return songFilePath # 已经存在,并且文件大小可以.
-    print( "song path: " + songFilePath );
+    print( "song path: " + songFilePath )
     DecodeCloudMusicCacheFile( ucFilePath, songFilePath )
     print( "Save song to :" + songFilePath )
     return songFilePath
@@ -181,7 +192,7 @@ def SaveAlbumCover( songInfo ):
         urllib.request.urlretrieve(imgUrl, coverFilePath)
     except urllib.error.HTTPError as err:
         print( "img get fail! url:\t"+ imgUrl  )
-        print( err );
+        print( err )
     except:
         print( "img get fail unknown except! url:\t"+ imgUrl  )
     print( "Save album cover to:" + coverFilePath )
@@ -217,7 +228,7 @@ def SaveLyric( songInfo ):
         lrcFile.close()
 
 def HackCloudMusicCache():
-    cacheFiles = os.listdir( cloudMusicCacheDir );
+    cacheFiles = os.listdir( cloudMusicCacheDir )
     for fileName in cacheFiles: #遍历文件夹
         ucFilePath = cloudMusicCacheDir + "\\" + fileName
         if(os.path.isfile(ucFilePath)): #判断是否是文件夹，不是文件夹才打开
@@ -225,7 +236,7 @@ def HackCloudMusicCache():
               isUC= fileName.endswith('.uc')
               if( isUC ):
                   strArray = fileName.split("-")
-                  songId = strArray[0];
+                  songId = strArray[0]
                   #print( "song id is :" + songId )  #文件名的第一部分是歌曲ID
                   idxFilePath = ucFilePath.replace('.uc', '.idx')
                   infoFilePath = ucFilePath.replace('.uc', '.info')
@@ -290,7 +301,7 @@ while( True ):
     print( "--------------------Start hack cloud music cache!------------------" )
     dirSize = 0
     try:
-        HackCloudMusicCache();
+        HackCloudMusicCache()
         dirSize = getdirsize(songStorageDir)
     except Exception as e:
         print( "HackCloudMusicCache except!" )
