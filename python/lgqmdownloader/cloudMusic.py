@@ -116,10 +116,10 @@ def GetSongInfo( songId, fileSize, format ):
             htmlTitle = browser.find_element_by_tag_name( "title" ).get_attribute("innerHTML")
             songInfo["title"] = htmlTitle.split(" - ")[0]
         if( not songInfo.get( 'album' ) ):
-            songInfo["album"] = browser.find_elements_by_class_name( "s-fc4")[1].text.split('：')[1]
+            songInfo["album"] = browser.find_element_by_class_name( "s-fc4 > a").text
         songInfo['album']
         if( not songInfo.get( 'artist' ) ):
-            songInfo["artist"] = browser.find_elements_by_class_name( "s-fc4")[0].text.split('：')[1]
+            songInfo["artist"] = browser.find_element_by_class_name( "s-fc4 > span").text
         if( not songInfo.get( 'images' ) ):
             songInfo["images"] = browser.find_element_by_class_name( "j-img").get_attribute( 'src').split('?')
     except Exception as e:
