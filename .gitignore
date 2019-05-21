@@ -11,3 +11,11 @@ V/v.v12.suo
 *.obj
 *.log
 *.pch
+python/test/venv/
+python/test/__pycache__/
+python/*/.idea/
+python/lgqmdownloader/UpgradeLog2.htm
+python/lgqmdownloader/UpgradeLog.htm
+python/lgqmdownloader/.idea/workspace.xml
+python/lgqmdownloader/.idea/inspectionProfiles/Project_Default.xml
+WebFetcher/UpgradeLog.htm

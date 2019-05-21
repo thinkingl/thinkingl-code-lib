@@ -1,0 +1,39 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "WebFetcher", "WebFetcher\prj_win32\WebFetcher.vcproj", "{919D9F28-823D-422C-9C0B-AF1AC32F6528}"
+	ProjectSection(ProjectDependencies) = postProject
+		{9D858D33-7695-4EB4-B7D7-087D6A67ABD4} = {9D858D33-7695-4EB4-B7D7-087D6A67ABD4}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "sqlite", "..\sqlite\prj_win32\sqlite.vcproj", "{9D858D33-7695-4EB4-B7D7-087D6A67ABD4}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TestMaxFileNumInFolder", "TestMaxFileNumInFolder\TestMaxFileNumInFolder.vcproj", "{5ECA7C78-74A6-4008-A796-1166BFD83A5D}"
+EndProject
+Global
+	GlobalSection(SubversionScc) = preSolution
+		Svn-Managed = True
+		Manager = AnkhSVN - Subversion Support for Visual Studio
+	EndGlobalSection
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{919D9F28-823D-422C-9C0B-AF1AC32F6528}.Debug|Win32.ActiveCfg = Debug|Win32
+		{919D9F28-823D-422C-9C0B-AF1AC32F6528}.Debug|Win32.Build.0 = Debug|Win32
+		{919D9F28-823D-422C-9C0B-AF1AC32F6528}.Release|Win32.ActiveCfg = Release|Win32
+		{919D9F28-823D-422C-9C0B-AF1AC32F6528}.Release|Win32.Build.0 = Release|Win32
+		{9D858D33-7695-4EB4-B7D7-087D6A67ABD4}.Debug|Win32.ActiveCfg = Debug|Win32
+		{9D858D33-7695-4EB4-B7D7-087D6A67ABD4}.Debug|Win32.Build.0 = Debug|Win32
+		{9D858D33-7695-4EB4-B7D7-087D6A67ABD4}.Release|Win32.ActiveCfg = Release|Win32
+		{9D858D33-7695-4EB4-B7D7-087D6A67ABD4}.Release|Win32.Build.0 = Release|Win32
+		{5ECA7C78-74A6-4008-A796-1166BFD83A5D}.Debug|Win32.ActiveCfg = Debug|Win32
+		{5ECA7C78-74A6-4008-A796-1166BFD83A5D}.Debug|Win32.Build.0 = Debug|Win32
+		{5ECA7C78-74A6-4008-A796-1166BFD83A5D}.Release|Win32.ActiveCfg = Release|Win32
+		{5ECA7C78-74A6-4008-A796-1166BFD83A5D}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
