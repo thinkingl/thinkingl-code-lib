@@ -19,3 +19,10 @@ python/lgqmdownloader/UpgradeLog.htm
 python/lgqmdownloader/.idea/workspace.xml
 python/lgqmdownloader/.idea/inspectionProfiles/Project_Default.xml
 WebFetcher/UpgradeLog.htm
+build-v-daemon-Desktop_Qt_5_8_0_MinGW_32bit-Debug/
+python/CloudMusicCacheParser/venv/
+python/javlib/venv/
+python/ximalayadownloader/venv/
+qt/build-javcmpare-Desktop_Qt_5_10_1_MinGW_32bit-Debug/
+Study/build-icmpstudy-Desktop_Qt_5_8_0_MinGW_32bit-Debug/
+*/__pycache__/
