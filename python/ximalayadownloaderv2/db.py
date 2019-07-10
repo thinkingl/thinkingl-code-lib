@@ -1,5 +1,6 @@
 import sqlite3
 import logging
+import time
 
 
 class XMLYDatabase:
@@ -11,16 +12,16 @@ class XMLYDatabase:
     # 初始化
     def init(self, dbPath):
 
-        self.connect = sqlite3.connect( dbPath )
+        self.connect = sqlite3.connect( dbPath, 10*1000 )
 
         # album 属性表 - albumId | Attr name | attr value 
-        self.connect.execute( 'Create Table  IF NOT EXISTS album(id TEXT NOT NULL, attrName TEXT NOT NULL, attrValue TEXT  NOT NULL, PRIMARY KEY(id,attrName,attrValue));' )
+        self.connect.execute( 'Create Table  IF NOT EXISTS album(id TEXT NOT NULL, attrName TEXT NOT NULL, attrValue TEXT  NOT NULL, PRIMARY KEY(id,attrName));' )
 
         # track 属性表 - trackId | Attr name | attr value
-        self.connect.execute( 'Create Table  IF NOT EXISTS track(id TEXT NOT NULL, attrName TEXT NOT NULL, attrValue TEXT  NOT NULL, PRIMARY KEY(id,attrName,attrValue));' )
+        self.connect.execute( 'Create Table  IF NOT EXISTS track(id TEXT NOT NULL, attrName TEXT NOT NULL, attrValue TEXT  NOT NULL, PRIMARY KEY(id,attrName));' )
 
         # anchor 属性表 - anchorId | Attr name | attr value
-        self.connect.execute( 'Create Table  IF NOT EXISTS anchor(id TEXT NOT NULL, attrName TEXT NOT NULL, attrValue TEXT  NOT NULL, PRIMARY KEY(id,attrName,attrValue));' )
+        self.connect.execute( 'Create Table  IF NOT EXISTS anchor(id TEXT NOT NULL, attrName TEXT NOT NULL, attrValue TEXT  NOT NULL, PRIMARY KEY(id,attrName));' )
 
         return self.connect != None
     
@@ -52,19 +53,25 @@ class XMLYDatabase:
     # 获取一个专辑的所有track
     def getTrackList(self, albumId):
         trackSet = set()
-        for row in self.connect.execute("select id from track where attrName='album_id' and attrValue = ? ;", (albumId,)):
+        # 有的音频是"转采"的, 它的album_id字段不是当前专辑, 而是原始出处的专辑. 这会造成当前专辑id查不到目标.
+        # 改用自己加的属性名 albumId
+        for row in self.connect.execute("select id from track where attrName='albumId' and attrValue = ? ;", (albumId,)):
             trackSet.add( row[0] )
         return list(trackSet)
 
     # 更新数据库
     def json2DB(self, tableName, id, jsonObj):
         for key in jsonObj :
+            #for i in range(10):
             try:
                 self.connect.execute('Replace into %s Values(?,?,?);'%tableName, (id,key, str(jsonObj[key])) )
             except:
                 logging.error('Replace info db fail! id: %s key: %s value: %s', id, key, jsonObj[key])
-                pass
+                logging.exception('error')
+                time.sleep(1)
+                pass   
         self.connect.commit()
+        return
 
     # 读取数据库
     def db2Json(self, tableName, id ):

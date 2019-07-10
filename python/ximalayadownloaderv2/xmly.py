@@ -5,6 +5,7 @@ import db
 import re
 import logging
 import urllib.request
+from urllib.parse import quote
 from bs4 import BeautifulSoup
 import json
 import os
@@ -12,6 +13,8 @@ import time
 import socket
 from queue import Queue
 import threading
+import xmSign
+import psutil
 
 class XMLYDownloader:
     #等待处理的url
@@ -19,6 +22,9 @@ class XMLYDownloader:
 
     #数据库
     database = db.XMLYDatabase()
+
+    # xmSign.
+    xmSign = xmSign.XMSign()
 
 
     baseDirs = ['D:/999-temp/xmly','/share/disk-160/xmly']
@@ -39,6 +45,13 @@ class XMLYDownloader:
         if( self.baseDir == '' ):
             logging.error("Can't find base dir!")
         self.database = self.newDatabase()
+
+        self.xmSign.init()
+
+    def getHeaders(self):
+        headers = {'User-Agent':'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) ' 'Chrome/51.0.2704.63 Safari/537.36'}
+        headers['xm-Sign']  = self.xmSign.getXMSign()
+        return headers      
     
     def newDatabase(self):
         database = db.XMLYDatabase()
@@ -48,7 +61,7 @@ class XMLYDownloader:
         except:
             logging.exception("error")
         else:
-            print('Data base path:' + dbPath)
+            logging.debug('Data base path:' + dbPath)
         return database
 
     def run(self):
@@ -70,7 +83,7 @@ class XMLYDownloader:
                 # 暂时先用这个逻辑....不完美.
                 downloadTrackNum += downloadNum
                 if( downloadTrackNum > 0 and len(self.waittingUrls) == 0 ):
-                    self.ReadUrl()
+                    self.ReadUrl() # 放开的话会再来一遍.
                     downloadTrackNum = 0
 
                 totalDownloadNum += downloadNum
@@ -116,7 +129,7 @@ class XMLYDownloader:
         if( infos == None ):
             return 0
         albumInfo = infos[0]
-
+        albumInfo['id'] = id    #没有id, 补充上.
         #if( albumInfo ):
             #self.database.updateAlbum(id, albumInfo)
         anchorInfo = infos[1]
@@ -167,6 +180,8 @@ class XMLYDownloader:
         url = 'https://www.ximalaya.com/revision/album?albumId=%s'%id
         strAlbumInfo = self.urlGetContent( url )
         #logging.info( "Album id %s info: %s", id, strAlbumInfo)
+        if len(strAlbumInfo) == 0:
+            return None
         rawAlbumInfo = json.loads( strAlbumInfo )
         if( not 'data' in rawAlbumInfo ):
             logging.error( 'Get album info fail! id:%s url:%s return:%s', id, url, rawAlbumInfo )
@@ -181,11 +196,97 @@ class XMLYDownloader:
     def parseUrl(self, url ):
         if( re.search( '/zhubo/', url) ):
             return self.parseZhubo(url)
-        else:
-            albumId = self.parseId(url)
-            if( albumId != '' ):
-                return [albumId]
+        
+        albumId = self.parseId(url)
+        if( albumId != '' ):
+            return [albumId]
+
+        reKey = re.search( '(?<=key=).*(?=&)', url )
+        if( reKey ):
+            key = reKey.group()
+            return self.searchAlbumByKeyword(key)
+
+        # https://www.ximalaya.com/revision/category/queryCategoryPageAlbums?category=youshengshu&subcategory=yingwenyuanban&meta=132_2722&sort=0&page=1&perPage=300
+        if re.search( '/queryCategoryPageAlbums', url ):
+            return self.parseAlbumByCategorySearchUrl(url)
+
+        # https://www.ximalaya.com/youshengshu/shangye/mr132t2722/
+        if re.search(  '(?<=www.ximalaya.com/)\D+?/\w+?(?=/)', url ):
+            return self.parseAlbumByCategory(url)
+            
+
+        return []
+
+    # 分类查找专辑.
+    def parseAlbumByCategory(self, url):
+        try:
+            match = re.search(  '(?<=www.ximalaya.com/)\D+?/\w+?(?=/)', url ).group()
+            categorys = match.split( '/' )
+            category = categorys[0]
+            subCategory = categorys[1]
+            url = 'https://www.ximalaya.com/revision/category/queryCategoryPageAlbums?category=%s&subcategory=%s&meta=132_2722&sort=0&page=1&perPage=300'%(category,subCategory)
+            return self.parseAlbumByCategorySearchUrl( url )
+        except:
+            logging.exception( 'error' )
+            logging.error( 'parseAlbumByCategory fail! url:%s', url )
             return []
+
+    # 通过分类查找专辑.
+    def parseAlbumByCategorySearchUrl(self, url):
+        pageNum = 1
+        albums = []
+        try:
+            while( True ):
+                curUrl = re.sub('(?<=page=)\d+(?=&perPage)', str(pageNum), url)
+                pageNum += 1
+                content = self.urlGetContent( curUrl )
+                rsp = json.loads(content)
+                if 'data' not in rsp:
+                    break
+                albumInfos = rsp['data']['albums']
+                if len( albumInfos ) == 0 :
+                    break
+                for albumInfo in albumInfos:
+                    id = albumInfo['albumId']
+                    title = albumInfo[ 'title' ]
+                    albums.append(id)
+                    logging.info( 'Find album by category! %s - %s', id, title)
+        except:
+            logging.exception( 'error')
+            logging.error( 'parse Category fail! url:%s pageNum:%d', url, pageNum)
+
+        return albums
+    
+    # 解析关键字.
+    def searchAlbumByKeyword(self, key):
+        if( len(key) == 0 ):
+            return []
+        kw = urllib.parse.quote(key)
+        page = 1
+        albums = []
+        while( True ):
+            url = "https://www.ximalaya.com/revision/search?core=album&kw={}&page={}&spellchecker=false&rows=20&condition=relation&device=iPhone&fq=&paidFilter=true".format(kw,page)
+            page += 1
+            content = self.urlGetContent(url)
+            try:
+                searchRsp = json.loads(content)
+                docs = searchRsp['data']['result']['response']['docs']
+                if( len(docs) == 0 ):
+                    break
+                for doc in docs:
+                    albumId = doc['id']
+                    albumTitle = doc['title']
+                    isPaid = doc['is_paid']
+                    anchorId = doc['uid']
+                    anchorName = doc['nickname']
+                    if not isPaid:
+                        albums.append( albumId )
+                    logging.info( 'Result for %s : %s - %s anchor: %s - %s isPaid:%s', key, albumTitle, albumId, anchorName, anchorId, isPaid )
+            except:
+                logging.error( 'Search keyword fail! key:%s page:%d rsp:%s url:%s', key, page, content, url )
+                break
+        return albums
+
 
     # 处理一个主播页面.
     def parseZhubo(self, url):
@@ -199,6 +300,7 @@ class XMLYDownloader:
         pageIndex = 1
         while( True ):
             albumListUrl = 'https://www.ximalaya.com/revision/user/pub?page=%d&pageSize=50&keyWord=&uid=%s'%(pageIndex,zhuboId)
+            # https://www.ximalaya.com/zhubo/9677803/album/
             content = self.urlGetContent( albumListUrl )
             albumListRsp = json.loads( content )
             if not 'data' in albumListRsp:
@@ -243,18 +345,23 @@ class XMLYDownloader:
         trackId = trackInfo['trackId']
         trackTitle = trackInfo['title']
         isPaid = trackInfo['isPaid']
-
+        albumId = albumInfo['id']
         if database == None:
             database = self.database
         storeTrackInfo = database.getTrack(trackId)
         if( len(storeTrackInfo) != 0 ):
             logging.debug("track %s - %s has downloaded!"%(trackId,trackTitle) )
+            if( 'albumId' not in storeTrackInfo ):
+                storeTrackInfo[ 'albumId' ]  = albumId
+                database.finishTrack( trackId, storeTrackInfo )                
             return True
         url = 'http://www.ximalaya.com/tracks/%s.json'%trackId
         content = self.urlGetContent(url)
         trackDetail = json.loads(content)
         trackInfo.update(trackDetail)
-
+        trackInfo[ 'albumId' ] = albumId
+        if albumId != trackInfo['album_id']:
+            logging.error( 'Track %s - %s is 转采! owner albumId:%s true albumId:%s', trackId, trackTitle, albumId, trackInfo['album_id'] )
         trackM4aUrl = trackInfo['play_path']
         anchorName = anchorInfo['anchorName']
         trackIndex = trackInfo['index']
@@ -285,15 +392,23 @@ class XMLYDownloader:
             url = 'http:' + url
         pdir = os.path.dirname( localPath )
         os.makedirs( pdir, 0o777, True)
-        try:
-            urllib.request.urlretrieve( url, localPath)
-            logging.info( 'downlaod file success! [%s] - [%s]', localPath, url)
-            return True
-        except:
-            logging.error( "download file fail! [%s] - [%s]", url, localPath)
-            if os.path.isfile( localPath ):
-                os.remove( localPath )
-            return False
+
+
+        while psutil.disk_usage( pdir ).free < 100*1024*1024 :  #100M
+            logging.error( 'No enough space!' )
+            time.sleep(1*60)
+
+        for i in range(10):                
+            try:
+                urllib.request.urlretrieve( url, localPath)
+                logging.info( 'downlaod file success! [%s] - [%s]', localPath, url)
+                return True
+            except:
+                logging.error( "download file fail! [%s] - [%s]", url, localPath)
+                if os.path.isfile( localPath ):
+                    os.remove( localPath )
+                time.sleep(1)
+        return False
 
 
     # 获取本地路径.
@@ -361,7 +476,7 @@ class XMLYDownloader:
         curTrackNum = tracksInfo['trackTotalCount']
         storeTrackList = self.database.getTrackList( albumId )
         if( len(storeTrackList) < curTrackNum ):
-            logging.info( 'album %s %s has more tracks %d !'%(albumId, curAlbumInfo['albumTitle'], curTrackNum) )
+            logging.info( 'album %s %s has more tracks %d stored:%d!'%(albumId, curAlbumInfo['albumTitle'], curTrackNum, len(storeTrackList)) )
             return True
 
         return False
@@ -392,7 +507,7 @@ class XMLYDownloader:
         return id
 
     def urlGetContent(self, url):
-        headers = {'User-Agent':'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) ' 'Chrome/51.0.2704.63 Safari/537.36'}
+        headers = self.getHeaders() #{'User-Agent':'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) ' 'Chrome/51.0.2704.63 Safari/537.36'}
         try:
             req = urllib.request.Request(url=url, headers=headers)
             content = urllib.request.urlopen(req).read().decode('utf-8','ignore')#, 'ignore'

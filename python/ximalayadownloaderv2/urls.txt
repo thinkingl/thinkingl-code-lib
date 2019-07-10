@@ -1,1 +1,160 @@
+搜索专辑关键字key=诺贝尔文学&
+
+
+草原上的小木屋
+2w
+陕西·西安
+认证：
+认证信息:
+英语有声书
+喜马拉雅个人电台
+https://www.ximalaya.com/zhubo/9677803/
+
+慧田哲学
+8.8w女神魔羯座
+北京·朝阳
+认证：
+认证信息:
+专注哲学十一年
+喜马拉雅个人电台
+https://www.ximalaya.com/zhubo/7545862/
+
+
+https://www.ximalaya.com/zhubo/26838578/ 露露主播 - 浙江·温州 - 出品有声小说，情感故事。
+dj高远1229 - 6.7w男神 - 天津市·和平区 - 认证： -认证信息: - 有声小说 - 喜马拉雅个人电台 - https://www.ximalaya.com/zhubo/4521373/
+
+温士刚
+25.1w男神天蝎座
+北京·丰台区
+认证：
+认证信息:
+培训讲座
+喜马拉雅个人电台
+https://www.ximalaya.com/zhubo/48973967/
+
+
+# 添加主播
+urlSetUnfinishedPages.add( "/zhubo/48210967/" ) # 加利福尼亚慕容
+urlSetUnfinishedPages.add( "/zhubo/11175476/" ) # 英文名著畅听
+urlSetUnfinishedPages.add( "/zhubo/7694761/" ) # 国际获奖儿童故事
+urlSetUnfinishedPages.add( "/zhubo/41010336/" ) # 江涛声音工作室
+urlSetUnfinishedPages.add( "/zhubo/25572713/" ) # 夜歌而行
+urlSetUnfinishedPages.add( "/zhubo/5634126/" ) # 马聪STA   
+urlSetUnfinishedPages.add( "/zhubo/65419887/" ) # 瀚章播读
+urlSetUnfinishedPages.add( "/zhubo/67540468/" ) # ae_wn  历史人文
+urlSetUnfinishedPages.add( "/zhubo/70721567/" ) # 孤山聊艺术 音乐历史
+urlSetUnfinishedPages.add( "/zhubo/35302492/" ) # 一语癔语
+urlSetUnfinishedPages.add( "/zhubo/27553392/" ) # 纪保超的分享
+urlSetUnfinishedPages.add( "/zhubo/47821280/" ) # 王廷志_4o
+urlSetUnfinishedPages.add( "/zhubo/45945908/" ) # 中国日报
+urlSetUnfinishedPages.add( "/zhubo/12828906/" ) # 蓝澜澜之诗样的天空
+urlSetUnfinishedPages.add( "/zhubo/53590696/" ) # 优听教材 - 女生朗读医学教材
+urlSetUnfinishedPages.add( "/zhubo/106227503/" ) # Spen_to - 只读了一本内科学
+urlSetUnfinishedPages.add( "/zhubo/65156042/" ) # 敏恩1123 - 医学.
+urlSetUnfinishedPages.add( "/zhubo/54319270/" ) # 我在澳洲 - 心理学
+urlSetUnfinishedPages.add( "/zhubo/112777610/" ) # 奥斯卡读书会 - 英语阅读
+urlSetUnfinishedPages.add( "/zhubo/9722986/" ) # 终极追求烟花烫 - 一个声音挺好听的女生, 医学护理.
+
 urlSetUnfinishedPages.add( '/xiangsheng/9723091/' )   #郭德纲相声
+#urlSetUnfinishedPages.add( "/youshengshu/6062943/")     #临高启明
+urlSetUnfinishedPages.add( "/renwen/6655240/" )         #红楼梦原著朗读和讲解
+#urlSetUnfinishedPages.add( "/youshengshu/3757698/")  #冯仑 - 野蛮生长
+urlSetUnfinishedPages.add( "/renwen/7651313/")      #晓说2017
+urlSetUnfinishedPages.add( "/youshengshu/329041/") # 潘石屹 - 我的价值观
+urlSetUnfinishedPages.add( "/youshengshu/3544633/") # 盗墓笔记 - 周建龙播讲
+#urlSetUnfinishedPages.add( "/youshengshu/14195461/") # 临高启明 第一卷 机器读的
+#urlSetUnfinishedPages.add( "/youshengshu/14215560/") # 临高启明 第二卷 机器读的
+#urlSetUnfinishedPages.add( "/youshengshu/13527805/") # 临高启明 第三卷 机器读的
+#urlSetUnfinishedPages.add( "/youshengshu/14538024/") # 临高启明 第四卷 机器读的
+#urlSetUnfinishedPages.add( "/youshengshu/14999275/") # 临高启明 第五卷 机器读的
+#urlSetUnfinishedPages.add( "/youshengshu/15179260/") # 临高启明 第六卷 机器读的
+#urlSetUnfinishedPages.add( "/youshengshu/15336581/") # 临高启明 第七卷 机器读的
+urlSetUnfinishedPages.add( "/youshengshu/413068/") # 皮囊
+urlSetUnfinishedPages.add( "/renwen/275154/") # 看见 - 柴静
+urlSetUnfinishedPages.add( "/youshengshu/7564012/") # 送你一颗子弹 - 刘瑜 - 左脑禅播讲
+urlSetUnfinishedPages.add( "/youshengshu/15172352/") # 中华人民共和国宪法 - 亮眼儿播讲
+urlSetUnfinishedPages.add( "/youshengshu/15248653/") # 中华人民共和国监察法 - 亮眼儿播讲
+urlSetUnfinishedPages.add( "/youshengshu/15273635/") # 民事诉讼法与民事诉讼法解释 - 亮眼儿播讲
+urlSetUnfinishedPages.add( "/youshengshu/10404795/") # 社会心理学 ( 侯玉波 第三版 ) - 界世的美小 播讲
+urlSetUnfinishedPages.add( "/youshengshu/12213434/") # 金瓶梅 - 安娜说播讲
+urlSetUnfinishedPages.add( "/renwen/430667/") # 官场现形记 - 白云出岫
+urlSetUnfinishedPages.add( "/youshengshu/290069/") #官场现形记 - 李说书
+urlSetUnfinishedPages.add( "/youshengshu/3075245/") # 王小波文集 - 阿苏阿西
+urlSetUnfinishedPages.add( "/youshengshu/3191173/") # 送你一颗子弹 - 刘瑜 - 胡糊糊亮亮
+urlSetUnfinishedPages.add( "/youshengshu/18756196/") # 墨子（原文+译文） - 墨子 - 安娜说520
+#urlSetUnfinishedPages.add( "/youshengshu/3664434/") # 肖申克的救赎 - 斯蒂芬·金 - 马西先生
+urlSetUnfinishedPages.add( "/youshengshu/4820458/") # 一个人的朝圣 -   [英] 蕾秋·乔伊斯  - 小鱼有声书
+urlSetUnfinishedPages.add( "/youshengshu/12167823/") # 霍乱时期的爱情 -   [哥伦比亚] 加西亚·马尔克斯  - 玛格麗特
+urlSetUnfinishedPages.add( "/youshengshu/6588476/") # 杀死一只知更鸟 -   [美] 哈珀·李  - 玛格麗特
+
+#urlSetUnfinishedPages.add( "/youshengshu/5697029/") # 月亮和六便士 -  [英] 威廉·萨默塞特·毛姆 - 玛格麗特
+urlSetUnfinishedPages.add( "/youshengshu/7494116/") # 贫民窟的百万富翁 -   [印度] 维卡斯·斯瓦鲁普 - 小鱼有声书
+urlSetUnfinishedPages.add( "/youshengshu/3376153/") # 基督山伯爵 - 大仲马 - 秦笙故事
+urlSetUnfinishedPages.add( "/youshengshu/11542809/") # 阿甘正传 -   [美] 温斯顿·葛鲁姆 -无话不讲
+urlSetUnfinishedPages.add( "/youshengshu/312611/")  # 百年孤独 - 哥伦比亚 加西亚·马尔克斯 - 主播罗宁
+urlSetUnfinishedPages.add( "/youshengshu/5115679/") # 人生的枷锁 - [英] 威廉·萨默塞特·毛姆 - 悦简
+#urlSetUnfinishedPages.add( "/youshengshu/14661785/") # 教父2 - 西西里人 - [美] 马里奥·普佐 - 主播罗宁
+urlSetUnfinishedPages.add( "/youshengshu/15356614/") # 阿甘正传 -   [美] 温斯顿·葛鲁姆 - 弘然
+urlSetUnfinishedPages.add( "/youshengshu/9875838/")  # 《三个火枪手》 - 大仲马 - 博雅人文
+urlSetUnfinishedPages.add( "/youshengshu/11217375/") # 麦田里的守望者 -  J·D·塞林格 - 思空语堂
+urlSetUnfinishedPages.add( "/youshengshu/10364890/") # 战争与和平 - 俄国 列夫·尼古拉耶维奇·托尔斯泰 - 主播罗宁
+urlSetUnfinishedPages.add( "/youshengshu/3387034/") # 双城记 - 英国 查尔斯·狄更斯 - 高乐高WHY伯爵
+urlSetUnfinishedPages.add( "/youshengshu/10829068/") # 基督山伯爵 - 大仲马 - 主播罗宁
+#urlSetUnfinishedPages.add( "/youshengshu/6090103/")     # 教父三部曲：教父、西西里人、最后的教父 － 马里奥普佐 - GGWizard
+urlSetUnfinishedPages.add( "/youshengshu/11735478/") # 毛姆 面纱 （悦简）
+urlSetUnfinishedPages.add( "/renwen/10398132/" ) # 《艺术史导论》清华大学 - 博雅人文
+urlSetUnfinishedPages.add( "/shangye/269179/") # 吴晓波频道
+urlSetUnfinishedPages.add( "/youshengshu/16496298/" ) # 《余欢》刘瑜 孤独得像一个星球 - 缦丽
+urlSetUnfinishedPages.add( "/youshengshu/3747452/" ) # 500废大作战(临高启明 第一卷) - 陆大胖子
+urlSetUnfinishedPages.add( "/youshengshu/3784849/") # 500废大作战 第二卷(临高启明 第二卷) - 陆大胖子
+urlSetUnfinishedPages.add( "/youshengshu/4137073/") # 500废大作战 第3卷(临高启明 第3卷) - 陆大胖子
+urlSetUnfinishedPages.add( "/youshengshu/4774110/") # 500废大作战 第4卷(临高启明 第4,5卷) - 陆大胖子
+urlSetUnfinishedPages.add( "/qinggan/6163096/") # 夜色温柔-柴静 - 流浪天使1
+urlSetUnfinishedPages.add( "/youshengshu/257280/") # 柴静《用我一辈子去忘记》- 卡卡radio
+urlSetUnfinishedPages.add( "/youshengshu/4894844/") #红与黑 - 主播罗宁
+urlSetUnfinishedPages.add( "/youshengshu/18859040/") # 临高启明 第五卷 - 婉婉的冒险
+urlSetUnfinishedPages.add( "/youshengshu/16415285/" ) # 500废大作战 第6卷(临高启明 第6卷) - 陆大胖子
+urlSetUnfinishedPages.add( "/waiyu/3531660/") # 世界名人英文演讲 - 英文原版读物
+urlSetUnfinishedPages.add( "/renwen/5354438/") # 文艺复兴在意大利 - 碎片先生
+urlSetUnfinishedPages.add( "/renwen/6414376/") # 艺术世界漫游指南 - 孤山聊艺术
+urlSetUnfinishedPages.add( "/youshengshu/2857488/") # 红与黑 - 气象先生平安
+#urlSetUnfinishedPages.add( "/youshengshu/4819310/") # 战争与和平 - gentle杰克
+urlSetUnfinishedPages.add( "/youshengshu/3492211/" ) # 呼啸山庄 - 演播蜘蛛
+urlSetUnfinishedPages.add( "/youshengshu/6805053/" ) # 远大前程 - 高乐高WHY伯爵
+urlSetUnfinishedPages.add( "/youshengshu/10026000/" ) # 巴黎圣母院 - 雨果 - 博雅人文
+urlSetUnfinishedPages.add( "/youshengshu/4100688/" ) # 大卫·科波菲尔（中文版）- 知北游z
+urlSetUnfinishedPages.add( "/youshengshu/3419108/" ) # 复活 - 有声的金明
+urlSetUnfinishedPages.add( "/youshengshu/3765198/" ) # 包法利夫人 - 且听倾城
+urlSetUnfinishedPages.add( "/youshengshu/5242438/" ) # 追忆似水年华 - 主播罗宁
+urlSetUnfinishedPages.add( "/youshengshu/10024798/" ) # 《复活》托尔斯泰 - 博雅人文
+urlSetUnfinishedPages.add( "/youshengshu/3584718/" ) # 羊脂球 - nick的声音世界
+urlSetUnfinishedPages.add( "/youshengshu/2869815/" ) # 高老头 - 熙城chuanqi
+urlSetUnfinishedPages.add( "/renwen/15273276/" ) # 晓说2018 - 超级制作
+urlSetUnfinishedPages.add( "/jiaoyu/7516087/" ) # 个案说法 - 我是方弘
+urlSetUnfinishedPages.add( "/renwen/4291180/" ) # 鲁迅全集-选读 - 白云出岫
+urlSetUnfinishedPages.add( "/xiangsheng/9742296/" ) # 郭麒麟相声全集 - 郭德纲相声
+urlSetUnfinishedPages.add( "/renwen/10422957/" ) # 《理想国》导读 复旦大学 - 博雅人文
+urlSetUnfinishedPages.add( "/ertong/277077/" ) # 格林童话故事全集 - 儿童故事机
+urlSetUnfinishedPages.add( "/youshengshu/12225530/" ) # 安徒生童话故事全集 - 岁月音域
+urlSetUnfinishedPages.add( "/lishi/13626147/" ) # 第二次世界大战全史(二战史) - ae_wn
+urlSetUnfinishedPages.add( "/renwen/5088879/" ) # 读者 - 读者
+urlSetUnfinishedPages.add( "/lvyou/3501680/" ) # 不傻在欧洲 - 李不傻
+urlSetUnfinishedPages.add( "/ertong/6233693/" ) # 米小圈上学记：一二三年级 -米小圈
+# 加利福尼亚慕容 已经直接添加了主播.
+#urlSetUnfinishedPages.add( "/renwen/15882009/" ) # 月亮和六便士·毛姆|慕容读经典 - 加利福尼亚慕容
+#urlSetUnfinishedPages.add( "/youshengshu/11523230/" ) # 《简爱》| 慕容读经典系列 - 加利福尼亚慕容
+#urlSetUnfinishedPages.add( "/lvyou/5721812/" ) # 行者无疆（主播：慕容） - 加利福尼亚慕容
+#urlSetUnfinishedPages.add( "/youshengshu/12488323/" ) # 《爱的艺术》·弗洛姆|慕容读经典 - 加利福尼亚慕容
+urlSetUnfinishedPages.add( "/youshengshu/21750972/" ) # 海子诗选：你来人间一趟，你要看看太阳 - 喜马有声剧
+urlSetUnfinishedPages.add( "/youshengshu/2819988/" ) # 一个陌生女人的来信：茨威格小说集 - 静播频道
+urlSetUnfinishedPages.add( "/waiyu/19801905/" ) # 原汁原味 英文演讲 | 附演讲稿 - 特若壹Troy
+urlSetUnfinishedPages.add( "" ) #
+
+# 有声书 - 英文原版 - 免费
+https://www.ximalaya.com/revision/category/queryCategoryPageAlbums?category=youshengshu&subcategory=yingwenyuanban&meta=132_2722&sort=0&page=1&perPage=300
+
+# 有声书 - 经典
+https://www.ximalaya.com/youshengshu/jingdian/mr132t2722/
+
+# 历史 - 世界史
+https://www.ximalaya.com/lishi/reci91/
