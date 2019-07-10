@@ -124,7 +124,25 @@ class XMLYDownloader:
     
      # 下载一张专辑
     def downloadAlbum(self,id):
-        logging.info( "download album %s", id )
+        # 根据本地数据库里的信息, 提前决定是不是不进一步下载了.
+        dbAlbumInfo = self.database.getAlbum(id)
+        try:
+            if( len(dbAlbumInfo) > 0 ):
+                lastCheckDate = dbAlbumInfo['lastCheckDate']
+                lastUpdateDate = dbAlbumInfo['updateDate']
+                title = dbAlbumInfo['albumTitle']
+                secSinceLastUpdate = time.time() - time.strptime( lastUpdateDate, '%Y-%m-%d')
+                secSinceLastCheck = time.time() - time.strptime( lastCheckDate, '%Y-%m-%d')
+                # 1个月没有更新的专辑, 1周内不重复下载.
+                if( secSinceLastUpdate > 1*30*24*3600 and secSinceLastCheck < 1*7*24*3600 ):
+                    logging.info( 'Album %s-%s is skiped to check & download. last update date is %s last check date is %s', id, title, lastUpdateDate, lastCheckDate )
+                    return 0
+        except:
+            logging.exception( 'error')
+        title = ''
+        if 'albumTitle' in dbAlbumInfo:
+            title = dbAlbumInfo['albumTitle']
+        logging.info( "download album %s - %s", id, title )
         infos = self.getAlbumAndAnchorInfo(id)
         if( infos == None ):
             return 0
@@ -167,6 +185,7 @@ class XMLYDownloader:
 
             if( successDownloadTrackNum >= trackNum ):
                 logging.warning('Album %s finished! tracks num:%d', albumTitle, trackNum)
+                albumInfo['lastCheckDate'] = time.strftime('%Y-%m-%d')
                 self.database.updateAlbum(id, albumInfo)
             
             # 下载完一张专辑后, 调用命令设置目录的权限. 否则linux下无法剪切文件夹.
