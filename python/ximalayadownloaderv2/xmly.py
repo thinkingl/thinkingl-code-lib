@@ -15,6 +15,8 @@ from queue import Queue
 import threading
 import xmSign
 import psutil
+import xmlycfg
+import movefile
 
 class XMLYDownloader:
     #等待处理的url
@@ -27,10 +29,10 @@ class XMLYDownloader:
     xmSign = xmSign.XMSign()
 
 
-    baseDirs = ['D:/999-temp/xmly','/share/disk-160/xmly']
+    baseDirs = xmlycfg.TempDir
     baseDir = ''
     DB_FILE_NAME = 'xmly.db'
-    threadNum = 5
+    threadNum = xmlycfg.DownloadThreadNum
 
     # 构造.
     def __init__(self):
@@ -127,12 +129,12 @@ class XMLYDownloader:
         # 根据本地数据库里的信息, 提前决定是不是不进一步下载了.
         dbAlbumInfo = self.database.getAlbum(id)
         try:
-            if( len(dbAlbumInfo) > 0 ):
+            if( len(dbAlbumInfo) > 0 and 'lastCheckDate' in dbAlbumInfo):
                 lastCheckDate = dbAlbumInfo['lastCheckDate']
                 lastUpdateDate = dbAlbumInfo['updateDate']
                 title = dbAlbumInfo['albumTitle']
-                secSinceLastUpdate = time.time() - time.strptime( lastUpdateDate, '%Y-%m-%d')
-                secSinceLastCheck = time.time() - time.strptime( lastCheckDate, '%Y-%m-%d')
+                secSinceLastUpdate = time.time() - time.mktime( time.strptime( lastUpdateDate, '%Y-%m-%d') )
+                secSinceLastCheck = time.time() - time.mktime( time.strptime( lastCheckDate, '%Y-%m-%d') )
                 # 1个月没有更新的专辑, 1周内不重复下载.
                 if( secSinceLastUpdate > 1*30*24*3600 and secSinceLastCheck < 1*7*24*3600 ):
                     logging.info( 'Album %s-%s is skiped to check & download. last update date is %s last check date is %s', id, title, lastUpdateDate, lastCheckDate )
@@ -146,7 +148,7 @@ class XMLYDownloader:
         infos = self.getAlbumAndAnchorInfo(id)
         if( infos == None ):
             return 0
-        albumInfo = infos[0]
+        albumInfo = (infos[0])
         albumInfo['id'] = id    #没有id, 补充上.
         #if( albumInfo ):
             #self.database.updateAlbum(id, albumInfo)
@@ -189,9 +191,14 @@ class XMLYDownloader:
                 self.database.updateAlbum(id, albumInfo)
             
             # 下载完一张专辑后, 调用命令设置目录的权限. 否则linux下无法剪切文件夹.
-            if self.baseDir[0] == '/':
-                chmodPath = os.path.join( self.baseDir, '*' )
-                os.system('chmod 777 %s -R'%chmodPath)
+            #if self.baseDir[0] == '/':
+                #chmodPath = os.path.join( self.baseDir, '*' )
+                #os.system('chmod 777 %s -R'%chmodPath)
+        else :
+            if 'lastCheckDate' not in dbAlbumInfo:
+                albumInfo['lastCheckDate'] = time.strftime('%Y-%m-%d')
+                self.database.updateAlbum(id, albumInfo)
+
         return successDownloadTrackNum
 
     # 解析专辑信息包括音频url
@@ -569,10 +576,11 @@ def initLogging():
 
 if __name__=="__main__":
     socket.setdefaulttimeout(100)
-
     
     initLogging()
     logging.info( 'Start XMLY Downloader!' )
+    movefile = movefile.MoveFile()
+    movefile.startCheck()
     downloader = XMLYDownloader() 
     downloader.run()
     if os.path.isfile( 'stop.flag'):
