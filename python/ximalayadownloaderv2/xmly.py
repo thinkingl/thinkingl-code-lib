@@ -52,7 +52,9 @@ class XMLYDownloader:
 
     def getHeaders(self):
         headers = {'User-Agent':'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) ' 'Chrome/51.0.2704.63 Safari/537.36'}
-        headers['xm-Sign']  = self.xmSign.getXMSign()
+        #headers['xm-sign']  = self.xmSign.getXMSignDirectly() #self.xmSign.getXMSign()
+        headers['xm-sign'] = self.xmSign.getXMSignPyHimalaya( str(round(time.time()*1000)) )
+        #headers['xm-sign'] = '79a54579eeff186d06d06540cdd545cc(90)1571975285400(53)1571975286232'
         return headers      
     
     def newDatabase(self):
@@ -84,9 +86,9 @@ class XMLYDownloader:
 
                 # 暂时先用这个逻辑....不完美.
                 downloadTrackNum += downloadNum
-                if( downloadTrackNum > 0 and len(self.waittingUrls) == 0 ):
-                    self.ReadUrl() # 放开的话会再来一遍.
-                    downloadTrackNum = 0
+                #if( downloadTrackNum > 0 and len(self.waittingUrls) == 0 ):
+                    #self.ReadUrl() # 放开的话会再来一遍.
+                    #downloadTrackNum = 0
 
                 totalDownloadNum += downloadNum
                 logging.info( 'download over !Cur turn download track: %d total: %d url: %s' % (downloadTrackNum, totalDownloadNum,url) )
@@ -136,7 +138,7 @@ class XMLYDownloader:
                 secSinceLastUpdate = time.time() - time.mktime( time.strptime( lastUpdateDate, '%Y-%m-%d') )
                 secSinceLastCheck = time.time() - time.mktime( time.strptime( lastCheckDate, '%Y-%m-%d') )
                 # 1个月没有更新的专辑, 1周内不重复下载.
-                if( secSinceLastUpdate > 1*30*24*3600 and secSinceLastCheck < 1*7*24*3600 ):
+                if( secSinceLastUpdate > 1*30*24*3600 and secSinceLastCheck < secSinceLastUpdate / 2 ): #1*7*24*3600 ):
                     logging.info( 'Album %s-%s is skiped to check & download. last update date is %s last check date is %s', id, title, lastUpdateDate, lastCheckDate )
                     return 0
         except:
@@ -535,8 +537,13 @@ class XMLYDownloader:
     def urlGetContent(self, url):
         headers = self.getHeaders() #{'User-Agent':'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) ' 'Chrome/51.0.2704.63 Safari/537.36'}
         try:
-            req = urllib.request.Request(url=url, headers=headers)
+            #nowTimeBeforeCall = str(round(time.time()*1000))
+
+            req = urllib.request.Request(url=url, headers=headers, method="GET")
             content = urllib.request.urlopen(req).read().decode('utf-8','ignore')#, 'ignore'
+            #serverTime = self.xmSign.getxmtime()
+            #nowTime = str(round(time.time()*1000))
+            #logging.info( "xm-sign:[%s] cur serverTime = [%s] localTimeBefor:[%s] localTime after:[%s] url:[%s] content 40:[%s]", headers['xm-sign'], serverTime, nowTimeBeforeCall, nowTime, url, content[0:40]  )
             return content
         except:
             logging.exception("error")

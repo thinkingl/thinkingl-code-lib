@@ -1,3 +1,22 @@
+﻿愚鹅小仙
+2.5万女神
+上海市·浦东新区
+认证：
+喜马拉雅个人电台
+https://www.ximalaya.com/zhubo/28344467/
+
+宠坏你的耳朵
+124.3万女神
+未知·未知
+认证：
+认证信息:
+平台签约主播
+喜马拉雅个人电台
+https://www.ximalaya.com/zhubo/14043986/
+
+# 有声书 - 英文原版 - 免费
+https://www.ximalaya.com/revision/category/queryCategoryPageAlbums?category=youshengshu&subcategory=yingwenyuanban&meta=132_2722&sort=0&page=1&perPage=300
+
 搜索专辑关键字key=诺贝尔文学&
 
 
@@ -150,14 +169,64 @@ urlSetUnfinishedPages.add( "/youshengshu/2819988/" ) # 一个陌生女人的来�
 urlSetUnfinishedPages.add( "/waiyu/19801905/" ) # 原汁原味 英文演讲 | 附演讲稿 - 特若壹Troy
 urlSetUnfinishedPages.add( "" ) #
 
-# 有声书 - 英文原版 - 免费
-https://www.ximalaya.com/revision/category/queryCategoryPageAlbums?category=youshengshu&subcategory=yingwenyuanban&meta=132_2722&sort=0&page=1&perPage=300
+# 有声书 - 商业
+https://www.ximalaya.com/youshengshu/shangye/mr132t2722/
 
 # 有声书 - 经典
 https://www.ximalaya.com/youshengshu/jingdian/mr132t2722/
+
+# 有声书 - 童书
+https://www.ximalaya.com/youshengshu/tongshu/mr132t2722/
 
 # 历史 - 世界史
 https://www.ximalaya.com/lishi/reci91/
 
 # 有声书 - 教材 - 大中专教材 - 免费.
 https://www.ximalaya.com/revision/category/queryCategoryPageAlbums?category=youshengshu&subcategory=jiaocai&meta=132_2722-232_3518&sort=0&page=1&perPage=30
+
+# 石头说话2017
+1.7万男神魔羯座
+浙江省·宁波市
+认证：
+认证信息:
+儿童故事
+喜马拉雅个人电台
+https://www.ximalaya.com/zhubo/19528219/
+
+
+白云出岫
+194.4万男神巨蟹座
+未知·未知
+认证：
+认证信息:
+中国古典文学全文朗读
+喜马拉雅个人电台
+https://www.ximalaya.com/zhubo/4228109/
+
+读书狼_既然
+40.7万
+女神
+未知·未知
+认证：
+认证信息:
+穿梭于人文与科技
+喜马拉雅个人电台
+https://www.ximalaya.com/zhubo/1732828/
+
+麦子
+2万女神
+河北省·石家庄市
+认证：
+认证信息:
+其他
+喜马拉雅个人电台
+https://www.ximalaya.com/zhubo/78188482/
+
+伴书眠
+3万女神
+未知·未知
+认证：
+认证信息:
+有声小说
+喜马拉雅个人电台
+https://www.ximalaya.com/zhubo/5221156/

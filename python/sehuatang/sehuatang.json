@@ -1,0 +1,20 @@
+{
+    "forms":
+    [
+        {
+            "url":"forum-103-<page>.html",
+            "localDir":"中文字幕",
+            "desc":"中文字幕板块"
+        },
+        {
+            "url":"forum-2-<page>.html",
+            "localDir":"国产原创",
+            "desc":"国产原创电影板块"
+        },
+        {
+            "url":"forum-98-<page>.html",
+            "localDir":"华人自拍",
+            "desc":"华人自拍图片板块"
+        }
+    ]
+}
