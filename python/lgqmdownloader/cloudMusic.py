@@ -12,9 +12,14 @@ import logging
 
 songStorageDir = "X:/music/cachedownload"
 songIdDir = "/`````songid"
-cloudMusicCacheDir = os.environ['LOCALAPPDATA'] + "\\Netease\\CloudMusic\\Cache\\Cache"
+
+
+
+
+#loudMusicCacheDir = os.environ['LOCALAPPDATA'] + "\\Netease\\CloudMusic\\Cache\\Cache"
 cloudMusicLyricDir = os.environ['LOCALAPPDATA'] + "\\Netease\\CloudMusic\\webdata\\lyric"
 MaxNameLen = 64 # 限制名称(歌手名称,专辑名称,歌曲名称)的最长长度, 超过长度的截断, 防止路径过长.
+
 
 
 def GetBrowser(PROXY_HOST, httpPort, ftpPort, sock5Port):
@@ -228,6 +233,13 @@ def SaveLyric( songInfo ):
         lrcFile.close()
 
 def HackCloudMusicCache():
+    # 读取缓存路径。
+    # C:\Users\thinkingl\AppData\Local\Netease\CloudMusic\cache_path
+    cloudMusicCacheDirFile = os.environ['LOCALAPPDATA'] + "\\Netease\\CloudMusic\\cache_path"
+    cachePathFile = open( cloudMusicCacheDirFile, "rb")
+    cloudMusicCacheDir = cachePathFile.read().decode( "utf-16")
+    cachePathFile.close()
+
     cacheFiles = os.listdir( cloudMusicCacheDir )
     for fileName in cacheFiles: #遍历文件夹
         ucFilePath = cloudMusicCacheDir + "\\" + fileName
