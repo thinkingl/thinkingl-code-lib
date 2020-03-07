@@ -438,6 +438,11 @@ class XMLYDownloader:
                 time.sleep(1)
         return False
 
+    # 从url中获取文件后缀.
+    def getFileExt(self, url ):
+        fileExt = url.split('.')[-1]
+        fileExt = fileExt.split('!')[0]
+        return fileExt
 
     # 获取本地路径.
     def getLocalPath(self, anchorInfo, albumInfo, trackInfo, fileType ):
@@ -451,14 +456,14 @@ class XMLYDownloader:
         filePath = os.path.join(self.baseDir, anchorName, albumTitle )
         if fileType == 'albumCover':
             coverUrl = albumInfo['cover']
-            fileExt = coverUrl.split('.')[-1]
+            fileExt = self.getFileExt( coverUrl )
             filePath = os.path.join(self.baseDir, anchorName, albumTitle, albumTitle+'.'+fileExt )
         
         if fileType == 'trackCover':
             coverUrl = trackInfo['cover_url']
             if( coverUrl == None ):
                 return ''
-            fileExt = coverUrl.split('.')[-1]
+            fileExt = self.getFileExt( coverUrl )
             filePath = os.path.join(self.baseDir, anchorName, albumTitle, trackFileName+'.'+fileExt )
         if fileType == 'track':
             trackM4aUrl = trackInfo['play_path']
