@@ -31,7 +31,7 @@ class XMLYDownloader:
 
     baseDirs = xmlycfg.TempDir
     baseDir = ''
-    DB_FILE_NAME = 'xmly.db'
+    
     threadNum = xmlycfg.DownloadThreadNum
 
     # 构造.
@@ -59,7 +59,7 @@ class XMLYDownloader:
     
     def newDatabase(self):
         database = db.XMLYDatabase()
-        dbPath = os.path.join( self.baseDir, self.DB_FILE_NAME )
+        dbPath = xmlycfg.getCurDBPath()
         try:
             database.init(dbPath)
         except:

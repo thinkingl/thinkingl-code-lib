@@ -1,13 +1,15 @@
 import os
 import logging
 
-MinDiskSpace = 1*1024*1024*1024 # 1G 最小的磁盘空间, 剩余磁盘空间不足后停止下载, 开始移动文件.
-TempDir = ['D:/999-temp/xmly','/share/disk-160/xmly']
+MinDiskSpace = 100*1024*1024*1024 # 1G 最小的磁盘空间, 剩余磁盘空间不足后停止下载, 开始移动文件.
+TempDir = ['D:/999-temp/xmly','/share/disk-ssd/xmlydownload']
 FinalDir = ['D:/999-temp/finalxmly','/share/disk-b-music/1-audiobook/xmly']
+DBPath = ['F:/tmp/xmly/xmly.db', '/share/disk-ssd/xmly/xmly.db']
 DownloadThreadNum = 5
 StopFlagFileName = 'stop.flag'
 CurTempDir = ''
 CurFinalDir = ''
+CurDBPath = ''
 
 def getCurTempDir():
     global CurTempDir
@@ -33,6 +35,19 @@ def getCurFinalDir():
             return CurFinalDir
     logging.error("Can't find valid final dir!!")
     return CurFinalDir
+
+def getCurDBPath():
+    global CurDBPath
+    if len(CurDBPath) > 0:
+        return CurDBPath
+    for path in DBPath:
+        if os.path.isfile( path ):
+            CurDBPath = path
+            logging.warning('Use db path %s', CurDBPath )
+            return CurDBPath
+    logging.error("Can't find db file path!")
+    return CurDBPath
+
 
 if __name__=="__main__":
     tmpDir = getCurTempDir()
