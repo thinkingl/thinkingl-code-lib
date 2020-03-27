@@ -17,6 +17,13 @@ class MoveFile:
                 self.moveXMLYFolders()
             time.sleep(1*60)
 
+    def removeEmptyDirs(self):
+        for root, dirs, files in os.walk(  xmlycfg.getCurTempDir() ):
+            if not os.listdir(root):
+                os.rmdir(root)
+                logging.warning( 'remove empty dir:' + root )
+
+
     def moveXMLYFolders(self):
         nameList = os.listdir( xmlycfg.getCurTempDir() )
         for name in nameList:
@@ -31,6 +38,7 @@ class MoveFile:
                 except:
                     logging.exception( 'error' )
                     logging.error( 'move anchor dir %s to %s fail!!', path, finalPath )
+        self.removeEmptyDirs()
 
     # 移动文件夹, 同名覆盖.
     # src: d:\abc
@@ -70,14 +78,23 @@ class MoveFile:
         for fileName in os.listdir( anchorDirPath ):
             baseName = fileName.split('.')[0]
             ext = fileName.split('.')[-1]
+            ext = ext.lower()
             if baseName == anchorName and ( ext == 'jpg' or ext == 'jpeg' or ext == 'png'): # 封面是 专辑名.图片文件后缀
                 hasCover = True
                 break
-        if not hasCover:
-            return False
-        return True
+        if hasCover:
+            return True
+
+        # 是不是有音频文件 .m4a
+        for root, dirs, files in os.walk(  anchorDirPath ):
+            for f in files:
+                if os.path.splitext( f )[1] == '.m4a':
+                    return True
+        
+        return False
 
 if __name__=="__main__":
     m= MoveFile()
-    m.threadCheckDiskSpace()
+    #m.threadCheckDiskSpace()
     #m.startCheck()
+    m.moveXMLYFolders()

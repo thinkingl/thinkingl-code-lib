@@ -442,6 +442,9 @@ class XMLYDownloader:
     def getFileExt(self, url ):
         fileExt = url.split('.')[-1]
         fileExt = fileExt.split('!')[0]
+        if fileExt.find('\\') != -1 or fileExt.find( '/' ) != -1:
+            logging.error( 'Invalid file ext from url:' + url )
+            fileExt = 'jpg'
         return fileExt
 
     # 获取本地路径.
