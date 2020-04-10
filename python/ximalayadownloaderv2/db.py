@@ -23,6 +23,11 @@ class XMLYDatabase:
         # anchor 属性表 - anchorId | Attr name | attr value
         self.connect.execute( 'Create Table  IF NOT EXISTS anchor(id TEXT NOT NULL, attrName TEXT NOT NULL, attrValue TEXT  NOT NULL, PRIMARY KEY(id,attrName));' )
 
+        # 加快查询track列表的速度.
+        self.connect.execute( "CREATE TABLE IF NOT EXISTS trackalbum(trackId TEXT not null, albumId TEXT not null, Primary key(trackId));")
+
+        self.connect.execute( "CREATE INDEX IF NOT EXISTS index_trackalbum on trackalbum(albumId);")
+
         return self.connect != None
     
     def close(self):
@@ -55,7 +60,9 @@ class XMLYDatabase:
         trackSet = set()
         # 有的音频是"转采"的, 它的album_id字段不是当前专辑, 而是原始出处的专辑. 这会造成当前专辑id查不到目标.
         # 改用自己加的属性名 albumId
-        for row in self.connect.execute("select id from track where attrName='albumId' and attrValue = ? ;", (albumId,)):
+        #sql = "select id from track where attrName='albumId' and attrValue = ? ;"
+        sql = "select trackId from trackalbum where albumId = ? ;"
+        for row in self.connect.execute(sql, (albumId,)):
             trackSet.add( row[0] )
         return list(trackSet)
 
@@ -65,6 +72,9 @@ class XMLYDatabase:
             #for i in range(10):
             try:
                 self.connect.execute('Replace into %s Values(?,?,?);'%tableName, (id,key, str(jsonObj[key])) )
+                if tableName == "track" and key == "albumId":
+                    self.connect.execute( "Replace into trackalbum Values(?,?);", (id, str(jsonObj[key])))
+
             except:
                 logging.error('Replace info db fail! id: %s key: %s value: %s', id, key, jsonObj[key])
                 logging.exception('error')
