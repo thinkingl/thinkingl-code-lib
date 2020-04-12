@@ -17,6 +17,7 @@ import xmSign
 import psutil
 import xmlycfg
 import movefile
+import xmlydbclient
 
 class XMLYDownloader:
     #等待处理的url
@@ -58,14 +59,17 @@ class XMLYDownloader:
         return headers      
     
     def newDatabase(self):
-        database = db.XMLYDatabase()
-        dbPath = xmlycfg.getCurDBPath()
-        try:
-            database.init(dbPath)
-        except:
-            logging.exception("error")
+        if xmlycfg.UseRemobeDatabase:
+            database = xmlydbclient.XMLYDatabaseClient()
         else:
-            logging.debug('Data base path:' + dbPath)
+            database = db.XMLYDatabase()
+            dbPath = xmlycfg.getCurDBPath()
+            try:
+                database.init(dbPath)
+            except:
+                logging.exception("error")
+            else:
+                logging.debug('Data base path:' + dbPath)
         return database
 
     def run(self):
@@ -121,9 +125,15 @@ class XMLYDownloader:
                 task = trackTaskQueue.get_nowait()
             except:
                 break
-            result = self.downloadTrack(task[0], task[1], task[2], newDatabase)
-            if result:
-                trackTaskResultQueue.put_nowait( (result, task[0], task[1], task[2]) )
+
+            try:
+                result = self.downloadTrack(task[0], task[1], task[2], newDatabase)
+            
+                if result:
+                    trackTaskResultQueue.put_nowait( (result, task[0], task[1], task[2]) )
+            except:
+                logging.error( "download track fail! task:" + json.dumps( task ) )
+                logging.exception( 'error' )
         newDatabase.close()
     
      # 下载一张专辑
@@ -166,9 +176,9 @@ class XMLYDownloader:
 
         successDownloadTrackNum = 0
         if( self.isAlbumNeedDownload( id, albumInfo, tracksInfo ) ):
-            trackIdList = self.getTrackList(id)
+            trackInfoList = self.getTrackList(id)
             trackTaskQueue = Queue()
-            for trackInfo in trackIdList:
+            for trackInfo in trackInfoList:
                 # 任务放入队列.
                 trackTaskQueue.put_nowait( (trackInfo, albumInfo, anchorInfo) )
                 if os.path.isfile( 'stop.flag' ):
@@ -426,7 +436,7 @@ class XMLYDownloader:
             logging.error( 'No enough space!' )
             time.sleep(1*60)
 
-        for i in range(10):                
+        for i in range(100):                
             try:
                 urllib.request.urlretrieve( url, localPath)
                 logging.info( 'downlaod file success! [%s] - [%s]', localPath, url)
@@ -435,6 +445,8 @@ class XMLYDownloader:
                 logging.error( "download file fail! [%s] - [%s]", url, localPath)
                 if os.path.isfile( localPath ):
                     os.remove( localPath )
+                logging.exception("error")
+                
                 time.sleep(1)
         return False
 
@@ -570,6 +582,7 @@ def initLogging():
     # 使用FileHandler输出到文件
     formatter   = '%(asctime)s  %(filename)s:%(lineno)d:%(funcName)s : %(levelname)s  %(message)s'    # 定义输出log的格式
     logFileName = time.strftime('xmlylog-%Y%m%d-%H%M%S.log',time.localtime())
+    
     fh = logging.FileHandler(logFileName)
     fh.setLevel(logging.DEBUG)
     #fh.setFormatter(formatter)

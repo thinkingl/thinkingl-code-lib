@@ -54,6 +54,13 @@ class MoveFile:
             if os.path.isdir(srcPath):
                 self.moveTreeForce( srcPath, dstPath )
                 continue
+
+            # 如果文件是最近修改的, 忽略. 因为可能文件正在写入中.
+            # 暂定1分钟.
+            if (time.time() - os.stat( srcPath ).st_mtime) < 60:
+                logging.info( 'file ' + srcPath + ' modified recently!' )
+                continue
+
             if os.path.exists( dstPath ):
                 os.remove( dstPath )
             try:
