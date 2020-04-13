@@ -24,7 +24,7 @@ dataDir2 = javlibLocalDir + "datas2/"
 #fireFoxOptions = webdriver.FirefoxOptions()
 #fireFoxOptions.set_headless()
 #webdriver = Firefox(firefox_options=fireFoxOptions)
-fp=webdriver.FirefoxProfile(r'C:\\Users\\thinkingl\\AppData\\Roaming\\Mozilla\\Firefox\\Profiles\\300ufwh8.default')  
+fp=webdriver.FirefoxProfile('C:\\Users\\thinkingl\\AppData\\Roaming\\Mozilla\\Firefox\\Profiles\\300ufwh8.default')  
 browser = webdriver.Firefox()
 #browser = webdriver.Chrome()
 

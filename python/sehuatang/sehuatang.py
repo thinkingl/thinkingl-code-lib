@@ -8,6 +8,7 @@ import json
 import socket
 from concurrent.futures import ThreadPoolExecutor
 import threading
+from http.cookiejar import CookieJar
 
 def mkdirs(path):
     if not os.path.isdir( path ):
@@ -41,7 +42,8 @@ def isExcludeImg( url ):
     '86.gif',
     'none.gif',
     'bd7QzT.gif',
-    '16481395.jpg'
+    '16481395.jpg',
+    '1586613712x1031866013.png'
     ]
     if imgName in excludeImgName:
         return True
@@ -50,11 +52,25 @@ def isExcludeImg( url ):
         
 class SeHuaTang:
     baseUrl = 'https://www.sehuatang.net'
-    localDir = 'D:/999-temp/sehuatang/'
-    localDir = 'D:/999-temp/sehuatang/huarenzipai/'
-    maxFilePerStoreDir = 5000   # 每个存储文件夹下最多的文件数目.
-    gqzwzmUrl = 'forum-103-<page>.html'
+
+    localBaseDir = 'H:/data/sehuatang'
+    if not os.path.isdir( localBaseDir ):
+        localBaseDir = '/share/disk-ssd/tmp/sehuatangtmp'
+
+    # 华人自拍
     gqzwzmUrl = 'forum-98-<page>.html'
+    localDir = os.path.join( localBaseDir, '/huarenzipai/' )
+
+    # 国产原创
+    gqzwzmUrl = 'forum-2-<page>.html'
+    localDir = os.path.join( localBaseDir, '/guochanyuanchuang/' )
+    
+    # 高清字幕
+    gqzwzmUrl = 'forum-103-<page>.html'
+    localDir = os.path.join( localBaseDir, 'gqzm' )
+
+    maxFilePerStoreDir = 5000   # 每个存储文件夹下最多的文件数目.
+
     #finishedUrl = set()
     finishedThreadId = set()
     threadPoolSaveThread = ThreadPoolExecutor(20)
@@ -70,12 +86,13 @@ class SeHuaTang:
 
 
     def getHeaders(self):
-        headers = {'User-Agent':'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) ' 'Chrome/51.0.2704.63 Safari/537.36'}
+        headers = {'User-Agent':'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.163 Safari/537.36'}
         return headers  
     def urlGetContent(self, url):
         headers = self.getHeaders() #{'User-Agent':'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) ' 'Chrome/51.0.2704.63 Safari/537.36'}
         
         req = urllib.request.Request(url=url, headers=headers)
+        
         content = urllib.request.urlopen(req).read().decode('utf-8','ignore')#, 'ignore'
         return content
 
@@ -118,7 +135,7 @@ class SeHuaTang:
                 break
 
     def downloadFileTry(self, url, localPath):
-        for i in range(5):                
+        for i in range(100):                
             try:
                 urllib.request.urlretrieve( url, localPath)
                 logging.info( 'downlaod file success! [%s] - [%s]', localPath, url)
@@ -375,7 +392,13 @@ def initLogging():
     )
 
 def initRequest():
-    opener = urllib.request.build_opener()
+    proxyhandler = urllib.request.ProxyHandler({'http':'http://192.168.84.162:8118', 'https':'http://192.168.84.162:8118'})
+
+    cj = CookieJar()
+    #opener = urllib.request.build_opener(urllib.request.HTTPCookieProcessor(cj))
+    cookieHandler = urllib.request.HTTPCookieProcessor(cj)
+
+    opener = urllib.request.build_opener( proxyhandler, cookieHandler )
     headers = {'User-Agent':'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) ' 'Chrome/51.0.2704.63 Safari/537.36'}
     opener.addheaders = [('User-agent', 'Mozilla/5.0')]
     urllib.request.install_opener(opener)

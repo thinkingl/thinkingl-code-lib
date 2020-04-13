@@ -97,7 +97,7 @@ def getImgInfoJson(fileName):
     avlib = CAvlibDb()
     avlib.ConnectDb()
     imgInfo = avlib.GetPicInfoJson( fileName )
-    return json.dumps(imgInfo)
+    return (imgInfo)
     #return "image info json" + fileName
 
 
@@ -114,7 +114,7 @@ def randomImg():
     imageNameList = avlib.GetRandomPic(num)
     avlib.CloseDb()
 
-    output = json.dumps( imageNameList )
+    output = { "imageList": imageNameList }
     return output
 
 @app.route("/compare", methods=['POST'])
@@ -127,7 +127,7 @@ def compare():
     else:
         ret['error'] = 'Invalid operation!'
 
-    return json.dumps( ret )
+    return ( ret )
 
 @app.route("/top", methods=['POST','GET'])
 def topImg():
@@ -153,5 +153,7 @@ def topImg():
     else:
         ret['error'] = 'Invalid operation!'
         
-    return json.dumps( ret )
+    return ( ret )
 
+if __name__ == '__main__':
+    app.run(host='0.0.0.0',port=5001)

@@ -21,7 +21,9 @@ import queue
 import labelAvPic  
 
 
-BaseUrl = 'http://192.168.84.8:5000/'
+#BaseUrl = 'http://192.168.84.8:5000/'
+BaseUrl = 'http://127.0.0.1:5001/'
+
 topPicNum = 4
 picOne = None
 picTwo = None
@@ -194,7 +196,7 @@ class AVCmpClient():
             try:
                 urlRandom = BaseUrl + 'random'
                 rsp = requests.get(urlRandom)
-                randomPics = rsp.json()
+                randomPics = rsp.json()['imageList']
                 #randomPics = json.loads( request.urlopen( urlRandom ).read() )
                 if( len(randomPics) < 2):
                     print( "error random pics : " + str(randomPics) )

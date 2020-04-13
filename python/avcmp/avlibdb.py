@@ -52,19 +52,7 @@ class CAvlibDb:
         dbCursor.execute( 'Insert or ignore into Attr values(?, ?, ? );', (attrType, attrName, 0))
         dbCursor.execute( 'Insert or ignore into PicAttr select Pic.rowId, Attr.rowId from Pic join Attr where Pic.Filename = ? and Attr.Type = ? and Attr.Name = ?;', (fileName, attrType, attrName) )
 
-    def Json2Db( self, fileName, filePath, dbCursor ):
-        jsonPath = filePath[0:-4] + '.json'
-        if not os.path.isfile( jsonPath ):
-            print( 'Json %s is not exist!'%jsonPath)
-            return
-        f=open(jsonPath,'rb')
-        try:
-            obj = json.load(f)
-        except:
-            print( 'Load json %s fail!'%jsonPath)
-            return
-        f.close()
-
+    def json2Db( self, obj, dbCursor ):
         #添加年.
         obj['year'] = obj['date'][0:4]
 
@@ -77,6 +65,21 @@ class CAvlibDb:
                 dbCursor.execute( 'Insert or ignore into Attr values(?, ?, ? );', (attrType, attrName, 0))
                 dbCursor.execute( 'Insert or ignore into PicAttr select Pic.rowId, Attr.rowId from Pic join Attr where Pic.Filename = ? and Attr.Type = ? and Attr.Name = ?;', (fileName, attrType, attrName) )
 
+
+    def jsonFile2Db( self, fileName, filePath, dbCursor ):
+        jsonPath = filePath[0:-4] + '.json'
+        if not os.path.isfile( jsonPath ):
+            print( 'Json %s is not exist!'%jsonPath)
+            return
+        f=open(jsonPath,'rb')
+        try:
+            obj = json.load(f)
+        except:
+            print( 'Load json %s fail!'%jsonPath)
+            return
+        f.close()
+        self.json2Db( obj, dbCursor )
+        
     def QueryPic2PicDic(self):
         allPic = {}
         for row in self.dbConnect.execute( 'select rowId,* from Pic;' ):
@@ -169,7 +172,7 @@ class CAvlibDb:
                     ext = os.path.splitext(fileName)[1]
                     if( ext == '.jpg'):
                         self.Pic2Db(fileName, os.path.join(root,fileName), cur)
-                        self.Json2Db(fileName, os.path.join(root,fileName),cur)
+                        self.jsonFile2Db(fileName, os.path.join(root,fileName),cur)
 
 
             # fileList = os.listdir(fileDirPath)

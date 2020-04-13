@@ -38,3 +38,7 @@ Study/build-icmpstudy-Desktop_Qt_5_8_0_MinGW_32bit-Debug/
 *.cache
 *.pyc
 python/disktest/data.7z
+python/avcmpclient/__pycache__/avcmp.cpython-37.pyc
+python/avcmp/__pycache__/avlibserver.cpython-37.pyc
+python/avcmp/__pycache__/avlibdb.cpython-37.pyc
+python/avcmp/__pycache__/avlibcfg.cpython-37.pyc
