@@ -62,7 +62,8 @@ def tryDownload(url, file_path, tryTimes, headers):
             logging.info( "Download success!" )
             return True
         time.sleep( 30 )
-    os.remove( file_path )
+    if os.path.isfile( file_path ):
+        os.remove( file_path )
     logging.error( "Download file fail! url: %s remove file %s !"%( url, file_path) )
     return False
 
