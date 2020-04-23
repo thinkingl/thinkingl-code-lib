@@ -18,6 +18,7 @@ import psutil
 import xmlycfg
 import movefile
 import xmlydbclient
+import xdownload
 
 class XMLYDownloader:
     #等待处理的url
@@ -397,12 +398,19 @@ class XMLYDownloader:
         content = self.urlGetContent(url)
         trackDetail = json.loads(content)
         trackInfo.update(trackDetail)
+
+        if not 'play_path' in trackInfo or trackInfo['play_path'] == None:
+            logging.error( "Get track info fail! track id: %s content:%s", trackId, content )
+            return False
+
         trackInfo[ 'albumId' ] = albumId
-        if albumId != trackInfo['album_id']:
+        if 'album_id' in trackInfo and albumId != trackInfo['album_id']:
             logging.error( 'Track %s - %s is 转采! owner albumId:%s true albumId:%s', trackId, trackTitle, albumId, trackInfo['album_id'] )
         trackM4aUrl = trackInfo['play_path']
         anchorName = anchorInfo['anchorName']
         trackIndex = trackInfo['index']
+
+        
 
         trackPath = self.getLocalPath( anchorInfo, albumInfo, trackInfo, 'track')
         trackCoverPath = self.getLocalPath( anchorInfo, albumInfo, trackInfo, 'trackCover')
@@ -436,6 +444,17 @@ class XMLYDownloader:
             logging.error( 'No enough space!' )
             time.sleep(1*60)
 
+        headers = self.getHeaders()
+        if xdownload.tryDownload( url, localPath, 10, headers ):
+            logging.info( 'downlaod file success! [%s] - [%s]', localPath, url)
+            return True
+        else:
+            logging.error( "download file fail! [%s] - [%s]", url, localPath)
+            if os.path.isfile( localPath ):
+                os.remove( localPath )
+            return False
+
+        # 下面的代码没用了.
         for i in range(100):                
             try:
                 urllib.request.urlretrieve( url, localPath)
