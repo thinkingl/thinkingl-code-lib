@@ -21,7 +21,7 @@ def download( url, file_path, customHeaders ):
             logging.error( 'get content length fail! url: '+ url + ' status code: ' + str(statusCode) )
             return False
         if total_size == 0:
-            logging.error( 'get content length is 0! url: ' + url )
+            logging.error( 'get content length is 0! url: %s file:%s'% (url, file_path) )
             return False
         if total_size > 0 and total_size <= temp_size:
             logging.info( 'download already finished! url:' + url + ' total:%d - cur file size:%d'%(total_size, temp_size) )
@@ -31,16 +31,17 @@ def download( url, file_path, customHeaders ):
     if customHeaders != None:
         headers.update( customHeaders )
 
-    logging.info( 'try download from ' + str( temp_size ) )
+    if temp_size > 0:
+        logging.info( 'try download from %d file:%s url:%s'%( temp_size, file_path, url ) )
     r = requests.get(url, stream=True, verify=False, headers=headers)
 
     if r.status_code < 200 or r.status_code >=300:
-        logging.error( "download http fail! url: %s r.status code: %d"%( url, r.status_code ) )
+        logging.error( "download http fail! url: %s r.status code: %d file:%s"%( url, r.status_code, file_path ) )
         r.close()
         return False
 
     total_size = int(r.headers['Content-Length'])
-    logging.info( "content length:" + str( total_size ) )
+    logging.info( "content length: %d file:%s"%( total_size, file_path ) )
 
     with open( file_path, 'ab' ) as f:
         for chunk in r.iter_content(chunk_size=1024):
@@ -59,7 +60,7 @@ def tryDownload(url, file_path, tryTimes, headers):
     for i in range( 0,tryTimes ):
         result = download( url, file_path, headers )
         if result:
-            logging.info( "Download success!" )
+            logging.info( "Download success! file:%s"%(file_path,) )
             return True
         time.sleep( 3 )
     if os.path.isfile( file_path ):
