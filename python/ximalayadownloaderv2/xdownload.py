@@ -23,7 +23,7 @@ def download( url, file_path, customHeaders ):
         if total_size == 0:
             logging.error( 'get content length is 0! url: ' + url )
             return False
-        if total_size > 0 and total_size >= temp_size:
+        if total_size > 0 and total_size <= temp_size:
             logging.info( 'download already finished! url:' + url + ' total:%d - cur file size:%d'%(total_size, temp_size) )
             return True
 
