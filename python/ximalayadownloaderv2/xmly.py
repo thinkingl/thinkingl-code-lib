@@ -585,6 +585,7 @@ class XMLYDownloader:
             #logging.info( "xm-sign:[%s] cur serverTime = [%s] localTimeBefor:[%s] localTime after:[%s] url:[%s] content 40:[%s]", headers['xm-sign'], serverTime, nowTimeBeforeCall, nowTime, url, content[0:40]  )
             return content
         except:
+            logging.error( 'get content fail! url: %s ', url )
             logging.exception("error")
             return ''
     
