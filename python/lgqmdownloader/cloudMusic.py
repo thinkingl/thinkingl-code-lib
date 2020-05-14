@@ -8,6 +8,7 @@ from selenium import webdriver
 import re
 import time
 import logging
+import sys
 
 
 songStorageDir = "X:/music/cachedownload"
@@ -43,7 +44,8 @@ fireFoxOptions = webdriver.FirefoxOptions()
 
 #fireFoxOptions.set_headless()
 
-browser = GetBrowser("127.0.0.1", 808, 2121, 1080)
+#browser = GetBrowser("127.0.0.1", 808, 2121, 1080)
+browser = GetBrowser("127.0.0.1", 8118, 2121, 1080)
 
 def NormalizeName( name ):
     name = name[0:MaxNameLen] # 截断超长的部分. 要先截断,否则可能会在截断后在结尾出现空格.
@@ -64,6 +66,7 @@ def GetSongInfo( songId, fileSize, format ):
             songInfoFile = open( songInfoFilePath, "rb")
             songInfo = json.load( songInfoFile )
             songInfoFile.close()
+            # 发现本地存的json文件可能是错的.
             if( songInfo.get("songId") and songInfo.get( 'album'  ) and songInfo.get('artist') and songInfo.get('title')):
                 return songInfo
         except:
@@ -80,8 +83,10 @@ def GetSongInfo( songId, fileSize, format ):
     except:
         print( "Browser get url fail!" + songUrl )
         browser.quit()
-        browser = GetBrowser()
+        browser = GetBrowser("127.0.0.1", 8118, 2121, 1080)
         return
+
+    time.sleep( 5 )
 
     try:
         browser.switch_to.frame('g_iframe')  # 从windows切换到frame，切换到真实信息所在的frame
@@ -101,6 +106,8 @@ def GetSongInfo( songId, fileSize, format ):
         except Exception as e:
             print( "Parse song info from html element /html/head/script[2] fail! songId:" + songId )
             logging.exception("message")
+
+    time.sleep( 5 )
     
     # try:
     #     infoArray = songInfo["description"].split('。')
@@ -138,6 +145,7 @@ def GetSongInfo( songId, fileSize, format ):
     with open( songInfoFilePath, "w", encoding='utf-8' ) as f:
         json.dump( songInfo, f )
     f.close()
+    logging.info( "song id: %s \nurl: %s \nsongInfo %s", songId, songUrl, songInfo )
     #print( songInfo )
     #browser.quit()
     return songInfo
@@ -203,6 +211,9 @@ def SaveAlbumCover( songInfo ):
     print( "Save album cover to:" + coverFilePath )
 
 def SaveLyric( songInfo ):
+    lrcFilePath = GetSongFilePathWithoutExt( songInfo ) + ".lrc"
+    if os.path.isfile( lrcFilePath ):
+        return
     lyricJsonFilePath = GetSongFilePathWithoutExt( songInfo ) + ".lyric.json"
     if( not os.path.exists( lyricJsonFilePath ) ):
         try:
@@ -227,7 +238,6 @@ def SaveLyric( songInfo ):
         return
     lyric = lyricJson[ "lrc"]["lyric"]
     lyric = lyric.replace( "\\n", "\n" )
-    lrcFilePath = GetSongFilePathWithoutExt( songInfo ) + ".lrc"
     with open( lrcFilePath, "w", encoding='utf-8' ) as lrcFile:
         lrcFile.write( lyric )
         lrcFile.close()
@@ -289,6 +299,7 @@ def HackCloudMusicCache():
                       storageSongPath = SaveSongFile( ucFilePath, songInfo )
                       SaveAlbumCover( songInfo )  # 保存封面
                       SaveLyric( songInfo )         # 保存歌词.
+                      time.sleep( 5 )
 
 
 def getdirsize(dir):
@@ -308,16 +319,43 @@ def human_readable(plain_size):
     if plain_size <= 1024 * 1024 * 1024 *1024:
         return str( round(plain_size / 1024 / 1024 / 1024, 2)) + 'G'
 
-#install_proxy( "127.0.0.1", 808, 2121, 1080 )
-while( True ):
-    print( "--------------------Start hack cloud music cache!------------------" )
-    dirSize = 0
-    try:
-        HackCloudMusicCache()
-        dirSize = getdirsize(songStorageDir)
-    except Exception as e:
-        print( "HackCloudMusicCache except!" )
-        logging.exception("message")
-    print( "End hack cloud music cache!------------------Cur dir size:%s"%human_readable(dirSize) )
+def initLogging():
+    sys.stdout.reconfigure(encoding='utf-8')
+    # 使用FileHandler输出到文件
+    formatter   = '%(asctime)s  %(filename)s:%(lineno)d:%(funcName)s : %(levelname)s  %(message)s'    # 定义输出log的格式
+    logFileName = time.strftime('cloudMusicLog-%Y%m%d-%H%M%S.log',time.localtime())
+    
+    fh = logging.FileHandler(logFileName)
+    fh.setLevel(logging.DEBUG)
+    #fh.setFormatter(formatter)
 
-    time.sleep( 60 * 5 )
+    # 使用StreamHandler输出到屏幕
+    ch = logging.StreamHandler()
+    ch.setLevel(logging.INFO)
+    #ch.setFormatter(formatter)
+    #logging.addHandler( fh )
+    #logging.addHandler( ch )
+
+    logging.basicConfig(level=logging.INFO,
+        format   = '%(asctime)s  %(filename)s:%(lineno)d:%(funcName)s : %(levelname)s  %(message)s',    # 定义输出log的格式
+        datefmt  = '%Y-%m-%d %A %H:%M:%S',                                     # 时间
+        #filename = logFileName,                # log文件名
+        #filemode = 'w',
+        handlers = [fh, ch]
+    )
+
+#install_proxy( "127.0.0.1", 808, 2121, 1080 )
+if __name__=="__main__":
+    initLogging()
+    while( True ):
+        print( "--------------------Start hack cloud music cache!------------------" )
+        dirSize = 0
+        try:
+            HackCloudMusicCache()
+            dirSize = getdirsize(songStorageDir)
+        except Exception as e:
+            print( "HackCloudMusicCache except!" )
+            logging.exception("message")
+        print( "End hack cloud music cache!------------------Cur dir size:%s"%human_readable(dirSize) )
+
+        time.sleep( 60 * 5 )
