@@ -480,12 +480,15 @@ class XMLYDownloader:
 
     # 获取本地路径.
     def getLocalPath(self, anchorInfo, albumInfo, trackInfo, fileType ):
+        anchorId = self.normalizeName( anchorInfo['anchorId'] )
         anchorName = self.normalizeName( anchorInfo['anchorName'] )
         albumTitle = self.normalizeName( albumInfo['albumTitle'] )
         trackTitle = self.normalizeName( trackInfo['title'])
         trackIndex = trackInfo['index']
 
         trackFileName = '%d-%s'%(trackIndex,trackTitle)
+
+        anchorName = anchorId + '-' + anchorName
 
         filePath = os.path.join(self.baseDir, anchorName, albumTitle )
         if fileType == 'albumCover':
@@ -512,6 +515,7 @@ class XMLYDownloader:
     
     # 去掉不能做文件路径的非法字符.
     def normalizeName(self, name ):
+        name = str(name)
         name = re.sub('[\\\/:*?"<>|]','-',name)#去掉非法字符
         name = name[0:64] # 截断超长的部分
         return name
