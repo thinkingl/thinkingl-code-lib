@@ -9,6 +9,7 @@ import avlibcfg
 import logging
 import traceback
 import json
+import base64
 
 class CAvlibDb:
     dbFilePath=os.path.join( avlibcfg.DbDir, avlibcfg.DbFileName )
@@ -47,6 +48,10 @@ class CAvlibDb:
         f=open(filePath,"rb")
         dbCursor.execute( 'Replace into PicData Select rowId, ? from Pic Where FileName = ?;', (f.read(),fileName) )
         f.close()
+
+    def PicBase642Db(self, fileName, picDataBase64, dbCursor ):
+        picData = base64.decodebytes( picDataBase64 )
+        dbCursor.execute( 'Replace into PicData Select rowId, ? from Pic Where FileName = ?;', (picData,fileName) )
 
     def PicAttr2Db( self, fileName, attrType, attrName, dbCursor ):
         dbCursor.execute( 'Insert or ignore into Attr values(?, ?, ? );', (attrType, attrName, 0))

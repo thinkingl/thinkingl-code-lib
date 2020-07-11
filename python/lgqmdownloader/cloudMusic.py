@@ -50,8 +50,8 @@ browser = GetBrowser("127.0.0.1", 8118, 2121, 1080)
 def NormalizeName( name ):
     name = name[0:MaxNameLen] # 截断超长的部分. 要先截断,否则可能会在截断后在结尾出现空格.
     name = re.sub('[\\\/:*?"<>|\t\v\r\n]','-',name)#去掉非法字符
-    name = re.sub('\s*$', '', name) # 去掉结尾的空白
-    name = re.sub('^\s*', '', name) #去掉开始的空白.
+    name = re.sub('[\.\s]*$', '', name) # 去掉结尾的空白和.
+    name = re.sub('^[\.\s]*', '', name) #去掉开始的空白和.
     name = name.replace( '\0', '' );    # 有的名称里面有0,必须去掉.
     return name
 

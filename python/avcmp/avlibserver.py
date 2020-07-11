@@ -80,6 +80,7 @@ app = Flask(__name__)
 def hello():
     return "Hello World!"
 
+# 获取图片数据。
 @app.route("/image/<fileName>", methods=['GET'])
 def getImg(fileName):
     avlib = CAvlibDb()
@@ -89,9 +90,9 @@ def getImg(fileName):
         return 'Image %s not exist!'%fileName
     rsp = Response(picData, mimetype='image/jpeg')
     #rsp.headers["Content-Disposition"] = "attachment; filename={};".format(fileName)
-    
     return rsp
 
+# 获取图片json信息。
 @app.route("/imageInfoJson/<fileName>", methods=['GET'])
 def getImgInfoJson(fileName):
     avlib = CAvlibDb()
@@ -99,6 +100,13 @@ def getImgInfoJson(fileName):
     imgInfo = avlib.GetPicInfoJson( fileName )
     return (imgInfo)
     #return "image info json" + fileName
+
+# 添加一个图片
+@app.route("/image/<fileName>", methods=['POST'])
+def addImg(fileName):
+    addImgReq = request.get_json()
+    
+    return ""
 
 
 
