@@ -79,7 +79,19 @@ def downloadCommit( commitTitle, sectionName, url  ):
     while( curPage<=maxPage ):
         # https://www.manhuabei.com/manhua/yiquanchaoren/483830.html?p=2  p=n为第n张图片网页的url
         pageUrl = url + '?p='+ str(curPage)
-        browser.get( pageUrl )
+
+        tryAgain = False
+        try:
+            browser.get( pageUrl )
+        except:
+            logging.exception("Get url")
+            logging.error( 'get url fail! %s', pageUrl )
+            time.sleep(5)
+            tryAgain = True
+        
+        if tryAgain:
+            browser.get( pageUrl )  # 再来一次,不抓异常。
+
         time.sleep(1)
         if maxPage == 1000:
             maxPageInfo = browser.find_element_by_css_selector( 'div#images p').text #'(1/26)'
@@ -107,6 +119,17 @@ def downloadCommit( commitTitle, sectionName, url  ):
 
     logging.info( 'finished download %s - %s - %s', commitTitle, sectionName, url)
 
+def tryDownloadComic(commicTitle, sectionName, url):
+    for i in range(0,5):            
+        try:
+            downloadCommit( commicTitle, sectionName, url )
+            break
+        except:
+            logging.exception( 'Download comic fail!' )
+            fileDir = os.path.join( commicDir, NormalizeName(commicTitle), NormalizeName(sectionName) )
+            os.rename( fileDir, fileDir+'-fail-' + str(random.randint(0,10000)))
+            logging.error( 'Download %s fail!', fileDir )
+            time.sleep(10)
 
 def parseCommicUrlList( browser, url ):
     logging.info( "url:" + url )
@@ -146,12 +169,9 @@ def parseCommicUrlList( browser, url ):
         if os.path.isdir(fileDir):
             logging.info( "commic %s - %s already exist!", commicTitle, sectionName )
             continue
-        try:
-            downloadCommit( commicTitle, sectionName, url )
-        except:
-            logging.exception( 'Download comic fail!' )
-            os.rename( fileDir, fileDir+'-fail-' + str(random.randint(0,10000)))
-            logging.error( 'Download %s fail!', fileDir )
+        
+        tryDownloadComic( commicTitle, sectionName, url )
+        
 
 onePieceUrl = 'https://www.manhuabei.com/manhua/haizeiwang/'
 if __name__=="__main__":
