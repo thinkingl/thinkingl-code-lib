@@ -71,16 +71,15 @@ def initLogging():
     )
 
 def downloadCommit( commitTitle, sectionName, url  ):
-    
+    logging.info( 'start download %s - %s - %s', commitTitle, sectionName, url)
     curPage = 1
     maxPage = 1000
 
     while( curPage<=maxPage ):
         # https://www.manhuabei.com/manhua/yiquanchaoren/483830.html?p=2  p=n为第n张图片网页的url
         pageUrl = url + '?p='+ str(curPage)
-        time.sleep(1)
         browser.get( pageUrl )
-        time.sleep(2)
+        time.sleep(1)
         if maxPage == 1000:
             maxPageInfo = browser.find_element_by_css_selector( 'div#images p').text #'(1/26)'
             maxPageInfo = maxPageInfo.split( '/' )[-1]
@@ -97,15 +96,16 @@ def downloadCommit( commitTitle, sectionName, url  ):
             os.makedirs( fileDir )
 
         filePath = os.path.join( commicDir, NormalizeName(commitTitle), NormalizeName(sectionName), fileName )
-        try:
-            urllib.request.urlretrieve(imgUrl, filePath)        
-        except:
-            logging.exception('error')
-            logging.error( "img get fail unknown except! url: %s path: %s", imgUrl, filePath  )
-            os.remove( filePath )
+        #try:
+        urllib.request.urlretrieve(imgUrl, filePath)        
+        #except:
+        #    logging.exception('error')
+        #    logging.error( "img get fail unknown except! url: %s path: %s", imgUrl, filePath  )
+        #    os.remove( filePath )
         curPage += 1
 
-    pass
+    logging.info( 'finished download %s - %s - %s', commitTitle, sectionName, url)
+
 
 def parseCommicUrlList( browser, url ):
     logging.info( "url:" + url )
@@ -145,9 +145,16 @@ def parseCommicUrlList( browser, url ):
         if os.path.isdir(fileDir):
             logging.info( "commic %s - %s already exist!", commicTitle, sectionName )
             continue
-        downloadCommit( commicTitle, sectionName, url )
+        try:
+            downloadCommit( commicTitle, sectionName, url )
+        except:
+            logging.exception( 'Download comic fail!' )
+            os.rename( fileDir, fileDir+'-error' )
+            logging.error( 'Download %s fail!', fileDir )
 
+onePieceUrl = 'https://www.manhuabei.com/manhua/haizeiwang/'
 if __name__=="__main__":
     initLogging()
     browser = GetBrowser("127.0.0.1", 8118, 2121, 1080)
     parseCommicUrlList( browser, yiquanchaorenUrl )
+    parseCommicUrlList( browser, onePieceUrl )
