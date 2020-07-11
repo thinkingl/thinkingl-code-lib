@@ -6,6 +6,7 @@ import os
 import re
 import urllib
 import requests
+import random
 
 
 MaxNameLen = 128
@@ -149,7 +150,7 @@ def parseCommicUrlList( browser, url ):
             downloadCommit( commicTitle, sectionName, url )
         except:
             logging.exception( 'Download comic fail!' )
-            os.rename( fileDir, fileDir+'-error' )
+            os.rename( fileDir, fileDir+'-fail-' + str(random.randint(0,10000)))
             logging.error( 'Download %s fail!', fileDir )
 
 onePieceUrl = 'https://www.manhuabei.com/manhua/haizeiwang/'
