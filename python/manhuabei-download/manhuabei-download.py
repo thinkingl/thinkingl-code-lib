@@ -71,65 +71,83 @@ def initLogging():
         handlers = [fh, ch]
     )
 
+def downloadPage( pageUrl, curDir ):
+    tryAgain = False
+    try:
+        browser.get( pageUrl )
+    except:
+        logging.exception("Get url")
+        logging.error( 'get url fail! %s', pageUrl )
+        time.sleep(5)
+        tryAgain = True
+    
+    if tryAgain:
+        browser.get( pageUrl )  # 再来一次,不抓异常。
+
+    time.sleep(1)
+    
+    img = browser.find_element_by_css_selector( 'div#images img')
+    imgUrl = img.get_attribute('src') # url
+    imgIndex = img.get_attribute('data-index') # index
+    fileName = imgIndex + '.jpg'
+
+    filePath = os.path.join( curDir, fileName )
+    #try:
+    urllib.request.urlretrieve(imgUrl, filePath)  
+    pass
+
 def downloadCommit( commitTitle, sectionName, url  ):
     logging.info( 'start download %s - %s - %s', commitTitle, sectionName, url)
+
+    fileDir = os.path.join( commicDir, NormalizeName(commitTitle), NormalizeName(sectionName) )
+    if not os.path.isdir( fileDir ):
+        os.makedirs( fileDir )
+
     curPage = 1
     maxPage = 1000
 
+    browser.get( url )
+    time.sleep(1)
+    maxPageInfo = browser.find_element_by_css_selector( 'div#images p').text #'(1/26)'
+    maxPageInfo = maxPageInfo.split( '/' )[-1]
+    maxPage = (int)(maxPageInfo.split(')')[0])
+    logging.info( 'max page: %d', maxPage )
+
+    curDir = os.path.join( commicDir, NormalizeName(commitTitle), NormalizeName(sectionName) )
+
+    success = True
     while( curPage<=maxPage ):
         # https://www.manhuabei.com/manhua/yiquanchaoren/483830.html?p=2  p=n为第n张图片网页的url
         pageUrl = url + '?p='+ str(curPage)
 
-        tryAgain = False
         try:
-            browser.get( pageUrl )
+            downloadPage( pageUrl, curDir )
         except:
-            logging.exception("Get url")
-            logging.error( 'get url fail! %s', pageUrl )
-            time.sleep(5)
-            tryAgain = True
-        
-        if tryAgain:
-            browser.get( pageUrl )  # 再来一次,不抓异常。
+            logging.error( "Download page fail! url: %s", pageUrl )
+            success = False
 
-        time.sleep(1)
-        if maxPage == 1000:
-            maxPageInfo = browser.find_element_by_css_selector( 'div#images p').text #'(1/26)'
-            maxPageInfo = maxPageInfo.split( '/' )[-1]
-            maxPage = (int)(maxPageInfo.split(')')[0])
-            logging.info( 'max page: %d', maxPage )
-
-        img = browser.find_element_by_css_selector( 'div#images img')
-        imgUrl = img.get_attribute('src') # url
-        imgIndex = img.get_attribute('data-index') # index
-        fileName = imgIndex + '.jpg'
-
-        fileDir = os.path.join( commicDir, NormalizeName(commitTitle), NormalizeName(sectionName) )
-        if not os.path.isdir( fileDir ):
-            os.makedirs( fileDir )
-
-        filePath = os.path.join( commicDir, NormalizeName(commitTitle), NormalizeName(sectionName), fileName )
-        #try:
-        urllib.request.urlretrieve(imgUrl, filePath)        
-        #except:
-        #    logging.exception('error')
-        #    logging.error( "img get fail unknown except! url: %s path: %s", imgUrl, filePath  )
-        #    os.remove( filePath )
         curPage += 1
 
     logging.info( 'finished download %s - %s - %s', commitTitle, sectionName, url)
+    return success
 
 def tryDownloadComic(commicTitle, sectionName, url):
-    for i in range(0,5):            
+    success = True
+    for i in range(0,2):            
         try:
-            downloadCommit( commicTitle, sectionName, url )
-            break
-        except:
+            success = downloadCommit( commicTitle, sectionName, url )            
+        except:           
+            success = False 
             logging.exception( 'Download comic fail!' )
+        if not success:
             fileDir = os.path.join( commicDir, NormalizeName(commicTitle), NormalizeName(sectionName) )
-            os.rename( fileDir, fileDir+'-fail-' + str(random.randint(0,10000)))
+            if os.path.isdir( fileDir ):
+                os.rename( fileDir, fileDir+'-fail-' + str(random.randint(0,10000)))
             logging.error( 'Download %s fail!', fileDir )
             time.sleep(10)
+        if success:
+            return success
+    return False
 
 def parseCommicUrlList( browser, url ):
     logging.info( "url:" + url )
@@ -170,7 +188,7 @@ def parseCommicUrlList( browser, url ):
             logging.info( "commic %s - %s already exist!", commicTitle, sectionName )
             continue
         
-        tryDownloadComic( commicTitle, sectionName, url )
+        downlaodOk = tryDownloadComic( commicTitle, sectionName, url )
         
 
 onePieceUrl = 'https://www.manhuabei.com/manhua/haizeiwang/'
