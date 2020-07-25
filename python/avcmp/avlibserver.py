@@ -35,6 +35,7 @@ topImageLock = threading.Lock()
 def ThreadImageScoreManager(compareOperationQueue):
     avlib = CAvlibDb()
     avlib.ConnectDb()
+    avlib.InitDbTable()
     needRescore = True
     while( True ):
         try:
@@ -102,13 +103,42 @@ def getImgInfoJson(fileName):
     #return "image info json" + fileName
 
 # 添加一个图片
-@app.route("/image/<fileName>", methods=['POST'])
+@app.route("/image/<fileName>", methods=['PUT'])
 def addImg(fileName):
     addImgReq = request.get_json()
-    
+    avdb = CAvlibDb()
+    avdb.ConnectDb()
+    avdb.InitDbTable()
+    cursor = avdb.beginTransaction();
+
+    # 添加图片属性。 
+    picJson = addImgReq['picJson']
+    avdb.json2Db( picJson, cursor )
+
+    # 添加图片数据
+    picData = addImgReq['picData']
+    avdb.picBase642Db( fileName, picData, cursor )
+
+    avdb.commitTransacton( cursor )
+
     return ""
 
-
+# 查询图片
+@app.route( "/image/search", methods=['POST','GET'])
+def searchImg():
+    searchParam = None
+    if( request.method == 'GET' ):
+        searchParam = request.args
+    if( request.method == 'POST'):        
+        searchParam = request.get_json()
+    ret = {}
+    avlib = CAvlibDb()
+    avlib.ConnectDb()
+    for key in searchParam:
+        picName = avlib.searchPic( key, searchParam[key])
+        ret['result'] = picName;
+        break # 不是模糊匹配，所以只支持一个属性。
+    return ret;
 
 @app.route("/imageInfoText/<fileName>", methods=['GET'])
 def getImgInfoTxt(fileName):

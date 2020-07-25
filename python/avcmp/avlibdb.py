@@ -49,8 +49,9 @@ class CAvlibDb:
         dbCursor.execute( 'Replace into PicData Select rowId, ? from Pic Where FileName = ?;', (f.read(),fileName) )
         f.close()
 
-    def PicBase642Db(self, fileName, picDataBase64, dbCursor ):
-        picData = base64.decodebytes( picDataBase64 )
+    def picBase642Db(self, fileName, picDataBase64, dbCursor ):
+        dbCursor.execute( 'Insert or ignore into Pic values( ? );', (fileName,) )   
+        picData = base64.decodebytes( picDataBase64.encode('utf-8') )
         dbCursor.execute( 'Replace into PicData Select rowId, ? from Pic Where FileName = ?;', (picData,fileName) )
 
     def PicAttr2Db( self, fileName, attrType, attrName, dbCursor ):
@@ -60,6 +61,8 @@ class CAvlibDb:
     def json2Db( self, obj, dbCursor ):
         #添加年.
         obj['year'] = obj['date'][0:4]
+        fileName = obj['imgFileName']
+        dbCursor.execute( 'Insert or ignore into Pic values( ? );', (fileName,) )   
 
         for key in obj:
             attrType = str(key)
@@ -69,7 +72,6 @@ class CAvlibDb:
             for attrName in attrNameArray:
                 dbCursor.execute( 'Insert or ignore into Attr values(?, ?, ? );', (attrType, attrName, 0))
                 dbCursor.execute( 'Insert or ignore into PicAttr select Pic.rowId, Attr.rowId from Pic join Attr where Pic.Filename = ? and Attr.Type = ? and Attr.Name = ?;', (fileName, attrType, attrName) )
-
 
     def jsonFile2Db( self, fileName, filePath, dbCursor ):
         jsonPath = filePath[0:-4] + '.json'
@@ -159,7 +161,23 @@ class CAvlibDb:
             'where Pic.rowId = PicAttr.picId and Attr.rowId=PicAttr.attrId  group by Pic.rowId order by sum(-Attr.score) limit ?,? ;', (begin,num)):
             picList.append(row[0])
         return picList
-        
+
+    # ????? ???????
+    def searchPic( self, attrType, attrName ):
+        # select fileName from Pic join PicAttr, Attr on Pic.rowId = PicAttr.PicId and PicAttr.AttrId = Attr.rowId  where Type = 'url' and Name = 'http://www.javlibrary.com/tw/?v=javli4324a';
+        for row in self.dbConnect.execute( 'select fileName from Pic join PicAttr, Attr on Pic.rowId = PicAttr.PicId and PicAttr.AttrId = Attr.rowId  '
+                'where Type = ? and Name = ?;', (attrType, attrName) ):
+                return row[0]
+        return None
+    
+    # ??????????
+    def beginTransaction(self):
+        cur = self.dbConnect.cursor()
+        cur.execute( 'Begin transaction;' )
+        return cur
+    def commitTransacton(self, cur):
+        cur.execute( 'Commit transaction;')
+        cur.close()
 
     def ThreadFile2Db(self):
         self.InitDbTable( )
@@ -198,3 +216,16 @@ class CAvlibDb:
             time.sleep(1*60)
             break
         cur.close()
+
+if __name__ == "__main__":
+    jsonFile = 'D:/999-temp/javlib/byDate/2013-08/2013-08-22 STAR-466.json';
+    obj = json.load( open( jsonFile, 'rb') )
+    db = CAvlibDb()
+    db.ConnectDb()
+    cur = db.beginTransaction()
+    db.json2Db( obj, cur )
+    db.commitTransacton(cur)
+    db.CloseDb()
+
+
+    
