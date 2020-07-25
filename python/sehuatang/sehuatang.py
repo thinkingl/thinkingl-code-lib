@@ -51,7 +51,7 @@ def isExcludeImg( url ):
 
         
 class SeHuaTang:
-    baseUrl = 'https://www.sehuatang.net'
+    baseUrl = 'https://www.sehuatang.org'
 
     localBaseDir = 'H:/data/sehuatang'
     if not os.path.isdir( localBaseDir ):
@@ -125,7 +125,7 @@ class SeHuaTang:
                 title = a.text
                 if title == '想得到邀请码进':
                     continue
-                if contentUrl == 'https://www.sehuatang.net/thread-164767-1-1.html':
+                if contentUrl == self.baseUrl + '/thread-164767-1-1.html':
                     continue
                 if not self.isThreadStored( contentUrl ):
                     logging.info( 'Title %s url %s', title, contentUrl )
