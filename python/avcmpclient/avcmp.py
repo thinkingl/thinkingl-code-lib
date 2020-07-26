@@ -21,8 +21,8 @@ import queue
 import labelAvPic  
 
 
-#BaseUrl = 'http://192.168.84.8:5000/'
-BaseUrl = 'http://127.0.0.1:5001/'
+BaseUrl = 'http://192.168.84.8:5001/'
+#BaseUrl = 'http://127.0.0.1:5001/'
 
 topPicNum = 4
 picOne = None

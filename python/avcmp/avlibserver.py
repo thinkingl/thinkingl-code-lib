@@ -136,9 +136,9 @@ def searchImg():
     avlib.ConnectDb()
     for key in searchParam:
         picName = avlib.searchPic( key, searchParam[key])
-        ret['result'] = picName;
+        ret['result'] = picName
         break # 不是模糊匹配，所以只支持一个属性。
-    return ret;
+    return ret
 
 @app.route("/imageInfoText/<fileName>", methods=['GET'])
 def getImgInfoTxt(fileName):
