@@ -15,9 +15,13 @@ def mkdirs(path):
         os.makedirs( path )
 
 # 去掉不能做文件路径的非法字符.
-def normalizeName( name ):
-    name = re.sub('[\\\/:*?"<>|]','-',name)#去掉非法字符
-    name = name[0:64] # 截断超长的部分
+def NormalizeName( name ):
+    MaxNameLen = 128
+    name = name[0:MaxNameLen] # 截断超长的部分. 要先截断,否则可能会在截断后在结尾出现空格.
+    name = re.sub('[\\\/:*?"<>|\t\v\r\n]','-',name)#去掉非法字符
+    name = re.sub('[\.\s]*$', '', name) # 去掉结尾的空白和.
+    name = re.sub('^[\.\s]*', '', name) #去掉开始的空白和.
+    name = name.replace( '\0', '' );    # 有的名称里面有0,必须去掉.
     return name
 
 def isExcludeImg( url ):
@@ -59,11 +63,11 @@ class SeHuaTang:
 
     # 华人自拍
     gqzwzmUrl = 'forum-98-<page>.html'
-    localDir = os.path.join( localBaseDir, '/huarenzipai/' )
+    localDir = os.path.join( localBaseDir, 'huarenzipai' )
 
     # 国产原创
     gqzwzmUrl = 'forum-2-<page>.html'
-    localDir = os.path.join( localBaseDir, '/guochanyuanchuang/' )
+    localDir = os.path.join( localBaseDir, 'guochanyuanchuang' )
     
     # 高清字幕
     gqzwzmUrl = 'forum-103-<page>.html'
