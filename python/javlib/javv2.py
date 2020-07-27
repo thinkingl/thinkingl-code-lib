@@ -466,7 +466,7 @@ while( len(waitingUrlSet ) > 0 ):
         errorUrlSet.add( waitingUrl )
         SaveUrls( errorUrlSet, errorUrlFilePath )
         time.sleep(30)
-    time.sleep(1)   # 防止网站封ip。
+    #time.sleep(1)   # 防止网站封ip。
 
 SaveUrls( waitingUrlSet, waitingUrlFilePath)
 SaveFinishedUrls( finishedUrlSet, javlibLocalDir )
