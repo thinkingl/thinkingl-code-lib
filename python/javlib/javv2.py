@@ -17,12 +17,14 @@ import proxy
 import logging
 from avdbClient import AvdbClient
 import re
+import sys
 
 javlibLocalDir = "d:/999-temp/javlib/"
 
 
 waitingUrlFile = "waitting.txt"
 finishedUrlFile = "finishedVideo.txt"
+finishedVideoListUrlFile = "finishedVideoList.txt"
 errorUrlFile = "error.txt"
 
 dirByDate = os.path.join( javlibLocalDir, 'byDate')
@@ -164,7 +166,7 @@ def ParseJavlibVideoHtml( videoUrl, videoInfo, urlSet ):
     videoCastNameArray = soup.select("#video_cast > table > tr > td")
     videoInfo["cast"] = ""
     if( len( videoCastNameArray ) > 1 ):
-        print ( "video cast:\t" + videoCastNameArray[1].text)
+        logging.debug ( "video cast:\t" + videoCastNameArray[1].text)
         videoInfo["cast"] += videoCastNameArray[1].text
         videoInfo["cast"] += "    "
     videoInfo["cast"] = videoInfo["cast"].strip()
@@ -188,7 +190,7 @@ def ParseJavlibVideoHtml( videoUrl, videoInfo, urlSet ):
 
     if( len( videoInfo["id"]) == 0 ):
          success = False
-    logging.info( json.dumps( videoInfo ) )
+    logging.debug( json.dumps( videoInfo ) )
     return success
 
 def ParseJavlibVideoListHtml( videoListUrl, newUrls ):
@@ -214,19 +216,24 @@ def ParseJavlibVideoListHtml( videoListUrl, newUrls ):
 
 
 def SaveUrls( urlSet, filePath ):
+    urlList = list(urlSet)
+    urlList.sort()
     f = open( filePath, "w", encoding="utf-8")
-    for url in urlSet:
+    for url in urlList:
         f.write( url + "\n" )
     f.close()
     bkFilePath = filePath + ".bk"
     shutil.copyfile( filePath, bkFilePath )
 
 def SaveFinishedUrls( urlSet, fileDir ):
+    urlList = list(urlSet)
+    urlList.sort()
+
     filePathVideo = fileDir + "finishedVideo.txt"
     fVideo = open( filePathVideo, "w", encoding="utf-8")
     filePathList = fileDir + "finishedVideoList.txt"
     fVideoList = open( filePathList, "w", encoding="utf-8")
-    for url in urlSet:
+    for url in urlList:
         if( url.startswith("http://www.javlibrary.com/tw/?v=") ):
             fVideo.write( url + "\n" )
         else:
@@ -369,7 +376,27 @@ def SaveVideoInfo( videoInfo ):
     if path2 != None:
         shutil.copyfile( filePath, path2 )
 
+# 从等待集合中获取一个等待的url
+# 新的算法加入排序，不再散乱的从waittingSet中获取。
+# 这样可以有规律的下载。
+# 可以防止因为分页问题错过一些。
+def getWaittingUrl( waittingSet ):
+    waitingList = list(waittingSet)
+    waitingList.sort(reverse=True)
+    url = waitingList.pop()
 
+    waitingList.sort()
+    # 如果需要一个列表，优先使用演员。
+    if url.find( 'http://www.javlibrary.com/tw/?v=' ) == -1:
+        for u in waitingList:
+            if u.find( 'http://www.javlibrary.com/tw/vl_star.php' ) != -1:
+                url = u
+                break
+
+    waittingSet.remove( url )
+    return url
+
+initLogging()
 
 waitingUrlSet = set()
 waitingUrlFilePath = javlibLocalDir+waitingUrlFile
@@ -379,6 +406,8 @@ ReadUrls(waitingUrlFilePath, waitingUrlSet)
 finishedUrlSet = set()
 finishedUrlFilePath = javlibLocalDir+finishedUrlFile
 ReadUrls(finishedUrlFilePath, finishedUrlSet)
+finishedUrlVideoListPath = javlibLocalDir+finishedVideoListUrlFile
+ReadUrls( finishedUrlVideoListPath, finishedUrlSet)
 
 errorUrlSet = set()
 errorUrlFilePath = javlibLocalDir + errorUrlFile
@@ -397,7 +426,7 @@ if( urlBeginning not in finishedUrlSet ):
     waitingUrlSet.add( urlBeginning )
 
 while( len(waitingUrlSet ) > 0 ):
-    waitingUrl = waitingUrlSet.pop()
+    waitingUrl = getWaittingUrl( waitingUrlSet ) # waitingUrlSet.pop()
     urlSet = set()
     success = True
     if( "/?v=" in waitingUrl ):
@@ -412,7 +441,7 @@ while( len(waitingUrlSet ) > 0 ):
         urlSet -= finishedUrlSet
         waitingUrlSet |= urlSet
         # save urls.
-        if( len(finishedUrlSet) % 100 == 0 ):
+        if( len(finishedUrlSet) % 10 == 0 ):
             SaveUrls( waitingUrlSet, waitingUrlFilePath)
             SaveFinishedUrls( finishedUrlSet, javlibLocalDir )
     else:
