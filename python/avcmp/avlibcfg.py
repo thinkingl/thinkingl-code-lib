@@ -8,7 +8,7 @@ if( not os.path.isdir( compareLogDir ) ):
     compareLogDir = 'D:/999-temp/javlib'
 compareLogPath = compareLogDir + 'avlibcomp.log'
 # 数据库文件的存放目录.
-DbDir = '/share/disk-320/'
+DbDir = '/share/disk-ssd/avlib/'
 if( not os.path.isdir( DbDir ) ):
     DbDir = 'H:/data/javlib'
 if( not os.path.isdir( DbDir ) ):

@@ -25,11 +25,19 @@ class AvdbClient:
 
         searchPicReq = {}
         searchPicReq['url'] = avUrl
-        rsp = requests.get( url, params=searchPicReq )
+        for i in range(0,10):
+            try:
+                rsp = requests.get( url, params=searchPicReq )
         
-        fileName = rsp.json()['result']
+                fileName = rsp.json()['result']
 
-        return fileName != None
+                return fileName != None
+            except:
+                print( "isAVUrlExist exception!" )
+                pass
+        
+        return False
+        
 
 if __name__ == "__main__":
     c = AvdbClient()

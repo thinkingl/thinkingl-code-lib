@@ -316,7 +316,7 @@ def getPathByDate( videoInfo, fileName ):
 # 只有单人作品， 并且不是匿名演员，才保存。
 def getPathByActress( videoInfo, fileName ):
     attressName = videoInfo['cast']
-    castArry = attressName.split( '    ' )
+    castArry = attressName.split( ' ' )
     anonymousCastSet = set()
     anonymousCastSet.add( 'anonymous' )
     if len( castArry ) == 1 and not attressName in anonymousCastSet :
