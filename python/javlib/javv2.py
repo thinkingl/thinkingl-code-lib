@@ -77,6 +77,8 @@ def NormalizeName( name ):
 
 def ParseJavlibVideoHtml( videoUrl, videoInfo, urlSet ):
     logging.info( "Parse video html:" + videoUrl)
+
+    
     
     soup = proxy.bsObjForm( videoUrl )
     if soup == None:
@@ -396,6 +398,25 @@ def getWaittingUrl( waittingSet ):
     waittingSet.remove( url )
     return url
 
+# 数据库是否存在
+def isExistInDb( avUrl ):
+    # 数据库是否存在
+    avdbClient = AvdbClient()
+    if avdbClient.isAVUrlExist( avUrl ):
+        logging.info( 'av %s already exist!', avUrl )
+        return True
+    return False
+
+def parseSaveAv( waitingUrl, urlSet):
+    if isExistInDb( waitingUrl ):
+        return True  # 已经存在的url直接完成。
+    else:
+        videoInfo= {}
+        success = ParseJavlibVideoHtml( waitingUrl, videoInfo, urlSet )
+        if( success ):
+            success = saveAV( videoInfo )
+        return success
+
 initLogging()
 
 waitingUrlSet = set()
@@ -430,10 +451,7 @@ while( len(waitingUrlSet ) > 0 ):
     urlSet = set()
     success = True
     if( "/?v=" in waitingUrl ):
-        videoInfo= {}
-        success = ParseJavlibVideoHtml( waitingUrl, videoInfo, urlSet )
-        if( success ):
-            success = saveAV( videoInfo )
+        success = parseSaveAv(waitingUrl, urlSet )
     else:
         success = ParseJavlibVideoListHtml( waitingUrl, urlSet )
     if( success ):
