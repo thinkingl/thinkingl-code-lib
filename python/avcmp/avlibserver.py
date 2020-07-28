@@ -32,6 +32,8 @@ topImageFileIndexWant = {"begin":0, "num":100}
 # 线程互斥锁.
 topImageLock = threading.Lock()
 
+
+
 def ThreadImageScoreManager(compareOperationQueue):
     avlib = CAvlibDb()
     avlib.ConnectDb()
@@ -106,6 +108,7 @@ def getImgInfoJson(fileName):
 @app.route("/image/<fileName>", methods=['PUT'])
 def addImg(fileName):
     addImgReq = request.get_json()
+
     avdb = CAvlibDb()
     avdb.ConnectDb()
     avdb.InitDbTable()
@@ -190,8 +193,27 @@ def topImg():
                 ret['error'] = 'Top image cache have not prepared! Please try again latter!'
     else:
         ret['error'] = 'Invalid operation!'
-        
     return ( ret )
+
+@app.route("/db/backup/<filename>", methods=['POST'])
+def backupDB( filename ):
+    avlib = CAvlibDb()
+    logging.info( 'backup db to %s', filename )
+    try:
+        avlib.backup( filename )
+        return { 'error':'ok'}
+    except Exception as e:
+        logging.error( 'backup database fail!' )
+        logging.exception( "backupDB")
+        return { 'error' : str(e) }
+        
+@app.route("/db/integritycheck", methods=['GET'])
+def dbIntegrityCheck():
+    avlib = CAvlibDb()
+    avlib.ConnectDb()
+    result = avlib.integrityCheck()
+    return { 'result' : result }
+
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0',port=5001)

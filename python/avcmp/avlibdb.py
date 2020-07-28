@@ -10,10 +10,15 @@ import logging
 import traceback
 import json
 import base64
+import shutil
+import threading
 
 class CAvlibDb:
     dbFilePath=os.path.join( avlibcfg.DbDir, avlibcfg.DbFileName )
     dbConnect=None
+    
+    # ???????????
+    dbWriteBackupLock = threading.Lock()
 
     def ConnectDb(self):
         self.dbConnect = sqlite3.connect(self.dbFilePath)
@@ -26,66 +31,72 @@ class CAvlibDb:
     def InitDbTable( self ):
         if self.dbConnect == None:
             self.ConnectDb()
-        cur=self.dbConnect.cursor()
-        sqlCreatePic='Create Table  IF NOT EXISTS Pic (FileName TEXT PRIMARY KEY NOT NULL);'
-        cur.execute(sqlCreatePic)
+        with self.dbWriteBackupLock:
+            cur=self.dbConnect.cursor()
+            sqlCreatePic='Create Table  IF NOT EXISTS Pic (FileName TEXT PRIMARY KEY NOT NULL);'
+            cur.execute(sqlCreatePic)
 
-        sqlCreateAttr='Create Table  IF NOT EXISTS Attr(Type TEXT NOT NULL, Name TEXT NOT NULL, Score BIGINT NOT NULL, PRIMARY KEY(Type,Name));'
-        cur.execute(sqlCreateAttr)
+            sqlCreateAttr='Create Table  IF NOT EXISTS Attr(Type TEXT NOT NULL, Name TEXT NOT NULL, Score BIGINT NOT NULL, PRIMARY KEY(Type,Name));'
+            cur.execute(sqlCreateAttr)
 
-        sqlCreatePicAttr='Create Table IF NOT EXISTS PicAttr(PicId BIGINT NOT NULL, AttrId BIGINT NOT NULL, PRIMARY KEY(PicId,AttrId));'
-        cur.execute(sqlCreatePicAttr)
-        cur.execute( 'Create Index IF NOT EXISTS indexAttr ON PicAttr(AttrId);')
+            sqlCreatePicAttr='Create Table IF NOT EXISTS PicAttr(PicId BIGINT NOT NULL, AttrId BIGINT NOT NULL, PRIMARY KEY(PicId,AttrId));'
+            cur.execute(sqlCreatePicAttr)
+            cur.execute( 'Create Index IF NOT EXISTS indexAttr ON PicAttr(AttrId);')
 
 
-        sqlCreatePicData='Create Table IF NOT EXISTS PicData(PicId BIGINT PRIMARY KEY NOT NULL, Data BLOB NOT NULL);'
-        cur.execute(sqlCreatePicData)
+            sqlCreatePicData='Create Table IF NOT EXISTS PicData(PicId BIGINT PRIMARY KEY NOT NULL, Data BLOB NOT NULL);'
+            cur.execute(sqlCreatePicData)
 
-        cur.close()
+            cur.close()
 
     def Pic2Db( self, fileName, filePath, dbCursor ):
-        dbCursor.execute( 'Insert or ignore into Pic values( ? );', (fileName,) )   
-        f=open(filePath,"rb")
-        dbCursor.execute( 'Replace into PicData Select rowId, ? from Pic Where FileName = ?;', (f.read(),fileName) )
-        f.close()
+        with self.dbWriteBackupLock:
+            dbCursor.execute( 'Insert or ignore into Pic values( ? );', (fileName,) )   
+            f=open(filePath,"rb")
+            dbCursor.execute( 'Replace into PicData Select rowId, ? from Pic Where FileName = ?;', (f.read(),fileName) )
+            f.close()
 
     def picBase642Db(self, fileName, picDataBase64, dbCursor ):
-        dbCursor.execute( 'Insert or ignore into Pic values( ? );', (fileName,) )   
-        picData = base64.decodebytes( picDataBase64.encode('utf-8') )
-        dbCursor.execute( 'Replace into PicData Select rowId, ? from Pic Where FileName = ?;', (picData,fileName) )
+        with self.dbWriteBackupLock:
+            dbCursor.execute( 'Insert or ignore into Pic values( ? );', (fileName,) )   
+            picData = base64.decodebytes( picDataBase64.encode('utf-8') )
+            dbCursor.execute( 'Replace into PicData Select rowId, ? from Pic Where FileName = ?;', (picData,fileName) )
 
     def PicAttr2Db( self, fileName, attrType, attrName, dbCursor ):
-        dbCursor.execute( 'Insert or ignore into Attr values(?, ?, ? );', (attrType, attrName, 0))
-        dbCursor.execute( 'Insert or ignore into PicAttr select Pic.rowId, Attr.rowId from Pic join Attr where Pic.Filename = ? and Attr.Type = ? and Attr.Name = ?;', (fileName, attrType, attrName) )
+        with self.dbWriteBackupLock:
+            dbCursor.execute( 'Insert or ignore into Attr values(?, ?, ? );', (attrType, attrName, 0))
+            dbCursor.execute( 'Insert or ignore into PicAttr select Pic.rowId, Attr.rowId from Pic join Attr where Pic.Filename = ? and Attr.Type = ? and Attr.Name = ?;', (fileName, attrType, attrName) )
 
     def json2Db( self, obj, dbCursor ):
         #添加年.
-        obj['year'] = obj['date'][0:4]
-        fileName = obj['imgFileName']
-        dbCursor.execute( 'Insert or ignore into Pic values( ? );', (fileName,) )   
+        with self.dbWriteBackupLock:
+            obj['year'] = obj['date'][0:4]
+            fileName = obj['imgFileName']
+            dbCursor.execute( 'Insert or ignore into Pic values( ? );', (fileName,) )   
 
-        for key in obj:
-            attrType = str(key)
-            attrNameArray = obj[key].split()
-            if len(attrNameArray) > 1:
-                attrNameArray.append( obj[key] )
-            for attrName in attrNameArray:
-                dbCursor.execute( 'Insert or ignore into Attr values(?, ?, ? );', (attrType, attrName, 0))
-                dbCursor.execute( 'Insert or ignore into PicAttr select Pic.rowId, Attr.rowId from Pic join Attr where Pic.Filename = ? and Attr.Type = ? and Attr.Name = ?;', (fileName, attrType, attrName) )
+            for key in obj:
+                attrType = str(key)
+                attrNameArray = obj[key].split()
+                if len(attrNameArray) > 1:
+                    attrNameArray.append( obj[key] )
+                for attrName in attrNameArray:
+                    dbCursor.execute( 'Insert or ignore into Attr values(?, ?, ? );', (attrType, attrName, 0))
+                    dbCursor.execute( 'Insert or ignore into PicAttr select Pic.rowId, Attr.rowId from Pic join Attr where Pic.Filename = ? and Attr.Type = ? and Attr.Name = ?;', (fileName, attrType, attrName) )
 
     def jsonFile2Db( self, fileName, filePath, dbCursor ):
-        jsonPath = filePath[0:-4] + '.json'
-        if not os.path.isfile( jsonPath ):
-            print( 'Json %s is not exist!'%jsonPath)
-            return
-        f=open(jsonPath,'rb')
-        try:
-            obj = json.load(f)
-        except:
-            print( 'Load json %s fail!'%jsonPath)
-            return
-        f.close()
-        self.json2Db( obj, dbCursor )
+        with self.dbWriteBackupLock:
+            jsonPath = filePath[0:-4] + '.json'
+            if not os.path.isfile( jsonPath ):
+                print( 'Json %s is not exist!'%jsonPath)
+                return
+            f=open(jsonPath,'rb')
+            try:
+                obj = json.load(f)
+            except:
+                print( 'Load json %s fail!'%jsonPath)
+                return
+            f.close()
+            self.json2Db( obj, dbCursor )
         
     def QueryPic2PicDic(self):
         allPic = {}
@@ -134,25 +145,27 @@ class CAvlibDb:
         return picNameList
     
     def UpdatePicAttrScore(self, fileName, scoreOffset, commit2Db):
-        self.dbConnect.execute( 'update Attr set score = score+ ? where rowId in '
-            '(select Attr.rowId from Attr join PicAttr,Pic where PicAttr.attrId = Attr.rowId and PicAttr.picId = Pic.rowId and Pic.FileName= ? );'
-            , (scoreOffset, fileName ) )
-        if(commit2Db):
-            self.dbConnect.commit()
+        with self.dbWriteBackupLock:
+            self.dbConnect.execute( 'update Attr set score = score+ ? where rowId in '
+                '(select Attr.rowId from Attr join PicAttr,Pic where PicAttr.attrId = Attr.rowId and PicAttr.picId = Pic.rowId and Pic.FileName= ? );'
+                , (scoreOffset, fileName ) )
+            if(commit2Db):
+                self.dbConnect.commit()
     
     def PicCompare(self, betterFileName, worseFileName):
-        ret = {}
-        ret['error'] = 'ok'
-        try:
-            self.UpdatePicAttrScore(betterFileName, 1, False)
-            self.UpdatePicAttrScore(worseFileName,-1, False)
-            self.dbConnect.commit()
-        except:
-            self.dbConnect.rollback()
-            logging.exception("message")
-            ret['error'] = 'Fail'
-            ret['message'] = traceback.format_exc()
-        return ret
+        with self.dbWriteBackupLock:
+            ret = {}
+            ret['error'] = 'ok'
+            try:
+                self.UpdatePicAttrScore(betterFileName, 1, False)
+                self.UpdatePicAttrScore(worseFileName,-1, False)
+                self.dbConnect.commit()
+            except:
+                self.dbConnect.rollback()
+                logging.exception("message")
+                ret['error'] = 'Fail'
+                ret['message'] = traceback.format_exc()
+            return ret
 
 
     def TopPics(self, begin, num):
@@ -176,8 +189,25 @@ class CAvlibDb:
         cur.execute( 'Begin transaction;' )
         return cur
     def commitTransacton(self, cur):
-        cur.execute( 'Commit transaction;')
-        cur.close()
+        with self.dbWriteBackupLock:
+            cur.execute( 'Commit transaction;')
+            cur.close()
+    
+    # ?????
+    def backup( self, fileName ):
+        with self.dbWriteBackupLock:
+            backupPath = os.path.join( avlibcfg.DbDir, fileName )
+            if os.path.isfile( backupPath ):
+                os.remove( backupPath )
+            shutil.copyfile( self.dbFilePath, backupPath )
+            
+    # ?????????
+    def integrityCheck(self):
+        with self.dbWriteBackupLock:
+            msg = ''
+            for row in self.dbConnect.execute( 'pragma integrity_check;' ):
+                msg += row[0]
+            return msg
 
     def ThreadFile2Db(self):
         self.InitDbTable( )
@@ -218,13 +248,15 @@ class CAvlibDb:
         cur.close()
 
 if __name__ == "__main__":
-    jsonFile = 'D:/999-temp/javlib/byDate/2013-08/2013-08-22 STAR-466.json';
+    jsonFile = 'D:/999-temp/javlib/byDate/2011-06/2011-06-04 GAR-233.json';
     obj = json.load( open( jsonFile, 'rb') )
     db = CAvlibDb()
     db.ConnectDb()
+    db.InitDbTable()
     cur = db.beginTransaction()
     db.json2Db( obj, cur )
     db.commitTransacton(cur)
+    db.backup( "backuptest.db" )
     db.CloseDb()
 
 

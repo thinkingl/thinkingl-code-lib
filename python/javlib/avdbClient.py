@@ -1,5 +1,7 @@
 import requests
 import base64
+import logging
+import time
 # avdb 客户端
 
 class AvdbClient:
@@ -37,8 +39,47 @@ class AvdbClient:
                 pass
         
         return False
-        
+    
+    # 备份数据库
+    def dbBackup(self, backupToken ):
+        for i in range( 0, 10 ):
+            try:
+                # 检测数据库是否损坏。
+                url = self.serverBaseUrl + 'db/integritycheck'
+
+                rsp = requests.get( url )
+                logging.info( 'database integrity check ret: %s', str(rsp.json()) )
+                result = rsp.json()['result']
+                if result != 'ok':
+                    logging.error( "database is corrupted!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" )
+                    logging.error( "database is corrupted!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" )
+                    logging.error( "database is corrupted!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" )
+                    logging.error( "database is corrupted!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" )
+                    logging.error( "database is corrupted!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" )
+                    time.sleep(100000000)
+                
+                backupUrl = self.serverBaseUrl + 'db/backup/<filename>'
+                fileName = 'avlib-' + backupToken + '.db'
+                backupUrl = backupUrl.replace( '<filename>', fileName )
+                rsp = requests.post( backupUrl )
+                logging.info( 'database backup ret: %s', str(rsp.json()))
+                result = rsp.json()['error']
+                if result == 'ok':
+                    return True
+
+            except Exception as e:
+                logging.error( 'Database back up fail! e: %s', e )
+                logging.exception( 'db backup' )    
+                time.sleep(10)
+            logging.error( 'database backup fail!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
+            logging.error( 'database backup fail!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
+            logging.error( 'database backup fail!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
+            logging.error( 'database backup fail!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
+            logging.error( 'database backup fail!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
+            time.sleep( 10000000000000)
+            return False
 
 if __name__ == "__main__":
     c = AvdbClient()
     c.isAVUrlExist( "http://www.javlibrary.com/tw/?v=javlijb6si" )
+    c.dbBackup( 'testbackup' )

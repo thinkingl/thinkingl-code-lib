@@ -196,7 +196,7 @@ def ParseJavlibVideoHtml( videoUrl, videoInfo, urlSet ):
     return success
 
 def ParseJavlibVideoListHtml( videoListUrl, newUrls ):
-    logging.info( "parse video list url:\t" + videoListUrl )
+    logging.info( "parse video list url: %s " , videoListUrl )
     
 
     soup = proxy.bsObjForm( videoListUrl )
@@ -231,9 +231,9 @@ def SaveFinishedUrls( urlSet, fileDir ):
     urlList = list(urlSet)
     urlList.sort()
 
-    filePathVideo = fileDir + "finishedVideo.txt"
+    filePathVideo = os.path.join(fileDir , "finishedVideo.txt")
     fVideo = open( filePathVideo, "w", encoding="utf-8")
-    filePathList = fileDir + "finishedVideoList.txt"
+    filePathList = os.path.join(fileDir , "finishedVideoList.txt")
     fVideoList = open( filePathList, "w", encoding="utf-8")
     for url in urlList:
         if( url.startswith("http://www.javlibrary.com/tw/?v=") ):
@@ -291,8 +291,16 @@ def saveAV( videoInfo ):
 
     # 保存到数据库
     picData = open(picPath, 'rb').read()
-    avdbClient.addPic( videoInfo, picData )
-    return True
+    for i in range(0,10):
+        try:
+            avdbClient.addPic( videoInfo, picData )
+            return True
+        except:
+            logging.error( "addPic exception!")
+            logging.exception( "addPic" )
+            time.sleep(1)
+            pass
+    return False
 
 def saveAVImage( videoInfo ):
     url = videoInfo['imgUrl']
@@ -417,6 +425,32 @@ def parseSaveAv( waitingUrl, urlSet):
             success = saveAV( videoInfo )
         return success
 
+# 备份所有数据
+# 数据库只保留2份备份。
+# 本地每天保存2份备份。
+def backupAllData(backupIndex, waittingSet, finishedSet, errorUrlSet):
+    dbBackToken = 'bk-' + str(backupIndex)
+    avdbClient = AvdbClient()
+    if not avdbClient.dbBackup( dbBackToken ):
+        logging.error( 'db backup fail!!!!' )
+        return
+    
+    cur_time = time.time()
+    strtoday = time.strftime('%Y%m%d',time.localtime(cur_time))
+    backDir = os.path.join( javlibLocalDir, 'bk', strtoday, str(backupIndex) )
+    if os.path.isdir( backDir ):
+        shutil.rmtree( backDir )
+    os.makedirs( backDir )
+
+    backWaittingPath = os.path.join( backDir, waitingUrlFile )
+    SaveUrls( waitingUrl, backWaittingPath )
+
+    SaveFinishedUrls( finishedSet, backDir )
+
+    backupErrorPath = os.path.join( backDir, errorUrlFile )
+    SaveUrls( errorUrlSet, backupErrorPath )
+
+
 initLogging()
 
 waitingUrlSet = set()
@@ -462,6 +496,12 @@ while( len(waitingUrlSet ) > 0 ):
         if( len(finishedUrlSet) % 10 == 0 ):
             SaveUrls( waitingUrlSet, waitingUrlFilePath)
             SaveFinishedUrls( finishedUrlSet, javlibLocalDir )
+            logging.info( 'finished: %d waitting: %d err: %d', len(finishedUrlSet), len( waitingUrlSet ), len(errorUrlSet) )
+        
+        # 备份。
+        if( len(finishedUrlSet ) % 10000 == 0 ):
+            backupIndex = (len(finishedUrlSet) / 10000) % 2
+            backupAllData( backupIndex, waitingUrlSet, finishedUrlSet, errorUrlSet )
     else:
         errorUrlSet.add( waitingUrl )
         SaveUrls( errorUrlSet, errorUrlFilePath )
