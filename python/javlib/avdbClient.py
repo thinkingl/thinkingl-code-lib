@@ -78,7 +78,7 @@ class AvdbClient:
             logging.error( 'database backup fail!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
             logging.error( 'database backup fail!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
             logging.error( 'database backup fail!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
-            time.sleep( 10000000000000)
+            time.sleep( 100000000)
             return False
 
 if __name__ == "__main__":
