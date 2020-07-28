@@ -19,6 +19,7 @@ import threading
 from queue import Queue,Empty
 import queue
 import labelAvPic  
+import random
 
 
 BaseUrl = 'http://192.168.84.8:5001/'
@@ -194,7 +195,15 @@ class AVCmpClient():
     def ThreadRandom(self, randomPicQueue ):
         while True:
             try:
-                urlRandom = BaseUrl + 'random'
+                # 为了解决看图疲劳，优化算法：
+                # 一张图为随机产生
+                # 另一张图取几张图中分数最高的
+                # 获取随机图片的数目也随机产生， 
+                # 如果是2就和当前一样
+                # 随机值越大，越好看。
+                picNum = random.randint(2,5)
+
+                urlRandom = BaseUrl + 'random?num=' + str(picNum)
                 rsp = requests.get(urlRandom)
                 randomPics = rsp.json()['imageList']
                 #randomPics = json.loads( request.urlopen( urlRandom ).read() )
@@ -203,6 +212,19 @@ class AVCmpClient():
                     continue
                 fileName1 = randomPics[0]
                 fileName2 = randomPics[1]
+
+                # 文件1固定用第一个
+                # 文件2在列表后面最高分。
+                randomPics = randomPics[1:]
+                maxScore = 0
+                for picName in randomPics:
+                    url = BaseUrl + 'imageInfoJson/%s'%(picName )
+                    rsp = requests.get(url)
+                    picInfo = rsp.json()    
+                    score = int(picInfo['score'])
+                    if score > maxScore:
+                        fileName2 = picName
+
 
                 item = [{'name':fileName1, 'data':self.GetPicData(fileName1)},{'name':randomPics[1], 'data':self.GetPicData(fileName2)}]
                 randomPicQueue.put( item )
