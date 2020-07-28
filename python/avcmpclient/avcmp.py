@@ -30,6 +30,38 @@ picOne = None
 picTwo = None
 topPicLabels = None
 
+
+
+def initLogging():
+    sys.stdout.reconfigure(encoding='utf-8')
+    # 使用FileHandler输出到文件
+    formatter   = '%(asctime)s  %(filename)s:%(lineno)d:%(funcName)s : %(levelname)s  %(message)s'    # 定义输出log的格式
+
+    if not os.path.isdir( 'logs' ):
+        os.makedirs( 'logs' )
+
+    logFileName = time.strftime('logs/avcmpclient-%Y%m%d-%H%M%S.log',time.localtime())
+    
+    fh = logging.FileHandler(logFileName)
+    fh.setLevel(logging.DEBUG)
+    #fh.setFormatter(formatter)
+
+    # 使用StreamHandler输出到屏幕
+    ch = logging.StreamHandler()
+    ch.setLevel(logging.INFO)
+    #ch.setFormatter(formatter)
+    #logging.addHandler( fh )
+    #logging.addHandler( ch )
+
+    logging.basicConfig(level=logging.INFO,
+        format   = '%(asctime)s  %(filename)s:%(lineno)d:%(funcName)s : %(levelname)s  %(message)s',    # 定义输出log的格式
+        datefmt  = '%Y-%m-%d %A %H:%M:%S',                                     # 时间
+        #filename = logFileName,                # log文件名
+        #filemode = 'w',
+        handlers = [fh, ch]
+    )
+initLogging()
+
 class AVCmpClient():
     randomPics = None
 
@@ -143,7 +175,7 @@ class AVCmpClient():
     def ThreadTopPicWork(self, topCmdQueue, topPicQueue, begin, num, topPicList, topPicCache):
         try:
             try:
-                cmd = topCmdQueue.get( timeout = 5 )
+                cmd = topCmdQueue.get( timeout = 50 )
                 begin = cmd['begin']
                 num = cmd['num']
                 #continue    # 一直取空为止, 只关心最后的命令.
@@ -201,7 +233,7 @@ class AVCmpClient():
                 # 获取随机图片的数目也随机产生， 
                 # 如果是2就和当前一样
                 # 随机值越大，越好看。
-                picNum = random.randint(2,5)
+                picNum = random.randint(2,10)
 
                 urlRandom = BaseUrl + 'random?num=' + str(picNum)
                 rsp = requests.get(urlRandom)
@@ -224,9 +256,11 @@ class AVCmpClient():
                     score = int(picInfo['score'])
                     if score > maxScore:
                         fileName2 = picName
+                        maxScore = score
+                        logging.info( 'Pic %s score %d is higher!', picName, score )
 
 
-                item = [{'name':fileName1, 'data':self.GetPicData(fileName1)},{'name':randomPics[1], 'data':self.GetPicData(fileName2)}]
+                item = [{'name':fileName1, 'data':self.GetPicData(fileName1)},{'name':fileName2, 'data':self.GetPicData(fileName2)}]
                 randomPicQueue.put( item )
             except:
                 print( 'Thread Random work fail!' )

@@ -10,6 +10,8 @@ import threading
 import avlibcfg
 import logging
 import time
+import sys
+import os
 
 # 存放待处理的用户图片比较操作的队列
 # Web收到用户的请求后插入队列
@@ -30,49 +32,87 @@ topImageFileCache = { "begin":0, "fileNameList":[] }
 topImageFileIndexWant = {"begin":0, "num":100}
 
 # 线程互斥锁.
-topImageLock = threading.Lock()
+topImageLock = threading.RLock()
 
 
+def initLogging():
+    #sys.stdout.reconfigure(encoding='utf-8')
+    # 使用FileHandler输出到文件
+    formatter   = '%(asctime)s  %(filename)s:%(lineno)d:%(funcName)s : %(levelname)s  %(message)s'    # 定义输出log的格式
+
+    if not os.path.isdir( 'logs' ):
+        os.makedirs( 'logs' )
+
+    logFileName = time.strftime('logs/avlibserver-%Y%m%d-%H%M%S.log',time.localtime())
+    
+    fh = logging.FileHandler(logFileName)
+    fh.setLevel(logging.DEBUG)
+    #fh.setFormatter(formatter)
+
+    # 使用StreamHandler输出到屏幕
+    ch = logging.StreamHandler()
+    ch.setLevel(logging.INFO)
+    #ch.setFormatter(formatter)
+    #logging.addHandler( fh )
+    #logging.addHandler( ch )
+
+    logging.basicConfig(level=logging.INFO,
+        format   = '%(asctime)s  %(filename)s:%(lineno)d:%(funcName)s : %(levelname)s  %(message)s',    # 定义输出log的格式
+        datefmt  = '%Y-%m-%d %A %H:%M:%S',                                     # 时间
+        #filename = logFileName,                # log文件名
+        #filemode = 'w',
+        handlers = [fh, ch]
+    )
+initLogging()
+
+
+def doThreadImageScoreManager(compareOperationQueue, needRescore):
+    avlib = CAvlibDb()
+    avlib.ConnectDb()
+    avlib.InitDbTable()
+    try:
+        op = compareOperationQueue.get( block=False )
+        better = op['better']
+        worse = op['worse']
+
+        ret = avlib.PicCompare( better, worse )
+        if( ret['error'] == 'ok'):
+            compareLogfile.write( (json.dumps(op)+"\n").encode('utf-8'))
+            compareLogfile.flush()
+            needRescore = True
+    except queue.Empty:
+        with topImageLock:
+            begin = topImageFileIndexWant['begin']
+            num = topImageFileIndexWant['num']
+            cacheBegin = topImageFileCache['begin']
+            cacheNum = len( topImageFileCache['fileNameList'])
+
+            # 对需求的前后放大100进行查询.
+            begin -= 100
+            begin = max(0, begin)
+            num += 200
+
+            if( begin < cacheBegin or begin+num > cacheBegin + cacheNum ):
+                needRescore = True
+        if( needRescore ):
+            
+            topFileList = avlib.TopPics(begin, num)
+            with topImageLock:
+                topImageFileCache['begin'] = begin
+                topImageFileCache[ 'fileNameList'] = topFileList
+            needRescore = False
+    return needRescore
 
 def ThreadImageScoreManager(compareOperationQueue):
     
     needRescore = True
     while( True ):
         try:
-            op = compareOperationQueue.get( block=False )
-            better = op['better']
-            worse = op['worse']
-
-            avlib = CAvlibDb()
-            avlib.ConnectDb()
-            avlib.InitDbTable()
-
-            ret = avlib.PicCompare( better, worse )
-            if( ret['error'] == 'ok'):
-                compareLogfile.write( (json.dumps(op)+"\n").encode('utf-8'))
-                compareLogfile.flush()
-                needRescore = True
-        except queue.Empty:
-            with topImageLock:
-                begin = topImageFileIndexWant['begin']
-                num = topImageFileIndexWant['num']
-                cacheBegin = topImageFileCache['begin']
-                cacheNum = len( topImageFileCache['fileNameList'])
-
-                # 对需求的前后放大100进行查询.
-                begin -= 100
-                begin = max(0, begin)
-                num += 200
-
-                if( begin < cacheBegin or begin+num > cacheBegin + cacheNum ):
-                    needRescore = True
-            if( needRescore ):
-                
-                topFileList = avlib.TopPics(begin, num)
-                with topImageLock:
-                    topImageFileCache['begin'] = begin
-                    topImageFileCache[ 'fileNameList'] = topFileList
-                needRescore = False
+            needRescore = doThreadImageScoreManager( compareOperationQueue, needRescore )
+        except:
+            logging.exception( 'error' )
+            time.sleep(10)
+            pass
         time.sleep(1)
 
 #threading._start_new_thread( ThreadImageScoreManager, compareOperationQueue )
@@ -115,6 +155,7 @@ def addImg(fileName):
     avdb = CAvlibDb()
     avdb.ConnectDb()
     avdb.InitDbTable()
+
     cursor = avdb.beginTransaction()
 
     # 添加图片属性。 
@@ -126,8 +167,8 @@ def addImg(fileName):
     avdb.picBase642Db( fileName, picData, cursor )
 
     avdb.commitTransacton( cursor )
-
-    return ""
+    ret = {'error':'ok'}
+    return ret
 
 # 查询图片
 @app.route( "/image/search", methods=['POST','GET'])

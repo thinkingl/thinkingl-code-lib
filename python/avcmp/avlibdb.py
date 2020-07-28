@@ -18,7 +18,7 @@ class CAvlibDb:
     dbConnect=None
     
     # ???????????
-    dbWriteBackupLock = threading.Lock()
+    dbWriteBackupLock = threading.RLock()
 
     def ConnectDb(self):
         self.dbConnect = sqlite3.connect(self.dbFilePath)

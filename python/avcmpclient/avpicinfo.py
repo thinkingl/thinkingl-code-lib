@@ -46,7 +46,7 @@ class AvPicInfoDlg():
 
         for attrName in picInfo:
             attrEdit = QLineEdit()
-            attrEdit.setText( picInfo[attrName])
+            attrEdit.setText( str(picInfo[attrName]))
             attrEdit.setMinimumWidth( 400 )
             formLayout.addRow( attrName, attrEdit )
 
