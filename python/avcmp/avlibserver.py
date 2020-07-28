@@ -35,15 +35,18 @@ topImageLock = threading.Lock()
 
 
 def ThreadImageScoreManager(compareOperationQueue):
-    avlib = CAvlibDb()
-    avlib.ConnectDb()
-    avlib.InitDbTable()
+    
     needRescore = True
     while( True ):
         try:
             op = compareOperationQueue.get( block=False )
             better = op['better']
             worse = op['worse']
+
+            avlib = CAvlibDb()
+            avlib.ConnectDb()
+            avlib.InitDbTable()
+
             ret = avlib.PicCompare( better, worse )
             if( ret['error'] == 'ok'):
                 compareLogfile.write( (json.dumps(op)+"\n").encode('utf-8'))
@@ -112,7 +115,7 @@ def addImg(fileName):
     avdb = CAvlibDb()
     avdb.ConnectDb()
     avdb.InitDbTable()
-    cursor = avdb.beginTransaction();
+    cursor = avdb.beginTransaction()
 
     # 添加图片属性。 
     picJson = addImgReq['picJson']
