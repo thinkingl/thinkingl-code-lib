@@ -29,16 +29,25 @@ def smartByDev( devname ):
     smartInfoCmpDiff( devPath, output, lastSmart )
     lastSmart = output
 
+    output += '\n'
+    output += '---------------------log----------------\n'
+    smartLogFileName = 'smart-log.txt'
+    with open( smartLogFileName, 'r' ) as f:
+        smartlog = f.read()
+        output += smartlog
+
     return output
 
 def isIgnoreDiff( line ):
     if line.find( 'Local Time is:' ) == 0:
         return True
-    if line.find( '9 Power_On_Hours' ) == 0:
+    if line.find( '9 Power_On_Hours' ) != -1:
         return True
     if line.find( '164 Unknown_Attribute' ) == 0:
         return True
     if line.find( '194 Temperature' ) == 0:
+        return True
+    if line.find( '197 Current_Pending_Sector' ) == 0:
         return True
     if line.find( '241 Total_LBAs_Written' ) == 0:
         return True
@@ -54,7 +63,7 @@ def writeSmartCmpLog( dev, text ):
     strnow = time.strftime('%Y-%m-%d-%H%M%S',time.localtime(cur_time))
     lognow = 'SMART changed!! dev ' + dev + ' cur time: ' + strnow + '\n'
     smartLogFileName = 'smart-log.txt'
-    with open( smartLogFileName, 'w+' ) as f:
+    with open( smartLogFileName, 'a' ) as f:
         f.write( lognow )
         f.write( text )
         f.close()
@@ -97,20 +106,34 @@ def smartInfoCmpDiff( dev, smart1, smart2 ):
             diff = True
     return diff
 
+def readLastSMART(devName):
+    devName = devName.split('/')[-1]
+    lastFileName = 'last-' + devName;
+    if not os.path.isfile( lastFileName ):
+        return ''
+    with open( lastFileName, 'r') as f:
+        smart = f.read()
+        f.close()
+        return smart
+    return ''
+
+def saveLastSMART(devName, smartInfo):
+    devName = devName.split('/')[-1]
+    lastFileName = 'last-' + devName;
+    with open( lastFileName, 'w' ) as f:
+        f.write(smartInfo)
+        f.close
 
 
 def threadMonitorSMART( devList ):
-    lastSmartTable = {}
     while( True ):
         for dev in devList:
             smartCmd = 'smartctl -a ' + dev
             output = os.popen( smartCmd ).read()
-            last = ''
-            if dev in lastSmartTable:
-                last = lastSmartTable[dev]
+            last = readLastSMART( dev )
             if smartInfoCmpDiff( dev, output, last ):
                 saveSmart( dev, output )
-            lastSmartTable[dev] = output
+            saveLastSMART( dev, output )
         time.sleep(60)
 
 
