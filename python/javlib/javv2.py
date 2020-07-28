@@ -252,7 +252,7 @@ def ReadUrls( filePath, urlSet ):
         logging.info( "file not found" )
 
 def downloadFileTry(url, localPath):
-    for i in range(10):                
+    for i in range(100):                
         try:
             urllib.request.urlretrieve( url, localPath)
             logging.info( 'downlaod file success! [%s] - [%s]', localPath, url)
@@ -261,7 +261,7 @@ def downloadFileTry(url, localPath):
             logging.error( "download file except [%s], try again! [%s] - [%s]", e, url, localPath)
             if os.path.isfile( localPath ):
                 os.remove( localPath )
-            time.sleep(1)
+            time.sleep(10)
     logging.error( "download file fail! [%s] - [%s]", url, localPath)    
     return False
 
@@ -429,6 +429,7 @@ def parseSaveAv( waitingUrl, urlSet):
 # 数据库只保留2份备份。
 # 本地每天保存2份备份。
 def backupAllData(backupIndex, waittingSet, finishedSet, errorUrlSet):
+    logging.warn( "!!!!!!!!!The backup start!!!!!!!!!!!!!!!!!!!!" )
     dbBackToken = 'bk-' + str(backupIndex)
     avdbClient = AvdbClient()
     if not avdbClient.dbBackup( dbBackToken ):
@@ -443,12 +444,13 @@ def backupAllData(backupIndex, waittingSet, finishedSet, errorUrlSet):
     os.makedirs( backDir )
 
     backWaittingPath = os.path.join( backDir, waitingUrlFile )
-    SaveUrls( waitingUrl, backWaittingPath )
+    SaveUrls( waittingSet, backWaittingPath )
 
     SaveFinishedUrls( finishedSet, backDir )
 
     backupErrorPath = os.path.join( backDir, errorUrlFile )
     SaveUrls( errorUrlSet, backupErrorPath )
+    logging.warn( "!!!!!!!!!The backup end!!!!!!!!!!!!!!!!!!!!" )
 
 
 initLogging()
@@ -500,7 +502,7 @@ while( len(waitingUrlSet ) > 0 ):
         
         # 备份。
         if( len(finishedUrlSet ) % 10000 == 0 ):
-            backupIndex = (len(finishedUrlSet) / 10000) % 2
+            backupIndex = int(len(finishedUrlSet) / 10000) % 2
             backupAllData( backupIndex, waitingUrlSet, finishedUrlSet, errorUrlSet )
     else:
         errorUrlSet.add( waitingUrl )

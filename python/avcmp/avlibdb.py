@@ -128,14 +128,17 @@ class CAvlibDb:
 
     def GetPicInfoJson(self, fileName):
         pic = {}
-        for row in self.dbConnect.execute( 'select Attr.Type,Attr.Name from Pic join PicAttr, Attr where PicAttr.picId = Pic.rowId and PicAttr.attrId = Attr.rowId and Pic.FileName = ?;', (fileName,)):
+        score = 0
+        for row in self.dbConnect.execute( 'select Attr.Type,Attr.Name?Attr.Score from Pic join PicAttr, Attr where PicAttr.picId = Pic.rowId and PicAttr.attrId = Attr.rowId and Pic.FileName = ?;', (fileName,)):
             type = row[0]
             name = row[1]
+            score += int(row[2])
             if( type in pic ):
                 if( len(name) > len(pic[type])):
                     pic[type] = name
             else:
                 pic[type] = name
+        pic['score'] = score
         return pic
     
     def GetRandomPic(self, num):
