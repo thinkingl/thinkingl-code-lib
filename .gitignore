@@ -42,3 +42,11 @@ python/avcmpclient/__pycache__/avcmp.cpython-37.pyc
 python/avcmp/__pycache__/avlibserver.cpython-37.pyc
 python/avcmp/__pycache__/avlibdb.cpython-37.pyc
 python/avcmp/__pycache__/avlibcfg.cpython-37.pyc
+python/disksmartserver/smart-log.txt
+python/disksmartserver/smart-sda-20200728-171610.txt
+python/disksmartserver/smart-sda-20200728-171710.txt
+python/disksmartserver/smart-sda-20200728-171810.txt
+python/disksmartserver/smart-sda-20200728-171911.txt
+python/disksmartserver/smart-sda-20200728-172613.txt
+python/disksmartserver/smart-sda-20200728-172714.txt
+python/disksmartserver/smart-sda-20200728-172915.txt

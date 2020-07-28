@@ -26,7 +26,7 @@ def smartByDev( devname ):
 
     if lastSmart == None:
         lastSmart = output
-    smartInfoCmp( output, lastSmart )
+    smartInfoCmpDiff( devPath, output, lastSmart )
     lastSmart = output
 
     return output
@@ -34,19 +34,51 @@ def smartByDev( devname ):
 def isIgnoreDiff( line ):
     if line.find( 'Local Time is:' ) == 0:
         return True
+    if line.find( '9 Power_On_Hours' ) == 0:
+        return True
+    if line.find( '164 Unknown_Attribute' ) == 0:
+        return True
+    if line.find( '194 Temperature' ) == 0:
+        return True
     if line.find( '241 Total_LBAs_Written' ) == 0:
         return True
     if line.find( '242 Total_LBAs_Read' ) == 0:
         return True
     if line.find( '245 Unknown_Attribute' ) == 0:
         return True
+    
     return False
 
-def smartInfoCmp( smart1, smart2 ):
+def writeSmartCmpLog( dev, text ):
+    cur_time = time.time()
+    strnow = time.strftime('%Y-%m-%d-%H%M%S',time.localtime(cur_time))
+    lognow = 'SMART changed!! dev ' + dev + ' cur time: ' + strnow + '\n'
+    smartLogFileName = 'smart-log.txt'
+    with open( smartLogFileName, 'w+' ) as f:
+        f.write( lognow )
+        f.write( text )
+        f.close()
+    print( lognow )
+    print( text )
+
+
+def saveSmart( dev, smartText ):
+    dev = dev.split('/')[-1]
+    cur_time = time.time()
+    strnow = time.strftime('%Y-%m-%d-%H%M%S',time.localtime(cur_time))
+    lognow = 'cur time: ' + strnow + '\n'
+    smartFileName = 'smart-' + dev + '-' + strnow + '.txt'
+    with open( smartFileName, 'w' ) as f:
+        f.write( lognow )
+        f.write( smartText )
+        f.close()
+    pass
+
+def smartInfoCmpDiff( dev, smart1, smart2 ):
     a1 = smart1.split('\n')
     a2 = smart2.split('\n')
     if len(a1) != len(a2):
-        return False
+        return True
 
     diff = False
     for i in range(0,len(a1)):
@@ -56,14 +88,35 @@ def smartInfoCmp( smart1, smart2 ):
             continue
 
         if line1 != line2 :
-            print( 'diff line ' + str(i+1) + ' :'  )
-            print( line1 )
-            print( line2 )
-            print( '\n' )
+            logText = ''
+            logText +=( 'diff line ' + str(i+1) + ' :\n'  )
+            logText +=( line1 + '\n')
+            logText +=( line2 + '\n')
+            logText +=( '\n' )
+            writeSmartCmpLog( dev, logText)
             diff = True
     return diff
-        
+
+
+
+def threadMonitorSMART( devList ):
+    lastSmartTable = {}
+    while( True ):
+        for dev in devList:
+            smartCmd = 'smartctl -a ' + dev
+            output = os.popen( smartCmd ).read()
+            last = ''
+            if dev in lastSmartTable:
+                last = lastSmartTable[dev]
+            if smartInfoCmpDiff( dev, output, last ):
+                saveSmart( dev, output )
+            lastSmartTable[dev] = output
+        time.sleep(60)
+
 
 
 if __name__ == '__main__':
+    devList = ['/dev/sda']
+    t = Thread( target=threadMonitorSMART, args=(devList,))
+    t.start()
     app.run(host='0.0.0.0',port=5002)
