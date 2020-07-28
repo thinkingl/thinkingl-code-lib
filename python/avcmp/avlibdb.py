@@ -129,7 +129,7 @@ class CAvlibDb:
     def GetPicInfoJson(self, fileName):
         pic = {}
         score = 0
-        for row in self.dbConnect.execute( 'select Attr.Type,Attr.Name?Attr.Score from Pic join PicAttr, Attr where PicAttr.picId = Pic.rowId and PicAttr.attrId = Attr.rowId and Pic.FileName = ?;', (fileName,)):
+        for row in self.dbConnect.execute( 'select Attr.Type,Attr.Name,Attr.Score from Pic join PicAttr, Attr where PicAttr.picId = Pic.rowId and PicAttr.attrId = Attr.rowId and Pic.FileName = ?;', (fileName,)):
             type = row[0]
             name = row[1]
             score += int(row[2])
