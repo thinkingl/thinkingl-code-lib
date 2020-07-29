@@ -504,7 +504,7 @@ while( len(waitingUrlSet ) > 0 ):
         if( len(finishedUrlSet ) % 5000 == 0 ):
             backupIndex = int(len(finishedUrlSet) / 5000) % 2
             backupAllData( backupIndex, waitingUrlSet, finishedUrlSet, errorUrlSet )
-        elif len(finishedUrlFile) % 1000 == 0 :
+        elif len(finishedUrlSet) % 500 == 0 :
             avdbClient = AvdbClient()
             avdbClient.dbIntegrityCheck()
             
