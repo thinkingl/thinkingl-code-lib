@@ -41,9 +41,10 @@ class AvdbClient:
                 pass
         
         return False
-    
-    # 备份数据库
-    def dbBackup(self, backupToken ):
+
+    # 检查数据库是否损坏。
+    def dbIntegrityCheck(self):
+        logging.info( "-------------------begin database integrity check!!!-----------------" )
         for i in range( 0, 10 ):
             try:
                 # 检测数据库是否损坏。
@@ -58,8 +59,33 @@ class AvdbClient:
                     logging.error( "database is corrupted!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" )
                     logging.error( "database is corrupted!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" )
                     logging.error( "database is corrupted!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" )
-                    time.sleep(100000000)
-                
+                    time.sleep(100000000)               
+                else:
+                    logging.info( "-------------------database integrity check OK!!!-----------------" )
+                    return True
+            except Exception as e:
+                logging.error( 'Database IntegrityCheck fail! e: %s', e )
+                logging.exception( 'db IntegrityCheck' )    
+                time.sleep(10)
+            logging.error( 'database IntegrityCheck fail!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
+            logging.error( 'database IntegrityCheck fail!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
+            logging.error( 'database IntegrityCheck fail!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
+            logging.error( 'database IntegrityCheck fail!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
+            logging.error( 'database IntegrityCheck fail!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
+            time.sleep( 100000000)
+            return False
+    
+    # 备份数据库
+    def dbBackup(self, backupToken ):
+        if not self.dbIntegrityCheck():
+            logging.error( 'database IntegrityCheck fail!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
+            logging.error( 'database IntegrityCheck fail!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
+            logging.error( 'database IntegrityCheck fail!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
+            time.sleep( 100000000)
+            return False
+
+        for i in range( 0, 10 ):
+            try:              
                 backupUrl = self.serverBaseUrl + 'db/backup/<filename>'
                 fileName = 'avlib-' + backupToken + '.db'
                 backupUrl = backupUrl.replace( '<filename>', fileName )
