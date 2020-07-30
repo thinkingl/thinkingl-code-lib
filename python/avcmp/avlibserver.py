@@ -239,17 +239,49 @@ def topImg():
         ret['error'] = 'Invalid operation!'
     return ( ret )
 
+threadTable = {}
 @app.route("/db/backup/<filename>", methods=['POST'])
 def backupDB( filename ):
+    global threadTable
+    backupThread = None
+    if filename in threadTable:
+        backupThread = threadTable[filename]
+    if backupThread == None or not backupThread.is_alive():
+        backupThread = Thread( target=threadDatabaseBackup, args=(filename,) )
+        backupThread.start()
+        threadTable[filename] = backupThread
+        return {'error':'ok'};
+    else:
+        logging( 'database backup thread for %s is running...', filename )
+        return {'error':'ok'}
+    pass
+
+def threadDatabaseBackup(filename):    
     avlib = CAvlibDb()
     logging.info( 'backup db to %s', filename )
     try:
         avlib.backup( filename )
+        logging.info( 'backup db to %s success!', filename )
+        #time.sleep( 100 ) # test
         return { 'error':'ok'}
     except Exception as e:
-        logging.error( 'backup database fail!' )
+        logging.error( 'backup database %s fail!', filename )
         logging.exception( "backupDB")
-        return { 'error' : str(e) }
+    return { 'error' : str(e) }
+
+@app.route("/db/backup/<filename>", methods=['GET'])
+def backupDbInfo( filename ):
+    avlib = CAvlibDb()
+    result= avlib.backupInfo(filename)
+    global threadTable
+    backupThread = None
+    if filename in threadTable:
+        backupThread = threadTable[filename]
+    threadRunning = False
+    if backupThread != None:
+        threadRunning = backupThread.is_alive()
+    result[ 'threadAlive' ] = threadRunning
+    return result
         
 @app.route("/db/integritycheck", methods=['GET'])
 def dbIntegrityCheck():
@@ -260,4 +292,8 @@ def dbIntegrityCheck():
 
 
 if __name__ == '__main__':
+    #backupDB( 'test.db' ) # test
+    #time.sleep(2)
+    #info = backupDbInfo( 'test.db' ) # test
+
     app.run(host='0.0.0.0',port=5001)

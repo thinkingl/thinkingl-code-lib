@@ -74,16 +74,8 @@ class AvdbClient:
         logging.error( 'database IntegrityCheck fail!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
         time.sleep( 100000000)
         return False
-    
-    # 备份数据库
-    def dbBackup(self, backupToken ):
-        if not self.dbIntegrityCheck():
-            logging.error( 'database IntegrityCheck fail!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
-            logging.error( 'database IntegrityCheck fail!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
-            logging.error( 'database IntegrityCheck fail!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
-            time.sleep( 100000000)
-            return False
 
+    def dbBackupStart( self, backupToken ):
         for i in range( 0, 10 ):
             try:              
                 backupUrl = self.serverBaseUrl + 'db/backup/<filename>'
@@ -94,7 +86,6 @@ class AvdbClient:
                 result = rsp.json()['error']
                 if result == 'ok':
                     return True
-
             except Exception as e:
                 logging.error( 'Database back up fail! e: %s', e )
                 logging.exception( 'db backup' )    
@@ -106,8 +97,53 @@ class AvdbClient:
         logging.error( 'database backup fail!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
         time.sleep( 100000000)
         return False
+    
+    def dbBackupInfo( self, backupToken ):
+        for i in range( 0, 10 ):
+            try:              
+                backupUrl = self.serverBaseUrl + 'db/backup/<filename>'
+                fileName = 'avlib-' + backupToken + '.db'
+                backupUrl = backupUrl.replace( '<filename>', fileName )
+                rsp = requests.get( backupUrl )
+                logging.info( 'database backup ret: %s', str(rsp.json()))
+                result = rsp.json()
+                return result
+            except Exception as e:
+                logging.error( 'Get Database backup info fail! e: %s', e )
+                logging.exception( 'db backup' )    
+                time.sleep(10)
+        return None
+
+    # 备份数据库
+    def dbBackup(self, backupToken ):
+        if not self.dbIntegrityCheck():
+            logging.error( 'database IntegrityCheck fail!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
+            logging.error( 'database IntegrityCheck fail!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
+            logging.error( 'database IntegrityCheck fail!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
+            time.sleep( 100000000)
+            return False
+
+        isOk = self.dbBackupStart( backupToken )
+        time.sleep(1)
+        if isOk:
+            while( True ):
+                backupInfo = self.dbBackupInfo( backupToken )
+                logging.info( 'backup info: %s', json.dumps(backupInfo) )
+                if not backupInfo['threadAlive'] and backupInfo['exist']:
+                    return True
+                time.sleep( 2 )
+            
+        
+        logging.error( 'database backup fail!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
+        logging.error( 'database backup fail!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
+        logging.error( 'database backup fail!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
+        logging.error( 'database backup fail!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
+        logging.error( 'database backup fail!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
+        time.sleep( 100000000)
+        return False
 
 if __name__ == "__main__":
     c = AvdbClient()
+    c.dbBackupInfo( 'bk-0' )
     c.isAVUrlExist( "http://www.javlibrary.com/tw/?v=javlijb6si" )
-    c.dbBackup( 'testbackup' )
+    #c.dbBackup( 'testbackup' )

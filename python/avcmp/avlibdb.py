@@ -203,6 +203,19 @@ class CAvlibDb:
             if os.path.isfile( backupPath ):
                 os.remove( backupPath )
             shutil.copyfile( self.dbFilePath, backupPath )
+    
+    # Get backup file info
+    def backupInfo( self, fileName ):
+        backupPath = os.path.join( avlibcfg.DbDir, fileName )
+        result = {};
+        result['path'] = backupPath
+        exist = os.path.isfile( backupPath )
+        result['exist'] = exist
+        if exist:
+          result['size'] = os.path.getsize( backupPath )  
+          result['modifyTime'] = time.strftime('%Y-%m-%d %H:%M:%S',  time.localtime(os.path.getmtime( backupPath )) )
+        return result
+
             
     # ?????????
     def integrityCheck(self):
@@ -251,7 +264,7 @@ class CAvlibDb:
         cur.close()
 
 if __name__ == "__main__":
-    jsonFile = 'D:/999-temp/javlib/byDate/2011-06/2011-06-04 GAR-233.json';
+    jsonFile = 'D:/999-temp/javlib/byDate/2019-05/2019-05-14 VARM-045.json';
     obj = json.load( open( jsonFile, 'rb') )
     db = CAvlibDb()
     db.ConnectDb()
@@ -260,6 +273,7 @@ if __name__ == "__main__":
     db.json2Db( obj, cur )
     db.commitTransacton(cur)
     db.backup( "backuptest.db" )
+    info = db.backupInfo( "backuptest.db" )
     db.CloseDb()
 
 
