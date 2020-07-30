@@ -24,8 +24,26 @@ def smartByDev( devname ):
     smartCmd = 'smartctl -a ' + devPath
     output = os.popen( smartCmd ).read()
 
-    if lastSmart == None:
-        lastSmart = output
+    lastSmart = readLastSMART(devname)
+    smartInfoCmpDiff( devPath, output, lastSmart )
+    lastSmart = output
+
+    output += '\n'
+    output += '---------------------log----------------\n'
+    smartLogFileName = 'smart-log.txt'
+    with open( smartLogFileName, 'r' ) as f:
+        smartlog = f.read()
+        output += smartlog
+
+    return output
+
+@app.route('/smart/dev/disk/by-id/<diskid>')
+def smartByDevId( diskid ):
+    devPath = '/dev/disk/by-id/' + diskid
+    smartCmd = 'smartctl -a ' + devPath
+    output = os.popen( smartCmd ).read()
+
+    lastSmart = readLastSMART(diskid)
     smartInfoCmpDiff( devPath, output, lastSmart )
     lastSmart = output
 
@@ -108,7 +126,7 @@ def smartInfoCmpDiff( dev, smart1, smart2 ):
 
 def readLastSMART(devName):
     devName = devName.split('/')[-1]
-    lastFileName = 'last-' + devName;
+    lastFileName = 'last-' + devName
     if not os.path.isfile( lastFileName ):
         return ''
     with open( lastFileName, 'r') as f:
@@ -119,7 +137,7 @@ def readLastSMART(devName):
 
 def saveLastSMART(devName, smartInfo):
     devName = devName.split('/')[-1]
-    lastFileName = 'last-' + devName;
+    lastFileName = 'last-' + devName
     with open( lastFileName, 'w' ) as f:
         f.write(smartInfo)
         f.close
@@ -139,7 +157,7 @@ def threadMonitorSMART( devList ):
 
 
 if __name__ == '__main__':
-    devList = ['/dev/sda']
+    devList = ['/dev/disk/by-id/ata-CV1-MB512LIT_AA000000000000001679']
     t = Thread( target=threadMonitorSMART, args=(devList,))
     t.start()
     app.run(host='0.0.0.0',port=5002)
