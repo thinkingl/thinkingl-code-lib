@@ -2,6 +2,7 @@ import requests
 import base64
 import logging
 import time
+import json
 # avdb 客户端
 
 class AvdbClient:
