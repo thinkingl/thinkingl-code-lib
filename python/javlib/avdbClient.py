@@ -60,7 +60,7 @@ class AvdbClient:
                     logging.error( "database is corrupted!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" )
                     logging.error( "database is corrupted!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" )
                     logging.error( "database is corrupted!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" )
-                    time.sleep(100000000)               
+                    time.sleep(10000000)               
                 else:
                     logging.info( "-------------------database integrity check OK!!!-----------------" )
                     return True
@@ -73,7 +73,7 @@ class AvdbClient:
         logging.error( 'database IntegrityCheck fail!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
         logging.error( 'database IntegrityCheck fail!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
         logging.error( 'database IntegrityCheck fail!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
-        time.sleep( 100000000)
+        time.sleep( 10000000)
         return False
 
     def dbBackupStart( self, backupToken ):
