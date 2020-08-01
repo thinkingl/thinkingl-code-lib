@@ -67,7 +67,7 @@ class AvdbClient:
             except Exception as e:
                 logging.error( 'Database IntegrityCheck fail! e: %s', e )
                 logging.exception( 'db IntegrityCheck' )    
-                time.sleep(10)
+                time.sleep(3*60)
         logging.error( 'database IntegrityCheck fail!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
         logging.error( 'database IntegrityCheck fail!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
         logging.error( 'database IntegrityCheck fail!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')

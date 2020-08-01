@@ -494,11 +494,7 @@ while( len(waitingUrlSet ) > 0 ):
         finishedUrlSet.add( waitingUrl )
         urlSet -= finishedUrlSet
         waitingUrlSet |= urlSet
-        # save urls.
-        if( len(finishedUrlSet) % 10 == 0 ):
-            SaveUrls( waitingUrlSet, waitingUrlFilePath)
-            SaveFinishedUrls( finishedUrlSet, javlibLocalDir )
-            logging.info( 'finished: %d waitting: %d err: %d', len(finishedUrlSet), len( waitingUrlSet ), len(errorUrlSet) )
+        
         
         # 备份。
         if( len(finishedUrlSet ) % 5000 == 0 ):
@@ -508,6 +504,11 @@ while( len(waitingUrlSet ) > 0 ):
             avdbClient = AvdbClient()
             avdbClient.dbIntegrityCheck()
             
+        # save urls. save after backup, do not save if backup fail!.
+        if( len(finishedUrlSet) % 10 == 0 ):
+            SaveUrls( waitingUrlSet, waitingUrlFilePath)
+            SaveFinishedUrls( finishedUrlSet, javlibLocalDir )
+            logging.info( 'finished: %d waitting: %d err: %d', len(finishedUrlSet), len( waitingUrlSet ), len(errorUrlSet) )
     else:
         errorUrlSet.add( waitingUrl )
         SaveUrls( errorUrlSet, errorUrlFilePath )
