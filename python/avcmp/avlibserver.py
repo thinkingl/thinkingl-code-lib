@@ -282,12 +282,47 @@ def backupDbInfo( filename ):
         threadRunning = backupThread.is_alive()
     result[ 'threadAlive' ] = threadRunning
     return result
-        
+
+    
+def threadDBIntegrityCheck( integrityCheckTaskTable ):
+    while True:
+        for k in integrityCheckTaskTable:
+            if integrityCheckTaskTable[ k ] == 'running':
+                try:
+                    avlib = CAvlibDb()
+                    avlib.ConnectDb()
+                    logging.info( 'begin check database integrity for %s', k )
+                    result = avlib.integrityCheck()
+                    logging.info( 'finish check database integrity for %s', k )
+                except Exception as e:
+                    logging.info( 'Database integrity check fail! k:%s e: %s', k, str(e) )
+                    result = str(e)
+                    logging.exception( 'integrity_check' )
+                finally:
+                    integrityCheckTaskTable[k] = result
+        time.sleep(2)
+
+integrityCheckTaskTable = {}
+
+integrityCheckThread = Thread( target=threadDBIntegrityCheck, args=(integrityCheckTaskTable,) )
+integrityCheckThread.start()
+@app.route("/db/integritycheck", methods=['POST'])
+def dbIntegrityCheckStart():
+    name = 'avlib.db'
+    global integrityCheckTaskTable
+    integrityCheckTaskTable[ name ] = 'running'
+    logging.info( 'Add database integrity check into task table.' )
+    return {'result':'ok'}
+
 @app.route("/db/integritycheck", methods=['GET'])
 def dbIntegrityCheck():
-    avlib = CAvlibDb()
-    avlib.ConnectDb()
-    result = avlib.integrityCheck()
+    name = 'avlib.db'
+    global integrityCheckTaskTable
+    if name in integrityCheckTaskTable:
+        result = integrityCheckTaskTable[name]
+    else:
+        result = 'No task'
+    logging.info( 'get integrity check task result: %s', result )
     return { 'result' : result }
 
 

@@ -43,37 +43,76 @@ class AvdbClient:
         
         return False
 
-    # 检查数据库是否损坏。
-    def dbIntegrityCheck(self):
-        logging.info( "-------------------begin database integrity check!!!-----------------" )
+    def dbIntegrityCheckStart(self):
+        logging.info( "-------------------database integrity check start!!!-----------------" )
+        for i in range( 0, 10 ):
+            try:
+                # 检测数据库是否损坏。
+                url = self.serverBaseUrl + 'db/integritycheck'
+
+                rsp = requests.post( url )
+                logging.info( 'database integrity check start ret: %s', str(rsp.json()) )
+                result = rsp.json()['result']
+                if result != 'ok':
+                    logging.error( "database IntegrityCheck start fail!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" )
+                    time.sleep( 60 )
+                else:
+                    logging.info( "-------------------database integrity check  start OK!!!-----------------" )
+                    return True
+            except Exception as e:
+                logging.error( 'Database IntegrityCheck start fail! e: %s', e )
+                logging.exception( 'db IntegrityCheck start' )    
+                time.sleep(60)
+        logging.error( 'database IntegrityCheck start fail!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
+        logging.error( 'database IntegrityCheck start fail!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
+        logging.error( 'database IntegrityCheck start fail!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
+        logging.error( 'database IntegrityCheck start fail!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
+        logging.error( 'database IntegrityCheck start fail!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
+        time.sleep( 10000000)
+        return False
+
+    def getDBIntegrityCheckStatus(self):
         for i in range( 0, 10 ):
             try:
                 # 检测数据库是否损坏。
                 url = self.serverBaseUrl + 'db/integritycheck'
 
                 rsp = requests.get( url )
-                logging.info( 'database integrity check ret: %s', str(rsp.json()) )
+                logging.info( 'database integrity check status ret: %s', str(rsp.json()) )
                 result = rsp.json()['result']
-                if result != 'ok':
-                    logging.error( "database is corrupted!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" )
-                    logging.error( "database is corrupted!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" )
-                    logging.error( "database is corrupted!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" )
-                    logging.error( "database is corrupted!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" )
-                    logging.error( "database is corrupted!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" )
-                    time.sleep(10000000)               
-                else:
-                    logging.info( "-------------------database integrity check OK!!!-----------------" )
-                    return True
+                
+                return result
             except Exception as e:
-                logging.error( 'Database IntegrityCheck fail! e: %s', e )
-                logging.exception( 'db IntegrityCheck' )    
+                logging.error( 'Database IntegrityCheck status fail! e: %s', e )
+                logging.exception( 'db IntegrityCheck status' )    
                 time.sleep(6*60)
-        logging.error( 'database IntegrityCheck fail!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
-        logging.error( 'database IntegrityCheck fail!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
-        logging.error( 'database IntegrityCheck fail!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
-        logging.error( 'database IntegrityCheck fail!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
-        logging.error( 'database IntegrityCheck fail!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
-        time.sleep( 10000000)
+        return 'fail'
+
+    # 检查数据库是否损坏。
+    def dbIntegrityCheck(self):
+        logging.info( "-------------------begin database integrity check!!!-----------------" )
+
+        self.dbIntegrityCheckStart()
+
+        while( True ):
+            result = self.getDBIntegrityCheckStatus()
+            if result == 'ok':
+                logging.info( 'Database integrity check pass!')
+                return True
+            elif result == 'running':
+                logging.info( 'Database integrity check task running')
+                time.sleep(10)
+                continue
+            else:
+                logging.info( 'Database integrity check fail!!!!!!!!!!!!!!! result: %s', result )
+                logging.info( 'Database integrity check fail!!!!!!!!!!!!!!! result: %s', result )
+                logging.info( 'Database integrity check fail!!!!!!!!!!!!!!! result: %s', result )
+                logging.info( 'Database integrity check fail!!!!!!!!!!!!!!! result: %s', result )
+                logging.info( 'Database integrity check fail!!!!!!!!!!!!!!! result: %s', result )
+                logging.info( 'Database integrity check fail!!!!!!!!!!!!!!! result: %s', result )
+                time.sleep( 10000000)
+                return False
+
         return False
 
     def dbBackupStart( self, backupToken ):
@@ -145,6 +184,9 @@ class AvdbClient:
 
 if __name__ == "__main__":
     c = AvdbClient()
-    c.dbBackupInfo( 'bk-0' )
-    c.isAVUrlExist( "http://www.javlibrary.com/tw/?v=javlijb6si" )
+    #c.dbBackupInfo( 'bk-0' )
+    #c.isAVUrlExist( "http://www.javlibrary.com/tw/?v=javlijb6si" )
+    status = c.getDBIntegrityCheckStatus()
+    c.dbIntegrityCheck()
+    
     #c.dbBackup( 'testbackup' )
