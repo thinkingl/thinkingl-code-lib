@@ -207,7 +207,7 @@ class CAvlibDb:
     # Get backup file info
     def backupInfo( self, fileName ):
         backupPath = os.path.join( avlibcfg.DbDir, fileName )
-        result = {};
+        result = {}
         result['path'] = backupPath
         exist = os.path.isfile( backupPath )
         result['exist'] = exist
