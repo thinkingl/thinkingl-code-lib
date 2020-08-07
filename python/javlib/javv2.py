@@ -252,7 +252,7 @@ def ReadUrls( filePath, urlSet ):
         logging.info( "file not found" )
 
 def downloadFileTry(url, localPath):
-    for i in range(100):                
+    for i in range(5):                
         try:
             urllib.request.urlretrieve( url, localPath)
             logging.info( 'downlaod file success! [%s] - [%s]', localPath, url)
@@ -500,9 +500,9 @@ while( len(waitingUrlSet ) > 0 ):
         if( len(finishedUrlSet ) % 5000 == 0 ):
             backupIndex = int(len(finishedUrlSet) / 5000) % 2
             backupAllData( backupIndex, waitingUrlSet, finishedUrlSet, errorUrlSet )
-        elif len(finishedUrlSet) % 500 == 0 :
-            avdbClient = AvdbClient()
-            avdbClient.dbIntegrityCheck()
+        #elif len(finishedUrlSet) % 500 == 0 :
+        #    avdbClient = AvdbClient()
+        #    avdbClient.dbIntegrityCheck()
             
         # save urls. save after backup, do not save if backup fail!.
         if( len(finishedUrlSet) % 10 == 0 ):
