@@ -474,7 +474,7 @@ queueWaittingUrl = queue.Queue(maxsize=2)
 # url处理结果，内部处理结果是（string url, bool result, set urlSet）的元组。
 queueResult = queue.SimpleQueue()
 
-threadNum = 5
+threadNum = 10
 for i in range(0, threadNum):
     threading.Thread(target=threadParseUrl,args=(queueWaittingUrl,queueResult)).start()
 
@@ -531,13 +531,13 @@ while( len(waitingUrlSet ) > 0 ):
             
             
             # 备份。
-            if( len(finishedUrlSet ) % 5000 == 0 ):
+            if( len(finishedUrlSet ) % 10000 == 0 ):
                 
                 # 等待当前任务完成。
                 queueWaittingUrl.join()
-                time.sleep(10)      # 先简单的sleep等待完成，后续考虑更好的方式。
+                time.sleep(60)      # 先简单的sleep等待完成，后续考虑更好的方式。
 
-                backupIndex = int(len(finishedUrlSet) / 5000) % 2
+                backupIndex = int(len(finishedUrlSet) / 10000) % 2
                 backupAllData( backupIndex, waitingUrlSet, finishedUrlSet, errorUrlSet )
             #elif len(finishedUrlSet) % 500 == 0 :
             #    avdbClient = AvdbClient()
