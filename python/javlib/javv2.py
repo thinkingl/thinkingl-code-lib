@@ -18,6 +18,8 @@ import logging
 from avdbClient import AvdbClient
 import re
 import sys
+import queue
+import threading
 
 javlibLocalDir = "d:/999-temp/javlib/"
 
@@ -452,6 +454,30 @@ def backupAllData(backupIndex, waittingSet, finishedSet, errorUrlSet):
     SaveUrls( errorUrlSet, backupErrorPath )
     logging.warn( "!!!!!!!!!The backup end!!!!!!!!!!!!!!!!!!!!" )
 
+def threadParseUrl( queueWaittingUrl, queueResult ):
+    while( True ):
+        waitingUrl = queueWaittingUrl.get()
+
+        urlSet = set()
+        success = True
+        if( "/?v=" in waitingUrl ):
+            success = parseSaveAv(waitingUrl, urlSet )
+        else:
+            success = ParseJavlibVideoListHtml( waitingUrl, urlSet )
+        
+        result = (waitingUrl, success, urlSet )
+        queueResult.put( result )
+    
+
+# 等待线程处理的url队列
+queueWaittingUrl = queue.Queue(maxsize=2)
+# url处理结果，内部处理结果是（string url, bool result, set urlSet）的元组。
+queueResult = queue.SimpleQueue()
+
+threadNum = 5
+for i in range(0, threadNum):
+    threading.Thread(target=threadParseUrl,args=(queueWaittingUrl,queueResult)).start()
+
 
 initLogging()
 
@@ -482,38 +508,50 @@ urlBeginning = "http://www.javlibrary.com/tw/?v=javlijb6si"
 if( urlBeginning not in finishedUrlSet ):
     waitingUrlSet.add( urlBeginning )
 
+workingUrlSet = set()
 while( len(waitingUrlSet ) > 0 ):
     waitingUrl = getWaittingUrl( waitingUrlSet ) # waitingUrlSet.pop()
-    urlSet = set()
-    success = True
-    if( "/?v=" in waitingUrl ):
-        success = parseSaveAv(waitingUrl, urlSet )
-    else:
-        success = ParseJavlibVideoListHtml( waitingUrl, urlSet )
-    if( success ):
-        finishedUrlSet.add( waitingUrl )
-        urlSet -= finishedUrlSet
-        waitingUrlSet |= urlSet
-        
-        
-        # 备份。
-        if( len(finishedUrlSet ) % 5000 == 0 ):
-            backupIndex = int(len(finishedUrlSet) / 5000) % 2
-            backupAllData( backupIndex, waitingUrlSet, finishedUrlSet, errorUrlSet )
-        #elif len(finishedUrlSet) % 500 == 0 :
-        #    avdbClient = AvdbClient()
-        #    avdbClient.dbIntegrityCheck()
+
+    # 放入线程处理队列。
+    queueWaittingUrl.put( waitingUrl )
+    workingUrlSet.add( waitingUrl )
+
+    while( not queueResult.empty() ):
+        result = queueResult.get()
+        url = result[0]
+        success = result[1]
+        urlSet = result[2]
+
+        workingUrlSet.remove( url ) # 删除有结果的。
+        if( success ):
+            finishedUrlSet.add( url )
+            urlSet -= finishedUrlSet
+            urlSet -= workingUrlSet
+            waitingUrlSet |= urlSet
             
-        # save urls. save after backup, do not save if backup fail!.
-        if( len(finishedUrlSet) % 10 == 0 ):
-            SaveUrls( waitingUrlSet, waitingUrlFilePath)
-            SaveFinishedUrls( finishedUrlSet, javlibLocalDir )
-            logging.info( 'finished: %d waitting: %d err: %d', len(finishedUrlSet), len( waitingUrlSet ), len(errorUrlSet) )
-    else:
-        errorUrlSet.add( waitingUrl )
-        SaveUrls( errorUrlSet, errorUrlFilePath )
-        time.sleep(30)
-    #time.sleep(1)   # 防止网站封ip。
+            
+            # 备份。
+            if( len(finishedUrlSet ) % 5000 == 0 ):
+                
+                # 等待当前任务完成。
+                queueWaittingUrl.join()
+                time.sleep(10)      # 先简单的sleep等待完成，后续考虑更好的方式。
+
+                backupIndex = int(len(finishedUrlSet) / 5000) % 2
+                backupAllData( backupIndex, waitingUrlSet, finishedUrlSet, errorUrlSet )
+            #elif len(finishedUrlSet) % 500 == 0 :
+            #    avdbClient = AvdbClient()
+            #    avdbClient.dbIntegrityCheck()
+                
+            # save urls. save after backup, do not save if backup fail!.
+            if( len(finishedUrlSet) % 10 == 0 ):
+                SaveUrls( waitingUrlSet | workingUrlSet, waitingUrlFilePath)
+                SaveFinishedUrls( finishedUrlSet, javlibLocalDir )
+                logging.info( 'finished: %d waitting: %d err: %d', len(finishedUrlSet), len( waitingUrlSet ), len(errorUrlSet) )
+        else:
+            errorUrlSet.add( url )
+            SaveUrls( errorUrlSet, errorUrlFilePath )
+            time.sleep(30)
 
 SaveUrls( waitingUrlSet, waitingUrlFilePath)
 SaveFinishedUrls( finishedUrlSet, javlibLocalDir )
