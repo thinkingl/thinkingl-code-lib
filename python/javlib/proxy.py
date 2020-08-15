@@ -52,11 +52,12 @@ def bsObjForm(url):
         try:
             html = urlGetContent(url)
             bsObj1 = BeautifulSoup(html, "html.parser")
-            return bsObj1
+            if not bsObj1 == None:
+                return bsObj1
         except:
             logging.error( 'bsObjForm %s fail!', url )
             logging.exception("error")
-            time.sleep(60)
+        time.sleep(60)
     return None 
 
 

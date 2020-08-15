@@ -534,7 +534,8 @@ while( len(waitingUrlSet ) > 0 ):
             if( len(finishedUrlSet ) % 10000 == 0 ):
                 
                 # 等待当前任务完成。
-                queueWaittingUrl.join()
+                while not queueWaittingUrl.empty():
+                    time.sleep(1)
                 time.sleep(60)      # 先简单的sleep等待完成，后续考虑更好的方式。
 
                 backupIndex = int(len(finishedUrlSet) / 10000) % 2
