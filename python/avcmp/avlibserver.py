@@ -34,6 +34,9 @@ topImageFileIndexWant = {"begin":0, "num":100}
 # 线程互斥锁.
 topImageLock = threading.RLock()
 
+# 写数据库加锁，避免sqlite出现数据库锁死。
+writeDBLock = threading.RLock()
+
 
 def initLogging():
     #sys.stdout.reconfigure(encoding='utf-8')
@@ -150,25 +153,26 @@ def getImgInfoJson(fileName):
 # 添加一个图片
 @app.route("/image/<fileName>", methods=['PUT'])
 def addImg(fileName):
-    addImgReq = request.get_json()
+    with writeDBLock:
+        addImgReq = request.get_json()
 
-    avdb = CAvlibDb()
-    avdb.ConnectDb()
-    avdb.InitDbTable()
+        avdb = CAvlibDb()
+        avdb.ConnectDb()
+        avdb.InitDbTable()
 
-    cursor = avdb.beginTransaction()
+        cursor = avdb.beginTransaction()
 
-    # 添加图片属性。 
-    picJson = addImgReq['picJson']
-    avdb.json2Db( picJson, cursor )
+        # 添加图片属性。 
+        picJson = addImgReq['picJson']
+        avdb.json2Db( picJson, cursor )
 
-    # 添加图片数据
-    picData = addImgReq['picData']
-    avdb.picBase642Db( fileName, picData, cursor )
+        # 添加图片数据
+        picData = addImgReq['picData']
+        avdb.picBase642Db( fileName, picData, cursor )
 
-    avdb.commitTransacton( cursor )
-    ret = {'error':'ok'}
-    return ret
+        avdb.commitTransacton( cursor )
+        ret = {'error':'ok'}
+        return ret
 
 # 查询图片
 @app.route( "/image/search", methods=['POST','GET'])
@@ -257,17 +261,18 @@ def backupDB( filename ):
     pass
 
 def threadDatabaseBackup(filename):    
-    avlib = CAvlibDb()
-    logging.info( 'backup db to %s', filename )
-    try:
-        avlib.backup( filename )
-        logging.info( 'backup db to %s success!', filename )
-        #time.sleep( 100 ) # test
-        return { 'error':'ok'}
-    except Exception as e:
-        logging.error( 'backup database %s fail!', filename )
-        logging.exception( "backupDB")
-    return { 'error' : str(e) }
+    with writeDBLock:
+        avlib = CAvlibDb()
+        logging.info( 'backup db to %s', filename )
+        try:
+            avlib.backup( filename )
+            logging.info( 'backup db to %s success!', filename )
+            #time.sleep( 100 ) # test
+            return { 'error':'ok'}
+        except Exception as e:
+            logging.error( 'backup database %s fail!', filename )
+            logging.exception( "backupDB")
+        return { 'error' : str(e) }
 
 @app.route("/db/backup/<filename>", methods=['GET'])
 def backupDbInfo( filename ):

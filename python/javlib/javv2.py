@@ -393,6 +393,8 @@ def SaveVideoInfo( videoInfo ):
 # 这样可以有规律的下载。
 # 可以防止因为分页问题错过一些。
 def getWaittingUrl( waittingSet ):
+    if len( waittingSet ) == 0:
+        return None
     waitingList = list(waittingSet)
     waitingList.sort(reverse=True)
     url = waitingList.pop()
@@ -419,6 +421,9 @@ def isExistInDb( avUrl ):
 
 def parseSaveAv( waitingUrl, urlSet):
     if isExistInDb( waitingUrl ):
+        # 也解析一下，否则无法增量下载了。
+        videoInfo= {}
+        success = ParseJavlibVideoHtml( waitingUrl, videoInfo, urlSet )
         return True  # 已经存在的url直接完成。
     else:
         videoInfo= {}
@@ -474,7 +479,7 @@ queueWaittingUrl = queue.Queue(maxsize=2)
 # url处理结果，内部处理结果是（string url, bool result, set urlSet）的元组。
 queueResult = queue.SimpleQueue()
 
-threadNum = 10
+threadNum = 2
 for i in range(0, threadNum):
     threading.Thread(target=threadParseUrl,args=(queueWaittingUrl,queueResult)).start()
 
@@ -498,7 +503,7 @@ ReadUrls( errorUrlFilePath, errorUrlSet)
 
 socket.setdefaulttimeout(100)
 opener=urllib.request.build_opener()
-opener.addheaders=[('User-Agent','Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/36.0.1941.0 Safari/537.36')]
+opener.addheaders=[('User-Agent','Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.125 Safari/537.36')]
 urllib.request.install_opener(opener)
 
 urlBeginning = "http://www.javlibrary.com/tw/?v=javlijb6si"
@@ -509,12 +514,15 @@ if( urlBeginning not in finishedUrlSet ):
     waitingUrlSet.add( urlBeginning )
 
 workingUrlSet = set()
-while( len(waitingUrlSet ) > 0 ):
+while( len(waitingUrlSet ) > 0 or len(workingUrlSet) > 0 ):
     waitingUrl = getWaittingUrl( waitingUrlSet ) # waitingUrlSet.pop()
 
-    # 放入线程处理队列。
-    queueWaittingUrl.put( waitingUrl )
-    workingUrlSet.add( waitingUrl )
+    if waitingUrl == None:
+        time.sleep(1)
+    else:
+        # 放入线程处理队列。
+        queueWaittingUrl.put( waitingUrl )
+        workingUrlSet.add( waitingUrl )
 
     while( not queueResult.empty() ):
         result = queueResult.get()
