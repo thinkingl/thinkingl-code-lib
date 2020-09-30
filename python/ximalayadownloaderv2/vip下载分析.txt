@@ -1,0 +1,243 @@
+http://www.ximalaya.com/tracks/167446426.json
+
+https://mpay.ximalaya.com/mobile/track/pay/167446426/1601451871056?device=pc&isBackend=true&_=1601451871056
+https://mpay.ximalaya.com/mobile/track/pay/{trackId}/{时间戳}?device=pc&isBackend=true&_={时间戳}
+
+Request URL: https://mpay.ximalaya.com/mobile/track/pay/167446426/1601451871056?device=pc&isBackend=true&_=1601451871056
+Request Method: GET
+Status Code: 200 
+Remote Address: 127.0.0.1:8118
+Referrer Policy: strict-origin-when-cross-origin
+access-control-allow-credentials: true
+access-control-allow-origin: https://www.ximalaya.com
+cache-control: no-cache
+content-encoding: gzip
+content-type: application/json;charset=UTF-8
+date: Wed, 30 Sep 2020 07:44:30 GMT
+expires: Thu, 01 Jan 1970 00:00:00 GMT
+last-modified: Wed, 30 Sep 2020 07:44:30 GMT
+server: Tengine
+status: 200
+vary: Accept-Encoding
+x-a1-protocol-switch: 0
+x-b3-back-id: forab
+x-idc-gw: sh-nh@mobile$100
+x-server-costtime: 8
+x-sid: 9200067111930958472
+x-tid: 6157394424761892875
+:authority: mpay.ximalaya.com
+:method: GET
+:path: /mobile/track/pay/167446426/1601451871056?device=pc&isBackend=true&_=1601451871056
+:scheme: https
+accept: */*
+accept-encoding: gzip, deflate, br
+accept-language: zh-CN,zh;q=0.9,en;q=0.8,zh-TW;q=0.7,ja;q=0.6
+cookie: _xmLog=h5&3519c4f4-a666-49a2-b5b4-feec0e0fc7f1&2.1.2; fds_otp=8713797323340702960; trackType=web; 1&remember_me=y; 1&_token=45738789&06864530140N8EEBE829879AE9A64838044E69BF0652BAEF52DD33B6B65AF1436A6AF583B3CA139M0C7DF47949C1A0C_; 1_l_flag=45738789&06864530140N8EEBE829879AE9A64838044E69BF0652BAEF52DD33B6B65AF1436A6AF583B3CA139M0C7DF47949C1A0C__2020-09-3015:42:22; x_xmly_traffic=utm_source%253A%2526utm_medium%253A%2526utm_campaign%253A%2526utm_content%253A%2526utm_term%253A%2526utm_from%253A
+origin: https://www.ximalaya.com
+referer: https://www.ximalaya.com/
+sec-fetch-dest: empty
+sec-fetch-mode: cors
+sec-fetch-site: same-site
+user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4183.121 Safari/537.36
+device: pc
+isBackend: true
+_: 1601451871056
+
+{"ret":0,"msg":"0","trackId":167446426,"uid":7817039,"albumId":20512746,"title":"《少年维特的烦恼》 第20集","domain":"http://audiopay.cos.tx.xmcdn.com","totalLength":8098434,"sampleDuration":0,"sampleLength":0,"isAuthorized":true,"apiVersion":"1.0.0","seed":8503,"fileId":"4*34*3*23*28*47*18*57*24*2*18*63*63*18*6*24*18*19*1*4*13*51*27*7*36*3*55*44*41*33*55*21*34*25*36*23*14*4*9*9*17*2*59*4*6*48*47*22*52*63*58*","buyKey":"2d31333230323037353837","duration":1000,"ep":"3xZrPox9SnVSiKgKPo4csAtbUxQghDyUS41KKVTjWi78ke/e3fzYmbtahP+IgqNgXuB2h3oBKLhi2vn43gQT274WPSlfHb0=","highestQualityLevel":1,"downloadQualityLevel":1,"authorizedType":1}
+
+
+{ret: 0, msg: "0", trackId: 167446426, uid: 7817039, albumId: 20512746, title: "《少年维特的烦恼》 第20集",…}
+albumId: 20512746
+apiVersion: "1.0.0"
+authorizedType: 1
+buyKey: "2d31333230323037353837"
+domain: "http://audiopay.cos.tx.xmcdn.com"
+downloadQualityLevel: 1
+duration: 1000
+ep: "3xZrPox9SnVSiKgKPo4csAtbUxQghDyUS41KKVTjWi78ke/e3fzYmbtahP+IgqNgXuB2h3oBKLhi2vn43gQT274WPSlfHb0="
+fileId: "4*34*3*23*28*47*18*57*24*2*18*63*63*18*6*24*18*19*1*4*13*51*27*7*36*3*55*44*41*33*55*21*34*25*36*23*14*4*9*9*17*2*59*4*6*48*47*22*52*63*58*"
+highestQualityLevel: 1
+isAuthorized: true
+msg: "0"
+ret: 0
+sampleDuration: 0
+sampleLength: 0
+seed: 8503
+title: "《少年维特的烦恼》 第20集"
+totalLength: 8098434
+trackId: 167446426
+uid: 7817039
+
+1. 域名 domain return "http://audiopay.cos.xmcdn.com" === t ? e = t.replace("http:", "https:") : (t.indexOf("audio.pay.xmcdn.com") > -1 && (e = "https://vod.xmcdn.com"), e)
+2. 固定的 /download/
+3. apiVersion
+4. c = function(t, e) {
+						var n = new vt(t).cg_fun(e);
+						return "/" === n[0] ? n : "/".concat(n)
+					}(o, i)
+	其中：
+				o = t.seed		// seed: 8503
+			  , i = t.fileId	// fileId:  	"4*34*3*23*28*47*18*57*24*2*18*63*63*18*6*24*18*19*1*4*13*51*27*7*36*3*55*44*41*33*55*21*34*25*36*23*14*4*9*9*17*2*59*4*6*48*47*22*52*63*58*"
+			  // 51个字符
+			  
+	  cg_fun 处理 filedId字段
+	 cg_fun: function(e) {
+                e = e.split("*");
+                var t = ""
+                  , n = 0;
+                for (n = 0; n < e.length - 1; n++)
+                    t += this._cgStr.charAt(e[n]);
+                return t
+            }
+			
+	_cgStr 是伪随机生成的字符串数组，生成的过程使用了seed。原理应该是服务端和客户端使用同样的seed，就可以有同样的字符串，可以进行解密。 函数：
+	i.prototype = {
+            cg_hun: function() {
+                this._cgStr = "";
+                var e = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ/\\:._-1234567890"
+                  , t = e.length
+                  , n = 0;
+                for (n = 0; n < t; n++) {
+                    var r = this.ran() * e.length
+                      , o = parseInt(r);
+                    this._cgStr += e.charAt(o),
+                    e = e.split(e.charAt(o)).join("")
+                }
+            },
+            cg_fun: function(e) {
+                e = e.split("*");
+                var t = ""
+                  , n = 0;
+                for (n = 0; n < e.length - 1; n++)
+                    t += this._cgStr.charAt(e[n]);
+                return t
+            },
+            ran: function() {
+                return this._randomSeed = (211 * this._randomSeed + 30031) % 65536,
+                this._randomSeed / 65536
+            },
+            cg_decode: function(e) {
+                var t = ""
+                  , n = 0;
+                for (n = 0; n < e.length; n++) {
+                    var r = e.charAt(n)
+                      , o = this._cgStr.indexOf(r);
+                    -1 !== o && (t += o + "*")
+                }
+                return t
+            }
+			
+		解密后得到 group2/M0B/44/80/wKgLflyHoGiDtGErAHuSgssFBWg862.m4a 这个路径
+5. 	？后的参数部分，来自于 f 的key-value 字段。
+
+	f = bt(a); 		// a = t.ep	ep: "3xZrPox9SnVSiKgKPo4csAtbUxQghDyUS41KKVTjWi78ke/e3fzYmbtahP+IgqNgXuB2h3oBKLhi2vn43gQT274WPSlfHb0="
+	f.duration = u;
+	
+	 bt = function(t) {
+	var e = yt(function(t, e) {
+		for (var n = [], r = 0; r < t.length; r++) {
+			for (var o = "a" <= t[r] && "z" >= t[r] ? t[r].charCodeAt() - 97 : t[r].charCodeAt() - "0".charCodeAt() + 26, i = 0; 36 > i; i++)
+				if (e[i] == o) {
+					o = i;
+					break
+				}
+			n[r] = 25 < o ? String.fromCharCode(o - 26 + "0".charCodeAt()) : String.fromCharCode(o + 97)
+		}
+		return n.join("")
+	}
+	
+	分析：
+		var mt = yt("xm", "Ä[ÜJ=Û3Áf÷N")	// mt="g3utf1k6yxdwi0"
+              , gt = [19, 1, 4, 7, 30, 14, 28, 8, 24, 17, 6, 35, 34, 16, 9, 10, 13, 22, 32, 29, 31, 21, 18, 3, 2, 23, 25, 27, 11, 20, 5, 15, 12, 0, 33, 26]
+              ,bt = function(t) {	// t="3xZrPox9SnVSiKgKPo4csAtbUxQghDyTTYRPc1W0Xy2hyO6N2ajfmeha0vqLhKVgXuci0CFWerho3vH53gQT274WPS1UGrs="
+		var e = yt(		// yt 函数接受2个参数，这里传入的是 function(t, e) 和 function(t) 两个函数的结果。
+			function(t, e) {		// t=("d" + mt + "9" = "dg3utf1k6yxdwi09" e=gt  [19, 1, 4, 7, 30, 14, 28, 8, 24, 17, 6, 35,。。。。,26]
+			for (var n = [], r = 0; r < t.length; r++) {
+				for (var o = "a" <= t[r] && "z" >= t[r] ? t[r].charCodeAt() - 97 : t[r].charCodeAt() - "0".charCodeAt() + 26, i = 0; 36 > i; i++)
+					if (e[i] == o) {
+						o = i;
+						break
+					}
+				n[r] = 25 < o ? String.fromCharCode(o - 26 + "0".charCodeAt()) : String.fromCharCode(o + 97)
+			}
+			return n.join("")	
+								// n= 	0: "x"
+										1: "k"
+										2: "t"
+										3: "3"
+										4: "a"
+										5: "4"
+										6: "1"
+										7: "p"
+										8: "s"
+										9: "i"
+										10: "z"
+										11: "x"
+										12: "r"
+										13: "h"
+										14: "9"
+										15: "l
+		}("d" + mt + "9", gt), function(t)			// t="3xZrPox9SnVSiKgKPo4csAtbUxQghDyTTYRPc1W0Xy2hyO6N2ajfmeha0vqLhKVgXuci0CFWerho3vH53gQT274WPS1UGrs="
+{
+                    if (!t)
+                        return "";
+                    var e, n, r, o, i, a = [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 62, -1, -1, -1, 63, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, -1, -1, -1, -1, -1, -1, -1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, -1, -1, -1, -1, -1, -1, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, -1, -1, -1, -1, -1];
+                    for (o = (t = t.toString()).length,
+                    r = 0,
+                    i = ""; r < o; ) {
+                        do {
+                            e = a[255 & t.charCodeAt(r++)]
+                        } while (r < o && -1 == e);if (-1 == e)
+                            break;
+                        do {
+                            n = a[255 & t.charCodeAt(r++)]
+                        } while (r < o && -1 == n);if (-1 == n)
+                            break;
+                        i += String.fromCharCode(e << 2 | (48 & n) >> 4);
+                        do {
+                            if (61 == (e = 255 & t.charCodeAt(r++)))
+                                return i;
+                            e = a[e]
+                        } while (r < o && -1 == e);if (-1 == e)
+                            break;
+                        i += String.fromCharCode((15 & n) << 4 | (60 & e) >> 2);
+                        do {
+                            if (61 == (n = 255 & t.charCodeAt(r++)))
+                                return i;
+                            n = a[n]
+                        } while (r < o && -1 == n);if (-1 == n)
+                            break;
+                        i += String.fromCharCode((3 & e) << 6 | n)
+                    }
+                    return i
+                }(t)).split("-")	// yt函数把ep解密出来的格式是  "2d31333230323037353837-4c8442a20d63cfdfe92699cc6fb3b9cb-6878-1601457072"
+                  , n = J(e, 4)
+                  , r = n[0];
+                return {
+                    sign: n[1],			// 上面yt函数解密结果就是url的4个参数。 duration是后加上的。
+                    buy_key: r,
+                    token: n[2],
+                    timestamp: n[3]
+                }
+            }
+			
+		 // yt函数  t="xkt3a41psizxrh9l", 是固定的值。  e是上面 function(t) 根据ep计算出的，二进制数组
+		 function yt(t, e) {
+                for (var n, r = [], o = 0, i = "", a = 0; 256 > a; a++)
+                    r[a] = a;
+                for (a = 0; 256 > a; a++)
+                    o = (o + r[a] + t.charCodeAt(a % t.length)) % 256,
+                    n = r[a],
+                    r[a] = r[o],
+                    r[o] = n;
+                for (var u = o = a = 0; u < e.length; u++)
+                    o = (o + r[a = (a + 1) % 256]) % 256,
+                    n = r[a],
+                    r[a] = r[o],
+                    r[o] = n,
+                    i += String.fromCharCode(e.charCodeAt(u) ^ r[(r[a] + r[o]) % 256]);
+                return i
+            }
+https://audiopay.cos.tx.xmcdn.com/download/1.0.0/group2/M0B/44/80/wKgLflyHoGiDtGErAHuSgssFBWg862.m4a?sign=b69fb8adae8ec17a3fdf04e22371d84a&buy_key=2d31333230323037353837&token=3087&timestamp=1601451870&duration=1000
+
+https://audiopay.cos.tx.xmcdn.com/download/1.0.0/group2/M0B/44/80/wKgLflyHoGiDtGErAHuSgssFBWg862.m4a
