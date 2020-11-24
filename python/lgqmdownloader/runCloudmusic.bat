@@ -1,1 +1,2 @@
 python cloudMusic.py
+pause

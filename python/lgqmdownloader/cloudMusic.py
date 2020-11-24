@@ -94,18 +94,20 @@ def GetSongInfo( songId, fileSize, format ):
         print( "switch to frame fail! song url:" + songUrl )
         return
     songInfo = {}
-    try:
-        songInfoJsonStr = browser.find_element_by_xpath( "/html/head/script[1]").get_attribute( "innerHTML" )
-        songInfo = json.loads( songInfoJsonStr )
-    except Exception as e:
-        print( "Parse song info from html element /html/head/script[1] fail! songId:" + songId )
-        logging.exception("message")
+
+    for songInfoEle in browser.find_elements_by_xpath( "/html/head/script"):
+
+        songInfoJsonStr = ''
         try:
-            songInfoJsonStr = browser.find_element_by_xpath( "/html/head/script[2]").get_attribute( "innerHTML" )
+            songInfoJsonStr = songInfoEle.get_attribute( "innerHTML" )
             songInfo = json.loads( songInfoJsonStr )
+            if( 'title' in songInfo ):
+                break
         except Exception as e:
-            print( "Parse song info from html element /html/head/script[2] fail! songId:" + songId )
-            logging.exception("message")
+            pass
+
+    if len(songInfo) == 0:
+        logging.error( "Can't find json song info for url: " + songUrl )
 
     time.sleep( 5 )
     
@@ -299,7 +301,7 @@ def HackCloudMusicCache():
                       storageSongPath = SaveSongFile( ucFilePath, songInfo )
                       SaveAlbumCover( songInfo )  # 保存封面
                       SaveLyric( songInfo )         # 保存歌词.
-                      time.sleep( 5 )
+                      time.sleep( 1 )
 
 
 def getdirsize(dir):
