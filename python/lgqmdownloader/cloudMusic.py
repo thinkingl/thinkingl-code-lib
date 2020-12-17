@@ -218,20 +218,25 @@ def SaveLyric( songInfo ):
         return
     lyricJsonFilePath = GetSongFilePathWithoutExt( songInfo ) + ".lyric.json"
     if( not os.path.exists( lyricJsonFilePath ) ):
+        songId = songInfo.get("songId")
+        lyricUrl = "http://music.163.com/api/song/lyric?os=pc&id="+ songId +"&lv=-1&kv=-1&tv=-1"
         try:
-            songId = songInfo["songId"]
-            lyricUrl = "http://music.163.com/api/song/lyric?os=pc&id="+ songId +"&lv=-1&kv=-1&tv=-1"
             urllib.request.urlretrieve( lyricUrl, lyricJsonFilePath )
+            logging.info( "save lyric url [%s] to [%s]", lyricUrl, lyricJsonFilePath )
         except:
-            print( "Save lyric fail! song info:" + json.dumps( songInfo ))
+            logging.error( "Save lyric fail! url [%s] to [%s]", lyricUrl, lyricJsonFilePath)
+            logging.exception( "error" )
+            if os.path.isfile( lyricJsonFilePath ):
+                os.remove( lyricJsonFilePath )
 
     try:
         lyricJsonFile = open( lyricJsonFilePath, "rb" )
         lyricJson = json.load( lyricJsonFile )
     except:
-        print( "Load lyric json fail! json file path:" + lyricJsonFilePath )
-        lyricJsonFile.close()
-        os.remove( lyricJsonFilePath )
+        logging.error( "Load lyric json fail! json file path:" + lyricJsonFilePath )
+        logging.exception( "error" )
+        if os.path.isfile( lyricJsonFilePath ):
+            os.remove( lyricJsonFilePath )
         return
     lyricJsonFile.close()
     if( not "lrc" in lyricJson.keys() ):
@@ -301,7 +306,7 @@ def HackCloudMusicCache():
                       storageSongPath = SaveSongFile( ucFilePath, songInfo )
                       SaveAlbumCover( songInfo )  # 保存封面
                       SaveLyric( songInfo )         # 保存歌词.
-                      time.sleep( 1 )
+                      #time.sleep( 1 )
 
 
 def getdirsize(dir):
