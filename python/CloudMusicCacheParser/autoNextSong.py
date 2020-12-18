@@ -86,7 +86,7 @@ if __name__=="__main__":
         
         if sizeNotChangeTime > random.randrange(minWaitTime, maxWaitTime):
             logging.info( 'dir size [%d] not change for [%d] times, next song!', curSize, sizeNotChangeTime )
-            keyboard.press_and_release( 'ctrl+alt+right' )
+            keyboard.press_and_release( 'ctrl+num add' )
             sizeNotChangeTime = 0
 
 
