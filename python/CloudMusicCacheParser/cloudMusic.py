@@ -12,6 +12,7 @@ import sys
 
 
 songStorageDir = "X:/music/cachedownload"
+songStorageDir = "H:/musicDownload"
 songIdDir = "/`````songid"
 
 
