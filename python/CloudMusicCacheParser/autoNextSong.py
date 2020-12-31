@@ -75,6 +75,7 @@ if __name__=="__main__":
     lastSize = 0
     startTime = time.time()
     songCount = 0
+    sizeChangedFromLastSong = False
     while( True ):
         time.sleep(1)
 
@@ -84,6 +85,7 @@ if __name__=="__main__":
         else:
             sizeNotChangeTime = 0
             lastSize = curSize
+            sizeChangedFromLastSong = True
             print( 'size changed to ' + str(curSize))
         
         if sizeNotChangeTime > random.randrange(minWaitTime, maxWaitTime):
@@ -91,16 +93,19 @@ if __name__=="__main__":
             keyboard.press_and_release( 'ctrl+shift+num add' )
             sizeNotChangeTime = 0
             
-            songCount += 1
-            curTime = time.time()
-            costTime = curTime - startTime
-            hour = int(costTime / 3600)
-            min = int((costTime % 3600) / 60 )
-            sec = int((costTime % 60))
-            averageMin = int(songCount * 60 / costTime)
-            averageHour = int(songCount * 3600 / costTime)
-            logging.info( '%d songs for %d hour %d min %d seconds(%d second total). average: %d / min;  %d / hour', int(songCount), hour, min, sec, int(costTime), averageMin, averageHour )
-
+            if sizeChangedFromLastSong :
+                sizeChangedFromLastSong = False
+                songCount += 1
+                curTime = time.time()
+                costTime = curTime - startTime
+                hour = int(costTime / 3600)
+                min = int((costTime % 3600) / 60 )
+                sec = int((costTime % 60))
+                averageMin = int(songCount * 60 / costTime)
+                averageHour = int(songCount * 3600 / costTime)
+                logging.info( '%d songs for %d hour %d min %d seconds(%d second total). average: %d / min;  %d / hour', int(songCount), hour, min, sec, int(costTime), averageMin, averageHour )
+            else:
+                logging.error( 'may cloud music client error or hot key fail!' )
 
 
     

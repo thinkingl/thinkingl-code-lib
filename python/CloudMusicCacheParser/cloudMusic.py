@@ -110,7 +110,7 @@ def GetSongInfo( songId, fileSize, format ):
     if len(songInfo) == 0:
         logging.error( "Can't find json song info for url: " + songUrl )
 
-    time.sleep( 5 )
+    time.sleep( 1 )
     
     # try:
     #     infoArray = songInfo["description"].split('。')
@@ -259,6 +259,10 @@ def HackCloudMusicCache():
     cachePathFile.close()
 
     cacheFiles = os.listdir( cloudMusicCacheDir )
+    
+    # 按时间排序, 把较早的文件排到前面, 先处理较早的文件.
+    cacheFiles = sorted(cacheFiles,  key=lambda x: os.path.getmtime(os.path.join(cloudMusicCacheDir, x)))
+
     for fileName in cacheFiles: #遍历文件夹
         ucFilePath = cloudMusicCacheDir + "\\" + fileName
         if(os.path.isfile(ucFilePath)): #判断是否是文件夹，不是文件夹才打开
@@ -277,7 +281,7 @@ def HackCloudMusicCache():
                       try:
                         idxJson = json.load( idxFile )
                       except:
-                          print( "Json parse idxFile fail! file:" + idxFilePath )
+                          logging.error( "Json parse idxFile fail! file:" + idxFilePath )
                           idxFile.close()
                           continue
                       #print( idxJson )
@@ -286,13 +290,13 @@ def HackCloudMusicCache():
                       cacheFinished = fileSize <= zoneEnd+1
                       idxFile.close()
                       if( not cacheFinished ):
-                          print( "File " + ucFilePath + " has not finished!")
+                          logging.error( "File " + ucFilePath + " has not finished!")
                           continue
                       infoFile = open( infoFilePath, 'rb' )
                       try:
                         infoJson = json.load( infoFile )
                       except:
-                          print( "Load song info json fail path:" + infoFilePath )
+                          logging.error( "Load song info json fail path:" + infoFilePath )
                           continue
                       musicFileFormat = infoJson['format']
                       #print( "file format is :" + musicFileFormat)
@@ -302,7 +306,7 @@ def HackCloudMusicCache():
                         if( not songInfo["songId"] ):
                             continue
                       except:
-                          print( "songInfo invalid!" )
+                          logging.error( "songInfo invalid!" )
                           continue
                       storageSongPath = SaveSongFile( ucFilePath, songInfo )
                       SaveAlbumCover( songInfo )  # 保存封面
@@ -356,14 +360,20 @@ def initLogging():
 if __name__=="__main__":
     initLogging()
     while( True ):
-        print( "--------------------Start hack cloud music cache!------------------" )
+        logging.info( "--------------------Start hack cloud music cache!------------------" )
         dirSize = 0
+        startTime = time.time();
+        spendTime = 0
         try:
             HackCloudMusicCache()
             dirSize = getdirsize(songStorageDir)
+            spendTime = time.time() - startTime
         except Exception as e:
             print( "HackCloudMusicCache except!" )
             logging.exception("message")
-        print( "End hack cloud music cache!------------------Cur dir size:%s"%human_readable(dirSize) )
+        logging.info( "End hack cloud music cache!------------------Cur dir size:%s"%human_readable(dirSize) )
 
-        time.sleep( 60 * 5 )
+        sleepTime = 60*5 - spendTime
+        if sleepTime <= 0:
+            sleepTime = 1
+        time.sleep( sleepTime )
