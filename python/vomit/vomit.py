@@ -33,8 +33,11 @@ class vomit():
                 vomitMap[session] = {}
         # save.
         configFilePath = self.filePath.rsplit('.',1)[0] + '.json'
-        with open( configFilePath, 'w' ) as f:
-            json.dump( vomitCfg, f, indent=4)
+        try:
+            with open( configFilePath, 'w' ) as f:
+                json.dump( vomitCfg, f, indent=4)
+        except:
+            print( "save config file %s fail!"%configFilePath )
 
     def readConfig(self):
         configFilePath = self.filePath.rsplit('.',1)[0] + '.json'
