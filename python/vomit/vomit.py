@@ -60,8 +60,8 @@ class vomit():
 
         # bind
         # to be continued.
-        dst = vomitCfg.get( 'dst' )
-        pdst = vomitCfg.get( 'pdst' )
+        targets = vomitCfg.get('target')
+        
         while True:
             firstTime = None
             startTime = time.time()
@@ -71,7 +71,10 @@ class vomit():
                     firstTime = packetTime
                 while packetTime - firstTime > time.time() - startTime:
                     time.sleep( 0.001 )
-                s.sendto( packet.payload.load, (dst, pdst) )
+                for target in targets:
+                    dst = target.get( 'dst' )
+                    pdst = target.get( 'pdst' )
+                    s.sendto( packet.payload.load, (dst, pdst) )
         
     def start(self):
         self.stop()
@@ -81,7 +84,7 @@ class vomit():
         for session in sessions:
             sessionCfg = mapCfg.get( session )
             sessionPackets = sessions[session]
-            if sessionCfg.get( 'dst' ) != None and sessionCfg.get( 'pdst' ) != None:
+            if sessionCfg.get( 'target' ) != None and len(sessionCfg.get( 'target' )) > 0:
                 t = threading.Thread( name=session, target=self.ThreadSender(sessionPackets, sessionCfg) )
                 self.threadTable[session] = t
                 t.start()
