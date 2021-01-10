@@ -5,6 +5,7 @@ import io
 
 
 fileName = '8kulaw.wav'
+fileName = '8kmp316.wav'
 if len( sys.argv ) < 2:
     print( 'no file name param!' )
     #exit(0)
@@ -24,6 +25,8 @@ with open( fileName, 'rb' ) as f:
     print( 'Format:\t\t', format)
     while( f.tell() < chunkSize +8 ):
         subChunkID = f.read(4).decode()
+        if subChunkID == '\x00':
+            continue
         print( '\tSubChunkID:\t', subChunkID)
         subChunkSize = struct.unpack('<L', f.read(4))[0]
         print( '\tSubChunkSize:\t', subChunkSize)
@@ -68,6 +71,13 @@ with open( fileName, 'rb' ) as f:
             print( '\tSampleLength:\t', dwSampleLength)
             pass
         elif subChunkID == 'data':
+            dataSize = struct.unpack('<L', f.read(4))[0]
+            print( '\tDatasize:\t', dataSize)
+            # 打印64字节数据.
+            pLen = min( dataSize, 64 )
+            while( pLen >= 16 ):
+                print( '\t', f.read(16))
+                pLen = pLen - 16
             pass
 
         print( '\n' )
