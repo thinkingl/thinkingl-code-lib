@@ -90,7 +90,7 @@ WAVE_FORMAT_ALAW = 0x0006
 WAVE_FORMAT_MULAW = 0x0007
 WAVE_FORMAT_EXTENSIBLE = 0xFFFE
 
-compressionNameTable = { WAVE_FORMAT_PCM:'PCM', WAVE_FORMAT_IEEE_FLOAT:'IEEE FLOAT', WAVE_FORMAT_ALAW:'ALAW', WAVE_FORMAT_MULAW:'MULAW'}
+compressionNameTable = { WAVE_FORMAT_PCM:'PCM', WAVE_FORMAT_IEEE_FLOAT:'IEEE FLOAT', WAVE_FORMAT_ALAW:'ALAW', WAVE_FORMAT_MULAW:'MULAW', WAVE_FORMAT_EXTENSIBLE:'WAVE_FORMAT_EXTENSIBLE'}
 
 def getCompressionName( type ):
     name = compressionNameTable.get( type )
@@ -498,6 +498,7 @@ class Wave_write:
             self._form_length_pos = None
 
         chunkSize = 36 + self._datalength
+        fmtChunkSize = 16
         if self._comptype != WAVE_FORMAT_PCM:
             fmtChunkSize = 18
         self._file.write(struct.pack('<L4s4sLHHLLHH',

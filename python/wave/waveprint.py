@@ -2,7 +2,7 @@
 import sys
 import struct
 import io
-
+import wave_ex
 
 fileName = '8kulaw.wav'
 fileName = '8kmp316.wav'
@@ -36,7 +36,8 @@ with open( fileName, 'rb' ) as f:
 
         if subChunkID == 'fmt ':
             audioFormat = struct.unpack('<H', f.read(2))[0]
-            print( '\tAudioFormat:\t', audioFormat)
+            audioFormatName = wave_ex.getCompressionName( audioFormat )
+            print( '\tAudioFormat:\t', audioFormat, '\t', audioFormatName)
             numChannels = struct.unpack('<H', f.read(2))[0]
             print( '\tNumChannels:\t', numChannels)
             sampleRate = struct.unpack('<L', f.read(4))[0]
@@ -79,6 +80,19 @@ with open( fileName, 'rb' ) as f:
                 print( '\t', f.read(16))
                 pLen = pLen - 16
             pass
+        elif subChunkID == 'LIST':
+            # https://www.recordingblogs.com/wiki/list-chunk-of-a-wave-file
+            listType = str(f.read(4)) #struct.unpack('<L', f.read(4))[0]
+            print( '\tListtype:\t', listType)
+            listDataLen = subChunkSize - 4 ;
+            print( '\tListdata:\t', f.read(listDataLen))
+        else:
+            # 打印64字节数据
+            dataSize = subChunkSize - 2
+            pLen = min( dataSize, 64 )
+            while( pLen >= 16 ):
+                print( '\t', f.read(16))
+                pLen = pLen - 16
 
         print( '\n' )
         f.seek( subChunkEndPos, 0)        
