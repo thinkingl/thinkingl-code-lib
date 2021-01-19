@@ -56,55 +56,49 @@ def testG722toWav():
     testFile = 'g722.raw'
     g722Data = open(testFile, 'rb').read()
 
-    codec_ctx = Codec('g722', 'r').create()
+    dec_codec_ctx = Codec('g722', 'r').create()
 
-    if codec_ctx.codec.audio_formats != None:
-        sample_fmt = codec_ctx.codec.audio_formats[-1].name
-        codec_ctx.format = sample_fmt
+    if dec_codec_ctx.codec.audio_formats != None:
+        sample_fmt = dec_codec_ctx.codec.audio_formats[-1].name
+        dec_codec_ctx.format = sample_fmt
 
     sample_rate = 8000
     channel_layout = "mono"
     channels = 1
 
-    codec_ctx.time_base = Fraction(1) / sample_rate
-    codec_ctx.sample_rate = sample_rate
-    codec_ctx.layout = channel_layout
-    codec_ctx.channels = channels
-    codec_ctx.open()
+    dec_codec_ctx.time_base = Fraction(1) / sample_rate
+    dec_codec_ctx.sample_rate = sample_rate
+    dec_codec_ctx.layout = channel_layout
+    dec_codec_ctx.channels = channels
+    dec_codec_ctx.open()
 
     codec_name = 'pcm_mulaw'
     
-    codec = Codec(codec_name, 'w')
+    enc_codec = Codec(codec_name, 'w')
 
-    ctx = codec.create()
+    enc_codec_ctx = enc_codec.create()
 
-    sample_fmt = ctx.codec.audio_formats[-1].name
+    sample_fmt = enc_codec_ctx.codec.audio_formats[-1].name
     sample_rate = 8000
     channel_layout = "mono"
     channels = 1
 
-    ctx.time_base = Fraction(1) / sample_rate
-    ctx.sample_rate = sample_rate
-    ctx.format = sample_fmt
-    ctx.layout = channel_layout
-    ctx.channels = channels
+    enc_codec_ctx.time_base = Fraction(1) / sample_rate
+    enc_codec_ctx.sample_rate = sample_rate
+    enc_codec_ctx.format = sample_fmt
+    enc_codec_ctx.layout = channel_layout
+    enc_codec_ctx.channels = channels
 
-    ctx.open()
-
-    codec_ctx_PCM = ctx #Codec('pcm_mulaw', 'w').create()
-    print( codec_ctx_PCM )
-    #codec_ctx_PCM
-    #codec_ctx_PCM.time_base = 8000
-    #codec_ctx_PCM.open()
+    enc_codec_ctx.open()
 
     packet = av.packet.Packet(g722Data)
     decoded_data = None
     packetBytes = None
-    for frame in codec_ctx.decode(packet):
+    for frame in dec_codec_ctx.decode(packet):
         print( frame )
         frame.sample_rate = 8000
         frame.rate = 8000
-        for p in codec_ctx_PCM.encode( frame ):
+        for p in enc_codec_ctx.encode( frame ):
             packetBytes = p.to_bytes()
             print( p )
         decoded_data = frame.planes[0].to_bytes()
@@ -146,16 +140,6 @@ def testG722toWav():
     w.writeframesraw( waveData );
     w.close()
 
-    #print( codec_ctx )
-
-    #sc = StreamContainer()
-    #streamG722 = sc.add_stream( 'g722', rate= 8000 )
-    #streamG722.decode( g722Data )
-
-    #stream_options = [{'-acodec': 'adpcm_g722'}]
-    #c = av.open( testFile, stream_options = stream_options )
-
-    a = 10
 
 if __name__ == '__main__':
     test8kulawTo8k16bitpcm()
