@@ -58,6 +58,20 @@ def testG722toWav():
 
     codec_ctx = Codec('g722', 'r').create()
 
+    if codec_ctx.codec.audio_formats != None:
+        sample_fmt = codec_ctx.codec.audio_formats[-1].name
+        codec_ctx.format = sample_fmt
+
+    sample_rate = 8000
+    channel_layout = "mono"
+    channels = 1
+
+    codec_ctx.time_base = Fraction(1) / sample_rate
+    codec_ctx.sample_rate = sample_rate
+    codec_ctx.layout = channel_layout
+    codec_ctx.channels = channels
+    codec_ctx.open()
+
     codec_name = 'pcm_mulaw'
     
     codec = Codec(codec_name, 'w')
