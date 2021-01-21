@@ -157,7 +157,7 @@ def threadMonitorSMART( devList ):
 
 
 if __name__ == '__main__':
-    devList = ['/dev/disk/by-id/ata-CV1-MB512LIT_AA000000000000001679']
+    devList = ['/dev/disk/by-id/scsi-SCV1-MB51_2LIT_152D20329000']
     t = Thread( target=threadMonitorSMART, args=(devList,))
     t.start()
     app.run(host='0.0.0.0',port=5002)
