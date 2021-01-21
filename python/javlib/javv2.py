@@ -29,6 +29,11 @@ finishedUrlFile = "finishedVideo.txt"
 finishedVideoListUrlFile = "finishedVideoList.txt"
 errorUrlFile = "error.txt"
 
+# url的链接关系.
+urlsMapFile = 'urlsMap.json'
+urlsMap = {}
+urlsMapLock = threading.RLock()
+
 dirByDate = os.path.join( javlibLocalDir, 'byDate')
 dirByActress = os.path.join( javlibLocalDir, 'byActress')
 
@@ -77,11 +82,51 @@ def NormalizeName( name ):
     name = name.replace( '\0', '' );    # 有的名称里面有0,必须去掉.
     return name
 
+def saveUrlsMap():
+    with urlsMapLock:
+        global urlsMap
+        urlsMapPath = os.path.join( javlibLocalDir, urlsMapFile )
+        with open( urlsMapPath, 'w' ) as f:
+            json.dump( urlsMap, f, indent=4 )
+        urlsMapPath = urlsMapPath + '.bk'       # 防止程序在dump过程中出问题(关闭, 这里再多写一个备份文件)
+        with open( urlsMapPath, 'w' ) as f:
+            json.dump( urlsMap, f, indent=4 )
+        return
+
+def loadUrlsMap():
+    with urlsMapLock:
+        global urlsMap
+        urlsMapPath = os.path.join( javlibLocalDir, urlsMapFile )
+        try:
+            with open( urlsMapPath ) as f:
+                urlsMap = json.load( f )
+        except:
+            logging.exception( 'error' )
+            urlsMap = {}
+            
+        if len( urlsMap ) > 0:
+            return
+        urlsMapPath = urlsMapPath + '.bk'       # 防止程序在dump过程中出问题(关闭, 从备份文件中读取)
+        with open( urlsMapPath ) as f:
+            urlsMap = json.load( f )
+        return
+
+def getUrls( url ):
+    with urlsMapLock:
+        global urlsMap
+        return urlsMap.get( url )
+
+def setUrls( url, releatedUrls ):
+    with urlsMapLock:
+        global urlsMap
+        urlsMap[ url ] = releatedUrls
+        return
+
 def ParseJavlibVideoHtml( videoUrl, videoInfo, urlSet ):
     logging.info( "Parse video html:" + videoUrl)
 
-    
-    
+    releatedUrls = []
+
     soup = proxy.bsObjForm( videoUrl )
     if soup == None:
         return False
@@ -130,6 +175,7 @@ def ParseJavlibVideoHtml( videoUrl, videoInfo, urlSet ):
     for videoDirectorUrl in videoDirectorUrlArray:
         url = urljoin( videoUrl, videoDirectorUrl.attrs["href"])
         urlSet.add( url )
+        releatedUrls.append( url )
         #print( "video director url:\t" + url )
 
     videoInfo["maker"] = ""
@@ -140,6 +186,7 @@ def ParseJavlibVideoHtml( videoUrl, videoInfo, urlSet ):
         videoInfo["maker"] = videoMaker.text
         url = urljoin( videoUrl, videoMaker.attrs["href"])
         urlSet.add( url )
+        releatedUrls.append( url )
         #print( "video maker url:\t" + url)
 
     videoLabelArray = soup.select("#video_label > table > tr > td a[href]")
@@ -149,6 +196,7 @@ def ParseJavlibVideoHtml( videoUrl, videoInfo, urlSet ):
         videoInfo["label"] += videoLabel.text
         url = urljoin( videoUrl, videoLabel.attrs["href"])
         urlSet.add( url )
+        releatedUrls.append( url )
         #print( "video label url:\t" + url)
 
     videoReviewArray = soup.select("#video_review > table > tr > td > span")
@@ -165,6 +213,7 @@ def ParseJavlibVideoHtml( videoUrl, videoInfo, urlSet ):
         videoInfo["genres"] += "    "
         url = urljoin( videoUrl, videoGenres.attrs["href"])
         urlSet.add( url )
+        releatedUrls.append( url )
         #print( "video genres url:\t"+url)
 
     videoCastNameArray = soup.select("#video_cast > table > tr > td")
@@ -181,6 +230,7 @@ def ParseJavlibVideoHtml( videoUrl, videoInfo, urlSet ):
     for videoCastUrl in videoCastUrlArray:
         url = urljoin( videoUrl, videoCastUrl.attrs["href"])
         urlSet.add( url )
+        releatedUrls.append( url )
         #print( "video cast url:\t" + url)
 
     # image.
@@ -195,6 +245,10 @@ def ParseJavlibVideoHtml( videoUrl, videoInfo, urlSet ):
     if( len( videoInfo["id"]) == 0 ):
          success = False
     logging.debug( json.dumps( videoInfo ) )
+
+    # 保存url关系.
+    setUrls( videoUrl, releatedUrls )
+
     return success
 
 def ParseJavlibVideoListHtml( videoListUrl, newUrls ):
@@ -421,9 +475,14 @@ def isExistInDb( avUrl ):
 
 def parseSaveAv( waitingUrl, urlSet):
     if isExistInDb( waitingUrl ):
-        # 也解析一下，否则无法增量下载了。
-        videoInfo= {}
-        success = ParseJavlibVideoHtml( waitingUrl, videoInfo, urlSet )
+        # 先从本地获取url关联的url.
+        # 如果本地没有记录, 就解析html.
+        releatedUrls = getUrls( waitingUrl )
+        if releatedUrls == None:
+            videoInfo= {}
+            success = ParseJavlibVideoHtml( waitingUrl, videoInfo, urlSet )
+        else:
+            urlSet.update( releatedUrls )
         return True  # 已经存在的url直接完成。
     else:
         videoInfo= {}
@@ -501,6 +560,9 @@ errorUrlSet = set()
 errorUrlFilePath = javlibLocalDir + errorUrlFile
 ReadUrls( errorUrlFilePath, errorUrlSet)
 
+# 关联url.
+loadUrlsMap()
+
 socket.setdefaulttimeout(100)
 opener=urllib.request.build_opener()
 opener.addheaders=[('User-Agent','Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.125 Safari/537.36')]
@@ -556,6 +618,7 @@ while( len(waitingUrlSet ) > 0 or len(workingUrlSet) > 0 ):
             if( len(finishedUrlSet) % 10 == 0 ):
                 SaveUrls( waitingUrlSet | workingUrlSet, waitingUrlFilePath)
                 SaveFinishedUrls( finishedUrlSet, javlibLocalDir )
+                saveUrlsMap()
                 logging.info( 'finished: %d waitting: %d err: %d', len(finishedUrlSet), len( waitingUrlSet ), len(errorUrlSet) )
         else:
             errorUrlSet.add( url )

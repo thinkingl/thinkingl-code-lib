@@ -6,6 +6,7 @@ import time
 import re
 from bs4 import BeautifulSoup
 from http.cookiejar import CookieJar
+import requests
 
 
 def GetFirefox(PROXY_HOST, httpPort, ftpPort, sock5Port):
@@ -41,9 +42,11 @@ def initUrllib():
 
 
 def urlGetContent( url):
-        req = urllib.request.Request(url=url)
+        #req = urllib.request.Request(url=url)
         
-        content = urllib.request.urlopen(req).read().decode('utf-8','ignore')#, 'ignore'
+        #content = urllib.request.urlopen(req).read().decode('utf-8','ignore')#, 'ignore'
+        r = requests.get( url, timeout=30)
+        content = r.text
         return content
 
     
