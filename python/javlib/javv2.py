@@ -22,6 +22,7 @@ import queue
 import threading
 
 javlibLocalDir = "d:/999-temp/javlib/"
+javlibLocalDir = "h:/javlib/"
 
 
 waitingUrlFile = "waitting.txt"
@@ -88,9 +89,10 @@ def saveUrlsMap():
         urlsMapPath = os.path.join( javlibLocalDir, urlsMapFile )
         with open( urlsMapPath, 'w' ) as f:
             json.dump( urlsMap, f, indent=4 )
-        urlsMapPath = urlsMapPath + '.bk'       # 防止程序在dump过程中出问题(关闭, 这里再多写一个备份文件)
-        with open( urlsMapPath, 'w' ) as f:
-            json.dump( urlsMap, f, indent=4 )
+        urlsMapPathBk = urlsMapPath + '.bk'       # 防止程序在dump过程中出问题(关闭, 这里再多写一个备份文件)
+        with open( urlsMapPathBk, 'wb' ) as fBk:
+            with open( urlsMapPath, 'rb') as f:
+                fBk.write( f.read() )
         return
 
 def loadUrlsMap():
@@ -298,6 +300,13 @@ def SaveFinishedUrls( urlSet, fileDir ):
             fVideoList.write( url+"\n" )
     fVideo.close()
     fVideoList.close()
+    with open( filePathVideo+'.bk', "wb") as fVideoBk:
+        with open( filePathVideo, 'rb' ) as fVideo:
+            fVideoBk.write( fVideo.read() )
+    
+    with open( filePathList+'.bk', "wb") as fVideoListBk:
+        with open( filePathList, 'rb' ) as fVideoList:
+            fVideoListBk.write( fVideoList.read() )
 
 def ReadUrls( filePath, urlSet ):
     try:
@@ -306,6 +315,13 @@ def ReadUrls( filePath, urlSet ):
         f.close()
     except FileNotFoundError:
         logging.info( "file not found" )
+    
+    try:
+        with open( filePath+'.bk', "r", encoding="utf-8") as f:
+            urlSet |= set(f.read().splitlines())
+        f.close()
+    except FileNotFoundError:
+        logging.info( "back file not found" )
 
 def downloadFileTry(url, localPath):
     for i in range(5):                
@@ -601,21 +617,22 @@ while( len(waitingUrlSet ) > 0 or len(workingUrlSet) > 0 ):
             
             
             # 备份。
-            if( len(finishedUrlSet ) % 10000 == 0 ):
+            numberBetweenBackup = 50000
+            if( len(finishedUrlSet ) % numberBetweenBackup == 0 ):
                 
                 # 等待当前任务完成。
                 while not queueWaittingUrl.empty():
                     time.sleep(1)
                 time.sleep(60)      # 先简单的sleep等待完成，后续考虑更好的方式。
 
-                backupIndex = int(len(finishedUrlSet) / 10000) % 2
+                backupIndex = int(len(finishedUrlSet) / numberBetweenBackup) % 2
                 backupAllData( backupIndex, waitingUrlSet, finishedUrlSet, errorUrlSet )
             #elif len(finishedUrlSet) % 500 == 0 :
             #    avdbClient = AvdbClient()
             #    avdbClient.dbIntegrityCheck()
                 
             # save urls. save after backup, do not save if backup fail!.
-            if( len(finishedUrlSet) % 10 == 0 ):
+            if( len(finishedUrlSet) % 100 == 0 ):
                 SaveUrls( waitingUrlSet | workingUrlSet, waitingUrlFilePath)
                 SaveFinishedUrls( finishedUrlSet, javlibLocalDir )
                 saveUrlsMap()
