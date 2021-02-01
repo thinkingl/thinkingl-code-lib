@@ -2,6 +2,7 @@
     "server":{
         "port":2080,
         "queueSize":100,
+        "recvBufSize":15000,
         "map":[
             {
                 "name":"remote desktop control for 90",
@@ -20,6 +21,7 @@
         "serverAddr":"lizhixing.top",
         "serverAddr-":"192.168.84.99",
         "serverPort":1723,
-        "queueSize":10
+        "queueSize":10,
+        "recvBufSize":1500000
     }
 }

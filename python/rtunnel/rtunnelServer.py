@@ -7,18 +7,23 @@ import rtunnelUtils
 import queue
 import time
 import base64
+import select
 
 class RTunnelServer():
 
     clientTable = {}    # clientId -> data queue for client ( send to client ).
     appConnectionTable = {} # connectionId -> data queue for app ( send to app )
+    recvBufSize = 1500
 
     def start( self, serverCfg ):
         logging.info( 'server start! cfg:[%s]', serverCfg )
         self.serverCfg = serverCfg
 
+        if serverCfg.get( 'recvBufSize') != None:
+            self.recvBufSize = serverCfg.get( 'recvBufSize')
+
         # 监听服务端口.
-        threading.Thread( name='service', target=self.serviceThread ).start()
+        threading.Thread( name='service', target=self.serviceThread, daemon=True ).start()
 
         # 监听通道端口.
         '''
@@ -35,7 +40,7 @@ class RTunnelServer():
         '''
         mappingCfgs = serverCfg.get('map')
         for mapping in mappingCfgs:
-            threading.Thread( name='tunnel-'+mapping.get('name'), target=self.tunnelThread, args=(mapping,) ).start()
+            threading.Thread( name='tunnel-'+mapping.get('name'), target=self.tunnelThread, args=(mapping,), daemon=True ).start()
 
         return
 
@@ -60,7 +65,7 @@ class RTunnelServer():
                 
             connection,address = sock.accept()  
             logging.info( 'Accept connection from %s', address )
-            threading.Thread(name='serviceConnection-recv-'+str(address), target=self.serviceConnectionRecvThread, args=(connection,address)).start()
+            threading.Thread(name='serviceConnection-recv-'+str(address), target=self.serviceConnectionRecvThread, args=(connection,address) , daemon=True).start()
             
         return
 
@@ -79,15 +84,21 @@ class RTunnelServer():
                     pass
                 if sendMsg != None:
                     logging.debug( 'serviceConnectionSendThread get msg to send, msg: %s', sendMsg )
+                    logging.info( 'serviceConnectionSendThread get msg to send to client %s, msg: %s', clientId, str(sendMsg)[0:100] )
+
                     rtunnelUtils.sendJsonMsg( connection, sendMsg )
                 else:
                     # 发一个空包,试试socket是不是有效.
                     #connection.send(b'')
                     # 发一个连接校验包.
-                    allConnections = list(self.appConnectionTable.keys())
+                    allConnections = list()
+                    for c in self.appConnectionTable:
+                        if clientId == self.appConnectionTable[c][1]:
+                            allConnections.append( c )
                     if allConnections != lastAllConnections:
                         lastAllConnections = allConnections
-                        syncMsg = { 'cmd':'sync', 'connections':allConnections}
+                        syncMsg = { 'cmd':'sync', 'clientId':clientId, 'connections':allConnections}
+                        logging.info( 'send sync msg: %s', syncMsg )
                         rtunnelUtils.sendJsonMsg( connection, syncMsg )
                     else:
                         #发一个空包,试试socket是不是有效.
@@ -114,15 +125,17 @@ class RTunnelServer():
                 self.clientTable[ clientId ] = sendQueue
                 logging.info( 'bind clientId - sendQueue : [%s - %s]', clientId, sendQueue )
 
-                sendThread = threading.Thread(name='serviceConnection-send-'+ clientId + '@' + str(address), target=self.serviceConnectionSendThread, args=(connection, clientId, address, sendQueue))
+                sendThread = threading.Thread(name='serviceConnection-send-'+ clientId + '@' + str(address), target=self.serviceConnectionSendThread, args=(connection, clientId, address, sendQueue), daemon=True)
                 sendThread.start()
 
 
                 while True:
+                    #select.select( [connection,], None, None, 0.01 )
                     msg = rtunnelUtils.recvMsg( connection )
                     logging.debug( 'serviceConnectionRecvThread recv msg from client. msg: %s', msg )
                     cmd = msg.get('cmd')
                     if cmd == 'sync':
+                        logging.info( 'recv sync msg %s', msg )
                         allConnections = msg.get('connections')
                         for connect in allConnections:
                             if not connect in self.appConnectionTable:
@@ -136,7 +149,7 @@ class RTunnelServer():
                         pass
                     else:
                         connectionId = msg.get( 'id' )
-                        appQueue = self.appConnectionTable.get( connectionId )
+                        appQueue = self.appConnectionTable.get( connectionId )[0]
                         if appQueue == None:
                             logging.error( 'Can not find connection queue for %s', connectionId )
                         else:
@@ -186,12 +199,12 @@ class RTunnelServer():
             connectionId = str(address)
             queueSize = self.serverCfg.get( 'queueSize' )
             appQueue = queue.Queue( queueSize )
-            self.appConnectionTable[ connectionId ] = appQueue
+            self.appConnectionTable[ connectionId ] = (appQueue,clientId)
 
             clientDataQueue = self.clientTable[ clientId ]
 
-            threading.Thread( name='tunnel-send-' + str(address), target=self.tunnelSendThread, args=(connection,mappingCfg, connectionId, appQueue) ).start()
-            threading.Thread( name='tunnel-recv-' + str(address), target=self.tunnelRecvThread, args=(connection,mappingCfg, connectionId, clientDataQueue) ).start()
+            threading.Thread( name='tunnel-send-' + str(address), target=self.tunnelSendThread, args=(connection,mappingCfg, connectionId, appQueue), daemon=True ).start()
+            threading.Thread( name='tunnel-recv-' + str(address), target=self.tunnelRecvThread, args=(connection,mappingCfg, connectionId, clientDataQueue), daemon=True ).start()
 
         return
     
@@ -207,7 +220,7 @@ class RTunnelServer():
         logging.debug( 'tunnelRecvThread put msg to client queue. msg: %s', connectMsg)
         try:
             while True:
-                data = connection.recv( 1500 )
+                data = connection.recv( self.recvBufSize )
                 if len( data ) == 0:
                     logging.error( 'recv empty data. connectionId: %s addr: %s:%d', connectionId, addr, port )
                     break
@@ -221,7 +234,7 @@ class RTunnelServer():
 
         disconnectMsg = { 'cmd':'disconnect', 'id':connectionId }
         clientQueue.put( disconnectMsg )
-        logging.debug( 'tunnelRecvThread put msg to client queue. msg: %s', disconnectMsg)
+        logging.info( 'tunnelRecvThread put msg to client queue. msg: %s', disconnectMsg)
 
         logging.info( 'tunnelRecvThread for %s exit!', connectionId )
         return

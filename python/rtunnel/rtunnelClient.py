@@ -12,8 +12,13 @@ import base64
 class RTunnelClient():
 
     client2AppQueueTable = {}   # connectionId -> client2AppQueue
+    clientCfg = {}
+    recvBufSize = 1500
 
     def start(self, clientCfg ):
+        self.clientCfg = clientCfg
+        if clientCfg.get( 'recvBufSize') != None:
+            self.recvBufSize = clientCfg.get( 'recvBufSize')
         threading.Thread(name='clientThread', target=self.clientThread, args=(clientCfg,), daemon=True).start()
         return
 
@@ -39,7 +44,8 @@ class RTunnelClient():
                 logging.info( 'client connect to %s success!', address )
 
                 # 发送自己的注册.
-                sendMsg(sock, 'register', clientId=clientCfg.get('id') )
+                clientId = clientCfg.get('id')
+                sendMsg(sock, 'register', clientId= clientId)
 
                 sendThread = threading.Thread( name='clientSendThread', target=self.clientSendThread, args=(sock,client2ServerQueue), daemon=True)
                 sendThread.start()
@@ -55,6 +61,11 @@ class RTunnelClient():
                         self.client2AppQueueTable[ connectionId ] = client2AppQueue
                         threading.Thread(name='ClientAppRecvThread-' + connectionId + '-' + str(address), target=self.clientAppRecvThread, args=(connectionId,address, client2ServerQueue, client2AppQueue)).start()
                     elif msg['cmd'] == 'sync':
+                        logging.info( 'recv sync: %s', msg)
+                        syncClientId = msg.get('clientId')
+                        if syncClientId != clientId:
+                            logging.error( 'sync msg with wrong client id! sync client id: %s, my id: %s', syncClientId, clientId )
+                            continue
                         allConnections = msg.get('connections')
                         for connect in allConnections:
                             if not connect in self.client2AppQueueTable:
@@ -73,7 +84,7 @@ class RTunnelClient():
                             client2AppQueue.put( msg )
                             logging.debug( 'put msg to client2App queue, msg: %s', msg )
                         else:
-                            logging.error( 'Cannot find client2AppQueue for msg! msg:%s', msg )
+                            logging.error( 'Cannot find client2AppQueue for msg! msg:%s', str(msg)[0:100] )
             except:
                 logging.exception( 'error' )
                 time.sleep(1)
@@ -85,6 +96,7 @@ class RTunnelClient():
         # 将要发给服务的数据发出去.
         try:
             lastAllConnections = None
+            idleNum= 0
             while True:
                 sendMsg = None
                 try:
@@ -98,16 +110,20 @@ class RTunnelClient():
                     # connection.send(b'')
                     # 发一个连接校验包.
                     allConnections = list(self.client2AppQueueTable.keys())
-                    if allConnections != lastAllConnections:
+                    if allConnections != lastAllConnections or idleNum > 60:
+                        idleNum = 0
                         lastAllConnections = allConnections
-                        syncMsg = { 'cmd':'sync', 'connections':allConnections}
+                        clientId = self.clientCfg.get('id')
+                        syncMsg = { 'cmd':'sync', 'clientId':clientId, 'connections':allConnections}
                         rtunnelUtils.sendJsonMsg( connection, syncMsg )
                     else:
                         #发一个空包,试试socket是不是有效.
                         connection.send(b'')
+                        idleNum = idleNum + 1
         except:
             logging.exception( 'error' )
 
+        connection.close()
         logging.info( 'clientSendThread exit!')
         return
 
@@ -123,7 +139,7 @@ class RTunnelClient():
 
             # 接收数据. 
             while True:
-                data = sock.recv(1500)
+                data = sock.recv(self.recvBufSize)
                 if len( data ) == 0:
                     logging.error( 'recv empty data. connectionId: %s addr: %s', connectionId, address )
                     break
@@ -180,4 +196,5 @@ class RTunnelClient():
         logging.info( 'del app queue from client2AppQueueTable for %s', connectionId )
 
         logging.info( 'clientAppSendThread exit! %s addr: %s', connectionId, address)
+        connection.close()
         return
