@@ -17,9 +17,9 @@
     },
     "client":{
         "id":"1",
-        "serverAddr--":"lizhixing.top",
-        "serverAddr":"192.168.84.99",
-        "serverPort":2080,
+        "serverAddr":"lizhixing.top",
+        "serverAddr-":"192.168.84.99",
+        "serverPort":1723,
         "queueSize":10
     }
 }
