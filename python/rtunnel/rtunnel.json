@@ -1,0 +1,25 @@
+{
+    "server":{
+        "port":2080,
+        "queueSize":100,
+        "map":[
+            {
+                "name":"remote desktop control for 90",
+                "clientId":"1",
+                "localPort":23389,
+                "remoteAddr-":"192.168.84.90",
+                "remotePort-":3389,
+                "remoteAddr":"192.168.84.99",
+                "remotePort":3389,
+                "protocol":"tcp"
+            }
+        ]
+    },
+    "client":{
+        "id":"1",
+        "serverAddr--":"lizhixing.top",
+        "serverAddr":"192.168.84.99",
+        "serverPort":2080,
+        "queueSize":10
+    }
+}

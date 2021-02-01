@@ -1,0 +1,22 @@
+{
+    "register":{
+        "cmd":"register",
+        "clientId":"1"
+    },
+    "connect":{
+        "cmd":"connect",
+        "id":"4",
+        "addr":"192.168.0.1",
+        "port":80
+    },
+    "disconnect":{
+        "id":"4"
+    },
+    "data":{
+        "id":"4",
+        "data":"adfsdfsll"
+    },
+    "sync":{
+        "connections":[4,5]
+    }
+}
