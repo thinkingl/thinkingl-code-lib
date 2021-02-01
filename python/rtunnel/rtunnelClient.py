@@ -14,7 +14,7 @@ class RTunnelClient():
     client2AppQueueTable = {}   # connectionId -> client2AppQueue
 
     def start(self, clientCfg ):
-        threading.Thread(name='clientThread', target=self.clientThread, args=(clientCfg,)).start()
+        threading.Thread(name='clientThread', target=self.clientThread, args=(clientCfg,), daemon=True).start()
         return
 
 
@@ -41,7 +41,7 @@ class RTunnelClient():
                 # 发送自己的注册.
                 sendMsg(sock, 'register', clientId=clientCfg.get('id') )
 
-                sendThread = threading.Thread( name='clientSendThread', target=self.clientSendThread, args=(sock,client2ServerQueue))
+                sendThread = threading.Thread( name='clientSendThread', target=self.clientSendThread, args=(sock,client2ServerQueue), daemon=True)
                 sendThread.start()
 
                 while True:
@@ -119,7 +119,7 @@ class RTunnelClient():
             sock.connect( address )
 
             # 创建发送线程.
-            threading.Thread(name='clientAppSendThread-' + connectionId + '-' + str(address), target=self.clientAppSendThread, args=(sock, connectionId, address, client2AppQueue)).start()
+            threading.Thread(name='clientAppSendThread-' + connectionId + '-' + str(address), target=self.clientAppSendThread, args=(sock, connectionId, address, client2AppQueue),daemon=True).start()
 
             # 接收数据. 
             while True:
