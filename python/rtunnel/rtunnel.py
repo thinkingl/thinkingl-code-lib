@@ -26,7 +26,7 @@ def initLogging( logFileName, logDir='./log', maxLogFileBytes=10*1024*1024, back
 	ch = logging.StreamHandler()
 	ch.setLevel(logging.DEBUG)
 
-	logging.basicConfig(level=logging.INFO,
+	logging.basicConfig(level=logging.DEBUG,
 		format   = '%(asctime)s.%(msecs)03d  %(filename)s:%(lineno)d:%(funcName)s : %(levelname)s  %(message)s',    # 定义输出log的格式
 		datefmt  = '%Y-%m-%d %H:%M:%S',                                     # 时间
 		#filename = logFileName,                # log文件名
@@ -48,7 +48,7 @@ if __name__=="__main__":
 
     if mode == 'client':
         client = rtunnelClient.RTunnelClient()
-        client.start( cfg.get( mode ))
+        client.startAsync( cfg.get( mode ))
     elif mode == 'server':
         serverCfg = cfg.get( mode )
         server = rtunnelServer.RTunnelServer()
