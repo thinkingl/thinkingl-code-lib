@@ -632,7 +632,7 @@ while( len(waitingUrlSet ) > 0 or len(workingUrlSet) > 0 ):
             #    avdbClient.dbIntegrityCheck()
                 
             # save urls. save after backup, do not save if backup fail!.
-            if( len(finishedUrlSet) % 100 == 0 ):
+            if( len(finishedUrlSet) % 1000 == 0 ):
                 SaveUrls( waitingUrlSet | workingUrlSet, waitingUrlFilePath)
                 SaveFinishedUrls( finishedUrlSet, javlibLocalDir )
                 saveUrlsMap()
