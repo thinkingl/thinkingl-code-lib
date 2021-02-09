@@ -105,10 +105,11 @@ class RTunnelServer():
                         pass
                     else:
                         connectionId = msg.get( 'id' )
-                        appQueue = self.appConnectionTable.get( connectionId )[0]
-                        if appQueue == None:
+                        appQueueTuple = self.appConnectionTable.get( connectionId )
+                        if appQueueTuple == None:
                             logging.error( 'Can not find connection queue for %s', connectionId )
                         else:
+                            appQueue = appQueueTuple[0]
                             await appQueue.put( msg )
             else:
                 logging.error( 'First msg should be register, but recv [%s]', regMsg )
@@ -121,7 +122,7 @@ class RTunnelServer():
         logging.info( 'serverClientReadTask exit!')
 
     async def clientWriteTask(self,rader, writer, clientId, clientDataQueue ):
-        logging.info( 'clientWriteTask start! clientId: %s clientDataQueue:%s ', clientId, clientDataQueue)
+        logging.info( 'clientWriteTask start! clientId: %s ', clientId)
 
         lastAllConnections = None
         try:
@@ -134,7 +135,7 @@ class RTunnelServer():
                     pass
                 if sendMsg != None:
                     logging.debug( 'clientWriteTask get msg to send, msg: %s', sendMsg )
-                    logging.info( 'clientWriteTask get msg to send to client %s, msg: %s', clientId, str(sendMsg)[0:100] )
+                    #logging.info( 'clientWriteTask get msg to send to client %s, msg: %s', clientId, str(sendMsg)[0:100] )
 
                     await rtunnelUtils.sendJsonMsgAsync( writer, sendMsg )
                 else:
@@ -161,7 +162,7 @@ class RTunnelServer():
                 
         except:
             logging.exception( 'error' )
-        logging.info( 'clientWriteTask exit! clientId: %s clientDataQueue:%s ', clientId, clientDataQueue)
+        logging.info( 'clientWriteTask exit! clientId: %s ', clientId)
         return
 
     # 通道task。
