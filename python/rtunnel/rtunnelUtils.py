@@ -57,7 +57,7 @@ def recvMsg(sock):
     logging.debug( 'recv msg data:[%s]', msgData)
     msg = json.loads(msgData)
     logging.debug( 'recv [%s]', msg)
-    return msg;
+    return msg
 
 async def recvMsgAsync(reader):
     len = await reader.readexactly(4)
@@ -67,4 +67,4 @@ async def recvMsgAsync(reader):
     logging.debug( 'recv msg data:[%s]', msgData)
     msg = json.loads(msgData)
     logging.debug( 'recv [%s]', msg)
-    return msg;
+    return msg

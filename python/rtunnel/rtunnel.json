@@ -1,19 +1,39 @@
 {
+    "log":{
+        "logLev":10,
+        "logLev-Info":20,
+        "logLev-DEBUG":10
+    },
     "server":{
-        "port":2080,
-        "queueSize":100,
-        "recvBufSize":15000,
+        "port":1723,
+        "queueSize":10,
+	"recvBufSize":15000,
         "map":[
             {
                 "name":"remote desktop control for 90",
-                "clientId":"1",
+                "clientId":"90",
                 "localPort":23389,
-                "remoteAddr-":"192.168.84.90",
-                "remotePort-":3389,
-                "remoteAddr":"192.168.84.99",
+                "remoteAddr":"192.168.84.90",
                 "remotePort":3389,
                 "protocol":"tcp"
-            }
+            },
+	    {
+		"name":"remote desktop control for 99",
+                "clientId":"99",
+                "localPort":33389,
+		"remoteAddr":"192.168.84.99",
+		"remotePort":3389,
+		"protocol":"tcp"
+	    },
+	    {
+	     
+     		"name":"test for tree hole",
+		"clientId":"90",
+		"localPort":1333,
+		"remoteAddr":"192.168.84.102",
+		"remotePort":1333,                
+		"protocol":"tcp"
+	    }
         ]
     },
     "client":{

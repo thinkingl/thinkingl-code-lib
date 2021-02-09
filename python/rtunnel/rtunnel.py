@@ -7,10 +7,11 @@ import sys
 from logging.handlers import RotatingFileHandler
 import rtunnelClient
 import rtunnelServer
+import rtunnelServerAsync
 
 
 
-def initLogging( logFileName, logDir='./log', maxLogFileBytes=10*1024*1024, backupCount = 10 ):
+def initLogging( logFileName, logDir='./log', maxLogFileBytes=10*1024*1024, backupCount = 10, logLev = logging.INFO ):
 	if logDir == None:
 		logDir = ''
 	if not os.path.isdir( logDir ):
@@ -26,7 +27,7 @@ def initLogging( logFileName, logDir='./log', maxLogFileBytes=10*1024*1024, back
 	ch = logging.StreamHandler()
 	ch.setLevel(logging.DEBUG)
 
-	logging.basicConfig(level=logging.DEBUG,
+	logging.basicConfig(level=logLev,
 		format   = '%(asctime)s.%(msecs)03d  %(filename)s:%(lineno)d:%(funcName)s : %(levelname)s  %(message)s',    # 定义输出log的格式
 		datefmt  = '%Y-%m-%d %H:%M:%S',                                     # 时间
 		#filename = logFileName,                # log文件名
@@ -35,25 +36,33 @@ def initLogging( logFileName, logDir='./log', maxLogFileBytes=10*1024*1024, back
 	)
 
 if __name__=="__main__":
-    mode = 'client'
-    if sys.argv[-1] == '-c':
-        mode = 'client'
-    elif sys.argv[-1] == '-s':
-        mode = 'server'
+	mode = 'client'
+	if sys.argv[-1] == '-c':
+		mode = 'client'
+	elif sys.argv[-1] == '-s':
+		mode = 'server'
 
-    initLogging( 'rtunnel-' + mode + '.log' )
-    logging.info( '------------rtunnel ' + mode + ' start!---------------' )
 
-    cfg = json.load( open( 'rtunnel.json', 'r') )
+	lev = logging.INFO
+	cfg = json.load( open( 'rtunnel.json', 'r') )
+	logCfg = cfg.get('log')
+	if  logCfg != None:
+		if logCfg.get( 'logLev') != None:
+			lev = logCfg.get( 'logLev')
+		
 
-    if mode == 'client':
-        client = rtunnelClient.RTunnelClient()
-        client.startAsync( cfg.get( mode ))
-    elif mode == 'server':
-        serverCfg = cfg.get( mode )
-        server = rtunnelServer.RTunnelServer()
-        server.start(serverCfg)
-        
-    while( True ):
-        time.sleep(1)
-        
+	initLogging( 'rtunnel-' + mode + '.log', logLev=lev )
+	logging.info( '------------rtunnel ' + mode + ' start!---------------' )
+
+
+	if mode == 'client':
+		client = rtunnelClient.RTunnelClient()
+		client.start( cfg.get( mode ))
+	elif mode == 'server':
+		serverCfg = cfg.get( mode )
+		server = rtunnelServerAsync.RTunnelServer()
+		server.start(serverCfg)
+		
+	while( True ):
+		time.sleep(1)
+		
