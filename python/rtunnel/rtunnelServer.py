@@ -7,7 +7,6 @@ import rtunnelUtils
 import queue
 import time
 import base64
-import select
 
 class RTunnelServer():
 
@@ -130,7 +129,6 @@ class RTunnelServer():
 
 
                 while True:
-                    #select.select( [connection,], None, None, 0.01 )
                     msg = rtunnelUtils.recvMsg( connection )
                     logging.debug( 'serviceConnectionRecvThread recv msg from client. msg: %s', msg )
                     cmd = msg.get('cmd')

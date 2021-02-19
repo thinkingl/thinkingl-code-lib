@@ -1,6 +1,6 @@
 {
     "log":{
-        "logLev":10,
+        "logLev":20,
         "logLev-Info":20,
         "logLev-DEBUG":10
     },
@@ -25,6 +25,22 @@
 		"remotePort":3389,
 		"protocol":"tcp"
 	    },
+        {
+            "name":"vnc for 90 port 5800",
+            "clientId":"90",
+            "localPort":5800,
+            "remoteAddr":"192.168.84.90",
+            "remotePort":5800,
+            "protocol":"tcp"
+        },
+        {
+            "name":"vnc for 90 port 5900",
+            "clientId":"90",
+            "localPort":5900,
+            "remoteAddr":"192.168.84.90",
+            "remotePort":5900,
+            "protocol":"tcp"
+        },
 	    {
 	     
      		"name":"test for tree hole",
