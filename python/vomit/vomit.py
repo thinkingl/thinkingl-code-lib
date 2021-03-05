@@ -34,17 +34,18 @@ class vomit():
         # save.
         configFilePath = self.filePath.rsplit('.',1)[0] + '.json'
         try:
-            with open( configFilePath, 'w' ) as f:
-                json.dump( vomitCfg, f, indent=4)
-        except:
-            print( "save config file %s fail!"%configFilePath )
+            jsonStr = json.dumps( vomitCfg, indent=4)
+            with open( configFilePath, 'w', encoding="utf-8" ) as f:
+                f.write( jsonStr )
+        except Exception as e:
+            print( "save config file %s fail! file:", configFilePath, " exceptio: ", e )
 
     def readConfig(self):
         configFilePath = self.filePath.rsplit('.',1)[0] + '.json'
         vomitCfg = {}
         if os.path.isfile( configFilePath ):
             try:
-                with open(configFilePath, 'r') as f: # f is a local var, it would clean up anyway.
+                with open(configFilePath, 'r', encoding='utf-8') as f: # f is a local var, it would clean up anyway.
                     vomitCfg = json.load( f )
             except:
                 pass 
@@ -82,9 +83,11 @@ class vomit():
         mapCfg = vomitCfg.get( 'map' )
         sessions = self.packList.sessions()
         for session in sessions:
+            print( "find session ", session )
             sessionCfg = mapCfg.get( session )
             sessionPackets = sessions[session]
-            if sessionCfg.get( 'target' ) != None and len(sessionCfg.get( 'target' )) > 0:
+            if sessionCfg != None and sessionCfg.get( 'target' ) != None and len(sessionCfg.get( 'target' )) > 0:
+                print( 'Create thread for session ', session, " config: ", sessionCfg )
                 t = threading.Thread( name=session, target=self.ThreadSender(sessionPackets, sessionCfg) )
                 self.threadTable[session] = t
                 t.start()
@@ -100,6 +103,12 @@ class vomit():
 
 if __name__=="__main__":
     filePath = './sample.pcapng'
+
+    if len( sys.argv ) > 1:
+        filePath = sys.argv[1]
+        print( 'package file:', filePath )
+    
+
     v = vomit(filePath)
     v.start()
     while True:
