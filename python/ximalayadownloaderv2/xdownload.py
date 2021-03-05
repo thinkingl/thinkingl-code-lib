@@ -6,6 +6,12 @@ import time
 
 
 def download( url, file_path, customHeaders ):    
+
+    # 发现续传会导致文件内容损坏, 这里禁掉续传功能.
+    if os.path.isfile( file_path ):
+        os.remove( file_path )
+        logging.info( 'remove unfinished file %s before download.', file_path )
+
     temp_size = 0
     if os.path.exists(file_path):
         temp_size = os.path.getsize(file_path)  # 本地已经下载的文件大小
@@ -51,7 +57,7 @@ def download( url, file_path, customHeaders ):
     f.close()
     r.close()
 
-    return os.path.exists(file_path) and os.path.getsize(file_path) >= total_size
+    return os.path.exists(file_path) and os.path.getsize(file_path) == total_size
 
 def tryDownload(url, file_path, tryTimes, headers):
     if tryTimes == None or tryTimes <= 0:
