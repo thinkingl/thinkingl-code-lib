@@ -16,6 +16,7 @@ def human_readable(plain_size):
     if plain_size <= 1024 * 1024 * 1024 *1024:
         return str( round(plain_size / 1024 / 1024 / 1024, 2)) + 'G'
 
+random.seed( time.time()*1984 )
 dataList = list()
 for i in range(0,30):
     l= numpy.random.randint(low=-2147483648, high=0x7FFFFFFF, size=1024**2*10)
@@ -44,7 +45,8 @@ try:
 
                 curSpeed = human_readable( len(data)/(bt-at) )
                 totalSpeed = human_readable( total / (bt - startTime) )
-                print( 'cur write speed ', curSpeed, ' total write speed ', totalSpeed  )
+                totalSize = human_readable( total )
+                print( 'total write ', totalSize, 'cur write speed ', curSpeed, ' total write speed ', totalSpeed  )
 
 except:
     print( 'write full!' )
