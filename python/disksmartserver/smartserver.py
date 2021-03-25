@@ -7,6 +7,7 @@ from threading import Thread
 import logging
 import time
 import os
+import re
 
 app = Flask(__name__)
 
@@ -28,6 +29,8 @@ def smartByDev( devname ):
     smartInfoCmpDiff( devPath, output, lastSmart )
     lastSmart = output
 
+    output = transSMARTInfo( output )
+
     output += '\n'
     output += '---------------------log----------------\n'
     smartLogFileName = 'smart-log.txt'
@@ -46,6 +49,8 @@ def smartByDevId( diskid ):
     lastSmart = readLastSMART(diskid)
     smartInfoCmpDiff( devPath, output, lastSmart )
     lastSmart = output
+
+    output = transSMARTInfo( output )
 
     output += '\n'
     output += '---------------------log----------------\n'
@@ -119,6 +124,9 @@ def smartInfoCmpDiff( dev, smart1, smart2 ):
             logText +=( 'diff line ' + str(i+1) + ' :\n'  )
             logText +=( line1 + '\n')
             logText +=( line2 + '\n')
+            logText += 'transed:\n' 
+            logText +=( transSMARTLine( line1 ) + '\n')
+            logText +=( transSMARTLine( line2 ) + '\n')
             logText +=( '\n' )
             writeSmartCmpLog( dev, logText)
             diff = True
@@ -154,7 +162,41 @@ def threadMonitorSMART( devList ):
             saveLastSMART( dev, output )
         time.sleep(60)
 
+def transSMARTLine( smartLine ):
+    transedLine = smartLine
+    try:
+        transMap = {}
+        with open( 'smartInfoTrans.txt' ) as f:
+            transLines = f.readlines()
+            for line in transLines:
+                line = line.strip()
+                id, value = line.split( '=' )
+                id = int( id, 16 )
+                
+                transMap[id] = value
 
+        values = re.split( '[\s]+', smartLine.strip() )
+        if len( values ) == 10:
+            smartId = int( values[0] )
+            smartDesc = values[1]
+            newSmartDesc = smartDesc
+            if smartId in transMap:
+                newSmartDesc = transMap[smartId]
+            # newSmartDesc 长度补齐到最长, 以对齐显示.
+            newSmartDesc += ( ' '*(47-len(newSmartDesc) ) )
+
+            transedLine = re.sub( smartDesc + '[\s]*', newSmartDesc, transedLine ) # transedLine.replace( smartDesc, newSmartDesc )
+    except:
+        pass
+    print( 'trans [', smartLine, '] to [', transedLine, ']' )
+    return transedLine
+
+def transSMARTInfo( smartInfo ):
+    transText = ''
+    for smartLine in smartInfo.split( '\n' ):
+        transText += transSMARTLine( smartLine )
+        transText += '\n'
+    return transText
 
 if __name__ == '__main__':
     devList = ['/dev/disk/by-id/scsi-SCV1-MB51_2LIT_152D20329000']
