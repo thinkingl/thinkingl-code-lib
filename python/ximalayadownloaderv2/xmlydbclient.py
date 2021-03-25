@@ -23,6 +23,8 @@ class XMLYDatabaseClient:
     def finishTrack(self, trackId, jsonTrack):
         return self.json2DB( 'track', trackId, jsonTrack )
 
+    def getAnchor(self, id):
+        return self.db2Json('anchor', id)
 
     # 获取专辑信息
     def getAlbum(self, id):

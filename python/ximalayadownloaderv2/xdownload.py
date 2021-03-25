@@ -8,9 +8,12 @@ import time
 def download( url, file_path, customHeaders ):    
 
     # 发现续传会导致文件内容损坏, 这里禁掉续传功能.
-    if os.path.isfile( file_path ):
-        os.remove( file_path )
-        logging.info( 'remove unfinished file %s before download.', file_path )
+    try:
+        if os.path.isfile( file_path ):
+            os.remove( file_path )
+            logging.info( 'remove unfinished file %s before download.', file_path )
+    except:
+        pass
 
     temp_size = 0
     if os.path.exists(file_path):

@@ -5,6 +5,14 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "Python: reverseTrackIndex.py",
+            "type": "python",
+            "request": "launch",
+            "program": "./reverseTrackIndex.py",
+            "console": "integratedTerminal",
+            "args": ["F:/1-audiobooks/4-有声书/new/汤姆叔叔的小屋"]
+        },
+        {
             "name": "Python: Flask",
             "type": "python",
             "request": "launch",
