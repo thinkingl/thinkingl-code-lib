@@ -19,9 +19,9 @@ def updateStockDict( stockDataStore ):
     stockDataStore.updateStockDict( STOCK_TYPE_AH, time.time(), stock_zh_ah_name_dict )
 
 def updateStockExchangeLists():
-    stockExchangeListDir = 'C:/Users/thinkingl/OneDrive/文档/华泰证券原始'
+    stockExchangeListDir = 'C:/Users/thinkingl/AppData/Local/Kingsoft/WPS Cloud Files/userdata/qing/filecache/李之兴的云文档/股票交割单'
     parser = StockExchangeListsParser(stockExchangeListDir)
-    parser.parseAll()
+    history = parser.parseAll()
 
 
 if __name__=="__main__":
