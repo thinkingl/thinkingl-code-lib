@@ -154,14 +154,23 @@ def GetSongInfo( songId, fileSize, format ):
     return songInfo
 
 def DecodeCloudMusicCacheFile( cacheFilePath, storageFilePath ):
-    with open ( cacheFilePath,'rb') as f:
-        btay = bytearray(f.read())
-    with open(storageFilePath,'wb') as out:
-        for i,j in enumerate(btay):
-            btay[i] = j ^ 0xa3
-        out.write(bytes(btay))
-        out.close()
-        f.close()
+    try:
+        with open ( cacheFilePath,'rb') as f:
+            btay = bytearray(f.read())
+        with open(storageFilePath,'wb') as out:
+            for i,j in enumerate(btay):
+                btay[i] = j ^ 0xa3
+            out.write(btay)
+            out.close()
+            f.close()
+    except:
+        logging.error( 'Decode %s to %s except!', cacheFilePath, storageFilePath )
+        logging.exception( 'error' )
+        if os.path.isfile( storageFilePath ):
+            errFilePath = storageFilePath + '.err'
+            if os.path.isfile( errFilePath ):
+                os.remove( errFilePath )
+            os.rename( storageFilePath, errFilePath )
 
 def GetSongDir( songInfo ):
     album = NormalizeName(songInfo[ "album" ])#去掉非法字符
@@ -178,6 +187,10 @@ def GetSongFilePathWithoutExt( songInfo ):
     songTitle = songInfo["title"]
     songDir = GetSongDir( songInfo )
     fileName = NormalizeName(songTitle)#去掉非法字符
+    # 文件名中加上artist.
+    artist = NormalizeName(songInfo["artist"])#去掉非法字符
+    if artist != '':
+        fileName = artist + ' - ' + fileName
     return  songDir + fileName
 
 def SaveSongFile( ucFilePath, songInfo ):
@@ -330,6 +343,7 @@ def human_readable(plain_size):
         return str( round(plain_size / 1024 / 1024, 2)) + 'M'
     if plain_size <= 1024 * 1024 * 1024 *1024:
         return str( round(plain_size / 1024 / 1024 / 1024, 2)) + 'G'
+    return str( round(plain_size / 1024 / 1024 / 1024, 2)) + 'G'
 
 def initLogging():
     sys.stdout.reconfigure(encoding='utf-8')
