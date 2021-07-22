@@ -66,6 +66,8 @@ def isIgnoreDiff( line ):
         return True
     if line.find( '9 Power_On_Hours' ) != -1:
         return True
+    if line.find( '160 Unknown_Attribute' ) == 0:
+        return True
     if line.find( '164 Unknown_Attribute' ) == 0:
         return True
     if line.find( '194 Temperature' ) == 0:
