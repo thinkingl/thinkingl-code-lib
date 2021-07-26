@@ -110,9 +110,13 @@ class Hashtools(object):
 
     def hashDirContinued(self, rootDir, backupDir):
         while( True ):
-            oldSize = os.path.getsize( self.allHashInfoFile )
+            oldSize = 0
+            if os.path.isfile( self.allHashInfoFile ):
+                oldSize = os.path.getsize( self.allHashInfoFile )
             self.hashDir( rootDir )
-            newSize = os.path.getsize( self.allHashInfoFile )
+            newSize = 0
+            if os.path.isfile( self.allHashInfoFile ):
+               newSize = os.path.getsize( self.allHashInfoFile )
             if oldSize != newSize:
                 self.backupFile(self.allHashInfoFile, backupDir, 100)
             time.sleep(60)
@@ -121,6 +125,8 @@ class Hashtools(object):
         baseName = os.path.basename( filePath )
         newName = str(int(time.time())) + '-' + baseName
         newPath = os.path.join( backDir, newName )
+        if not os.path.isdir( backDir ):
+            os.makedirs( backDir )
         copy2(filePath, newPath)
         fileList = os.listdir(backDir)
         if len(fileList) > maxNum:
@@ -131,7 +137,10 @@ class Hashtools(object):
 if __name__ == '__main__':
     rootDir = 'Z:/Downloads'
     rootDir = 'x:/Downloads'
+    if not os.path.isdir( rootDir ):
+        rootDir = 'd:/Downloads'
     allHashInfoFile = 'E:/all115hashlinks.txt'
-    backupDir = 'f:/all115hashlinksbackup'
+    allHashInfoFile = 'h:/all115hashlinks.txt'
+    backupDir = 'H:/all115hashlinksbackup'
     hashTool = Hashtools(allHashInfoFile)
     hashTool.hashDirContinued( rootDir, backupDir )
