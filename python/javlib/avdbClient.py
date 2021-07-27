@@ -8,6 +8,8 @@ import json
 class AvdbClient:
     serverBaseUrl = 'http://127.0.0.1:5001/'
     serverBaseUrl = 'http://192.168.84.8:5001/'
+    serverBaseUrl = 'https://192.168.84.8/avlib/'
+
 
     # 添加一个图片
     def addPic( self, avInfo, picData ):
