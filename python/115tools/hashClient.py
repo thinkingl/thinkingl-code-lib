@@ -15,8 +15,8 @@ class HashClient():
         hash['updateTime'] = updateTime
         print( 'add hash: ', hash)
         url = self.serverBaseUrl + '/hashlink'
-        rsp = requests.put( url=url, json=hash)
-        print( 'add hash rsp: ', rsp )
+        rsp = requests.put( url=url, json=hash, verify=False)
+        print( 'add hash rsp: ', rsp, ' url: ', url )
         if( 200 != rsp.status_code ):
             return False
         if( rsp.json().get('error') != 0 ):
@@ -25,7 +25,7 @@ class HashClient():
 
     def gethashlink(self, dirName:str, fileName:str)->dict:
         url = self.serverBaseUrl + '/hashlink/' + dirName + '/' + fileName
-        rsp = requests.get(url)
+        rsp = requests.get(url, verify=False)
         print( 'get rsp from server: ', rsp)
         if rsp.status_code != 200:
             return {"error":500}

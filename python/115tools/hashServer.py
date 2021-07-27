@@ -12,46 +12,49 @@ import re
 from hashlink import Hashlink
 from hashtools import *
 import requests
+import hashcfg
+from logging.handlers import RotatingFileHandler
+
 
 app = Flask(__name__)
 
 
-def initLogging():
-    #sys.stdout.reconfigure(encoding='utf-8')
-    # 使用FileHandler输出到文件
-    formatter   = '%(asctime)s  %(filename)s:%(lineno)d:%(funcName)s : %(levelname)s  %(message)s'    # 定义输出log的格式
+def initLogging( logFileName, logDir='./log', maxLogFileBytes=10*1024*1024, backupCount = 10 ):
+	if logDir == None:
+		logDir = ''
+	if not os.path.isdir( logDir ):
+		os.makedirs( logDir )
 
-    if not os.path.isdir( 'logs' ):
-        os.makedirs( 'logs' )
+	# 循环覆盖的日志文件. 
+	logFileName = os.path.join( logDir, logFileName )
+	fh = RotatingFileHandler(logFileName, maxBytes=maxLogFileBytes, backupCount=backupCount,encoding="utf-8")
 
-    logFileName = time.strftime('logs/hashserver-%Y%m%d-%H%M%S.log',time.localtime())
-    
-    fh = logging.FileHandler(logFileName)
-    fh.setLevel(logging.DEBUG)
-    #fh.setFormatter(formatter)
+	fh.setLevel(logging.DEBUG)
 
-    # 使用StreamHandler输出到屏幕
-    ch = logging.StreamHandler()
-    ch.setLevel(logging.INFO)
-    #ch.setFormatter(formatter)
-    #logging.addHandler( fh )
-    #logging.addHandler( ch )
+	# 使用StreamHandler输出到屏幕
+	ch = logging.StreamHandler()
+	ch.setLevel(logging.INFO)
 
-    logging.basicConfig(level=logging.INFO,
-        format   = '%(asctime)s  %(filename)s:%(lineno)d:%(funcName)s : %(levelname)s  %(message)s',    # 定义输出log的格式
-        datefmt  = '%Y-%m-%d %A %H:%M:%S',                                     # 时间
-        #filename = logFileName,                # log文件名
-        #filemode = 'w',
-        handlers = [fh, ch]
-    )
-initLogging()
+	logging.basicConfig(level=logging.INFO,
+		format   = '%(asctime)s.%(msecs)03d  %(filename)s:%(lineno)d:%(funcName)s : %(levelname)s  %(message)s',    # 定义输出log的格式
+		datefmt  = '%Y-%m-%d %H:%M:%S',                                     # 时间
+		#filename = logFileName,                # log文件名
+		#filemode = 'w',
+		handlers = [fh, ch]
+	)
+
+initLogging('hashserver.log', logDir=hashcfg.LogDir)
 
 def appendHashlinkLogFile(hashlink:str):
-    with open( 'hashlinklog.txt', 'a', encoding='utf-8' ) as f:
+    hashlinklogpath = hashcfg.HashLogPath
+    hashlogdir = os.path.dirname( hashlinklogpath )
+    if not os.path.isdir( hashlogdir ):
+        os.makedirs( hashlogdir )
+    with open( hashlinklogpath, 'a', encoding='utf-8' ) as f:
         f.write( hashlink + '\n' )
         f.close()
 
-@app.route("/")
+@app.route("/hashlink")
 def hello():
     return "Hello, I'm HashServer!"
 
@@ -61,7 +64,7 @@ def addHashlink():
     if not "updateTime" in hash:
         hash['updateTime'] = time.time()
     logging.info( 'Add hash link: %s', hash )
-    db = HashlinkDB()
+    db = HashlinkDB(hashcfg.HashDBPath)
     db.addHashlink(**hash)
 
     appendHashlinkLogFile( Hashlink(hash).getHashlink() )
@@ -70,7 +73,7 @@ def addHashlink():
 @app.route("/hashlink/<dirName>/<fileName>", methods=['GET'])
 def getHashlink(dirName:str, fileName:str):
     #searchParam = request.args
-    db = HashlinkDB()
+    db = HashlinkDB( hashcfg.HashDBPath )
     hash = db.getHashlink(dirName, fileName)
     if hash == None:
         return {'error':-1, 'msg':'file not exist!'}

@@ -1,9 +1,10 @@
 import sqlite3
+import os
 
 class HashlinkDB():
     dbConnect = None
-    def __init__(self) -> None:
-        self.dbFilePath = 'hashs.db'
+    def __init__(self, dbPath:str) -> None:
+        self.dbFilePath = dbPath
         self.initDb()
         pass
 
@@ -17,6 +18,9 @@ class HashlinkDB():
 
     def connectDb(self)-> sqlite3.Connection:
         self.closeDb()
+        dbDir = os.path.dirname( self.dbFilePath )
+        if not os.path.isdir( dbDir ):
+            os.makedirs( dbDir )
         self.dbConnect = sqlite3.connect(self.dbFilePath,timeout=60)
         return self.dbConnect
     
