@@ -129,7 +129,7 @@ class Hashtools(object):
         copy2(filePath, newPath)
         fileList = os.listdir(backDir)
         if len(fileList) > maxNum:
-            os.remove(fileList[0])
+            os.remove(os.path.join(backDir, fileList[0]) )
         return
 
 
