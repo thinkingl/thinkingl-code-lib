@@ -7,9 +7,10 @@ import hashClient
 from hashlink import Hashlink
 
 class Importor():
-    def __init__(self, onlyTest:bool, runForever:bool) -> None:
+    def __init__(self, onlyTest:bool, runForever:bool, tail:int) -> None:
         self.onlyTest = onlyTest
         self.runForever = runForever
+        self.tail = tail
         pass
     
 
@@ -38,6 +39,7 @@ class Importor():
                 try:
                     with open(file, encoding='utf-8') as f:
                         lines = f.readlines()
+                        lines = lines[-self.tail:]
                         for line in lines:
                             hashlink = line.strip()
                             if not hashlink in allImportedLinks:
@@ -67,9 +69,11 @@ if __name__ == '__main__':
     parser.add_argument('--run',
                     help='Only test, do not commit to server.', action="store_true")
 
+    parser.add_argument('--tail', help='Import the tail lines of the file.', default=100, type=int)
+
     args = parser.parse_args()
     
-    importor = Importor(args.test, args.run )
+    importor = Importor(args.test, args.run, args.tail )
 
     importor.importHashlinks( args.files )
 

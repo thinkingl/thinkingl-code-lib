@@ -12,6 +12,14 @@
             "console": "integratedTerminal"
         },
         {
+            "name": "Python: importhashlinks",
+            "type": "python",
+            "request": "launch",
+            "program": "importhashlinks.py",
+            "console": "integratedTerminal",
+            "args": ["--tail", "10", "e:/all115hashlinks.txt"]
+        },
+        {
             "name": "Python: hashserver",
             "type": "python",
             "request": "launch",
