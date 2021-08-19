@@ -7,6 +7,10 @@ class HashClient():
     def __init__(self, serverBaseUrl) -> None:
         self.serverBaseUrl = serverBaseUrl
     
+        self.proxies = {
+            'http': 'http://127.0.0.1:8118',
+            'https': 'http://127.0.0.1:8118',
+            }
     
     def addHashlink(self, **kw):
         updateTime = time.time()
@@ -15,7 +19,7 @@ class HashClient():
         hash['updateTime'] = updateTime
         print( 'add hash: ', hash)
         url = self.serverBaseUrl + '/hashlink'
-        rsp = requests.put( url=url, json=hash, verify=False)
+        rsp = requests.put( url=url, json=hash, verify=False, proxies=self.proxies)
         print( 'add hash rsp: ', rsp, ' url: ', url )
         if( 200 != rsp.status_code ):
             return False
@@ -25,7 +29,7 @@ class HashClient():
 
     def gethashlink(self, dirName:str, fileName:str)->dict:
         url = self.serverBaseUrl + '/hashlink/' + dirName + '/' + fileName
-        rsp = requests.get(url, verify=False)
+        rsp = requests.get(url, verify=False, proxies=self.proxies)
         print( 'get rsp from server: ', rsp)
         if rsp.status_code != 200:
             return {"error":500}
