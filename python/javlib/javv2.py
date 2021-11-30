@@ -23,6 +23,7 @@ import threading
 
 javlibLocalDir = "d:/999-temp/javlib/"
 javlibLocalDir = "h:/javlib/"
+javlibLocalDir = "y:/javlib/"
 
 
 waitingUrlFile = "waitting.txt"
@@ -108,9 +109,12 @@ def loadUrlsMap():
             
         if len( urlsMap ) > 0:
             return
-        urlsMapPath = urlsMapPath + '.bk'       # 防止程序在dump过程中出问题(关闭, 从备份文件中读取)
-        with open( urlsMapPath ) as f:
-            urlsMap = json.load( f )
+        try:
+            urlsMapPath = urlsMapPath + '.bk'       # 防止程序在dump过程中出问题(关闭, 从备份文件中读取)
+            with open( urlsMapPath ) as f:
+                urlsMap = json.load( f )
+        except:
+            logging.exception( 'error' )
         return
 
 def getUrls( url ):

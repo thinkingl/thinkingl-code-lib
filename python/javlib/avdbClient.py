@@ -3,6 +3,7 @@ import base64
 import logging
 import time
 import json
+import os
 # avdb 客户端
 
 class AvdbClient:
@@ -10,6 +11,8 @@ class AvdbClient:
     serverBaseUrl = 'http://192.168.84.8:5001/'
     serverBaseUrl = 'https://192.168.84.8/avlib/'
 
+    dbBackupDir = './'
+    dbBackupDir = '/share/disk-ssdgw2T/backups/avlib/'
 
     # 添加一个图片
     def addPic( self, avInfo, picData ):
@@ -21,7 +24,7 @@ class AvdbClient:
         addPicReq['picJson'] = avInfo
         addPicReq['picData'] = picBase64
 
-        rsp = requests.put( url, json=addPicReq )
+        rsp = requests.put( url, json=addPicReq,verify=False )
         return rsp 
 
     # 图片是否存在
@@ -32,7 +35,7 @@ class AvdbClient:
         searchPicReq['url'] = avUrl
         for i in range(0,100):
             try:
-                rsp = requests.get( url, params=searchPicReq )
+                rsp = requests.get( url, params=searchPicReq,verify=False )
         
                 fileName = rsp.json()['result']
 
@@ -52,7 +55,7 @@ class AvdbClient:
                 # 检测数据库是否损坏。
                 url = self.serverBaseUrl + 'db/integritycheck'
 
-                rsp = requests.post( url )
+                rsp = requests.post( url,verify=False )
                 logging.info( 'database integrity check start ret: %s', str(rsp.json()) )
                 result = rsp.json()['result']
                 if result != 'ok':
@@ -79,7 +82,7 @@ class AvdbClient:
                 # 检测数据库是否损坏。
                 url = self.serverBaseUrl + 'db/integritycheck'
 
-                rsp = requests.get( url )
+                rsp = requests.get( url,verify=False )
                 logging.info( 'database integrity check status ret: %s', str(rsp.json()) )
                 result = rsp.json()['result']
                 
@@ -122,8 +125,13 @@ class AvdbClient:
             try:              
                 backupUrl = self.serverBaseUrl + 'db/backup/<filename>'
                 fileName = 'avlib-' + backupToken + '.db'
+                
+                # add backup dir
+                fileName = os.path.join( self.dbBackupDir, fileName )
+                logging.info( 'database backup path: %s', fileName)
+
                 backupUrl = backupUrl.replace( '<filename>', fileName )
-                rsp = requests.post( backupUrl )
+                rsp = requests.post( backupUrl,verify=False )
                 logging.info( 'database backup ret: %s', str(rsp.json()))
                 result = rsp.json()['error']
                 if result == 'ok':
@@ -146,7 +154,7 @@ class AvdbClient:
                 backupUrl = self.serverBaseUrl + 'db/backup/<filename>'
                 fileName = 'avlib-' + backupToken + '.db'
                 backupUrl = backupUrl.replace( '<filename>', fileName )
-                rsp = requests.get( backupUrl )
+                rsp = requests.get( backupUrl,verify=False )
                 logging.info( 'database backup ret: %s', str(rsp.json()))
                 result = rsp.json()
                 return result

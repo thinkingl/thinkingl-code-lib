@@ -43,10 +43,11 @@ def initLogging():
     # 使用FileHandler输出到文件
     formatter   = '%(asctime)s  %(filename)s:%(lineno)d:%(funcName)s : %(levelname)s  %(message)s'    # 定义输出log的格式
 
-    if not os.path.isdir( 'logs' ):
-        os.makedirs( 'logs' )
+    logDir = avlibcfg.LogDir
+    if not os.path.isdir( logDir ):
+        os.makedirs( logDir )
 
-    logFileName = time.strftime('logs/avlibserver-%Y%m%d-%H%M%S.log',time.localtime())
+    logFileName = time.strftime( logDir + '/avlibserver-%Y%m%d-%H%M%S.log',time.localtime())
     
     fh = logging.FileHandler(logFileName)
     fh.setLevel(logging.DEBUG)
@@ -125,12 +126,12 @@ t.start()
 app = Flask(__name__)
 
 
-@app.route("/")
+@app.route("/avlib")
 def hello():
-    return "Hello World!"
+    return "Hello, I'm avlib db!"
 
 # 获取图片数据。
-@app.route("/image/<fileName>", methods=['GET'])
+@app.route("/avlib/image/<fileName>", methods=['GET'])
 def getImg(fileName):
     avlib = CAvlibDb()
     avlib.ConnectDb()
@@ -142,7 +143,7 @@ def getImg(fileName):
     return rsp
 
 # 获取图片json信息。
-@app.route("/imageInfoJson/<fileName>", methods=['GET'])
+@app.route("/avlib/imageInfoJson/<fileName>", methods=['GET'])
 def getImgInfoJson(fileName):
     avlib = CAvlibDb()
     avlib.ConnectDb()
@@ -151,7 +152,7 @@ def getImgInfoJson(fileName):
     #return "image info json" + fileName
 
 # 添加一个图片
-@app.route("/image/<fileName>", methods=['PUT'])
+@app.route("/avlib/image/<fileName>", methods=['PUT'])
 def addImg(fileName):
     with writeDBLock:
         addImgReq = request.get_json()
@@ -175,7 +176,7 @@ def addImg(fileName):
         return ret
 
 # 查询图片
-@app.route( "/image/search", methods=['POST','GET'])
+@app.route( "/avlib/image/search", methods=['POST','GET'])
 def searchImg():
     searchParam = None
     if( request.method == 'GET' ):
@@ -191,11 +192,11 @@ def searchImg():
         break # 不是模糊匹配，所以只支持一个属性。
     return ret
 
-@app.route("/imageInfoText/<fileName>", methods=['GET'])
+@app.route("/avlib/imageInfoText/<fileName>", methods=['GET'])
 def getImgInfoTxt(fileName):
     return "image info text" + fileName
 
-@app.route("/random")
+@app.route("/avlib/random")
 def randomImg():
     num = request.args.get('num','2')
     avlib = CAvlibDb()
@@ -206,7 +207,7 @@ def randomImg():
     output = { "imageList": imageNameList }
     return output
 
-@app.route("/compare", methods=['POST'])
+@app.route("/avlib/compare", methods=['POST'])
 def compare():
     print(request.method)
     op = request.get_json()
@@ -218,7 +219,7 @@ def compare():
 
     return ( ret )
 
-@app.route("/top", methods=['POST','GET'])
+@app.route("/avlib/top", methods=['POST','GET'])
 def topImg():
     want = None
     if( request.method == 'GET' ):
@@ -244,7 +245,7 @@ def topImg():
     return ( ret )
 
 threadTable = {}
-@app.route("/db/backup/<filename>", methods=['POST'])
+@app.route("/avlib/db/backup/<filename>", methods=['POST'])
 def backupDB( filename ):
     global threadTable
     backupThread = None
@@ -274,7 +275,7 @@ def threadDatabaseBackup(filename):
             logging.exception( "backupDB")
         return { 'error' : str(e) }
 
-@app.route("/db/backup/<filename>", methods=['GET'])
+@app.route("/avlib/db/backup/<filename>", methods=['GET'])
 def backupDbInfo( filename ):
     avlib = CAvlibDb()
     result= avlib.backupInfo(filename)
@@ -311,7 +312,7 @@ integrityCheckTaskTable = {}
 
 integrityCheckThread = Thread( target=threadDBIntegrityCheck, args=(integrityCheckTaskTable,) )
 integrityCheckThread.start()
-@app.route("/db/integritycheck", methods=['POST'])
+@app.route("/avlib/db/integritycheck", methods=['POST'])
 def dbIntegrityCheckStart():
     name = 'avlib.db'
     global integrityCheckTaskTable
@@ -319,7 +320,7 @@ def dbIntegrityCheckStart():
     logging.info( 'Add database integrity check into task table.' )
     return {'result':'ok'}
 
-@app.route("/db/integritycheck", methods=['GET'])
+@app.route("/avlib/db/integritycheck", methods=['GET'])
 def dbIntegrityCheck():
     name = 'avlib.db'
     global integrityCheckTaskTable
