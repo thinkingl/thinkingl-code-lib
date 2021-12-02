@@ -11,8 +11,8 @@ class AvdbClient:
     serverBaseUrl = 'http://192.168.84.8:5001/'
     serverBaseUrl = 'https://192.168.84.8/avlib/'
 
-    dbBackupDir = './'
-    dbBackupDir = '/share/disk-ssdgw2T/backups/avlib/'
+    #dbBackupDir = './'
+    #dbBackupDir = '/share/disk-ssdgw2T/backups/avlib/'
 
     # 添加一个图片
     def addPic( self, avInfo, picData ):
@@ -127,7 +127,7 @@ class AvdbClient:
                 fileName = 'avlib-' + backupToken + '.db'
                 
                 # add backup dir
-                fileName = os.path.join( self.dbBackupDir, fileName )
+                #fileName = os.path.join( self.dbBackupDir, fileName )
                 logging.info( 'database backup path: %s', fileName)
 
                 backupUrl = backupUrl.replace( '<filename>', fileName )
