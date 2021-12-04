@@ -20,6 +20,7 @@ import re
 import sys
 import queue
 import threading
+from download import *
 
 javlibLocalDir = "d:/999-temp/javlib/"
 javlibLocalDir = "h:/javlib/"
@@ -133,7 +134,12 @@ def ParseJavlibVideoHtml( videoUrl, videoInfo, urlSet ):
 
     releatedUrls = []
 
+    startTime = time.time()
     soup = proxy.bsObjForm( videoUrl )
+    endTime = time.time()
+    if endTime - startTime > 2:
+        logging.warning( "Time use %.2f seconds for url %s", endTime-startTime, videoUrl )
+
     if soup == None:
         return False
 
@@ -249,7 +255,8 @@ def ParseJavlibVideoHtml( videoUrl, videoInfo, urlSet ):
         videoInfo['imgUrl'] = url;   
 
     if( len( videoInfo["id"]) == 0 ):
-         success = False
+        logging.error( "can't get video's id! url: %s videoInfo: %s", videoUrl, videoInfo )
+        success = False
     logging.debug( json.dumps( videoInfo ) )
 
     # 保存url关系.
@@ -260,9 +267,11 @@ def ParseJavlibVideoHtml( videoUrl, videoInfo, urlSet ):
 def ParseJavlibVideoListHtml( videoListUrl, newUrls ):
     logging.info( "parse video list url: %s " , videoListUrl )
     
-
+    startTime = time.time()
     soup = proxy.bsObjForm( videoListUrl )
-    #print( soup )
+    endTime = time.time()
+    if endTime - startTime > 2:
+        logging.warning( "Time use %.2f seconds for url %s", endTime-startTime, videoListUrl )
 
     videoInfoUrlArray = soup.select(".videos .video a[href]")
     for videoInfoUrl in videoInfoUrlArray:
@@ -327,7 +336,7 @@ def ReadUrls( filePath, urlSet ):
     except FileNotFoundError:
         logging.info( "back file not found" )
 
-def downloadFileTry(url, localPath):
+def downloadFileTry_nouse(url, localPath):
     for i in range(5):                
         try:
             urllib.request.urlretrieve( url, localPath)
@@ -357,20 +366,27 @@ def saveAV( videoInfo ):
     # 保存本地文件
 
     # 图片
+    # 有些图片过期了，都是保存不下来的。所以改为即使图片保存失败，也仍然保存图片其它信息到数据库中。
+    # 但是这种图片仍然返回False，这样它的url可以记录到 error.txt 中。
+    result = True
     picPath = saveAVImage( videoInfo )
     if picPath == None:
         logging.error( 'Save av image fail!' )
-        return False
+        result = False
+        videoInfo[ 'imgFail' ] = 'True'
+        videoInfo[ 'imgFailUrl'] = videoInfo['imgUrl']
 
     # json和text文件
     SaveVideoInfo( videoInfo )
 
     # 保存到数据库
-    picData = open(picPath, 'rb').read()
+    picData = b''
+    if result:
+        picData = open(picPath, 'rb').read()
     for i in range(0,10):
         try:
             avdbClient.addPic( videoInfo, picData )
-            return True
+            return result
         except:
             logging.error( "addPic exception!")
             logging.exception( "addPic" )
