@@ -108,7 +108,7 @@ def bsObjForm(url):
         except:
             logging.error( 'bsObjForm %s fail!', url )
             logging.exception("error")
-        time.sleep(5*60)
+        time.sleep(1*60)
     return None 
 
 
