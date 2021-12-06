@@ -49,7 +49,7 @@ if not os.path.isdir( dirByActress ):
 def initLogging():
     sys.stdout.reconfigure(encoding='utf-8')
     # 使用FileHandler输出到文件
-    formatter   = '%(asctime)s  %(filename)s:%(lineno)d:%(funcName)s : %(levelname)s  %(message)s'    # 定义输出log的格式
+    formatter   = '%(asctime)s %(threadName)s %(thread)d %(filename)s:%(lineno)d:%(funcName)s : %(levelname)s  %(message)s'    # 定义输出log的格式
 
     if not os.path.isdir( 'logs' ):
         os.makedirs( 'logs' )
@@ -68,7 +68,7 @@ def initLogging():
     #logging.addHandler( ch )
 
     logging.basicConfig(level=logging.INFO,
-        format   = '%(asctime)s  %(filename)s:%(lineno)d:%(funcName)s : %(levelname)s  %(message)s',    # 定义输出log的格式
+        format   = formatter, #'%(asctime)s  %(filename)s:%(lineno)d:%(funcName)s : %(levelname)s  %(message)s',    # 定义输出log的格式
         datefmt  = '%Y-%m-%d %A %H:%M:%S',                                     # 时间
         #filename = logFileName,                # log文件名
         #filemode = 'w',
