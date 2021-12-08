@@ -37,20 +37,20 @@ class XMLYDatabaseClient:
     # 获取一个专辑的所有track
     def getTrackList(self, albumId):
         url = self.xmlyDatabaseServiceUrl + '/tracklist/' + str(albumId)
-        response = requests.get( url=url )
+        response = requests.get( url=url,verify=False )
         trackListJson = response.json()
         return trackListJson["trackList"]
 
     # 更新数据库
     def json2DB(self, tableName, id, jsonObj):
         url = self.xmlyDatabaseServiceUrl + '/' + tableName + '/' + str(id)
-        requests.put( url=url, json=jsonObj )
+        requests.put( url=url, json=jsonObj,verify=False )
         return
 
     # 读取数据库
     def db2Json(self, tableName, id ):
         url = self.xmlyDatabaseServiceUrl + '/' + tableName + '/' + str(id)
-        response = requests.get( url )
+        response = requests.get( url, verify=False )
         return response.json()
 
 if __name__ == '__main__':

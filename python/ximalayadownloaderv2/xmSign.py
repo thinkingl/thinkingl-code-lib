@@ -66,7 +66,7 @@ class XMSign:
 
     def getxmtime(self):
         url="https://www.ximalaya.com/revision/time"
-        response = requests.get(url, headers=self.headers)
+        response = requests.get(url, headers=self.headers,verify=False)
         # print(response)
         html = response.text
         return html

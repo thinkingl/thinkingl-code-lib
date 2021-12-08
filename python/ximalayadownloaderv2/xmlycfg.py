@@ -2,16 +2,16 @@ import os
 import logging
 
 MinDiskSpace = 1*1024*1024*1024 # 1G 最小的磁盘空间, 剩余磁盘空间不足后停止下载, 开始移动文件.
-TempDir = ['D:/999-temp/xmly','/share/disk-ssd/tmp/xmlytmp','/share/disk-ssd/xmlydownload']
+TempDir = ['y:/tmp/xmlytmp','/share/disk-ssd/tmp/xmlytmp','/share/disk-ssd/xmlydownload']
 FinalDir = ['D:/999-temp/finalxmly','/share/disk-wd12t/1-audiobook/xmly']
 DBPath = ['F:/tmp/xmly/xmly.db', '/share/disk-ssd/xmly/xmly.db']
-DownloadThreadNum = 5
+DownloadThreadNum = 1
 StopFlagFileName = 'stop.flag'
 CurTempDir = ''
 CurFinalDir = ''
 CurDBPath = ''
 UseRemobeDatabase = True
-XMLYDatabaseServiceUrl = "http://192.168.84.8:5000"
+XMLYDatabaseServiceUrl = "https://192.168.84.8/xmly"
 
 
 def getCurTempDir():
