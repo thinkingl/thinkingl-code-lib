@@ -20,6 +20,7 @@ import movefile
 import xmlydbclient
 import xdownload
 import requests
+import urllib3
 
 class XMLYDownloader:
     #等待处理的url
@@ -572,9 +573,14 @@ class XMLYDownloader:
     def parseId(self,url):
         id = ''
         try:
-            id = re.search('(?<=/)\d+(?=/)',url).group()
+            id = re.search('(?<=/)\d+(?=/)',url).group()    # /id/
         except:
             pass
+        if id == '':
+            try:
+                id = re.search('(?<=/)\d+(?=$)',url).group() # /id
+            except:
+                pass
         logging.debug("parse id %s from url: %s", id, url )
         return id
 
@@ -634,6 +640,9 @@ def initLogging():
 if __name__=="__main__":
     socket.setdefaulttimeout(100)
     
+    # 屏蔽 InsecureRequestWarning
+    urllib3.disable_warnings( urllib3.exceptions.InsecureRequestWarning )
+
     initLogging()
     logging.info( 'Start XMLY Downloader!' )
     movefile = movefile.MoveFile()
