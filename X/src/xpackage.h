@@ -38,7 +38,7 @@ public:
         int bodyLen = ntohl( *(int*)packageData );
         if( bodyLen > max_body_length )
         {
-            LOG(ERROR) << "Out of bound of XPackage!!"
+            LOG(ERROR) << "Out of bound of XPackage!!";
         }
         return bodyLen;
     }
