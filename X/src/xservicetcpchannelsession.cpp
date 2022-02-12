@@ -66,7 +66,7 @@ void XServiceTCPChannelSession::doReadHeader()
             }
             else
             {
-                LOG(ERROR) << "xpackage stream socket read fail! ec:[" << ec << "]";
+                LOG(ERROR) << "xpackage stream socket read head fail! ec:[" << ec << "]";
                 this->onFail( ec );
             }
         }
@@ -89,7 +89,7 @@ void XServiceTCPChannelSession::doReadBody( shared_ptr<XPackage> package )
             }
             else
             {
-                LOG(ERROR) << "xpackage stream socket read fail! ec:[" << ec << "]";
+                LOG(ERROR) << "xpackage stream socket read body fail! ec:[" << ec << "]";
                 this->onFail( ec );
             }
         }
@@ -150,6 +150,7 @@ void XServiceTCPChannelSession::onChannelPayloadMessage( shared_ptr<XMessage> ms
 {
     auto payloadMsg = XMessage::fromXPackageJsonBody( msg->getData() );
     VLOG(5) << "channel recv payload msg: " << payloadMsg->toJson();
+    LOG_FIRST_N(INFO,100) << "tcp channel session recv payload msg:" << payloadMsg->toJson();
     this->deliverRawMessage( payloadMsg );
 }
 
