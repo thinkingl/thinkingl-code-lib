@@ -397,10 +397,24 @@ class XMLYDownloader:
         url = 'http://www.ximalaya.com/tracks/%s.json'%trackId
         content = self.urlGetContent(url)
         trackDetail = json.loads(content)
-        trackInfo.update(trackDetail)
+
+        if 'play_path' in trackDetail and trackDetail['play_path'] != None:
+            trackInfo.update(trackDetail)
+        else:
+            url = 'https://www.ximalaya.com/revision/play/v1/audio?id=%s&ptype=1'%trackId
+            content = self.urlGetContent(url)
+            trackDetail = json.loads(content)
+            if 'data' in trackDetail:
+                trackDetail = trackDetail.get('data')
+            if 'src' in trackDetail:
+                trackInfo.update(trackDetail)
+                trackInfo['play_path'] = trackDetail['src']
 
         if not 'play_path' in trackInfo or trackInfo['play_path'] == None:
             logging.error( "Get track info fail! track id: %s content:%s", trackId, content )
+
+            
+
             return False
 
         trackInfo[ 'albumId' ] = albumId
