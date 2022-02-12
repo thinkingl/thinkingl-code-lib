@@ -110,6 +110,7 @@ void XServiceTCPChannelClient::doReadHeader()
         {
             if (!ec)
             {
+                LOG_FIRST_N(INFO,100) << "tcp channel client doReadHeader, bodyLen:" << package->bodyLength();
                 doReadBody( package );
             }
             else

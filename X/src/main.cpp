@@ -63,6 +63,7 @@ int main(int argc, char *argv[])
 	FLAGS_log_dir = "./logs";
 	FLAGS_colorlogtostderr=true;  //设置输出颜色
 	FLAGS_alsologtostderr =true;//设置日志消息除了日志文件之外是否去标准输出
+	//FLAGS_v = 5;
 	google::InitGoogleLogging( argv[0] );
 
 	LOG(INFO) << "X run!";

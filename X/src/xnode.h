@@ -28,6 +28,7 @@ class XNode : public std::enable_shared_from_this<XNode>
     bool run();
 
     void deliverMessage( std::shared_ptr<XMessage> msg );
+    void deliverRawMessage( shared_ptr<XMessage> msg );
 
     string getId()const;
 

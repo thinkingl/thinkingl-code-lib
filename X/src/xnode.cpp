@@ -44,6 +44,11 @@ bool XNode::run()
 void XNode::deliverMessage( shared_ptr<XMessage> msg )
 {
     msg->setFromNode( this->id );
+    this->deliverRawMessage( msg );
+}
+
+void XNode::deliverRawMessage( shared_ptr<XMessage> msg )
+{
 
     VLOG(5) << "node will deliver msg: " << msg->toJson();
 
