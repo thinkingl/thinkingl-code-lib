@@ -49,8 +49,8 @@ void XNode::deliverMessage( shared_ptr<XMessage> msg )
 
 void XNode::deliverRawMessage( shared_ptr<XMessage> msg )
 {
-    LOG_FIRST_N(INFO,100) << "node will deliver msg: " << msg->toJson();
-    VLOG(5) << "node will deliver msg: " << msg->toJson();
+    //LOG_FIRST_N(INFO,100) << "node will deliver msg: " << msg->toJson();
+    //VLOG(5) << "node will deliver msg: " << msg->toJson();
 
     string toNode = msg->getToNode();
     string toService = msg->getToService();

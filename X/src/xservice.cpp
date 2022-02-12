@@ -25,7 +25,7 @@ XService::XService( json cfg, shared_ptr<XNode> node )
 void XService::deliverMessage( std::shared_ptr<XMessage> mesg )
 {
     mesg->setFromService( this->getId() );
-    LOG_FIRST_N(INFO,100) << "xservice will deliver message:" << mesg->toJson();
+    //LOG_FIRST_N(INFO,100) << "xservice will deliver message:" << mesg->toJson();
     this->xnode->deliverMessage( mesg );
 }
 

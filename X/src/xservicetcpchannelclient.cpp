@@ -110,12 +110,12 @@ void XServiceTCPChannelClient::doReadHeader()
         {
             if (!ec)
             {
-                LOG_FIRST_N(INFO,100) << "tcp channel client doReadHeader, bodyLen:" << package->bodyLength();
+                //LOG_FIRST_N(INFO,100) << "tcp channel client doReadHeader, bodyLen:" << package->bodyLength();
                 doReadBody( package );
             }
             else
             {
-                LOG(ERROR) << "xpackage stream socket read body fail! ec:[" << ec << "]";
+                LOG(ERROR) << "xpackage stream socket read head fail! ec:[" << ec << "]";
                 this->onFail( ec );
             }
         }
@@ -217,7 +217,7 @@ void XServiceTCPChannelClient::onSessionMessage( shared_ptr<XMessage> msg )
 
 void XServiceTCPChannelClient::input( shared_ptr<XMessage> msg )
 {
-    LOG_FIRST_N(INFO,100) << "tcp channel client input msg:" << msg->toJson();
+    //LOG_FIRST_N(INFO,100) << "tcp channel client input msg:" << msg->toJson();
     bool sending = !this->sendMessageQueue.empty();
     this->sendMessageQueue.push( msg );
     if( !sending )

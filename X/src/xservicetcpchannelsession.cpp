@@ -150,7 +150,7 @@ void XServiceTCPChannelSession::onChannelPayloadMessage( shared_ptr<XMessage> ms
 {
     auto payloadMsg = XMessage::fromXPackageJsonBody( msg->getData() );
     VLOG(5) << "channel recv payload msg: " << payloadMsg->toJson();
-    LOG_FIRST_N(INFO,100) << "tcp channel session recv payload msg:" << payloadMsg->toJson();
+    //LOG_FIRST_N(INFO,100) << "tcp channel session recv payload msg:" << payloadMsg->toJson();
     this->deliverRawMessage( payloadMsg );
 }
 
@@ -184,7 +184,7 @@ void XServiceTCPChannelSession::doWrite()
     auto msg = make_shared<XMessage>(XMessage::MessageChannelPayload, "", payloadPackage );
     auto package = msg->toXPackage();
 
-    LOG_FIRST_N(INFO, 100) << "doWrite package, bodyLen:" << package->bodyLength();
+    //LOG_FIRST_N(INFO, 100) << "doWrite package, bodyLen:" << package->bodyLength();
     auto self(shared_from_this());
     asio::async_write( this->socket,
         asio::buffer( package->data(), package->header_length + package->bodyLength() ),
