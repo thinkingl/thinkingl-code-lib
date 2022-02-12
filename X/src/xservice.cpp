@@ -25,12 +25,12 @@ XService::XService( json cfg, shared_ptr<XNode> node )
 void XService::deliverMessage( std::shared_ptr<XMessage> mesg )
 {
     mesg->setFromService( this->getId() );
-    this->deliverRawMessage( mesg );
+    this->xnode->deliverMessage( mesg );
 }
 
 void XService::deliverRawMessage( shared_ptr<XMessage> msg )
 {
-    this->xnode->deliverMessage( msg );
+    this->xnode->deliverRawMessage( msg );
 }
 
 
