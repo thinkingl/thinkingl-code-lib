@@ -19,6 +19,8 @@ import xmlycfg
 import movefile
 import xmlydbclient
 import xdownload
+import requests
+import urllib3
 
 class XMLYDownloader:
     #等待处理的url
@@ -563,7 +565,7 @@ class XMLYDownloader:
         if( len(storeTrackList) < curTrackNum ):
             logging.info( 'album %s %s has more tracks %d stored:%d!'%(albumId, curAlbumInfo['albumTitle'], curTrackNum, len(storeTrackList)) )
             return True
-
+        logging.info( 'album %s %s donot need to be downloaded!'%(albumId, curAlbumInfo['albumTitle']) )
         return False
 
     # 获取专辑的Track列表
@@ -585,9 +587,14 @@ class XMLYDownloader:
     def parseId(self,url):
         id = ''
         try:
-            id = re.search('(?<=/)\d+(?=/)',url).group()
+            id = re.search('(?<=/)\d+(?=/)',url).group()    # /id/
         except:
             pass
+        if id == '':
+            try:
+                id = re.search('(?<=/)\d+(?=$)',url).group() # /id
+            except:
+                pass
         logging.debug("parse id %s from url: %s", id, url )
         return id
 
@@ -596,8 +603,12 @@ class XMLYDownloader:
         try:
             #nowTimeBeforeCall = str(round(time.time()*1000))
 
-            req = urllib.request.Request(url=url, headers=headers, method="GET")
-            content = urllib.request.urlopen(req).read().decode('utf-8','ignore')#, 'ignore'
+            #req = urllib.request.Request(url=url, headers=headers, method="GET")
+            #content = urllib.request.urlopen(req).read().decode('utf-8','ignore')#, 'ignore'
+
+            rsp = requests.get( url=url, verify=False,headers=headers)
+            content = rsp.text
+
             #serverTime = self.xmSign.getxmtime()
             #nowTime = str(round(time.time()*1000))
             #logging.info( "xm-sign:[%s] cur serverTime = [%s] localTimeBefor:[%s] localTime after:[%s] url:[%s] content 40:[%s]", headers['xm-sign'], serverTime, nowTimeBeforeCall, nowTime, url, content[0:40]  )
@@ -618,7 +629,7 @@ class XMLYDownloader:
 
 def initLogging():
     # 使用FileHandler输出到文件
-    formatter   = '%(asctime)s  %(filename)s:%(lineno)d:%(funcName)s : %(levelname)s  %(message)s'    # 定义输出log的格式
+    formatter   = '%(asctime)s %(threadName)s %(thread)d %(filename)s:%(lineno)d:%(funcName)s : %(levelname)s  %(message)s'    # 定义输出log的格式
     logFileName = time.strftime('xmlylog-%Y%m%d-%H%M%S.log',time.localtime())
     
     fh = logging.FileHandler(logFileName)
@@ -627,13 +638,13 @@ def initLogging():
 
     # 使用StreamHandler输出到屏幕
     ch = logging.StreamHandler()
-    ch.setLevel(logging.INFO)
+    ch.setLevel(logging.DEBUG)
     #ch.setFormatter(formatter)
     #logging.addHandler( fh )
     #logging.addHandler( ch )
 
     logging.basicConfig(level=logging.INFO,
-        format   = '%(asctime)s  %(filename)s:%(lineno)d:%(funcName)s : %(levelname)s  %(message)s',    # 定义输出log的格式
+        format   = formatter,    # 定义输出log的格式
         datefmt  = '%Y-%m-%d %A %H:%M:%S',                                     # 时间
         #filename = logFileName,                # log文件名
         #filemode = 'w',
@@ -643,6 +654,9 @@ def initLogging():
 if __name__=="__main__":
     socket.setdefaulttimeout(100)
     
+    # 屏蔽 InsecureRequestWarning
+    urllib3.disable_warnings( urllib3.exceptions.InsecureRequestWarning )
+
     initLogging()
     logging.info( 'Start XMLY Downloader!' )
     movefile = movefile.MoveFile()
