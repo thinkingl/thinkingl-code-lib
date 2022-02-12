@@ -46,7 +46,7 @@ RM			:= del /q /f
 MD			:= mkdir
 CXXFLAGS	+= -DGLOG_NO_ABBREVIATED_SEVERITIES
 else
-MAIN		:= main
+MAIN		:= x
 SOURCEDIRS	:= $(shell find $(SRC) -type d)
 INCLUDEDIRS	:= $(shell find $(INCLUDE) -type d)
 LIBDIRS		:= $(shell find $(LIB) -type d)
@@ -64,10 +64,13 @@ LIBS		:= $(patsubst %,-L%, $(LIBDIRS:%/=%))
 ifeq ($(OS),Windows_NT)
 LIBS		+= -lws2_32 -lgdi32 -lwsock32
 LIBS		+= -lshlwapi
-LIBS		+= -lgtest
-LIBS		+= -lglog
 LIBS		+= -lgflags_static
 endif
+
+LIBS		+= -lgtest
+LIBS		+= -lglog
+LIBS		+= -lpthread
+
 
 # define the C source files
 SOURCES		:= $(wildcard $(patsubst %,%/*.cpp, $(SOURCEDIRS)))
