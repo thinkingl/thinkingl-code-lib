@@ -56,7 +56,8 @@ public:
     {
         if ( len > max_body_length )
         {
-            throw EXCEPTION_ARRAY_BOUNDS_EXCEEDED;
+            //throw EXCEPTION_ARRAY_BOUNDS_EXCEEDED;
+            throw "body is out of bounds!";
             return;
         }
         int netLen = htonl( len );
