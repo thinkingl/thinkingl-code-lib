@@ -12,6 +12,7 @@
 #include "asio.hpp"
 #include <string>
 #include "base64.h"
+#include <glog/logging.h>
 
 using namespace std;
 
@@ -37,7 +38,7 @@ public:
         int bodyLen = ntohl( *(int*)packageData );
         if( bodyLen > max_body_length )
         {
-            bodyLen = max_body_length;
+            LOG(ERROR) << "Out of bound of XPackage!!"
         }
         return bodyLen;
     }

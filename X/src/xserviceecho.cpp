@@ -16,10 +16,13 @@ bool XServiceEcho::start()
 void XServiceEcho::input( shared_ptr<XMessage> msg )
 {
     auto echoMsg = std::make_shared<XMessage>(*msg);
+    LOG(INFO) << "echo recv msg:" << msg->toJson();
     echoMsg->setToNode( msg->getFromNode() );
     echoMsg->setToService( msg->getFromService() );
     echoMsg->setFromNode( "" );
     echoMsg->setFromService( this->getId() );
+
+    LOG(INFO) << "echo back msg:" << echoMsg->toJson();
     this->deliverMessage( echoMsg );
 }
 
