@@ -4,6 +4,7 @@
 #include "xmessage.h"
 #include <memory>
 #include <nlohmann/json.hpp>
+#include <asio.hpp>
 
 using namespace std;
 using namespace nlohmann;

@@ -20,7 +20,7 @@ class XPackage
 {
 public:
     enum { header_length = 4 };
-    enum { max_body_length = 1000*1024 };
+    enum { max_body_length = 5*1000*1024 };
 
     XPackage()
     {

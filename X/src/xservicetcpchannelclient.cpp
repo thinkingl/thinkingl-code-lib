@@ -65,6 +65,7 @@ void XServiceTCPChannelClient::doConnect()
                         {
                             LOG(ERROR) << "timer for reconnecting fail! ec:[" << ec << "]";
                         }
+                        timerRetry->cancel();
                     }
                     );
 
