@@ -20,6 +20,7 @@ bool XNode::run()
         std::shared_ptr<XService> service = XServiceFactory::createService( serviceCfg, this->shared_from_this(), asio_io_context );
         if( service )
         {
+            LOG(INFO) << "create service, id: " << serviceCfg["id"];
             service->start();
             this->servicesTable[service->getId()] = service;
         }

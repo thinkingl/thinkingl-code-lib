@@ -11,7 +11,8 @@ XServiceTCPChannelServer::XServiceTCPChannelServer(json cfg, shared_ptr<XNode> n
 
 bool XServiceTCPChannelServer::start()
 {
-    return false;
+    this->doAccept();
+    return true;
 }
 
 void XServiceTCPChannelServer::input( std::shared_ptr<XMessage> msg )
@@ -56,6 +57,7 @@ void XServiceTCPChannelServer::onNewConnect( asio::ip::tcp::socket s )
     // 创建一个session，接收、发送 数据
     json cfg;
     cfg["id"] = session;
+    cfg["name"] = session;
     shared_ptr<XServiceTCPChannelSession> sessionService = std::make_shared<XServiceTCPChannelSession>( cfg, this->getXNode(), this->shared_from_this(), std::move(s), this->asioContext );
     sessionService->start();
     this->sessionTable[session] = sessionService;

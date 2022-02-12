@@ -29,7 +29,8 @@ std::shared_ptr<XService> XServiceFactory::createService( json serviceConfig, sh
     }
     else if( XService::ServiceNodeChannelTCPServer == type )
     {
-        service == std::make_shared<XServiceTCPChannelServer>(serviceConfig, node, ctx );
+        service = std::make_shared<XServiceTCPChannelServer>(serviceConfig, node, ctx );
+        LOG(INFO) << "make share tcp channel server " << service;
     }
     else    
     {

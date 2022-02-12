@@ -1,0 +1,63 @@
+{
+    "xnode": {
+        "id": "pc@home",
+        "name": "pc@home",
+        "services": [
+            {
+                "id":"ssh@apu",
+                "name":"ssh@apu",
+                "type":"tcp_endpoint",
+                "endpoint":
+                    { 
+                        "host":"192.168.84.8",
+                        "service":"22"
+                    }
+            },
+            {
+                "id":"entry_for_ssh@apu",
+                "name":"entry_for_ssh@apu",
+                "type":"tcp_sourcepoint",
+                "port":2284,
+                "dst_node":"pc@home",
+                "dst_service":"ssh@apu"
+            },
+            {
+                "id":"echo",
+                "name":"echo for test",
+                "type":"echo"
+            },
+            {
+                "id":"entry_for_echo",
+                "name":"entry_for_echo",
+                "type":"tcp_sourcepoint",
+                "port":19840,
+                "dst_node":"pc@home",
+                "dst_service":"echo"
+            },
+            {
+                "type":"tcp_channel_client___________nouse",
+                "id":"tcp_channel_client_home_to_aliyun234",
+                "name":"tcp channel from home to aliyun234",
+                "endpoint":{
+                    "host":"47.100.205.234",
+                    "port":1984
+                }
+            },
+            {
+                "type":"tcp_channel_client",
+                "id":"tcp_channel_client_home_to_apu",
+                "name":"tcp channel from home pc to apu",
+                "server":{
+                    "host":"192.168.84.8",
+                    "port":1984
+                }
+            },
+            {
+                "type":"tcp_channel_server",
+                "id":"tcp_channel_server_homepc",
+                "name":"tcp channel server for home pc",
+                "port":1984
+            }
+        ]
+    }
+}
