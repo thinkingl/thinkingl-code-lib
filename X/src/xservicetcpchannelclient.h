@@ -24,7 +24,7 @@ private:
     void doConnect();
     void doRead();
     void doReadHeader();
-    void doReadBody(shared_ptr<XPackage> package);
+    void doReadBody( XPackageHeader header );
 
     void doWrite();
 
@@ -51,4 +51,8 @@ private:
     std::queue<shared_ptr<XMessage>> sendMessageQueue;
 
     std::set<string> regedNodeIds;
+
+private:
+    // 调试用.
+
 };

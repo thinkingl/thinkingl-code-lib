@@ -25,7 +25,7 @@ public:
 private:
     void doRead();
     void doReadHeader();
-    void doReadBody(shared_ptr<XPackage> package);
+    void doReadBody( XPackageHeader header );
 
     void doWrite();
 
@@ -53,4 +53,9 @@ private:
     std::set<string> regedNodeIds;
 
     shared_ptr<XServiceTCPChannelServer> tcpChannelServer;
+
+    // 调试用
+    std::deque<shared_ptr<XPackage>> lastRecvPackages;
+    std::deque<shared_ptr<XMessage>> lastRecvMessages;
+
 };

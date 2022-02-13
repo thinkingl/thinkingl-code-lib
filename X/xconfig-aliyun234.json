@@ -1,0 +1,35 @@
+{
+    "xnode": {
+        "id": "234@aliyun",
+        "name": "234@aliyun",
+        "services": [            
+            {
+                "id":"echo",
+                "name":"echo for test",
+                "type":"echo"
+            },
+            {
+                "id":"entry_for_echo",
+                "name":"entry_for_echo",
+                "type":"tcp_sourcepoint",
+                "port":19840,
+                "dst_node":"pc@home",
+                "dst_service":"echo"
+            },            
+            {
+                "type":"tcp_channel_server",
+                "id":"tcp_channel_server_apu",
+                "name":"tcp channel server for apu",
+                "port":1984
+            },
+            {
+                "id":"entry_for_ssh@apu",
+                "name":"entry_for_ssh@apu for test",
+                "type":"tcp_sourcepoint",
+                "port":2284,
+                "dst_node":"apu@home",
+                "dst_service":"ssh@apu"
+            }
+        ]
+    }
+}

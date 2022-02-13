@@ -48,7 +48,7 @@ json XMessage::toJson() const
     j[ KeyFromService ] = this->fromService;
     if( this->data )
     {
-        j[KeyData] = this->data->encodeBody();
+        j[KeyData] = this->data->toBase64();
     }
     return j;
 }
@@ -64,6 +64,7 @@ std::shared_ptr<XPackage> XMessage::toXPackage() const
 shared_ptr<XMessage> XMessage::fromXPackageJsonBody(shared_ptr<XPackage> package )
 {
     string strJson = (char*)package->body();
+    LOG_FIRST_N(INFO,100) << "fromXPackageJsonBody strJson:[" << strJson << "]";  
     json j = json::parse(strJson);
 
     auto msg = std::make_shared<XMessage>( j[KeyType], j[KeyFromNode], j[KeyFromService], j[KeyToNode], j[KeyToService], j[KeySession], nullptr );
@@ -71,9 +72,8 @@ shared_ptr<XMessage> XMessage::fromXPackageJsonBody(shared_ptr<XPackage> package
     if( j[KeyData].is_string() )
     {
         string strB64 = j[KeyData];
-        string data = base64Decode( strB64.c_str(), strB64.length() );
         //std::cout << "decode result: " << data << std::endl;
-        auto package = make_shared<XPackage>( data.data(), data.length() );
+        auto package = XPackage::fromBase64( strB64 );
         msg->setData( package );
     }
     return msg;

@@ -81,7 +81,7 @@ void XServiceTCPChannelClient::sendHello()
 
     auto self = this->shared_from_this();
     asio::async_write( this->socket,
-        asio::buffer( helloPackage->data(), helloPackage->header_length + helloPackage->bodyLength() ),
+        asio::buffer( helloPackage->data(), helloPackage->totalLength() ),
         [this,self](std::error_code ec, std::size_t length)
         {
             if( !ec )
@@ -104,34 +104,55 @@ void XServiceTCPChannelClient::doRead()
 void XServiceTCPChannelClient::doReadHeader()
 {
     auto self( this->shared_from_this() );
-    auto package = std::make_shared<XPackage>();
+    XPackageHeader* header = new XPackageHeader();
     asio::async_read( this->socket,
-        asio::buffer((void*)package->data(), XPackage::header_length ),
-        [this, self, package](std::error_code ec, std::size_t /*length*/)
+        asio::buffer( header, XPackage::header_length ),
+        [this, self, header](std::error_code ec, std::size_t /*length*/)
         {
             if (!ec)
             {
                 //LOG_FIRST_N(INFO,100) << "tcp channel client doReadHeader, bodyLen:" << package->bodyLength();
-                doReadBody( package );
+                doReadBody( *header );
             }
             else
             {
                 LOG(ERROR) << "xpackage stream socket read head fail! ec:[" << ec << "]";
                 this->onFail( ec );
             }
+            delete header;
         }
     );
 }
 
-void XServiceTCPChannelClient::doReadBody( shared_ptr<XPackage> package )
+void XServiceTCPChannelClient::doReadBody( XPackageHeader header )
 {
+    if( !header.checkValid() )
+    {
+        LOG(ERROR) << "tcp channel client recv Invalid header!";
+        char dumpHeader[ XPackage::header_length+1] = {0};
+        memcpy(dumpHeader, &header, XPackage::header_length );
+        LOG(ERROR) << "dump invalid header:[" << dumpHeader << "]";
+        cout << "-----------------" << endl;
+        for( int i=0; i<XPackage::header_length; ++i )
+        {
+            cout << setw(2) << setfill('0') << hex << (int)((unsigned char*)(&header))[i] << " ";
+        }
+        cout << endl << "-----------------" << endl;
+
+        this->onFail( std::error_code() );
+        return;
+    }
+
+    auto package = std::make_shared<XPackage>( header );
     auto self( this->shared_from_this() );
     asio::async_read( this->socket,
-        asio::buffer((void*)package->body(), package->bodyLength() ),
+        asio::buffer(package->body(), package->bodyLength() ),
         [this, self, package](std::error_code ec, std::size_t length)
         {
             if (!ec)
             {
+                LOG_ASSERT( package->bodyLength() == length );
+                
                 // 将读到的package解析后送出. 
                 this->onChannelPackage( package );
 
@@ -195,13 +216,33 @@ void XServiceTCPChannelClient::onFail( std::error_code ec )
     this->regedNodeIds.clear();
 
     // 重连.
-    this->doConnect();
+    auto self( this->shared_from_this() );
+    auto timerRetry = make_shared<asio::steady_timer>(this->asioContext);
+    timerRetry->expires_after( std::chrono::seconds(30) );
+    timerRetry->async_wait([this,self,timerRetry](std::error_code ec)
+        {
+            if( !ec )
+            {
+                LOG(INFO) << "on fail will reconnect to tcp channel server " << this->serverHost << ":" << this->serverPort;
+                this->doConnect();
+            }
+            else
+            {
+                LOG(ERROR) << "timer for reconnecting fail! ec:[" << ec << "]";
+            }
+            timerRetry->cancel();
+        }
+        );
     // 通知相关的node都断链? 还是不要做过多控制,只在两端做控制.
 }
 
 void XServiceTCPChannelClient::onChannelPayloadMessage( shared_ptr<XMessage> payloadMsg )
 {
-    VLOG(5) << "channel recv payload msg: " << payloadMsg->toJson();
+    //VLOG(5) << "channel recv payload msg: " << payloadMsg->toJson();
+    if( payloadMsg->getToService() == XService::ServiceEcho || payloadMsg->getFromService() == XService::ServiceEcho )
+    {
+        LOG(INFO) << "tcp channel client recv echo payload: " << payloadMsg->toJson();
+    }
     this->deliverRawMessage( payloadMsg );
 }
 
@@ -238,7 +279,7 @@ void XServiceTCPChannelClient::doWrite()
 
     auto self(shared_from_this());
     asio::async_write( this->socket,
-        asio::buffer( package->data(), package->header_length + package->bodyLength() ),
+        asio::buffer( package->data(), package->totalLength() ),
         [this, self](std::error_code ec, std::size_t /*length*/)
         {
           if (!ec)

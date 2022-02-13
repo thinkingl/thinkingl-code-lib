@@ -18,9 +18,15 @@ bool XServiceTCPEndpoint::start()
 
 void XServiceTCPEndpoint::input( shared_ptr<XMessage> message )
 {
+    string type = message->getType();
     if( message->getType() == XMessage::MessageTCPConnect )
     {
         this->doConnect( message );        
+    }
+    if( XMessage::MessageTCPDisconnect == type )
+    {
+        LOG(ERROR) << "session stream " << message->getSession() << "-" << this->getId() << " recv disconnect msg!";
+        this->removeSession( message->getSession() );
     }
     else
     {

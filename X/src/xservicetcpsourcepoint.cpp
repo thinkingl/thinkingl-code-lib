@@ -53,7 +53,7 @@ void XServiceTCPSourcepoint::doAccept()
 void XServiceTCPSourcepoint::input(std::shared_ptr<XMessage> msg)
 {
     // 将msg中的原始数据复原后发出去。
-    VLOG(5) << "tcp source point service input msg: " << msg->toJson();
+    //VLOG(5) << "tcp source point service input msg: " << msg->toJson();
 
     // 不需要处理连接请求. 这个只能是echo返回回来的.
     if( msg->getType() == XMessage::MessageTCPConnect )

@@ -20,4 +20,9 @@ TEST( XMessage, transXPackage )
     std::cout << "msgRestore data: " << packageRestore->bodyLength() << " - " << (char*)(packageRestore->body()) << std::endl;
 
     EXPECT_EQ( msg->toJson().dump(), msgRestore->toJson().dump() );
+
+    auto msg2 = make_shared<XMessage>( XMessage::MessageTCPData, "fromNode", "fromService", "toNdoe", "toService", "sessionId", nullptr );
+    EXPECT_FALSE( msg2->getData() );
+
 }
+

@@ -34,18 +34,28 @@ void SessionStream::stop()
 void SessionStream::doRead()
 {
     auto self( this->shared_from_this() );
-    auto package = std::make_shared<XPackage>();
+    auto package = std::make_shared<XPackage>(nullptr,MaxReadLen);
     this->socket.async_read_some(
         asio::buffer((void*)package->body(), MaxReadLen ),
         [this, self, package](std::error_code ec, std::size_t length)
         {
             if (!ec)
             {
-                package->bodyLength( length );
+                if( this->toService == XService::ServiceEcho )
+                {
+                    LOG(INFO) << "read echo in:" << (char*)package->body() << " read len: " << length;
+                }
+                auto bodyPackage = std::make_shared<XPackage>(package->body(), length);
+ 
+                //package->bodyLength( length );
 
+                if( this->toService == XService::ServiceEcho )
+                {
+                    LOG(INFO) << "read echo after bodyLength:" << (char*)bodyPackage->body() << " body len: " << bodyPackage->bodyLength();
+                }
                 //LOG(INFO) << "session [" << this->sessionId << "] recv [" << package->bodyLength() << "]-[" << package->body() << "]";
-                VLOG(5) << "session [" << this->sessionId << "] recv datalen:[" << package->bodyLength() << "]";
-                this->onReadData( package );
+                //VLOG(5) << "session [" << this->sessionId << "] recv datalen:[" << package->bodyLength() << "]";
+                this->onReadData( bodyPackage );
                 
                 doRead();
             }
@@ -65,6 +75,11 @@ void SessionStream::onReadData( shared_ptr<XPackage> package )
     auto msg = this->parseXPackage( package );
     if( msg )
     {
+        if( msg->getToService() == XService::ServiceEcho || msg->getFromService() == XService::ServiceEcho )
+        {
+            LOG(INFO) << "session stream read echo msg: " << msg->toJson();
+        }
+        
         this->service->deliverMessage( msg );
     }
     else
@@ -93,6 +108,11 @@ void SessionStream::doWrite()
     auto msg = this->sendMsgQueue.front();
     
     auto package = msg->getData();
+
+    if( msg->getToService() == XService::ServiceEcho || msg->getFromService() == XService::ServiceEcho )
+    {
+        LOG(INFO) << "session stream send echo msg: " << msg->toJson() << " dataLen: " << package->bodyLength() << " data: " << (char*)package->body();
+    }
 
     auto self(shared_from_this());
     asio::async_write( this->socket,
