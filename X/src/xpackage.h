@@ -176,7 +176,7 @@ public:
         return b64;
     }
 
-    static shared_ptr<XPackage> fromBase64( const string& str )
+    static shared_ptr<XPackage> fromBase64( string str )
     {
         string data = base64Decode( str );
         if( data.length() >= XPackage::header_length )
