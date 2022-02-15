@@ -29,6 +29,15 @@ void XServiceTCPChannelSession::sendHello()
 {
     LOG(INFO) << "will say hello to tcp channel peer, local id: " << this->getId() << " - " << this->getName();
     auto helloMsg = this->createServiceMessage( XMessage::MessageChannelHello, "", "", "" );
+
+    bool sending = !this->sendMessageQueue.empty();
+    this->sendMessageQueue.push( helloMsg );
+    if( !sending )
+    {
+        this->doWrite();
+    }
+
+    /*
     auto helloPackage = helloMsg->toXPackage();
 
     auto self = this->shared_from_this();
@@ -45,6 +54,7 @@ void XServiceTCPChannelSession::sendHello()
                 LOG(ERROR) << "tcp channel session hello fail! ec: " << ec;
             }
         });
+        */
 }
 
 void XServiceTCPChannelSession::doRead()
@@ -216,8 +226,11 @@ void XServiceTCPChannelSession::onSessionMessage( shared_ptr<XMessage> msg )
 
 }
 
-void XServiceTCPChannelSession::input( shared_ptr<XMessage> msg )
+void XServiceTCPChannelSession::input( shared_ptr<XMessage> payloadMsg )
 {
+    auto payloadPackage = payloadMsg->toXPackage();
+    auto msg = make_shared<XMessage>(XMessage::MessageChannelPayload, "", payloadPackage );
+
     bool sending = !this->sendMessageQueue.empty();
     this->sendMessageQueue.push( msg );
     if( !sending )
@@ -228,11 +241,7 @@ void XServiceTCPChannelSession::input( shared_ptr<XMessage> msg )
 
 void XServiceTCPChannelSession::doWrite()
 {
-    auto payloadMsg = this->sendMessageQueue.front();
-    
-    auto payloadPackage = payloadMsg->toXPackage();
-
-    auto msg = make_shared<XMessage>(XMessage::MessageChannelPayload, "", payloadPackage );
+    auto msg = this->sendMessageQueue.front();
     auto package = msg->toXPackage();
 
     //LOG_FIRST_N(INFO, 100) << "doWrite package, bodyLen:" << package->bodyLength();

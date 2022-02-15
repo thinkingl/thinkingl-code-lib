@@ -77,6 +77,16 @@ void XServiceTCPChannelClient::sendHello()
 {
     LOG(INFO) << "will say hello to tcp channel server " << this->serverHost << ":" << this->serverPort;
     auto helloMsg = this->createServiceMessage( XMessage::MessageChannelHello, "", "", "" );
+
+    bool sending = !this->sendMessageQueue.empty();
+    this->sendMessageQueue.push( helloMsg );
+    if( !sending )
+    {
+        this->doWrite();
+    }
+
+    /*
+
     auto helloPackage = helloMsg->toXPackage();
 
     auto self = this->shared_from_this();
@@ -93,6 +103,7 @@ void XServiceTCPChannelClient::sendHello()
                 LOG(ERROR) << "tcp channel client hello fail! ec: " << ec;
             }
         });
+    */
 }
 
 void XServiceTCPChannelClient::doRead()
@@ -257,8 +268,11 @@ void XServiceTCPChannelClient::onSessionMessage( shared_ptr<XMessage> msg )
 
 }
 
-void XServiceTCPChannelClient::input( shared_ptr<XMessage> msg )
+void XServiceTCPChannelClient::input( shared_ptr<XMessage> payloadMsg )
 {
+    auto payloadPackage = payloadMsg->toXPackage();
+
+    auto msg = make_shared<XMessage>(XMessage::MessageChannelPayload, "", payloadPackage );
     //LOG_FIRST_N(INFO,100) << "tcp channel client input msg:" << msg->toJson();
     bool sending = !this->sendMessageQueue.empty();
     this->sendMessageQueue.push( msg );
@@ -271,11 +285,8 @@ void XServiceTCPChannelClient::input( shared_ptr<XMessage> msg )
 void XServiceTCPChannelClient::doWrite()
 {
     auto payloadMsg = this->sendMessageQueue.front();
-    
-    auto payloadPackage = payloadMsg->toXPackage();
 
-    auto msg = make_shared<XMessage>(XMessage::MessageChannelPayload, "", payloadPackage );
-    auto package = msg->toXPackage();
+    auto package = payloadMsg->toXPackage();
 
     auto self(shared_from_this());
     asio::async_write( this->socket,

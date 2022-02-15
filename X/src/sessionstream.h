@@ -12,7 +12,7 @@ using namespace std;
 class SessionStream : public std::enable_shared_from_this<SessionStream>
 {
 public:
-    enum {  MaxReadLen = 10*1024, /* XPackage::max_body_length / 4,*/ };
+    enum {  MaxReadLen = 1*1024, /* XPackage::max_body_length / 4,*/ };
 public:
     SessionStream( string sessionId, asio::ip::tcp::socket s, std::shared_ptr<XService> service, string toNode, string toService );
     ~SessionStream();
