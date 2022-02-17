@@ -3,6 +3,7 @@
 #include "xservice.h"
 #include <queue>
 #include <set>
+#include <deque>
 
 class XServiceTCPChannelClient : public XService, public std::enable_shared_from_this<XServiceTCPChannelClient>
 {
@@ -48,7 +49,7 @@ private:
     string serverHost;
     int serverPort;
 
-    std::queue<shared_ptr<XMessage>> sendMessageQueue;
+    std::deque<shared_ptr<XMessage>> sendMessageQueue;
 
     std::set<string> regedNodeIds;
 

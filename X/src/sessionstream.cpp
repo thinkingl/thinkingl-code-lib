@@ -23,6 +23,7 @@ SessionStream::~SessionStream()
 bool SessionStream::start()
 {
     this->doRead();
+    return true;
 }
 
 void SessionStream::stop()
@@ -117,7 +118,7 @@ void SessionStream::doWrite()
     auto self(shared_from_this());
     asio::async_write( this->socket,
         asio::buffer( package->body(), package->bodyLength() ),
-        [this, self](std::error_code ec, std::size_t /*length*/)
+        [this, self, package](std::error_code ec, std::size_t /*length*/)
         {
           if (!ec)
           {
