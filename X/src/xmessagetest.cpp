@@ -24,5 +24,38 @@ TEST( XMessage, transXPackage )
     auto msg2 = make_shared<XMessage>( XMessage::MessageTCPData, "fromNode", "fromService", "toNdoe", "toService", "sessionId", nullptr );
     EXPECT_FALSE( msg2->getData() );
 
+
+}
+
+TEST( XMessage, bigText )
+{
+    vector<unsigned char> testData;
+    for( int i=0; i< 1000*1024; ++i )
+    {
+        testData.push_back( rand() );
+    }
+
+    auto package = make_shared<XPackage>( testData.data(), testData.size() );
+
+    auto msg = make_shared<XMessage>( XMessage::MessageTCPData, "fromNode", "fromService", "toNdoe", "toService", "sessionId", package );
+  
+    auto packageJson = msg->toXPackage();
+    auto msgRestore = XMessage::fromXPackageJsonBody( packageJson );
+
+    EXPECT_EQ( msg->toJson().dump(), msgRestore->toJson().dump() );
+
+
+    auto packageRestore = msgRestore->getData();
+
+    EXPECT_EQ( testData.size(), packageRestore->bodyLength() );
+
+    vector<unsigned char> restoreData;
+    for( int i=0; i<packageRestore->bodyLength(); ++i )
+    {
+        restoreData.push_back( ((unsigned char*)packageRestore->body())[i] );
+    }
+    EXPECT_EQ( testData, restoreData );
+
+
 }
 
