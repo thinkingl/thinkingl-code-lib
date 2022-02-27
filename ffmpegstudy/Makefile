@@ -61,6 +61,8 @@ endif
 LIBS		+= -lgtest
 LIBS		+= -lglog
 LIBS		+= -lpthread
+LIBS		+= -lavformat -lavcodec -lavutil
+#       <AdditionalDependencies>$(FFmpegLibraryDir)lib\avcodec.lib;$(FFmpegLibraryDir)lib\avfilter.lib;$(FFmpegLibraryDir)lib\avformat.lib;$(FFmpegLibraryDir)lib\avutil.lib;$(FFmpegLibraryDir)lib\swresample.lib;$(FFmpegLibraryDir)lib\swscale.lib</AdditionalDependencies>
 
 
 # define the C source files
