@@ -44,11 +44,20 @@ int main()
         cout << "stream " << i << ":\t" << "codecId:" << codecId << " mediaType:" << mediaType << "(0:video;1:audio;)" << endl;
     }
 
-    AVPacket pkt;
-    memset(&pkt,0,sizeof(pkt));
+    AVFormatContext* ofmtctx = avformat_alloc_context();         
+
+     //设置流格式为RTP                                   
+    ofmtctx->oformat = av_guess_format("rtp", NULL, NULL);   
+    //用指定IP和端口构造输出流地址
+    sprintf(ofmtctx->filename,"rtp://%s:%d", "192.168.84.153",8000);
+
+    //打开输出流
+    avio_open(&ofmtctx->pb,fmtctx->filename, AVIO_FLAG_WRITE);
+
+    AVPacket* pkt = av_packet_alloc();
     while(true)
     {
-        int err = av_read_frame( ifmt_ctx, &pkt );
+        int err = av_read_frame( ifmt_ctx, pkt );
         if( err != 0 )
         {
             cout << "av_read_frame end!" << endl;
@@ -56,10 +65,11 @@ int main()
         }
         else
         {
-            cout << "read frame, stream:" << pkt.stream_index << " size:" << pkt.size << endl;
+            cout << "read frame, stream:" << pkt->stream_index << " size:" << pkt->size << endl;
         }
     }
 
+    av_packet_free( &pkt );
     //av_register_all();
 
     return 0;
