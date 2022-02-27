@@ -1,2 +1,5 @@
 ulimit -c unlimited
-output/x
+while true
+do
+	output/x
+done

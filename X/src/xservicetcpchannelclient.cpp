@@ -35,6 +35,9 @@ void XServiceTCPChannelClient::doConnect()
         LOG(INFO) << it.endpoint();
     }
     LOG(INFO) << "----------------------end";
+
+    this->sendMessageQueue.clear();
+
     //serverEndpoint.port( this->serverPort );
     asio::async_connect( this->socket,
         serverEndpoint,
@@ -47,6 +50,7 @@ void XServiceTCPChannelClient::doConnect()
                 this->sendHello();
 
                 this->doRead();
+                this->doWrite();
             }
             else
             {
@@ -79,11 +83,8 @@ void XServiceTCPChannelClient::sendHello()
     auto helloMsg = this->createServiceMessage( XMessage::MessageChannelHello, "", "", "" );
 
     bool sending = !this->sendMessageQueue.empty();
-    this->sendMessageQueue.push( helloMsg );
-    if( !sending )
-    {
-        this->doWrite();
-    }
+    this->sendMessageQueue.push_back( helloMsg );
+    
 
     /*
 
@@ -92,7 +93,7 @@ void XServiceTCPChannelClient::sendHello()
     auto self = this->shared_from_this();
     asio::async_write( this->socket,
         asio::buffer( helloPackage->data(), helloPackage->totalLength() ),
-        [this,self](std::error_code ec, std::size_t length)
+        [this,self,helloPackage](std::error_code ec, std::size_t length)
         {
             if( !ec )
             {
@@ -275,7 +276,7 @@ void XServiceTCPChannelClient::input( shared_ptr<XMessage> payloadMsg )
     auto msg = make_shared<XMessage>(XMessage::MessageChannelPayload, "", payloadPackage );
     //LOG_FIRST_N(INFO,100) << "tcp channel client input msg:" << msg->toJson();
     bool sending = !this->sendMessageQueue.empty();
-    this->sendMessageQueue.push( msg );
+    this->sendMessageQueue.push_back( msg );
     if( !sending )
     {
         this->doWrite();
@@ -284,6 +285,10 @@ void XServiceTCPChannelClient::input( shared_ptr<XMessage> payloadMsg )
 
 void XServiceTCPChannelClient::doWrite()
 {
+    if( this->sendMessageQueue.empty() )
+    {
+        return;
+    }
     auto payloadMsg = this->sendMessageQueue.front();
 
     auto package = payloadMsg->toXPackage();
@@ -291,11 +296,14 @@ void XServiceTCPChannelClient::doWrite()
     auto self(shared_from_this());
     asio::async_write( this->socket,
         asio::buffer( package->data(), package->totalLength() ),
-        [this, self](std::error_code ec, std::size_t /*length*/)
+        [this, self,package](std::error_code ec, std::size_t /*length*/)
         {
           if (!ec)
           {
-            this->sendMessageQueue.pop();
+              if( !this->sendMessageQueue.empty() )
+              {
+                this->sendMessageQueue.pop_front();
+              }
             if (!sendMessageQueue.empty())
             {
               doWrite();

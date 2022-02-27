@@ -43,7 +43,7 @@ void XServiceTCPChannelSession::sendHello()
     auto self = this->shared_from_this();
     asio::async_write( this->socket,
         asio::buffer( helloPackage->data(), helloPackage->header_length + helloPackage->bodyLength() ),
-        [this,self](std::error_code ec, std::size_t length)
+        [this,self,helloPackage](std::error_code ec, std::size_t length)
         {
             if( !ec )
             {
@@ -248,7 +248,7 @@ void XServiceTCPChannelSession::doWrite()
     auto self(shared_from_this());
     asio::async_write( this->socket,
         asio::buffer( package->data(), package->header_length + package->bodyLength() ),
-        [this, self](std::error_code ec, std::size_t /*length*/)
+        [this, self, package](std::error_code ec, std::size_t /*length*/)
         {
           if (!ec)
           {
