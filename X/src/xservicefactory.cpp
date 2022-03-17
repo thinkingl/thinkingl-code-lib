@@ -10,7 +10,8 @@ std::shared_ptr<XService> XServiceFactory::createService( json serviceConfig, sh
 {
     std::shared_ptr<XService> service;
     string type = serviceConfig["type"];
-    LOG(INFO) << "will create xservice, type: " << type;
+    string name = serviceConfig["name"];
+    LOG(INFO) << "will create xservice, type: " << type << " name:" << name;
     if( XService::ServiceTCPSourcepoint == type )
     {
         service = std::make_shared<XServiceTCPSourcepoint>( serviceConfig, node, ctx );
