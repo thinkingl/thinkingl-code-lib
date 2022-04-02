@@ -1,6 +1,7 @@
 #include "xservicetcpchannelclient.h"
 #include <glog/logging.h>
 #include "xnode.h"
+#include <iomanip>
 
 XServiceTCPChannelClient::XServiceTCPChannelClient( json cfg, shared_ptr<XNode> node,asio::io_context& context )
 :XService(cfg, node )
@@ -9,7 +10,8 @@ XServiceTCPChannelClient::XServiceTCPChannelClient( json cfg, shared_ptr<XNode> 
 ,serverHost(cfg["server"]["host"])
 ,serverPort(cfg["server"]["port"].get<int>() )
 {
-
+    asio::socket_base::keep_alive keep_alive(true);
+    this->socket.set_option( keep_alive );
 }
 
 XServiceTCPChannelClient::~XServiceTCPChannelClient()

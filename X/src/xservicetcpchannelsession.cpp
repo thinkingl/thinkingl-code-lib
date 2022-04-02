@@ -2,6 +2,8 @@
 #include <glog/logging.h>
 #include "xservicetcpchannelserver.h"
 #include "xnode.h"
+#include <iomanip>
+
 
 XServiceTCPChannelSession::XServiceTCPChannelSession(json cfg, shared_ptr<XNode> node, shared_ptr<XServiceTCPChannelServer> channelServer, asio::ip::tcp::socket s, asio::io_context& ctx )
 :XService(cfg, node )
