@@ -10,8 +10,6 @@ XServiceTCPChannelClient::XServiceTCPChannelClient( json cfg, shared_ptr<XNode> 
 ,serverHost(cfg["server"]["host"])
 ,serverPort(cfg["server"]["port"].get<int>() )
 {
-    asio::socket_base::keep_alive keep_alive(true);
-    this->socket.set_option( keep_alive );
 }
 
 XServiceTCPChannelClient::~XServiceTCPChannelClient()
@@ -48,6 +46,10 @@ void XServiceTCPChannelClient::doConnect()
             if (!ec)
             {
                 LOG(INFO) << "connect to tcp channel server [" << endpoint << "] success!";
+
+                asio::socket_base::keep_alive keep_alive(true);
+                this->socket.set_option( keep_alive );    
+                LOG(INFO) << "set_option tcp keep_alive over.";
 
                 this->sendHello();
 
