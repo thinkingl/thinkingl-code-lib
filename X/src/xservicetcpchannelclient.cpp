@@ -91,7 +91,10 @@ void XServiceTCPChannelClient::sendHello()
 
     bool sending = !this->sendMessageQueue.empty();
     this->sendMessageQueue.push_back( helloMsg );
-    
+    if( !sending )
+    {
+        this->doWrite();
+    }
 
     /*
 
