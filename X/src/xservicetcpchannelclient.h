@@ -28,6 +28,7 @@ private:
     void doReadBody( XPackageHeader header );
 
     void doWrite();
+    void doKeepalive();
 
     void sendHello();
     void sendNodeInfo();

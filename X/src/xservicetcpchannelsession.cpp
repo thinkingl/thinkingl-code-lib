@@ -18,6 +18,8 @@ XServiceTCPChannelSession::XServiceTCPChannelSession(json cfg, shared_ptr<XNode>
 XServiceTCPChannelSession::~XServiceTCPChannelSession()
 {
     LOG(INFO) << "unconstruct of XServiceTCPChannelSession, sessionId:" << this->sessionId;
+    // 关闭socket.
+    this->socket.close();
 }
 
 bool XServiceTCPChannelSession::start()

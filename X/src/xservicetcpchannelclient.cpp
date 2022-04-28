@@ -37,6 +37,8 @@ void XServiceTCPChannelClient::doConnect()
     LOG(INFO) << "----------------------end";
 
     this->sendMessageQueue.clear();
+    // 连接前先保证没有连接.
+    this->socket.close();
 
     //serverEndpoint.port( this->serverPort );
     asio::async_connect( this->socket,
@@ -55,6 +57,7 @@ void XServiceTCPChannelClient::doConnect()
 
                 this->doRead();
                 this->doWrite();
+                this->doKeepalive();
             }
             else
             {
@@ -321,6 +324,31 @@ void XServiceTCPChannelClient::doWrite()
     });
 }
 
+void XServiceTCPChannelClient::doKeepalive()
+{
+    auto self( this->shared_from_this() );
+    auto timerKeepalive = make_shared<asio::steady_timer>(this->asioContext);
+    timerKeepalive->expires_after( std::chrono::seconds(60) );
+    timerKeepalive->async_wait([this,self,timerKeepalive](std::error_code ec)
+        {
+            if( !ec )
+            {
+                LOG(INFO) << "will send keepalive(say hello)";
+                if( this->sendMessageQueue.empty() )    // 防止连接失败造成的消息积压
+                {
+                    this->sendHello();
+                }
+
+                this->doKeepalive();    // 下一轮.
+            }
+            else
+            {
+                LOG(ERROR) << "timer for keepalive fail! ec:[" << ec << "]";
+            }
+            timerKeepalive->cancel();
+        }
+        );
+}
 
 void XServiceTCPChannelClient::regRemoteNode( string remoteNodeId )
 {
