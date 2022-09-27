@@ -49,6 +49,7 @@ private:
 
     string serverHost;
     int serverPort;
+    json config;
 
     std::deque<shared_ptr<XMessage>> sendMessageQueue;
 

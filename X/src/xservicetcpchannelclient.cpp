@@ -9,6 +9,7 @@ XServiceTCPChannelClient::XServiceTCPChannelClient( json cfg, shared_ptr<XNode> 
 ,socket(context)
 ,serverHost(cfg["server"]["host"])
 ,serverPort(cfg["server"]["port"].get<int>() )
+,config(cfg)
 {
 }
 
@@ -25,10 +26,24 @@ bool XServiceTCPChannelClient::start()
 
 void XServiceTCPChannelClient::doConnect()
 {
+    auto host = this->serverHost;
+    auto port = this->serverPort;
+
+    // 如果配了serverList多个服务端地址, 随机取一个用.
+    auto ja = config["serverlist"];
+    if( !ja.empty() )
+    {
+        auto i = rand() % ja.size();
+        auto j = ja[i];
+        host = j["host"];
+        port = j["port"].get<int>();
+        LOG(INFO) << "use random endpoint in serverlist, host:[" << host << "] port:[" << port <<"]";
+    }
+
     auto self = this->shared_from_this();
     stringstream ss;
-    ss << this->serverPort;
-    auto serverEndpoint = asio::ip::tcp::resolver( this->asioContext ).resolve( this->serverHost, ss.str() );
+    ss << port;
+    auto serverEndpoint = asio::ip::tcp::resolver( this->asioContext ).resolve( host, ss.str() );
     LOG(INFO) << "TCP channel client will connect to: -----------" ;
     for( auto it : serverEndpoint )
     {

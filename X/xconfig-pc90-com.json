@@ -1,0 +1,103 @@
+{
+    "xnode": {
+        "id": "pc90@com",
+        "name": "pc90@com",
+        "services": [
+            {
+                "id":"iperf3@vm@pc99",
+                "name":"iperf3@vm@pc99",
+                "type":"tcp_endpoint",
+                "endpoint":
+                    { 
+                        "host":"192.168.84.102",
+                        "service":"5201"
+                    }
+            },
+            {
+                "id":"entry_for_iperf3@vm@pc99",
+                "name":"entry for perf3 @ vm @pc 99 @com",
+                "type":"tcp_sourcepoint",
+                "port":25201,
+                "dst_node":"pc90@com",
+                "dst_service":"iperf3@vm@pc99"
+            },
+            {
+                "id":"ssh@vm@pc99",
+                "name":"ssh@vm@pc99",
+                "type":"tcp_endpoint",
+                "endpoint":
+                    { 
+                        "host":"192.168.84.102",
+                        "service":"22"
+                    }
+            },
+            {
+                "id":"entry_for_ssh@vm@pc99",
+                "name":"entry for ssh @ vm @pc 99 @com",
+                "type":"tcp_sourcepoint",
+                "port":2222,
+                "dst_node":"pc90@com",
+                "dst_service":"ssh@vm@pc99"
+            },
+            {
+                "id":"echo",
+                "name":"echo for test",
+                "type":"echo"
+            },
+            {
+                "id":"entry_for_echo",
+                "name":"entry_for_echo",
+                "type":"tcp_sourcepoint",
+                "port":19840,
+                "dst_node":"pc99@com",
+                "dst_service":"echo"
+            },
+            {
+                "type":"tcp_channel_client",
+                "id":"tcp_channel_client_home_to_apu",
+                "name":"tcp channel from home pc to apu",
+                "server":{
+                    "host":"lizhixing.top",
+                    "port":1984
+                },
+                "serverlist":[
+                    {
+                        "host":"lizhixing.top",
+                        "port":1984
+                    },
+                    {
+                        "host":"550257e1.123nat.com",
+                        "port":1984
+                    }
+                ]
+            },
+            {
+                "id":"rdc@pc90@com",
+                "name":"rdc@pc90@com",
+                "type":"tcp_endpoint",
+                "endpoint":
+                    { 
+                        "host":"192.168.84.90",
+                        "service":"3389"
+                    }
+            }
+			,
+            {
+                "id":"rdc@pc99@com",
+                "name":"rdc@pc99@com",
+                "type":"tcp_endpoint",
+                "endpoint":
+                    { 
+                        "host":"192.168.84.99",
+                        "service":"3389"
+                    }
+            },
+            {
+                "type":"tcp_channel_server",
+                "id":"tcp_channel_server_pc90@com",
+                "name":"tcp channel server for pc90@com",
+                "port":2984
+            }
+        ]
+    }
+}
