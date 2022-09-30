@@ -21,6 +21,18 @@ public:
     virtual void input( std::shared_ptr<XMessage> );
 
     virtual void onSessionMessage( shared_ptr<XMessage> msg );
+
+private:
+    enum Status
+    {
+        Idle,       // 空闲状态. 定时器超时动作是doConnect,并进入Connecting状态. 这是初始状态.
+        Connecting, // 连接状态. 定时器超时动作是连接失败, 进入Idle状态. 连接失败进入Idle状态.
+        Service,    // 工作状态. 定时器超时动作是doKeepalive. doRead/doWrite 失败, 进入Idle状态.
+    };
+    Status status;
+    std::shared_ptr<asio::steady_timer> timer;   // 定时器,状态机超时用.
+    void onTimeout();
+    void nextStatus( Status nextStatus );
 private:
     void doConnect();
     void doRead();
