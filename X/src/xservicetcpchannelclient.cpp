@@ -77,9 +77,9 @@ void XServiceTCPChannelClient::doConnect()
     auto port = this->serverPort;
 
     // 如果配了serverList多个服务端地址, 随机取一个用.
-    auto ja = config["serverlist"];
-    if( !ja.empty() )
+    if( config.contains( "serverlist" ) )
     {
+        auto ja = config["serverlist"];
         auto i = rand() % ja.size();
         auto j = ja[i];
         host = j["host"];
