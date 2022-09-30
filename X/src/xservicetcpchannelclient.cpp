@@ -10,7 +10,9 @@ XServiceTCPChannelClient::XServiceTCPChannelClient( json cfg, shared_ptr<XNode> 
 ,serverHost(cfg["server"]["host"])
 ,serverPort(cfg["server"]["port"].get<int>() )
 ,config(cfg)
+,status(Idle)
 {
+    LOG(INFO) << "construct of XServiceTCPChannelClient, this:" << this;
 }
 
 XServiceTCPChannelClient::~XServiceTCPChannelClient()
@@ -20,8 +22,53 @@ XServiceTCPChannelClient::~XServiceTCPChannelClient()
 
 bool XServiceTCPChannelClient::start()
 {
-    this->doConnect();
+    //this->doConnect();
+    if( !this->timer )
+    {
+        this->timer = std::make_shared<asio::steady_timer>( this->asioContext );
+    }
+    this->timer->cancel();
+    
+    this->onTimeout();
+
     return true;
+}
+
+void XServiceTCPChannelClient::onTimeout()
+{
+    switch( this->status )
+    {
+        case Idle:
+            LOG(INFO) << "status timer: status idle(" << this->status << "), will doConnect!";
+            this->doConnect();
+        break;
+        case Connecting:
+            LOG(INFO) << "status timer: status Connecting(" << this->status << "), connecting timeout!";
+            // todo....
+        break;
+        case Service:
+            LOG(INFO) << "status timer: status Service(" << this->status << "), will doKeepalive!";
+            this->doKeepalive();
+        break;
+        default:
+            LOG(ERROR) << "Unkown status [" << this->status << "]!!!";
+            break;
+    }
+
+    this->timer->expires_after( std::chrono::seconds(60) );
+    auto self = this->shared_from_this();
+    this->timer->async_wait([self](std::error_code ec)
+        {
+            if( !ec )
+            {
+            }
+            else
+            {
+                LOG(ERROR) << "timer for status fail! ec:[" << ec << "]";
+            }
+            self->onTimeout();
+        }
+        );
 }
 
 void XServiceTCPChannelClient::doConnect()
@@ -72,31 +119,18 @@ void XServiceTCPChannelClient::doConnect()
 
                 this->doRead();
                 this->doWrite();
-                this->doKeepalive();
+
+                this->nextStatus( Service );
             }
             else
             {
                 LOG(ERROR) << "connect to tcp channel server [" << this->serverHost << ":" << this->serverPort << "] fail! ec:[" << ec << "]";
-
-                auto timerRetry = make_shared<asio::steady_timer>(this->asioContext);
-                timerRetry->expires_after( std::chrono::seconds(30) );
-                timerRetry->async_wait([this,self,timerRetry](std::error_code ec)
-                    {
-                        if( !ec )
-                        {
-                            LOG(INFO) << "will reconnect to tcp channel server " << this->serverHost << ":" << this->serverPort;
-                            this->doConnect();
-                        }
-                        else
-                        {
-                            LOG(ERROR) << "timer for reconnecting fail! ec:[" << ec << "]";
-                        }
-                        timerRetry->cancel();
-                    }
-                    );
-
+                
+                this->nextStatus( Idle );
             }
         } );
+        
+        this->nextStatus( Connecting );
 }
 
 void XServiceTCPChannelClient::sendHello()
@@ -110,26 +144,6 @@ void XServiceTCPChannelClient::sendHello()
     {
         this->doWrite();
     }
-
-    /*
-
-    auto helloPackage = helloMsg->toXPackage();
-
-    auto self = this->shared_from_this();
-    asio::async_write( this->socket,
-        asio::buffer( helloPackage->data(), helloPackage->totalLength() ),
-        [this,self,helloPackage](std::error_code ec, std::size_t length)
-        {
-            if( !ec )
-            {
-                LOG(INFO) << "tcp channel client hello success!";
-            }
-            else
-            {
-                LOG(ERROR) << "tcp channel client hello fail! ec: " << ec;
-            }
-        });
-    */
 }
 
 void XServiceTCPChannelClient::doRead()
@@ -252,24 +266,11 @@ void XServiceTCPChannelClient::onFail( std::error_code ec )
     }
     this->regedNodeIds.clear();
 
-    // 重连.
-    auto self( this->shared_from_this() );
-    auto timerRetry = make_shared<asio::steady_timer>(this->asioContext);
-    timerRetry->expires_after( std::chrono::seconds(30) );
-    timerRetry->async_wait([this,self,timerRetry](std::error_code ec)
-        {
-            if( !ec )
-            {
-                LOG(INFO) << "on fail will reconnect to tcp channel server " << this->serverHost << ":" << this->serverPort;
-                this->doConnect();
-            }
-            else
-            {
-                LOG(ERROR) << "timer for reconnecting fail! ec:[" << ec << "]";
-            }
-            timerRetry->cancel();
-        }
-        );
+    this->socket.close();
+
+    // 切到idle, 等待重连.
+    this->nextStatus( Idle );
+
     // 通知相关的node都断链? 还是不要做过多控制,只在两端做控制.
 }
 
@@ -344,28 +345,15 @@ void XServiceTCPChannelClient::doWrite()
 
 void XServiceTCPChannelClient::doKeepalive()
 {
-    auto self( this->shared_from_this() );
-    auto timerKeepalive = make_shared<asio::steady_timer>(this->asioContext);
-    timerKeepalive->expires_after( std::chrono::seconds(60) );
-    timerKeepalive->async_wait([this,self,timerKeepalive](std::error_code ec)
-        {
-            if( !ec )
-            {
-                LOG(INFO) << "will send keepalive(say hello)";
-                if( this->sendMessageQueue.empty() )    // 防止连接失败造成的消息积压
-                {
-                    this->sendHello();
-                }
-
-                this->doKeepalive();    // 下一轮.
-            }
-            else
-            {
-                LOG(ERROR) << "timer for keepalive fail! ec:[" << ec << "]";
-            }
-            timerKeepalive->cancel();
-        }
-        );
+    LOG(INFO) << "send keepalive(say hello)";
+    if( this->sendMessageQueue.empty() )    // 防止连接失败造成的消息积压
+    {
+        this->sendHello();
+    }
+    else
+    {
+        LOG(INFO) << "sendMessageQueue not empty, no need to keepalive!";
+    }
 }
 
 void XServiceTCPChannelClient::regRemoteNode( string remoteNodeId )
@@ -380,4 +368,10 @@ void XServiceTCPChannelClient::unregRemoteNode( string remoteNodeId )
     LOG(INFO) << "tcp channel client unreg remote node: " << remoteNodeId;
     this->getXNode()->unregRemoteNodeRouteService( remoteNodeId, this->shared_from_this() );
     this->regedNodeIds.erase( remoteNodeId );
+}
+
+void XServiceTCPChannelClient::nextStatus( Status nextStatus )
+{
+    LOG(INFO) << "Status change!! from [" << this->status << "] to [" << nextStatus << "]";
+    this->status = nextStatus;
 }
