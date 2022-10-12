@@ -4,12 +4,12 @@
         {
             "name": "mingw",
             "includePath": [
-                "C:\\Program Files (x86)\\mingw-w64\\include\\**",
-                "C:\\Program Files (x86)\\mingw-w64\\x86_64-w64-mingw32\\include\\**",
-                "C:\\2-code\\ffmpeg\\**"
+                "C:\\mingw64\\include\\**",
+                "C:\\mingw64\\x86_64-w64-mingw32\\include\\**",
+                "C:\\0-code\\opensources\\ffmpeg\\**"
             ],
             "defines": [],
-            "compilerPath": "C:\\Program Files (x86)\\mingw-w64\\bin\\g++.exe",
+            "compilerPath": "C:\\mingw64\\bin\\g++.exe",
             "cStandard": "c17",
             "cppStandard": "c++17",
             "intelliSenseMode": "windows-gcc-x64"
