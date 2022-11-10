@@ -34,4 +34,6 @@ public:
 	CString m_strDatabasePath;
 	afx_msg void OnBnClickedButtonExplorerDatabase();
 	afx_msg void OnBnClickedButtonDatabaseImport();
+	// µÿÕº¿‡–Õ, google/gaode
+	CString m_mapType;
 };
