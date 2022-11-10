@@ -1,0 +1,48 @@
+{
+    "xnode": {
+        "id": "vm102@99@kdcom",
+        "name": "vm102@99@kdcom",
+        "services": [
+            {
+                "id":"ssh@vm102",
+                "name":"ssh@vm102",
+                "type":"tcp_endpoint",
+                "endpoint":
+                    { 
+                        "host":"192.168.84.102",
+                        "service":"22"
+                    }
+            },
+            {
+                "id":"entry_for_mc@vm102",
+                "name":"entry_for_minecraft@vm102",
+                "type":"tcp_endpoint",
+		"endpoint":
+		{
+			"host":"192.168.84.102",
+			"service":"25565"
+		}
+            },
+            {
+                "id":"echo",
+                "name":"echo for test",
+                "type":"echo"
+            },
+            {
+                "type":"tcp_channel_client",
+                "id":"tcp_channel_client_home_to_apu",
+                "name":"tcp channel from home pc to apu",
+                "server":{
+                    "host":"lizhixing.top",
+                    "port":1984
+                }
+            },
+            {
+                "type":"tcp_channel_server",
+                "id":"tcp_channel_server@vm102",
+                "name":"tcp channel server for vm102@99@kdcom",
+                "port":1984
+            }
+        ]
+    }
+}

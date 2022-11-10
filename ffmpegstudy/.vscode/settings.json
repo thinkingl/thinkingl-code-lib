@@ -67,6 +67,7 @@
         "variant": "cpp",
         "forward_list": "cpp",
         "numeric": "cpp",
-        "valarray": "cpp"
+        "valarray": "cpp",
+        "xstring": "cpp"
     }
 }
