@@ -20,6 +20,9 @@ public:
 	static tstring GetDatabasePath();
 	static BOOL SetDatabasePath( ctstring& databasePath );
 
+	static tstring GetMapType();
+	static BOOL SetMapType( ctstring& type );
+
 private:
 	/** ÅäÖÃÎÄ¼ş. */
 	static 	CIniConfigFile s_iniConfigFile;

@@ -80,8 +80,11 @@ void CMapCtrl::OnPaint()
 				dc.FillSolidRect( nDrawPosX, nDrawPosY, IMG_SIZE, IMG_SIZE, RGB( 200,200,200 ) );
 
 				CString strText;
-				strText.Format( _T( "囧 ，没这个图片！x: %d y: %d  " ), imgIndex.x, imgIndex.y );
+				strText.Format( _T( "囧 ，没这个图片！\n x: %d y: %d z:%d  " ), imgIndex.x, imgIndex.y, this->m_nZLevel );
 				dc.TextOut( nDrawPosX + 10, nDrawPosY + 10, strText ); 
+				strText.Format( _T( "x: %d y: %d z:%d  " ), imgIndex.x, imgIndex.y, this->m_nZLevel );
+				dc.TextOut( nDrawPosX + 10, nDrawPosY + 30, strText ); 
+
 			}
 		}
 	}
@@ -324,8 +327,21 @@ CString CMapCtrl::ImageIndex2ImagePath( int zLevel, const CImageIndex& imgIndex 
 	}
 
 	CString strPath;
-	strPath.Format( _T( "%s\\%s\\%d\\%d\\%d\\%d\\%d.png" ), strImgDir, strImgSubDir, zLevel, ( imgIndex.x >> 10 ) % 1024, ( imgIndex.x % 1024 ), 
-		( imgIndex.y >> 10 ) % 1024, imgIndex.y % 1024 );
+
+	tstring mapType = CSZMapConfig::GetMapType();
+	if ( mapType == _T("gaode") )
+	{
+		// 高德地图 /{z}/{x}/{y}.png
+		// zlevel 也不一样.
+		int gaodeZLevel = MAX_MAP_ZLEVEL - this->m_nZLevel;
+		strPath.Format( _T( "%s\\%s\\%d\\%d\\%d.png" ), strImgDir, strImgSubDir, gaodeZLevel, imgIndex.x,imgIndex.y );
+	}
+	else	// google
+	{
+		strPath.Format( _T( "%s\\%s\\%d\\%d\\%d\\%d\\%d.png" ), strImgDir, strImgSubDir, zLevel, ( imgIndex.x >> 10 ) % 1024, ( imgIndex.x % 1024 ), 
+			( imgIndex.y >> 10 ) % 1024, imgIndex.y % 1024 );
+	}
+
 
 	return strPath;
 }

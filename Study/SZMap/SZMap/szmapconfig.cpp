@@ -46,4 +46,15 @@ BOOL CSZMapConfig::SetDatabasePath( ctstring& databasePath )
 	BOOL ret = s_iniConfigFile.Write( _T("szmapcfg"), _T("DatabasePath"), databasePath );
 	return ret;
 }
+
+tstring CSZMapConfig::GetMapType()
+{
+	return s_iniConfigFile.ReadString( _T("szmapcfg"), _T("MapType"),_T("google") );
+}
+BOOL CSZMapConfig::SetMapType( ctstring& type )
+{
+	BOOL ret = s_iniConfigFile.Write( _T("szmapcfg"), _T("MapType"), type );
+	return ret;
+}
+
 //end of file

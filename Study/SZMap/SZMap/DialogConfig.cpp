@@ -17,6 +17,7 @@ CDialogConfig::CDialogConfig(CWnd* pParent /*=NULL*/)
 	, m_strImgDir(_T(""))
 	, m_strImgSubDir(_T(""))
 	, m_strDatabasePath(_T(""))
+	, m_mapType(_T(""))
 {
 
 }
@@ -31,6 +32,7 @@ void CDialogConfig::DoDataExchange(CDataExchange* pDX)
 	DDX_Text(pDX, IDC_EDIT_MAP_IMAGE_DIRECTORY, m_strImgDir);
 	DDX_CBString(pDX, IDC_COMBO_IMG_SUB_DIR, m_strImgSubDir);
 	DDX_Text(pDX, IDC_EDIT_MAP_DATABASE_PATH, m_strDatabasePath);
+	DDX_CBString(pDX, IDC_EDIT_MAP_TYPE, m_mapType);
 }
 
 
@@ -56,6 +58,8 @@ BOOL CDialogConfig::OnInitDialog()
 	this->m_strImgSubDir = CSZMapConfig::GetMapSubDir().c_str();
 
 	this->m_strDatabasePath = CSZMapConfig::GetDatabasePath().c_str();
+
+	this->m_mapType = CSZMapConfig::GetMapType().c_str();
 
 	this->UpdateData( FALSE );
 
@@ -96,6 +100,7 @@ void CDialogConfig::OnBnClickedOk()
 	CSZMapConfig::SetMapImageDir( (LPCTSTR)this->m_strImgDir );
 	CSZMapConfig::SetMapSubDir( (LPCTSTR)this->m_strImgSubDir );
 	CSZMapConfig::SetDatabasePath( (LPCTSTR)this->m_strDatabasePath );
+	CSZMapConfig::SetMapType( (LPCTSTR)this->m_mapType );
 
 	CDialogEx::OnOK();
 }
