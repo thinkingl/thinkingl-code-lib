@@ -1,0 +1,32 @@
+{
+    "xnode": {
+        "id": "pi@home",
+        "name": "pi@home",
+        "services": [
+            {
+                "id":"echo",
+                "name":"echo for test",
+                "type":"echo"
+            },
+            {
+                "id":"entry_for_echo",
+                "name":"entry_for_echo",
+                "type":"tcp_sourcepoint",
+                "port":19840,
+                "dst_node":"pc@home",
+                "dst_service":"echo"
+            },
+            {
+                "type":"xlinktest",
+                "id":"xlinktest@pi",
+                "name":"xlinktest@pi",
+                "localPort":1985,
+                "echo":true,
+                "sendData":false,
+                "remoteAddr":"",
+                "remotePort":0
+            }
+			
+        ]
+    }
+}

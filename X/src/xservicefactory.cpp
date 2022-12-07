@@ -5,6 +5,7 @@
 #include "xserviceecho.h"
 #include "xservicetcpchannelclient.h"
 #include "xservicetcpchannelserver.h"
+#include "xprotocol/xlinktest.h"
 
 std::shared_ptr<XService> XServiceFactory::createService( json serviceConfig, shared_ptr<XNode> node, asio::io_context& ctx)
 {
@@ -32,6 +33,11 @@ std::shared_ptr<XService> XServiceFactory::createService( json serviceConfig, sh
     {
         service = std::make_shared<XServiceTCPChannelServer>(serviceConfig, node, ctx );
         LOG(INFO) << "make share tcp channel server " << service;
+    }
+    else if( type == "xlinktest" )
+    {
+        service = std::make_shared<XLinkTest>(serviceConfig, ctx, node );
+        LOG(INFO) << "make share xlinktest! " << service;
     }
     else    
     {

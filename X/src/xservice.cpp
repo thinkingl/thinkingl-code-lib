@@ -10,6 +10,9 @@ const string XService::ServiceUDPSourcepoint = "udp_sourcepoint";
 
 const string XService::ServiceEcho = "echo";     // 回声服务，原样返回收到的数据，用于测试。
 
+
+
+
 const string XService::ServiceNodeChannelTCPClient = "tcp_channel_client";
 const string XService::ServiceNodeChannelTCPServer = "tcp_channel_server";
 const string XService::ServiceNodeChannelTCPSession = "tcp_channel_session";
