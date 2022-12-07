@@ -195,8 +195,9 @@ class AvdbClient:
 if __name__ == "__main__":
     c = AvdbClient()
     #c.dbBackupInfo( 'bk-0' )
-    #c.isAVUrlExist( "http://www.javlibrary.com/tw/?v=javlijb6si" )
-    status = c.getDBIntegrityCheckStatus()
-    c.dbIntegrityCheck()
+    ret = c.isAVUrlExist( "http://www.javlibrary.com/tw/?v=javlijb6si" )
+    print( ret )
+    #status = c.getDBIntegrityCheckStatus()
+    #c.dbIntegrityCheck()
     
     #c.dbBackup( 'testbackup' )

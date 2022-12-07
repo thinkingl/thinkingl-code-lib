@@ -581,6 +581,10 @@ for i in range(0, threadNum):
 
 initLogging()
 
+if not os.path.exists( javlibLocalDir ):
+    os.makedirs( javlibLocalDir )
+
+
 waitingUrlSet = set()
 waitingUrlFilePath = javlibLocalDir+waitingUrlFile
 ReadUrls(waitingUrlFilePath, waitingUrlSet)

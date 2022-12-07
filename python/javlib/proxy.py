@@ -47,7 +47,7 @@ def GetFirefox(PROXY_HOST, httpPort, ftpPort, sock5Port):
 
 
 def initUrllib():
-    proxyhandler = urllib.request.ProxyHandler({'http':'http://192.168.84.162:8118', 'https':'http://192.168.84.162:8118'})
+    proxyhandler = urllib.request.ProxyHandler({'http':'http://192.168.88.90:8118', 'https':'http://192.168.88.90:8118'})
 
     cj = CookieJar()
     #opener = urllib.request.build_opener(urllib.request.HTTPCookieProcessor(cj))
@@ -62,7 +62,7 @@ firefox = None
 def initFirefox():
     global firefox
     if firefox == None:
-        firefox = GetFirefox( "172.16.64.90", 8118, 0, 0 )
+        firefox = GetFirefox( "192.168.88.90", 8118, 0, 0 )
         testUrl = "http://www.javlibrary.com/tw/"
         firefox.get(testUrl)
         time.sleep(30)
@@ -116,4 +116,4 @@ if __name__=="__main__":
     urlTest = "http://www.javlibrary.com/tw/?v=javlijb6si"
     initUrllib()
     bs = bsObjForm( urlTest )
-    bs
+    print(bs)
