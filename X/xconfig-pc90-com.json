@@ -97,6 +97,16 @@
                 "id":"tcp_channel_server_pc90@com",
                 "name":"tcp channel server for pc90@com",
                 "port":2984
+            },
+            {
+                "type":"xlinktest",
+                "id":"xlinktest@pc90@com",
+                "name":"xlinktest@pc90@com",
+                "localPort":1985,
+                "echo":false,
+                "sendData":true,
+                "remoteAddr":"lizhixing.top",
+                "remotePort":1985
             }
         ]
     }
