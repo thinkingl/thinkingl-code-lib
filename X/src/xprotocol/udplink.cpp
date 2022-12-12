@@ -52,11 +52,22 @@ void UDPLink::doRecv()
         std::size_t len ){
             if( ec )
             {
-                LOG(ERROR) << "udplink recv fail! ec:[" << ec << "]";
+                if( ec.value() == 10061 )
+                {
+                    // ICMP的对端不可达会返回这个错误, 忽略.
+                }
+                else
+                {
+                    LOG(ERROR) << "udplink recv fail! ec:[" << ec << "]";
+                }
+            }
+            else
+            {
+                // 处理收到的数据.
+                LOG(INFO) << "udp link recv data, len:[" << len << "] recvData:[" << (char*)self->_recvBuff << "]";
             }
 
-            // 处理收到的数据.
-            LOG(INFO) << "udp link recv data, len:[" << len << "] recvData:[" << (char*)self->_recvBuff << "]";
+            
 
             // 继续收.
             self->doRecv();
