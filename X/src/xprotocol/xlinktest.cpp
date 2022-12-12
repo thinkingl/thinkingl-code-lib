@@ -52,6 +52,7 @@ void XLinkTest::doSendTimer( std::shared_ptr<asio::steady_timer> timer )
 
 void XLinkTest::onRecv(unsigned char* data, size_t len, std::error_code ec, XAddr remote )
 {
+    LOG(INFO) << "onRecv data:[" << data << "] len:[" << len << "] ec:[" << ec << "] remote:[" << remote.host << ":" << remote.port << "]";
     if( this->_echoRecv )
     {
         if( this->_xlink )
