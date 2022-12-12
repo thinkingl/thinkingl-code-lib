@@ -41,6 +41,7 @@ void XLinkTest::doSendTimer( std::shared_ptr<asio::steady_timer> timer )
         }
         else
         {
+            //LOG(INFO) << "doSendTimer start doSendData";
             // 发送一段数据.
             this->doSendData();
 
@@ -78,15 +79,19 @@ void XLinkTest::doSendData()
             {
                 len = 1;
             }
-            auto data = std::make_shared<std::vector<unsigned char>>();
-            data->resize(len);
-            for( auto i=0; i<len; ++i )
-            {
-                data->at(i) = '0' + ( i % ('9'-'0') );
-            }
-            data->at(len-1) = 0;
+            auto data = std::make_shared<std::string>();
 
-            this->_xlink->send( addr, data->data(), len );
+            static unsigned s_counter = 0;
+            s_counter++;
+            while( data->size() < len )
+            {
+                stringstream ss;
+                ss << s_counter << "\t";
+                data->append( ss.str() );
+            }
+            data->resize( len );
+
+            this->_xlink->send( addr, (unsigned char*)data->c_str(), data->length()+1 );
         }
         else
         {
