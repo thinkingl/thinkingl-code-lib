@@ -64,10 +64,12 @@ void UDPLink::doRecv()
             else
             {
                 // 处理收到的数据.
-                LOG(INFO) << "udp link recv data, len:[" << len << "] recvData:[" << (char*)self->_recvBuff << "]";
+                LOG(INFO) << "udp link recv data, len:[" << len << "] recvData:[" << (char*)self->_recvBuff << "] from [" << self->_recvEndpoint << "]";
+                XAddr addr;
+                addr.host = self->_recvEndpoint.address().to_string();
+                addr.port = self->_recvEndpoint.port();
+                self->onRecv( self->_recvBuff, len, ec, addr );
             }
-
-            
 
             // 继续收.
             self->doRecv();
