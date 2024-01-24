@@ -24,7 +24,7 @@ from download import *
 
 javlibLocalDir = "d:/999-temp/javlib/"
 javlibLocalDir = "h:/javlib/"
-javlibLocalDir = "y:/javlib/"
+#javlibLocalDir = "y:/javlib/"
 
 
 waitingUrlFile = "waitting.txt"
@@ -589,12 +589,16 @@ waitingUrlSet = set()
 waitingUrlFilePath = javlibLocalDir+waitingUrlFile
 ReadUrls(waitingUrlFilePath, waitingUrlSet)
 #print( waitingUrlSet)
+logging.info( "waiting url size:[%d]", len(waitingUrlSet) )
 
 finishedUrlSet = set()
 finishedUrlFilePath = javlibLocalDir+finishedUrlFile
 ReadUrls(finishedUrlFilePath, finishedUrlSet)
+logging.info( "finished file size:[%d]", len(finishedUrlSet) )
+
 finishedUrlVideoListPath = javlibLocalDir+finishedVideoListUrlFile
 ReadUrls( finishedUrlVideoListPath, finishedUrlSet)
+logging.info( "total finished size:[%d]", len(finishedUrlSet) )
 
 errorUrlSet = set()
 errorUrlFilePath = javlibLocalDir + errorUrlFile
@@ -602,6 +606,7 @@ ReadUrls( errorUrlFilePath, errorUrlSet)
 
 # 关联url.
 loadUrlsMap()
+logging.info( "urls map size: [%d]", len(urlsMap) )
 
 socket.setdefaulttimeout(100)
 opener=urllib.request.build_opener()

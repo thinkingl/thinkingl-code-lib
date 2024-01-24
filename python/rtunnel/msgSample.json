@@ -1,7 +1,12 @@
 {
-    "register":{
+    "hello":{
         "cmd":"register",
-        "clientId":"1"
+        "me":{
+            "user":"thinkingl",
+            "cell":{
+                "id":"90"
+            }
+        }
     },
     "connect":{
         "cmd":"connect",

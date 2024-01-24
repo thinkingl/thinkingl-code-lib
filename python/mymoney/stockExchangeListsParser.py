@@ -100,7 +100,7 @@ class StockExchangeListsParser():
             else:
                 items = line.split('\t')
                 record = self.parseRecord( titles, items )
-                print( record )
+                #print( record )
                 if record != None:
                     history.addRecord( record )
 
@@ -124,7 +124,7 @@ class StockExchangeListsParser():
                 else:
                     record = self.parseRecord( titles, items )
                     if record != None:
-                        print( record )
+                        #print( record )
                         history.addRecord( record )
                 
         pass

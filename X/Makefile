@@ -18,7 +18,7 @@ LFLAGS =
 OUTPUT	:= output
 
 # define source directory
-SRC		:= src
+SRC		:= src src/xprotocol
 
 # define include directory
 INCLUDE	:= include

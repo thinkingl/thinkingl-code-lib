@@ -15,6 +15,9 @@ def human_readable(plain_size):
         return str( round(plain_size / 1024 / 1024, 2)) + 'M'
     if plain_size <= 1024 * 1024 * 1024 *1024:
         return str( round(plain_size / 1024 / 1024 / 1024, 2)) + 'G'
+    if plain_size <= 1024 * 1024 * 1024 *1024 * 1024:
+        return str( round(plain_size / 1024 / 1024 / 1024 / 1024, 2)) + 'T'
+    return str( round(plain_size / 1024 / 1024 / 1024 / 1024, 2)) + 'T'
 
 
 def writeTest(testDir, dataList):
@@ -28,32 +31,25 @@ def writeTest(testDir, dataList):
         pass
 
     try:
-        for root, dirs, files in os.walk( testDir ):
-            for file in files:
-                path = os.path.join( root, file )
-                os.remove( path )
-    except:
-        pass
-
-    try:
         while True:
             testFileName = 'diskfill-' + str(int(time.time())) + '.dat'
             testFilePath = os.path.join( testDir, testFileName )
             writeLen = 0
+
+            at = time.time()
+
             with open( testFilePath, 'wb') as f:
                 while writeLen < testFileSize:
                     randIndex = random.randint(0, len(dataList)-1)
                     data = dataList[randIndex]
-                    at = time.time()
                     f.write(data)
-                    bt = time.time()
                     writeLen = writeLen + len(data)
                     total = total + len(data)
-
-                    curSpeed = human_readable( len(data)/(bt-at) )
-                    totalSpeed = human_readable( total / (bt - startTime) )
-                    totalSize = human_readable( total )
-                    print( 'total write ', totalSize, 'cur write speed ', curSpeed, ' total write speed ', totalSpeed  )
+            bt = time.time()
+            curSpeed = human_readable( writeLen/(bt-at) )
+            totalSpeed = human_readable( total / (bt - startTime) )
+            totalSize = human_readable( total )
+            print( 'total write ', totalSize, ' cur write speed ', curSpeed, 'B/s total write speed ', totalSpeed, 'B/s'  )
 
     except:
         print( 'write full!' )
@@ -70,18 +66,22 @@ def readTest(testDir):
     for root, dirs, files in os.walk( testDir ):
         for file in files:
             path = os.path.join( root, file )
+            readLen = 0
+            at = time.time()
+
             with open( path, 'rb' ) as f:
                 while True:
-                    at = time.time()
                     data = f.read( 100*1024**2 )
-                    bt = time.time()
                     if len( data ) == 0:
                         break
 
                     total = total + len(data)
-                    curSpeed = human_readable( len(data)/(bt-at) )
-                    totalSpeed = human_readable( total / (bt - startTime) )
-                    print( 'cur read speed ', curSpeed, ' total read speed ', totalSpeed  )
+                    readLen = readLen + len(data)
+            bt = time.time()
+            curSpeed = human_readable( readLen/(bt-at) )
+            totalSpeed = human_readable( total / (bt - startTime) )
+            totalLen = human_readable( total )
+            print( 'total read ', totalLen, ' cur read speed ', curSpeed, 'B/s total read speed ', totalSpeed, 'B/s'  )
 
     endTime = time.time()
     totalSpeed = human_readable( total / (endTime - startTime) )
@@ -89,7 +89,7 @@ def readTest(testDir):
 
 random.seed( time.time()*1984 )
 dataList = list()
-for i in range(0,30):
+for i in range(0,20):
     l= numpy.random.randint(low=-2147483648, high=0x7FFFFFFF, size=1024**2*10)
     dataList.append( l.tobytes() )
 
@@ -105,4 +105,11 @@ for i in range( 0, testTimes ):
     print( 'test - ' , i, ' start!' )
     writeTest(testDir, dataList)
     readTest(testDir)
+    try:
+        for root, dirs, files in os.walk( testDir ):
+            for file in files:
+                path = os.path.join( root, file )
+                os.remove( path )
+    except:
+        pass
     print( 'test - ', i, ' finished!')

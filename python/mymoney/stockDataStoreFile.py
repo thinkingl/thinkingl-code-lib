@@ -30,6 +30,14 @@ class StockDataStoreFile( StockDataStore ):
         except:
             logging.exception( 'error' )
             return StockDictInfo()
+    
+    # 股票是否存在
+    def isStock(self, symbol:str) -> bool:
+        allStockDict = self.getStockDict()
+        for type, oneType in allStockDict.typeDict.items():
+            if symbol in oneType.stockDict:
+                return True
+        return False
 
     # 更新股票字典
     def updateStockDict(self, type:str, endTime:float, stockDict:dict ):

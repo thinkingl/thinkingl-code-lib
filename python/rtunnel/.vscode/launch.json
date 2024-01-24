@@ -5,6 +5,16 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "Python: xcell",
+            "type": "python",
+            "request": "launch",
+            "program": "rtunnel.py",
+            "console": "integratedTerminal",
+            "args": [
+                "--mode","cell", "--cfg", "xcell-90.json"
+            ]
+        },
+        {
             "name": "Python: client",
             "type": "python",
             "request": "launch",
@@ -17,7 +27,9 @@
             "request": "launch",
             "program": "rtunnel.py",
             "console": "integratedTerminal",
-            "args": ["-s"]
+            "args": [
+                "-s"
+            ]
         }
     ]
 }

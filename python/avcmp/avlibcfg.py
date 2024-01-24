@@ -22,3 +22,5 @@ DbFileName = 'avlib.db'
 # 图片文件的存放目录.
 BaseDir = 'H:/data/javlib/'
 FileDir = 'datas2/'
+
+LogDir = '/share/disk-ssd/avlib/logs'

@@ -1,0 +1,57 @@
+{
+    "log":{
+        "logLev":20,
+        "logLev-Info":20,
+        "logLev-DEBUG":10
+    },
+    
+    "me":{
+        "user":"thinkingl",
+        "cell":{
+            "id":"90",
+            "publicAddrs":[
+                {
+                    "addr":"192.168.84.90",
+                    "port":"1723"
+                },
+                {
+                    "addr":"10.20.20.84",
+                    "port":"1723"
+                },
+                {
+                    "addr":"172.16.64.90",
+                    "port":"1723"
+                }
+            ]
+        }
+    },
+    
+    "nodes":[
+        
+    ],
+
+    "conveyor":{
+        "localPort":1723,
+        "queueSize":10,
+	    "recvBufSize":15000
+    },
+
+    "portTunnels":[
+        {
+            "name":"samba of apu 111",
+            "route":"apu",
+            "localPort":111,
+            "remoteAddr":"192.168.84.8",
+            "remotePort":111,
+            "protocol":"tcp"
+        },
+        {
+            "name":"samba of apu 445",
+            "route":"apu",
+            "localPort":445,
+            "remoteAddr":"192.168.84.8",
+            "remotePort":445,
+            "protocol":"tcp"
+        }
+    ]
+}

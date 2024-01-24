@@ -12,7 +12,7 @@ import sys
 
 
 songStorageDir = "X:/music/cachedownload"
-songStorageDir = "H:/musicDownload"
+songStorageDir = "h:/musicDownload"
 songIdDir = "/`````songid"
 
 
@@ -258,6 +258,8 @@ def SaveLyric( songInfo ):
     if( not "lyric" in lyricJson[ "lrc"].keys() ):
         return
     lyric = lyricJson[ "lrc"]["lyric"]
+    if lyric == None:
+        return
     lyric = lyric.replace( "\\n", "\n" )
     with open( lrcFilePath, "w", encoding='utf-8' ) as lrcFile:
         lrcFile.write( lyric )

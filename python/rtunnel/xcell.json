@@ -1,0 +1,46 @@
+{
+    "log":{
+        "logLev":20,
+        "logLev-Info":20,
+        "logLev-DEBUG":10
+    },
+    
+    "me":{
+        "user":"thinkingl",
+        "cell":{
+            "id":"90",
+            "publicAddrs":[
+                {
+                    "addr":"192.168.84.90",
+                    "port":"1723"
+                },
+                {
+                    "addr":"10.20.20.84",
+                    "port":"1723"
+                },
+                {
+                    "addr":"172.16.64.90",
+                    "port":"1723"
+                }
+            ]
+        }
+    },
+    
+    "nodes":[
+        {
+            "addr-":"lizhixing.top",
+            "addr":"192.168.84.102",
+            "port":1723
+        }
+    ],
+
+    "conveyor":{
+        "localPort":1723,
+        "queueSize":10,
+	    "recvBufSize":15000
+    },
+
+    "portTunnels":[
+        
+    ]
+}

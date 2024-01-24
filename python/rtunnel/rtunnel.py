@@ -8,7 +8,8 @@ from logging.handlers import RotatingFileHandler
 import rtunnelClient
 import rtunnelServer
 import rtunnelServerAsync
-
+import xcell
+import argparse
 
 
 def initLogging( logFileName, logDir='./log', maxLogFileBytes=10*1024*1024, backupCount = 10, logLev = logging.INFO ):
@@ -36,22 +37,25 @@ def initLogging( logFileName, logDir='./log', maxLogFileBytes=10*1024*1024, back
 	)
 
 if __name__=="__main__":
-	mode = 'client'
-	if sys.argv[-1] == '-c':
-		mode = 'client'
-	elif sys.argv[-1] == '-s':
-		mode = 'server'
+	parser = argparse.ArgumentParser(description='XCell')
+	parser.add_argument('--mode', nargs='?', default='cell', help='work mode')
+	parser.add_argument('--cfg', nargs='?', default='xcell.json', help='configure file')
 
+	args = parser.parse_args( )
+
+	mode = args.mode
+
+	cfgFile = args.cfg
 
 	lev = logging.INFO
-	cfg = json.load( open( 'rtunnel.json', 'r') )
+	cfg = json.load( open( cfgFile, 'r') )
 	logCfg = cfg.get('log')
 	if  logCfg != None:
 		if logCfg.get( 'logLev') != None:
 			lev = logCfg.get( 'logLev')
 		
 
-	initLogging( 'rtunnel-' + mode + '.log', logLev=lev )
+	initLogging( 'rtunnel-' + cfgFile + '.log', logLev=lev )
 	logging.info( '------------rtunnel ' + mode + ' start!---------------' )
 
 
@@ -62,6 +66,9 @@ if __name__=="__main__":
 		serverCfg = cfg.get( mode )
 		server = rtunnelServerAsync.RTunnelServer()
 		server.start(serverCfg)
+	elif mode == 'cell':
+		cell = xcell.XCell()
+		cell.start( cfg )
 		
 	while( True ):
 		time.sleep(1)

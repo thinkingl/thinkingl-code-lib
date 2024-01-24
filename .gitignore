@@ -52,3 +52,4 @@ python/disksmartserver/smart-sda-20200728-172714.txt
 python/disksmartserver/smart-sda-20200728-172915.txt
 *.o
 X/logs/*
+X/xconfig.json

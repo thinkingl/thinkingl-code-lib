@@ -2,6 +2,7 @@
 
 #include <functional>
 #include <system_error>
+#include <memory>
 #include "xaddr.h"
 
 /**
@@ -43,3 +44,6 @@ protected:
 private:
     callback_recv onRecvFun;
 };
+
+typedef std::shared_ptr<XLink> PXLink;
+typedef std::vector<PXLink> XLinkList;

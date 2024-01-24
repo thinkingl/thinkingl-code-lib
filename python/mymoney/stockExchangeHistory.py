@@ -2,6 +2,14 @@ import dataclasses
 import datetime
 from enum import Flag
 
+ExchangeDealTypeDict = {
+    "in" : ["银行转证券"],
+    "out": ["证券转银行"],
+    "buy": [],
+    "sell":[]
+}
+
+
 @dataclasses.dataclass
 class StockExchangeRecord():
     date:datetime.date  # 日期
@@ -18,7 +26,7 @@ class StockExchangeRecord():
     dealType:str        # 交易类型
     comments:str = ""   # 备注
 
-    def __init__(self, **kwargs):
+    def __init__(self, **kwargs) ->None:
         names = set([f.name for f in dataclasses.fields(self)])
         for k, v in kwargs.items():
             if k in names:
@@ -31,13 +39,13 @@ class StockExchangeHistory():
     version:str = '1.0'
     history:dict[str, StockExchangeRecord] = {}
 
-    def addRecord(self, record:StockExchangeRecord):
+    def addRecord(self, record:StockExchangeRecord) -> None :
         self.history[record.id] = record
         #self.history.append( record )
         #self.history.sort(key=lambda record: record.date)
         pass
 
-    def getAllRecordList(self):
+    def getAllRecordList(self) -> list[StockExchangeRecord]:
         allRecord = list()
         for k,v in self.history.items():
             allRecord.append(v)
