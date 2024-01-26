@@ -1,0 +1,24 @@
+PROJECT(xmedia)
+CMAKE_MINIMUM_REQUIRED(VERSION 3.12)
+ADD_SUBDIRECTORY( thirdparty/glog )
+ADD_SUBDIRECTORY( thirdparty/googletest )
+ADD_SUBDIRECTORY( test )
+INCLUDE_DIRECTORIES(src)
+INCLUDE_DIRECTORIES(thirdparty/googletest/googletest/include)
+INCLUDE_DIRECTORIES(thirdparty/glog/src)
+INCLUDE_DIRECTORIES(thirdparty/asio/asio/include)
+
+AUX_SOURCE_DIRECTORY(src DIR_SRCS) #将./下的所有*.cpp加入到 DIR_SRCS 中
+ADD_EXECUTABLE( ${PROJECT_NAME} ${DIR_SRCS})
+
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
+
+TARGET_LINK_LIBRARIES(xmedia gtest)
+TARGET_LINK_LIBRARIES(xmedia glog)
+TARGET_LINK_LIBRARIES(xmedia pthread)
+
+enable_testing()
+
+
