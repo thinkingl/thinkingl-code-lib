@@ -9,6 +9,7 @@ import re
 import time
 import logging
 import sys
+from cacheFile import CacheFile
 
 
 songStorageDir = "X:/music/cachedownload"
@@ -193,7 +194,7 @@ def GetSongFilePathWithoutExt( songInfo ):
         fileName = artist + ' - ' + fileName
     return  songDir + fileName
 
-def SaveSongFile( ucFilePath, songInfo ):
+def SaveSongFile( cacheFile : CacheFile, songInfo ):
     songFilePath = GetSongFilePathWithoutExt( songInfo ) + "." + songInfo["format"]
 
     try:
@@ -206,7 +207,8 @@ def SaveSongFile( ucFilePath, songInfo ):
             #print( songFilePath + " already exist!")
             return songFilePath # 已经存在,并且文件大小可以.
     print( "song path: " + songFilePath )
-    DecodeCloudMusicCacheFile( ucFilePath, songFilePath )
+    cacheFile.exportDecodedFile( songFilePath )
+    #DecodeCloudMusicCacheFile( ucFilePath, songFilePath )
     print( "Save song to :" + songFilePath )
     return songFilePath
 
@@ -272,7 +274,9 @@ def HackCloudMusicCache():
     cachePathFile = open( cloudMusicCacheDirFile, "rb")
     cloudMusicCacheDir = cachePathFile.read().decode( "utf-16")
     cachePathFile.close()
-
+    
+    print( "cache dir is ", cloudMusicCacheDir )
+    
     cacheFiles = os.listdir( cloudMusicCacheDir )
     
     # 按时间排序, 把较早的文件排到前面, 先处理较早的文件.
@@ -288,10 +292,11 @@ def HackCloudMusicCache():
                   songId = strArray[0]
                   #print( "song id is :" + songId )  #文件名的第一部分是歌曲ID
                   idxFilePath = ucFilePath.replace('.uc', '.idx')
-                  infoFilePath = ucFilePath.replace('.uc', '.info')
+                  #infoFilePath = ucFilePath.replace('.uc', '.info')
+                  # 网易云更新,没有info文件了. @2024-06-05
                   idxFileExist = os.path.exists( idxFilePath )
-                  infoFileExist = os.path.exists( infoFilePath )
-                  if( idxFileExist and infoFileExist ):     # info 或 idx 文件不存在的时候,歌曲还没有播放完.
+                  #infoFileExist = os.path.exists( infoFilePath )
+                  if( idxFileExist  ):     # info 或 idx 文件不存在的时候,歌曲还没有播放完.
                       idxFile = open( idxFilePath, 'rb')
                       try:
                         idxJson = json.load( idxFile )
@@ -307,14 +312,18 @@ def HackCloudMusicCache():
                       if( not cacheFinished ):
                           logging.error( "File " + ucFilePath + " has not finished!")
                           continue
-                      infoFile = open( infoFilePath, 'rb' )
-                      try:
-                        infoJson = json.load( infoFile )
-                      except:
-                          logging.error( "Load song info json fail path:" + infoFilePath )
-                          continue
-                      musicFileFormat = infoJson['format']
+                      #infoFile = open( infoFilePath, 'rb' )
+                      #try:
+                      #  infoJson = json.load( infoFile )
+                      #except:
+                      #    logging.error( "Load song info json fail path:" + infoFilePath )
+                      #    continue
+                      #musicFileFormat = infoJson['format']
                       #print( "file format is :" + musicFileFormat)
+
+                      # 没有info文件了, 用新的方法获取文件格式.
+                      fileCache = CacheFile( ucFilePath )
+                      musicFileFormat = fileCache.getFileType()
 
                       songInfo = GetSongInfo( songId, fileSize, musicFileFormat )
                       try:
@@ -323,7 +332,7 @@ def HackCloudMusicCache():
                       except:
                           logging.error( "songInfo invalid!" )
                           continue
-                      storageSongPath = SaveSongFile( ucFilePath, songInfo )
+                      storageSongPath = SaveSongFile( fileCache, songInfo )
                       SaveAlbumCover( songInfo )  # 保存封面
                       SaveLyric( songInfo )         # 保存歌词.
                       #time.sleep( 1 )
@@ -378,7 +387,7 @@ if __name__=="__main__":
     while( True ):
         logging.info( "--------------------Start hack cloud music cache!------------------" )
         dirSize = 0
-        startTime = time.time();
+        startTime = time.time()
         spendTime = 0
         try:
             HackCloudMusicCache()
