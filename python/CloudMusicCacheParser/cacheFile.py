@@ -21,7 +21,15 @@ class CacheFile:
                 return 'flac'
             if m.endswith( 'mp3' ):
                 return 'mp3'
+            if m.endswith( "m4a" ):
+                return "m4a"
+        
         assert( False )
+
+        for m in info.mime:
+            if m.startswith( 'audio/'):
+                return m.split('/')[1]
+                 
         return ""
 
         if self._data == None :

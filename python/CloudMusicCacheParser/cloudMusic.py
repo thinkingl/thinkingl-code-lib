@@ -57,8 +57,18 @@ def NormalizeName( name ):
     name = name.replace( '\0', '' );    # 有的名称里面有0,必须去掉.
     return name
 
+def SaveSongInfo( songInfo ):
+    # 保存.
+    songId = songInfo.get("songId")
+    songIdDirPath = songStorageDir + songIdDir
+    if not( os.path.exists(songIdDirPath) ):
+            os.makedirs( songIdDirPath, 0o777, True )
+    songInfoFilePath = songStorageDir + songIdDir + "/" + songId + ".json"
+    with open( songInfoFilePath, "w", encoding='utf-8' ) as f:
+        json.dump( songInfo, f )
+    f.close()
 
-def GetSongInfo( songId, fileSize, format ):
+def GetSongInfo( songId, fileSize ):
     songIdDirPath = songStorageDir + songIdDir
     if not( os.path.exists(songIdDirPath) ):
             os.makedirs( songIdDirPath, 0o777, True )
@@ -143,12 +153,9 @@ def GetSongInfo( songId, fileSize, format ):
         logging.exception("message")
         return
     songInfo["songId"] = songId
-    songInfo["format"]= format
+    #songInfo["format"]= format
     songInfo["fileSize"] = fileSize
-    # 保存.
-    with open( songInfoFilePath, "w", encoding='utf-8' ) as f:
-        json.dump( songInfo, f )
-    f.close()
+    
     logging.info( "song id: %s \nurl: %s \nsongInfo %s", songId, songUrl, songInfo )
     #print( songInfo )
     #browser.quit()
@@ -194,20 +201,25 @@ def GetSongFilePathWithoutExt( songInfo ):
         fileName = artist + ' - ' + fileName
     return  songDir + fileName
 
-def SaveSongFile( cacheFile : CacheFile, songInfo ):
-    songFilePath = GetSongFilePathWithoutExt( songInfo ) + "." + songInfo["format"]
+def SaveSongFile( ucFilePath : CacheFile, songInfo ):
 
-    try:
-        os.path.isfile( songFilePath )
-    except:
-        print( songFilePath + " Error!" )
+    oldFileSize = songInfo.get( "realFileSize" )
+    newFileSize = songInfo["fileSize"]
+    if( oldFileSize != None and oldFileSize >= newFileSize ):
+        logging.info( "song %s - %s Old file size %d is ok! new size:%d", 
+                     songInfo.get("songId"), songInfo.get( "title" ), oldFileSize, newFileSize )
+        return
 
-    if( os.path.isfile( songFilePath ) ):
-        if( os.path.getsize( songFilePath ) >= int( songInfo["fileSize"] ) ):
-            #print( songFilePath + " already exist!")
-            return songFilePath # 已经存在,并且文件大小可以.
-    print( "song path: " + songFilePath )
-    cacheFile.exportDecodedFile( songFilePath )
+    fileCache = CacheFile( ucFilePath )
+    fileFormat = fileCache.getFileType()
+    songInfo["format"] = fileFormat
+
+    songFilePath = GetSongFilePathWithoutExt( songInfo ) + "." + fileFormat
+    fileCache.exportDecodedFile( songFilePath )
+
+    realFileSize = os.path.getsize( songFilePath )
+    songInfo["realFileSize"] = realFileSize
+
     #DecodeCloudMusicCacheFile( ucFilePath, songFilePath )
     print( "Save song to :" + songFilePath )
     return songFilePath
@@ -322,20 +334,22 @@ def HackCloudMusicCache():
                       #print( "file format is :" + musicFileFormat)
 
                       # 没有info文件了, 用新的方法获取文件格式.
-                      fileCache = CacheFile( ucFilePath )
-                      musicFileFormat = fileCache.getFileType()
+                      #fileCache = CacheFile( ucFilePath )
+                      #musicFileFormat = fileCache.getFileType()
 
-                      songInfo = GetSongInfo( songId, fileSize, musicFileFormat )
+                      songInfo = GetSongInfo( songId, fileSize )
                       try:
                         if( not songInfo["songId"] ):
+                            logging.error( "Can't get song info! id:%s", songId)
                             continue
                       except:
                           logging.error( "songInfo invalid!" )
                           continue
-                      storageSongPath = SaveSongFile( fileCache, songInfo )
+                      storageSongPath = SaveSongFile( ucFilePath, songInfo )
                       SaveAlbumCover( songInfo )  # 保存封面
                       SaveLyric( songInfo )         # 保存歌词.
                       #time.sleep( 1 )
+                      SaveSongInfo( songInfo )
 
 
 def getdirsize(dir):
